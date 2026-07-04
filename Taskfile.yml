@@ -1,0 +1,121 @@
+# Task runner for Gaia's Choice. https://taskfile.dev
+#
+# All npm work runs inside a throwaway node:alpine container, and node_modules
+# lives in a named Docker volume — nothing touches your host filesystem. This
+# mirrors the supply-chain stance in .npmrc / README.
+#
+# Run `task` (no args) to list everything.
+version: '3'
+
+vars:
+  NODE_IMAGE: node:22-alpine
+  IMAGE: gaias-choice
+  PORT: '8080' # Cloud Run runtime port (nginx)
+  DEV_PORT: '5173' # Vite dev server
+  REGION: europe-west1
+  SERVICE: gaias-choice
+  VOLUME: gaias-choice-node-modules
+  # Reusable "npm in a container" prefix: source mounted read-write, deps in a volume.
+  NODE_RUN: >-
+    docker run --rm -v {{.ROOT_DIR}}:/app -w /app
+    -v {{.VOLUME}}:/app/node_modules {{.NODE_IMAGE}}
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list
+    silent: true
+
+  deps:
+    desc: Install dependencies into the isolated volume (skipped when lockfile is unchanged)
+    internal: true
+    sources:
+      - package.json
+      - package-lock.json
+    generates:
+      - .task/deps.done
+    cmds:
+      - '{{.NODE_RUN}} npm ci --ignore-scripts --no-fund'
+      - mkdir -p .task && touch .task/deps.done
+
+  dev:
+    desc: Run the Vite dev server (http://localhost:5173)
+    deps: [deps]
+    cmds:
+      - >-
+        docker run --rm -it -v {{.ROOT_DIR}}:/app -w /app
+        -v {{.VOLUME}}:/app/node_modules -p {{.DEV_PORT}}:{{.DEV_PORT}}
+        {{.NODE_IMAGE}} npm run dev -- --host 0.0.0.0 --port {{.DEV_PORT}}
+
+  typecheck:
+    desc: Strict TypeScript type-check
+    deps: [deps]
+    cmds:
+      - '{{.NODE_RUN}} npm run typecheck'
+
+  build:
+    desc: Build the SPA to dist/
+    deps: [deps]
+    cmds:
+      - '{{.NODE_RUN}} npm run build'
+
+  lock:
+    desc: Regenerate package-lock.json (isolated, no scripts run)
+    cmds:
+      - >-
+        docker run --rm -v {{.ROOT_DIR}}:/app -w /app {{.NODE_IMAGE}}
+        npm install --package-lock-only --ignore-scripts --no-fund
+
+  audit:
+    desc: Audit dependencies for known vulnerabilities
+    cmds:
+      - >-
+        docker run --rm -v {{.ROOT_DIR}}:/app -w /app {{.NODE_IMAGE}}
+        npm audit --audit-level=low
+
+  images:
+    desc: Optimize public/images to resized WebP (PNG/JPG in, WebP out, originals removed)
+    vars:
+      MAGICK: dpokidov/imagemagick:latest
+      MAX_DIM: '1400' # shrink-only: images smaller than this are left as-is
+      QUALITY: '80'
+    cmds:
+      - >-
+        docker run --rm --entrypoint sh -v {{.ROOT_DIR}}/public/images:/imgs -w /imgs {{.MAGICK}}
+        -c 'for f in *.png *.jpg *.jpeg; do [ -e "$f" ] || continue;
+        magick "$f" -resize "{{.MAX_DIM}}x{{.MAX_DIM}}>" -quality {{.QUALITY}}
+        -define webp:method=6 "${f%.*}.webp" && rm "$f"; done'
+      - 'echo "Remember to reference the .webp files in content/ frontmatter."'
+
+  image:
+    desc: Build the production Docker image (nginx)
+    cmds:
+      - docker build -t {{.IMAGE}} .
+
+  run:
+    desc: Build the image and run it locally (http://localhost:8080)
+    deps: [image]
+    cmds:
+      - docker run --rm -p {{.PORT}}:{{.PORT}} {{.IMAGE}}
+
+  deploy:
+    desc: Deploy to Google Cloud Run from source (override with REGION=... SERVICE=...)
+    cmds:
+      - >-
+        gcloud run deploy {{.SERVICE}} --source . --region {{.REGION}}
+        --allow-unauthenticated --port {{.PORT}}
+
+  verify:
+    desc: Full local check — audit, typecheck, and a production image build
+    cmds:
+      - task: audit
+      - task: typecheck
+      - task: image
+
+  clean:
+    desc: Remove build output, deps volume, task cache, and the local image
+    cmds:
+      - rm -rf dist .task
+      - docker volume rm {{.VOLUME}} 2>/dev/null || true
+      - docker image rm {{.IMAGE}} 2>/dev/null || true

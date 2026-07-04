@@ -1,0 +1,52 @@
+name: Deploy to Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+      - uses: actions/setup-node@v4.4.0
+        with:
+          node-version: 22.11.0
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+        env:
+          # Project page lives under /gaias-choice/. vite.config.ts reads this;
+          # local/Cloud Run builds leave it unset and serve from "/".
+          BASE_PATH: /gaias-choice/
+      - name: SPA fallback
+        # GitHub Pages has no server-side rewrite, so deep links (e.g.
+        # /gaias-choice/reviews/foo) hit 404.html. Serving a copy of index.html
+        # there lets the client router take over.
+        run: cp dist/index.html dist/404.html
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          path: dist
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4.0.5

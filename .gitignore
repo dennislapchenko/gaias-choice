@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.task/
+*.local
+.DS_Store
+.env
+.env.*
+!.env.example
+.secrets

@@ -1,0 +1,80 @@
+export interface NavItem {
+  label: string
+  path: string
+}
+
+export interface ValueItem {
+  title: string
+  text: string
+}
+
+export interface SiteConfig {
+  name: string
+  tagline: string
+  description: string
+  mission: string
+  heroImage?: string
+  values: ValueItem[]
+  nav: NavItem[]
+  social: { label: string; url: string }[]
+  contactEmail: string
+}
+
+/** Common fields every markdown entry carries. */
+export interface Entry {
+  slug: string
+  title: string
+  html: string
+}
+
+export interface Product extends Entry {
+  category: string
+  rating: number
+  price?: string
+  affiliateUrl?: string
+  image?: string
+  excerpt: string
+  date: string
+  tags?: string[]
+}
+
+export interface Guide extends Entry {
+  excerpt: string
+  date: string
+  image?: string
+  tags?: string[]
+}
+
+export type Page = Entry
+
+/** The set of CSS color slots a palette can override. */
+export interface ThemeColors {
+  sage: string // primary accent (buttons, nav, mission band)
+  sageDark: string // accent hover / eyebrow text
+  onAccent: string // text/icon color placed ON the accent (contrast-safe per palette)
+  clay: string // warm accent (price, rating stars)
+  sand: string // page background
+  sand2: string // neutral surface (placeholders, nav hover)
+  line: string // borders
+  mint: string // pastel slot 1
+  peach: string // pastel slot 2
+  lilac: string // pastel slot 3
+}
+
+export interface Theme {
+  tag: string // stable identifier, persisted + shown in the switcher
+  label: string // human-facing name
+  default?: boolean // the palette used when nothing is stored
+  colors: ThemeColors
+}
+
+/** A celestial event marked on the sidebar almanac calendar. */
+export interface AstroEvent {
+  date: string // local YYYY-MM-DD (viewer's timezone)
+  time?: string // local HH:MM of the exact event
+  title: string
+  body: string // celestial body (Moon, Sun, Mercury, …)
+  icon: string // glyph / emoji marker
+  kind?: string // phase | ingress | moon-ingress | retrograde | aspect | voc | eclipse
+  blurb: string // revealed on hover/focus
+}

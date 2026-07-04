@@ -1,0 +1,34 @@
+name: Gaia's Choice
+tagline: Natural gear for life on the road with a baby
+description: >-
+  Honest, real-world reviews of natural, plastic-free, fragrance-free products
+  for traveling with a little one — by camper, car, or carry-on. Built from 7+
+  months of full-time family travel — no synthetics, no perfumes, no guessing.
+mission: >-
+  We help families travel consciously, comfortably, and safely — using only
+  natural, eco-friendly gear, free of synthetics, fragrance, and plastic.
+
+heroImage: /images/hero.webp
+
+values:
+  - title: Honesty first
+    text: Every review comes from gear we actually packed, used, and lived with on the road.
+  - title: Safe & natural
+    text: We look for organic, non-toxic materials — the stuff you'd trust next to a newborn.
+  - title: Less, but better
+    text: A camper — or a carry-on — has no room for clutter. We favor durable, multi-use picks.
+  - title: Mindful by default
+    text: Fewer, better things means less waste, lighter travel, and a smaller footprint.
+
+nav:
+  - { label: Home, path: / }
+  - { label: Reviews, path: /reviews }
+  - { label: Guides, path: /guides }
+  - { label: About, path: /about }
+  - { label: Contact, path: /contact }
+
+social:
+  - { label: Pinterest, url: 'https://pinterest.com' }
+  - { label: Instagram, url: 'https://instagram.com' }
+
+contactEmail: hello@gaias-choice.example

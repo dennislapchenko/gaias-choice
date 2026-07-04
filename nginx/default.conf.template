@@ -1,0 +1,30 @@
+# Only ${PORT} is substituted (it is the sole matching env var); nginx runtime
+# variables like $uri are left intact by the official image's envsubst step.
+server {
+    listen       ${PORT};
+    listen       [::]:${PORT};
+    server_name  _;
+
+    root   /usr/share/nginx/html;
+    index  index.html;
+
+    # Long-cache fingerprinted assets.
+    location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
+    # SPA fallback: unknown paths render index.html so client routing works.
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Basic hardening headers.
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    gzip on;
+    gzip_types text/plain text/css application/javascript application/json image/svg+xml;
+}
