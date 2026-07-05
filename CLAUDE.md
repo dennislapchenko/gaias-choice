@@ -177,8 +177,10 @@ muddy — nudge the accent hue darker if you need strict AA-small there.
   the choice under `localStorage['gc-theme']`.
 - `initTheme()` runs in `main.tsx` **before** React renders, so the saved palette
   is applied without a flash.
-- `components/ThemeSwitcher.tsx` (in the header) lists every palette with swatches,
-  its **label and `tag`**, and marks the `default`.
+- `components/ThemeSwitcher.tsx` (in the header) lists every palette with swatches
+  and its **label only** (the `tag` id and "· default" suffix are not shown); a ✓
+  marks the active one. The `tag` is still the stable id persisted to
+  `localStorage['gc-theme']` — it's just no longer surfaced in the menu.
 - **To add a palette:** append an entry to `themes.yaml` — no code change. There
   are currently 7 (meadow, bubblegum, citrus, periwinkle, lagoon, sunset, grape).
 - **To make one permanent/default:** set `default: true` on it (and remove it from

@@ -288,11 +288,6 @@ h1 {
   font-size: 0.92rem;
   color: var(--ink);
 }
-.theme-tag {
-  font-size: 0.72rem;
-  color: var(--muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-}
 .theme-check {
   color: var(--sage-dark);
   font-weight: 700;

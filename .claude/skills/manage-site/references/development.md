@@ -15,7 +15,7 @@ Keep this table current — when you add/rename/change a component, update the r
 | --- | --- | --- |
 | Page shell: header, nav, **mobile hamburger menu**, footer | `src/components/Layout.tsx` + `.site-header`/`.nav-toggle`/`.site-nav` in `styles.css` | Nav collapses to a hamburger dropdown ≤820px (closes on nav/Escape/outside-click). Nav items come from `site.yaml` `nav:`/`footerNav:`. |
 | **Language switcher** | `src/components/LanguageSwitcher.tsx` + `.lang-*` in `styles.css` | Flag-emoji button that cycles locale on click (no menu). Flags in `LOCALE_FLAGS` (`lib/i18n.tsx`). `.lang-hint` flashes the next flag on hover and for 0.5s after a click; a click sets a `dismissed` state (cleared on `mouseleave`) so the hover preview doesn't linger under a stationary cursor — CSS gate is `.lang-switcher:not(.dismissed):hover`. |
-| **Theme/palette switcher** | `src/components/ThemeSwitcher.tsx` + `.theme-*` | Dropdown; palettes are data in `content/themes.yaml` (`lib/theme.ts` applies them). |
+| **Theme/palette switcher** | `src/components/ThemeSwitcher.tsx` + `.theme-*` | Dropdown; palettes are data in `content/themes.yaml` (`lib/theme.ts` applies them). Each option shows swatches + the **label only** (not the `tag` id / "· default"). |
 | **Sidebar** (mission, values, almanac) | `src/components/Sidebar.tsx` `WIDGETS` registry + `.side-*`/`.value-badge*` | Composition/order is data: `site.yaml` `sidebar:` list. Value icons: `VALUE_ICONS` map + `icon:` on each value. |
 | Almanac calendar / astrology | `src/components/AstroCalendar.tsx` + `src/lib/astro.ts` | Real ephemeris — extend generators, never a horoscope API. |
 | Reviews / guides / pages content | `content/locales/<lng>/…` | Markdown+YAML; see `content-editing.md`. |

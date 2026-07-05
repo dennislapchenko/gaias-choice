@@ -71,10 +71,6 @@ export default function ThemeSwitcher() {
                 </span>
                 <span className="theme-option-text">
                   <span className="theme-label">{theme.label}</span>
-                  <span className="theme-tag">
-                    {theme.tag}
-                    {theme.default ? ` · ${t('theme.default')}` : ''}
-                  </span>
                 </span>
                 {theme.tag === activeTag && (
                   <span className="theme-check" aria-hidden="true">
