@@ -83,6 +83,23 @@ If Docker is down: `open -a OrbStack` and wait ~15s. For visual checks, serve
 `dist/` statically (`task dev` needs a TTY and fails under preview harnesses) —
 full recipe in `references/development.md`.
 
+## Update the docs — every time, before you're done
+
+**Any** change to a component, behavior, content model, workflow, or convention
+**must** be reflected in the docs in the same session, so the next run instantly
+knows where a thing lives and how to change it. This is not optional cleanup —
+it's part of "done". Concretely, after the work:
+
+- Update the **"Where things live" map** and the relevant **"Common dev tasks"**
+  entry in `references/development.md` (add the component/task if it's new).
+- Update `CLAUDE.md` when an architecture fact or contract changed (e.g. a new
+  `site.yaml` field, a component that stopped being a dropdown, a new locale
+  hook). Fix any line the change made stale — don't leave the docs describing a
+  state the code no longer matches.
+- Update this `SKILL.md` when a rule/process changed.
+
+If you changed something and touched no doc, assume you forgot one — re-check.
+
 ## Committing & shipping
 
 Never commit automatically. Once a change is verified (typecheck + build green),

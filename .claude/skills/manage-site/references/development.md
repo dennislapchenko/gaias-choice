@@ -6,6 +6,25 @@ single hand-written `src/styles.css`, content bundled at build time via
 fetching. Architecture details live in the repo `CLAUDE.md` — read it before
 structural changes.
 
+## Where things live (change X → edit Y)
+
+Keep this table current — when you add/rename/change a component, update the row
+(that's a house rule; see SKILL.md "Update the docs").
+
+| To change… | Edit | Notes |
+| --- | --- | --- |
+| Page shell: header, nav, **mobile hamburger menu**, footer | `src/components/Layout.tsx` + `.site-header`/`.nav-toggle`/`.site-nav` in `styles.css` | Nav collapses to a hamburger dropdown ≤820px (closes on nav/Escape/outside-click). Nav items come from `site.yaml` `nav:`/`footerNav:`. |
+| **Language switcher** | `src/components/LanguageSwitcher.tsx` + `.lang-*` in `styles.css` | Flag-emoji button that cycles locale on click (no menu). Flags in `LOCALE_FLAGS` (`lib/i18n.tsx`); `.lang-hint` flashes the next flag. |
+| **Theme/palette switcher** | `src/components/ThemeSwitcher.tsx` + `.theme-*` | Dropdown; palettes are data in `content/themes.yaml` (`lib/theme.ts` applies them). |
+| **Sidebar** (mission, values, almanac) | `src/components/Sidebar.tsx` `WIDGETS` registry + `.side-*`/`.value-badge*` | Composition/order is data: `site.yaml` `sidebar:` list. Value icons: `VALUE_ICONS` map + `icon:` on each value. |
+| Almanac calendar / astrology | `src/components/AstroCalendar.tsx` + `src/lib/astro.ts` | Real ephemeris — extend generators, never a horoscope API. |
+| Reviews / guides / pages content | `content/locales/<lng>/…` | Markdown+YAML; see `content-editing.md`. |
+| Site name, tagline, mission, values, nav, social | `content/locales/<lng>/site.yaml` | Per locale; shape in `SiteConfig` (`lib/types.ts`). |
+| UI chrome strings (labels, aria) | `src/locales/en.ts` + `ru.ts` | Flat `t()` dictionary; keep both in sync. |
+| Colors, radii, layout, breakpoints | `src/styles.css` | One stylesheet; CSS vars in `:root`. Breakpoints: 900 (sidebar stacks), 820 (nav→hamburger), 720/560/480. |
+| Cards (product/guide) | `src/components/ProductCard.tsx` / `GuideCard.tsx` | Grids collapse to 1 col on mobile. |
+| Routes | `src/App.tsx` | Standalone pages need a route here. |
+
 ## Commands (always via Taskfile — never host npm)
 
 | Command | What |
