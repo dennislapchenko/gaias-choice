@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - main
+  # Lets you manually trigger a clean redeploy from the Actions tab. Prefer
+  # this over "re-run failed jobs" on a stuck run — re-running re-uploads the
+  # `github-pages` artifact into the SAME run without clearing the old one,
+  # and actions/deploy-pages then errors with "Multiple artifacts named
+  # github-pages were unexpectedly found" (seen 2026-07-05). A fresh run via
+  # workflow_dispatch (or a new push) always starts with a clean artifact slate.
+  workflow_dispatch:
 
 permissions:
   contents: read
