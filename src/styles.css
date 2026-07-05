@@ -1122,13 +1122,24 @@ h1 {
 }
 
 /* ---------- Guide epics (themed collection thumbnails) ---------- */
+/* A single-line carousel: thumbs never wrap; the strip scrolls horizontally
+   with snap. Padding + negative margins leave room for the hover lift and the
+   active 2px ring, which overflow-x would otherwise clip. */
 .epic-strip {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 14px;
-  margin: 0 0 28px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+  padding: 6px 4px 14px;
+  margin: -6px -4px 14px;
 }
 .epic-thumb {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
   width: 200px;
   padding: 0;
   border: 1px solid var(--line);
@@ -1175,7 +1186,7 @@ h1 {
 }
 @media (max-width: 560px) {
   .epic-thumb {
-    width: calc(50% - 7px);
+    width: 164px;
   }
 }
 
