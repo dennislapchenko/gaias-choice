@@ -139,8 +139,8 @@ hype, no exclamation stacking — see `.claude/skills/manage-site/references/con
 | --- | --- | --- |
 | About / Contact / mission (site.yaml) | High — this is her speaking | Fusion register, love/gratitude acts, non-attachment root of "меньше, но лучше" |
 | Guides / Learn courses | Medium-high | Difficulty-first honesty, self-dialogue at key moments, transformation verbs, cost-naming |
-| Product reviews | Medium-low | Honesty about flaws = her honesty about fear; tenderness only toward the baby/nature, never the product; verdict-first stays |
-| Roadmap | Light | Building-in-public candor, cost-naming; structure stays checklisty |
+| Product reviews | Medium | Honesty about flaws = her honesty about fear; tenderness only toward the baby/nature, never the product; verdict-first stays |
+| Roadmap | Medium-high | Building-in-public candor, cost-naming; structure stays checklisty |
 | Privacy / Disclosure | Near zero | Precision first; at most one warm human sentence |
 
 **Translation of her markers into house-compliant prose:**
