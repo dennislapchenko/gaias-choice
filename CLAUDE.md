@@ -69,7 +69,7 @@ src/
     astro.ts             # in-browser ephemeris → celestial events (astronomy-engine)
     types.ts             # SiteConfig, Product, Guide, Page, Theme, AstroEvent
   components/            # Layout, Sidebar, AstroCalendar, ThemeSwitcher,
-                         # LanguageSwitcher, ProductCard, GuideCard, Markdown, Rating
+                         # LanguageSwitcher, ProductCard, GuideCard, GuideRow, Markdown, Rating
   pages/                 # Home, Reviews, ReviewDetail, Guides, GuideDetail,
                          # MarkdownPage (about/contact), NotFound
   styles.css             # single hand-written stylesheet (no CSS framework)
@@ -142,8 +142,9 @@ See the "New Compass epic" task in `references/development.md`.
 
 Optional `chapter: N` orders guides within an epic for course sequencing
 (ascending, independent of `date`); guides without it keep the existing
-date-descending order (`Guides.tsx`). `GuideCard`/`GuideDetail` show a small
-"Chapter N" label when set. Guide detail pages (`GuideDetail.tsx`) also render
+date-descending order (`Guides.tsx`). `GuideRow` (the `/guides` epic listing),
+`GuideCard` (homepage teaser), and `GuideDetail` all show a small "Chapter N"
+label when set. Guide detail pages (`GuideDetail.tsx`) also render
 a page-local table of contents from the guide's `h2`/`h3` headings — a sticky
 column next to the article on desktop, a `<details open>` block on mobile
 (expanded by default, still collapsible by tapping the summary), only once a

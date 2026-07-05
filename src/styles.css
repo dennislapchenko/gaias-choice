@@ -908,6 +908,122 @@ h1 {
   gap: 12px;
 }
 
+/* ---------- Guide rows (epic listing on /guides) ---------- */
+/* Fat horizontal bars instead of vertical cards: a full-bleed image with
+   corner-anchored labels — "Guide" tag top-left, chapter number top-right,
+   title bottom-left, excerpt bottom-right. See components/GuideRow.tsx. */
+.guide-row-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.guide-row {
+  position: relative;
+  display: block;
+  height: 175px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  color: var(--white);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.guide-row:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+.guide-row::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(0, 0, 0, 0) 26%,
+    rgba(0, 0, 0, 0) 48%,
+    rgba(0, 0, 0, 0.82) 100%
+  );
+  z-index: 1;
+}
+.guide-row-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.guide-row-img.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.6rem;
+  background: var(--sand-2);
+}
+.guide-row-tag {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+}
+.guide-row-chapter {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+}
+/* White text with a hard black outline (layered text-shadow) so titles and
+   excerpts stay legible over any busy AI-art thumbnail. */
+.guide-row-title,
+.guide-row-excerpt {
+  color: var(--white);
+  text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000,
+    0 2px 6px rgba(0, 0, 0, 0.6);
+}
+.guide-row-title {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  right: 46%;
+  z-index: 2;
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.25;
+}
+.guide-row-title a {
+  color: inherit;
+  text-decoration: none;
+}
+.guide-row-excerpt {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  z-index: 2;
+  max-width: 42%;
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  text-align: right;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+@media (max-width: 640px) {
+  .guide-row {
+    height: auto;
+    min-height: 175px;
+  }
+  .guide-row-title {
+    right: 14px;
+  }
+  .guide-row-excerpt {
+    display: none;
+  }
+}
+
 .tag {
   align-self: flex-start;
   background: var(--lilac);

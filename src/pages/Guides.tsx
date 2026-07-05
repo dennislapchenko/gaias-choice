@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { getGuides, getSite } from '../lib/content'
 import { useI18n } from '../lib/i18n'
 import { withBase } from '../lib/asset'
-import GuideCard from '../components/GuideCard'
+import GuideRow from '../components/GuideRow'
 
 export default function Guides() {
   const { locale, t } = useI18n()
@@ -62,9 +62,9 @@ export default function Guides() {
 
       {activeEpic?.blurb && <p className="epic-blurb">{activeEpic.blurb}</p>}
 
-      <div className="grid grid-2">
+      <div className="guide-row-list">
         {visible.map((g) => (
-          <GuideCard key={g.slug} guide={g} />
+          <GuideRow key={g.slug} guide={g} />
         ))}
       </div>
     </>
