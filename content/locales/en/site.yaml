@@ -40,6 +40,14 @@ epics:
     title: Building in public
     image: /images/guide-eco-items.webp
     blurb: A free, honest course on building a plastic-free-gear review site from zero — every real step, in order.
+  - tag: homeopathy
+    title: Homeopathy at home
+    image: /images/guide-natural-vs.webp
+    blurb: An 11-chapter course — assemble a family remedy kit and learn to use it with honest observation, never replacing your doctor.
+  - tag: herbalism
+    title: The home herbalist
+    image: /images/beeswax.webp
+    blurb: An 11-chapter course — grow a green shelf of infusions, oils and tinctures, and learn ten plants the way you know people.
 
 nav:
   - { label: Home, path: / }
