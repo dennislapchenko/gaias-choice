@@ -3,15 +3,22 @@ title: "Writing Reviews That Earn Trust (Our Process)"
 excerpt: The testing process, the review structure, and the exact template we use — so every review is one we could defend to a reader's face.
 image: /images/guide-natural-vs.webp
 date: 2026-07-04
+chapter: 2
 tags: [founder-guide, reviews, process]
 ---
 
-> **Founder guide.** Written for us while we bootstrap the site — see the
-> [Kickstart Playbook](/guides/kickstart-playbook) for context.
+> **Chapter 2 of 5 · The Path** — [← Chapter 1: The Kickstart Playbook](/guides/kickstart-playbook) · [Chapter 3: Getting Traffic →](/guides/getting-traffic-seo-and-pinterest)
+> *You already can:* name the two assets and the order of operations they dictate.
+> *This chapter adds:* the testing bar, the review structure, and the template that turn honesty into a repeatable craft.
+
+> **Founder guide.** Written for ourselves while we bootstrap this site —
+> honest notes, published as a course.
 
 A review site lives or dies on one question: *does the reader believe we
-actually used this thing?* Everything in this guide exists to make the honest
-answer "yes" — and to make that obvious on the page.
+actually used this thing?* This is the trust half of chapter 1's two assets —
+the one that has to come first — turned into a repeatable process. Everything
+in this guide exists to make the honest answer "yes" — and to make that
+obvious on the page.
 
 ## The rules
 
@@ -25,7 +32,8 @@ answer "yes" — and to make that obvious on the page.
    or who it's *not* for.
 4. **Photos are ours.** Phone camera is fine. Our hands, our floor, our baby's
    crib in the background. Original photos are the single strongest signal — to
-   readers and to Google — that the experience is real.
+   readers and to Google — that the experience is real. Why Google in
+   particular rewards them so heavily is chapter 3's story.
 
 ## The testing process (minimum bar)
 
@@ -96,4 +104,44 @@ the same honesty the whole site is built on.
 
 Every existing review on this site is placeholder text with fake affiliate
 links. As real reviews get written, the fakes get deleted — not edited into
-shape, deleted. Track the swap on the [roadmap](/roadmap).
+shape, deleted. That's chapter 1's literal-truth rule with a broom in its
+hands. Track the swap on the [roadmap](/roadmap).
+
+## Practice
+
+With the product from chapter 1's notes file — 30–40 minutes:
+
+1. Run the claims check today: find the certification label, verify its number
+   on the certifier's site, and write down what you actually find.
+2. Measure one thing about it nobody publishes — weight, real volume,
+   dimensions — and add the number to the notes.
+3. Draft the verdict: two or three sentences, including who it's *not* for.
+
+**How to know it worked:** a stranger reading only your verdict could decide
+to buy or skip in ten seconds.
+
+## Now you can
+
+- Say which products may never receive a rating, and what a free unit from a
+  brand changes.
+- Run the minimum testing bar: two weeks of use, three washes, verified
+  claims, real numbers.
+- Build a review verdict-first and defend the flaws section as the trust
+  engine, not a courtesy.
+
+## Check yourself
+
+Answer from memory:
+
+1. What are the four rules — and which one is the strongest signal to readers
+   and Google alike?
+2. Name the five sections of the review structure, in order.
+3. Why does a flawless 5-star review damage trust instead of building it?
+
+## Next
+
+A perfect review nobody reads builds nothing. Chapter 3 is the other asset:
+how people actually find a site like this, why Pinterest fits the niche
+unusually well, and the flat months every honest site walks through.
+
+**[Chapter 3: Getting Traffic →](/guides/getting-traffic-seo-and-pinterest)**

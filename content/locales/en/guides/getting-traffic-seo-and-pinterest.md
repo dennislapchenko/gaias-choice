@@ -3,11 +3,16 @@ title: "Getting Traffic: SEO, Pinterest, and Patience"
 excerpt: How people will actually find this site — keyword research for beginners, why Pinterest fits this niche, and the technical SEO work our stack needs.
 image: /images/guide-packing-light.webp
 date: 2026-07-02
+chapter: 3
 tags: [founder-guide, seo, traffic]
 ---
 
-> **Founder guide.** Written for us while we bootstrap the site — see the
-> [Kickstart Playbook](/guides/kickstart-playbook) for context.
+> **Chapter 3 of 5 · The Path** — [← Chapter 2: Writing Reviews That Earn Trust](/guides/writing-reviews-that-earn-trust) · [Chapter 4: How This Site Will Make Money →](/guides/how-this-site-will-make-money)
+> *You already can:* test a product to the minimum bar and write a verdict-first review that names its flaws.
+> *This chapter adds:* keyword research without paid tools, Pinterest as a search engine, and the patience math of the flat months.
+
+> **Founder guide.** Written for ourselves while we bootstrap this site —
+> honest notes, published as a course.
 
 Traffic for a site like ours comes from three places, in this order of
 importance: **Google search**, **Pinterest**, and everything else. Instagram
@@ -22,9 +27,11 @@ knows. Two things matter for us:
 
 1. **First-hand experience, provably.** Google's review-system updates
    explicitly reward evidence of real use: original photos, measurements,
-   drawbacks, comparisons. Our
+   drawbacks, comparisons. This is where chapter 2's fourth rule — *photos are
+   ours* — pays out: the
    [review process](/guides/writing-reviews-that-earn-trust) produces exactly
-   this — not as an SEO trick, but the incentives align perfectly.
+   this evidence, not as an SEO trick, but because the incentives align
+   perfectly.
 2. **Topical focus.** Thirty pieces about one narrow topic (natural gear for
    traveling with a baby) outrank three hundred scattered ones. We stay narrow
    until we've won the niche.
@@ -86,7 +93,8 @@ and social previews don't run JS at all. Concretely missing today:
 
 ## The publishing rhythm and the flat months
 
-- **Cadence beats volume:** one genuinely good piece a week, every week.
+- **Cadence beats volume:** one genuinely good piece a week, every week —
+  chapter 1's weekly rhythm, seen from the traffic side.
 - **30–50 solid pieces** is roughly the mass where a niche site starts being
   taken seriously by search engines.
 - Expect **months of near-zero search traffic.** This is the phase where most
@@ -95,5 +103,53 @@ and social previews don't run JS at all. Concretely missing today:
 - Every month, **update one old piece** — freshness plus depth on existing
   URLs often beats a new URL.
 
+One more reason patience is structural rather than decorative: joining
+affiliate programs before there's traffic doesn't just earn nothing — it can
+close the account for good. The exact rule, and the honest math around it, is
+chapter 4.
+
 > The whole game: stay narrow, publish weekly, prove first-hand experience,
 > and still be here in twelve months.
+
+## Practice
+
+Fifteen minutes, for the product in your notes file:
+
+1. Type its topic into Google; write down every autocomplete suggestion and
+   "People also ask" question worth answering.
+2. Look at who ranks now, and note honestly where first-hand evidence could
+   win.
+3. Keep the three most winnable long-tail phrases — they go to the top of the
+   editorial-calendar list.
+
+**How to know it worked:** each kept phrase is specific enough that you can
+name the exact page that would answer it.
+
+## Now you can
+
+- Turn autocomplete and "People also ask" into demand data without paying for
+  a tool.
+- Say why thirty pieces on one narrow topic beat three hundred scattered ones.
+- Treat Pinterest as a search engine: business account, category boards, tall
+  pins to specific pages.
+- Name the technical SEO gap of an SPA and its keystone fix.
+
+## Check yourself
+
+Answer from memory:
+
+1. In what order of importance do the traffic channels come — and which ones
+   are deliberately optional?
+2. Why is prerendering the keystone dev task rather than just one item on a
+   list?
+3. Around what content mass does a niche site start being taken seriously —
+   and which channel usually shows life first while search is still flat?
+
+## Next
+
+Trust engine, traffic engine — now the part everyone asks about first and
+should build last. Chapter 4 is the money: how affiliate income actually
+works, the math with no romance in it, and the traps that have killed real
+sites.
+
+**[Chapter 4: How This Site Will Make Money →](/guides/how-this-site-will-make-money)**

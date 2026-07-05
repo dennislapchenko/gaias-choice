@@ -3,15 +3,21 @@ title: "How This Site Will Make Money (Honest Math Included)"
 excerpt: Affiliate programs, realistic commission math, what comes after affiliates — and the traps that get new sites banned.
 image: /images/guide-toiletries.webp
 date: 2026-07-03
+chapter: 4
 tags: [founder-guide, monetization, affiliate]
 ---
 
-> **Founder guide.** Written for us while we bootstrap the site — see the
-> [Kickstart Playbook](/guides/kickstart-playbook) for context.
+> **Chapter 4 of 5 · The Path** — [← Chapter 3: Getting Traffic](/guides/getting-traffic-seo-and-pinterest) · [Chapter 5: The Launch Checklist →](/guides/launch-checklist)
+> *You already can:* write a review that earns trust and give it an honest chance of being found.
+> *This chapter adds:* how affiliate income actually works, the math with no romance in it, and the traps that get new sites banned.
 
-Monetization is the *last* step in the chain, not the first. Nothing here works
-without content and traffic. But we should understand the destination before we
-start walking.
+> **Founder guide.** Written for ourselves while we bootstrap this site —
+> honest notes, published as a course.
+
+Monetization is the *last* step in the chain, not the first — chapter 1's
+order of operations put it at the very end on purpose. Nothing here works
+without chapter 2's content and chapter 3's traffic. But we should understand
+the destination before we start walking.
 
 ## Layer 1: Affiliate links (months 3–12)
 
@@ -28,6 +34,8 @@ The rules that actually bite:
 
 - **Three qualifying sales in the first 180 days** or the account is closed
   (we can reapply — but better to join only when there's traffic to convert).
+  This is exactly the trap chapter 3 warned about: joining early doesn't just
+  earn nothing, it burns the account.
 - **Mandatory wording:** "As an Amazon Associate we earn from qualifying
   purchases" — visible on the site. Goes on our [disclosure page](/disclosure)
   and footer.
@@ -95,7 +103,7 @@ Not now — but the roadmap should point here:
   that earns pennies and uglifies the site. Ads also sit oddly with a
   "buy less, buy better" brand — decide when it's a real decision.
 - **Sponsorships.** Once there's an audience, eco brands pay flat fees for
-  honest (disclosed) reviews. Our no-copy-approval rule from the
+  honest (disclosed) reviews. The no-copy-approval rule from chapter 2's
   [review process](/guides/writing-reviews-that-earn-trust) is non-negotiable.
 
 ## The traps (each of these has killed real sites)
@@ -110,3 +118,47 @@ Not now — but the roadmap should point here:
   `/go/<product>` → 302 with click counting — gives us click-through data no
   matter the program, and keeps affiliate URLs editable site-wide in one place.
   Check each program's cloaking policy first; Amazon requires the raw link.)
+
+Every one of these traps gets caught by the same net: a launch gate that
+refuses to open while anything on the list is still false. That gate is
+chapter 5.
+
+## Practice
+
+Twenty minutes with a calculator:
+
+1. Pick the highest-ticket product you would honestly review, and run it
+   through the table: how many sales would $300/month take at ~3% versus ~10%?
+2. Find one small eco brand you already buy from and check its site footer for
+   an "Affiliates" link; note the commission if it's published.
+
+**How to know it worked:** you can say out loud, with numbers, why the first
+months earn $0 — and it doesn't scare you.
+
+## Now you can
+
+- Explain what an affiliate link is, who pays, and what the reader pays
+  (nothing).
+- Run the honest math and say why a $12 soap review is trust content, not
+  income content.
+- Name the traps — placeholder content, missing disclosure, commission-chosen
+  products — and the review-first rule that prevents the worst of them.
+
+## Check yourself
+
+Answer from memory:
+
+1. What happens to an Amazon Associates account with no qualifying sales in
+   180 days?
+2. Review first or join the program first — and what does that order protect?
+3. Which future revenue layer multiplies all the others, and why does it start
+   early?
+
+## Next
+
+The craft, the audience, the money — every piece is on the table. Chapter 5 is
+the Summit: no new fundamentals, just the checklist that forces chapters 1–4
+to be true at the same time, ending with the only exam that matters — *would a
+stranger trust this?*
+
+**[Chapter 5: The Launch Checklist →](/guides/launch-checklist)**

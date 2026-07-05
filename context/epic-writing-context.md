@@ -205,7 +205,11 @@ Meat-free framing follows the precedence rule in ideology-context §How-to-use.
   topic selection, not format change — pick territories genuinely big enough
   for 11 chapters; if an outline honestly runs short, the topic is too narrow
   for an epic (make it a standalone guide instead) rather than the chapters
-  too thin.
+  too thin. One sanctioned deviation exists: the founder course «Честный сайт
+  с нуля» (tag `founder-guide`) runs **5 chapters** (Gate 1 / Path 2–4 /
+  Summit 5) because its territory is exactly the five playbooks — see
+  `context/course-plan-building-in-public.md`; everything else (Trail, seeds,
+  callbacks, Bridge, artifact) follows this blueprint.
 - *On 1–2 h chapters:* attention research favors 25–45 min sessions; we keep
   the long chapter (it respects the reader) but the skeleton is deliberately
   built from resumable ~30-min blocks — treat Core / Worked example / Практика

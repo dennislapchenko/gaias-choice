@@ -66,18 +66,23 @@ may flex, but verdict-first + a flaws section are fixed.
 Frontmatter: `title`, `excerpt`, `date`, optional `image`, `tags`, optional
 `chapter: N` (course order — see below).
 
-Current guides are **founder guides** (internal playbooks, deliberately
-public). If adding another founder guide, open with the same blockquote the
-existing ones use:
+The **founder guides** (internal playbooks, deliberately public) form the
+5-chapter epic «Честный сайт с нуля» / "An honest site from zero" (tag
+`founder-guide`, `chapter:` 1–5, Gate 1 / Path 2–4 / Summit 5 — a sanctioned
+5-chapter deviation from the 11-chapter format; plan and continuity map in
+`context/course-plan-building-in-public.md`). Each chapter opens with a Trail
+block followed by the one-line founder note:
 
 ```markdown
-> **Founder guide.** Written for us while we bootstrap the site — see the
-> [Kickstart Playbook](/guides/kickstart-playbook) for context.
+> **Founder guide.** Written for ourselves while we bootstrap this site —
+> honest notes, published as a course.
 ```
 
-Reader-facing guides (post-bootstrap) drop that note and follow the voice
-rules above. Don't "fix" founder guides into consumer content — replacing them
-is a deliberate roadmap milestone.
+Adding a founder guide means renumbering the course — extend the course plan
+first. Reader-facing guides (post-bootstrap) drop the founder note and follow
+the voice rules above. Don't "fix" founder guides into consumer content —
+retelling each chapter from lived experience is a deliberate roadmap
+milestone.
 
 **11-chapter epic courses (Learn):** a course = 11 guide files per locale with
 `chapter: N` frontmatter (1–11, controls order) and the epic tag first in
@@ -87,10 +92,12 @@ the Thread navigation weave (Trail block, spine artifact, callbacks/seeds,
 Bridge block), chapter anatomy, practice-task rules, and shipping checklist —
 lives in `context/epic-writing-context.md`. **Read it before writing or
 editing any course chapter**; its skeleton headings feed the chapter TOC
-sidebar, so don't rename them casually. Two courses exist (ch. 1–3 shipped
-2026-07-05, ch. 4–11 pending): their per-course outlines — chapter one-liners,
-named concepts, seeds, reuse maps — are `context/course-plan-homeopathy.md`
-and `context/course-plan-herbalism.md`; follow the plan when writing the next
+sidebar, so don't rename them casually. Three courses exist: the founder
+course (5 chapters, complete — `context/course-plan-building-in-public.md`)
+and two reader-facing 11-chapter courses (ch. 1–3 shipped 2026-07-05,
+ch. 4–11 pending) with outlines — chapter one-liners, named concepts, seeds,
+reuse maps — in `context/course-plan-homeopathy.md` and
+`context/course-plan-herbalism.md`; follow the plan when writing the next
 chapter. Frontmatter gotcha learned the hard way: **quote any `title:`/`excerpt:`
 containing a colon** — an unquoted `… вечером: ваш …` is a YAML nested-mapping
 error that blanks the whole SPA (the `import.meta.glob` parse happens at

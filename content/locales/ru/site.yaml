@@ -42,9 +42,9 @@ sidebar:
 # here is the default selection. Add an epic + tag guides with it to grow this.
 epics:
   - tag: founder-guide
-    title: Строим публично
+    title: Честный сайт с нуля
     image: /images/guide-eco-items.webp
-    blurb: Бесплатный честный курс о том, как построить сайт-обзорник эко-товаров с нуля — без глянца, каждый реальный шаг, по порядку, включая те, что дались тяжело.
+    blurb: Бесплатный курс из пяти глав о том, как построить сайт-обзорник, которому верят, — на живом примере этого самого сайта, от первого обзора до запуска. Каждый шаг настоящий, включая те, что дались тяжело.
   - tag: homeopathy
     title: Гомеопатия дома
     image: /images/guide-natural-vs.webp

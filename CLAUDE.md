@@ -52,6 +52,7 @@ context/                 # authoring context (NOT bundled into the site)
   epic-writing-context.md  # blueprint for 11-chapter Compass epic courses (curriculum, Thread weave, chapter anatomy)
   course-plan-homeopathy.md  # «Гомеопатия дома»: full 11-chapter outline, concepts, seeds (ch. 1–3 shipped)
   course-plan-herbalism.md   # «Домашний травник»: full 11-chapter outline, concepts, seeds (ch. 1–3 shipped)
+  course-plan-building-in-public.md  # «Честный сайт с нуля»: the founder guides as a 5-chapter course (complete; sanctioned 5-chapter deviation)
 public/
   images/*.webp          # optimized images referenced by content (see Images)
   favicon.svg
@@ -130,10 +131,12 @@ Compass page shows epics as thumbnails (tabs) and lists the selected epic's
 items, with the epic's `blurb` as a course intro. Epic metadata (title,
 thumbnail, blurb) is configured in
 `site.yaml` `epics:` (`GuideEpic` in `lib/types.ts`); the first configured epic
-is the default. Three epics exist: `founder-guide` (the 5 founder guides) plus
-two reader-facing 11-chapter courses in progress — `homeopathy` («Гомеопатия
-дома») and `herbalism` («Домашний травник»), chapters 1–3 each shipped
-2026-07-05; their outlines live in `context/course-plan-*.md`.
+is the default. Three epics exist: `founder-guide` («Честный сайт с нуля» /
+"An honest site from zero" — the 5 founder guides as a complete 5-chapter
+course, retrofit 2026-07-05) plus two reader-facing 11-chapter courses in
+progress — `homeopathy` («Гомеопатия дома») and `herbalism` («Домашний
+травник»), chapters 1–3 each shipped 2026-07-05; all outlines live in
+`context/course-plan-*.md`.
 **Ideology:** each epic should read like a complete, streamlined free course.
 See the "New Compass epic" task in `references/development.md`.
 
@@ -408,11 +411,14 @@ The owner wants the npm surface kept off the host and minimal.
 The site is in **bootstrap mode** — the owners are first-time site builders
 learning the affiliate-content business as they go:
 
-- `content/locales/en/guides/*` are **founder guides**: internal how-to-build-this-site
-  playbooks (review process, monetization, traffic/SEO, launch checklist,
-  master playbook), deliberately public. They will be replaced by
-  reader-facing guides once the owners have real first-hand content. Don't
-  "fix" them back into consumer content.
+- `content/locales/en/guides/*` include the **founder guides**: internal
+  how-to-build-this-site playbooks (review process, monetization, traffic/SEO,
+  launch checklist, master playbook), deliberately public and since 2026-07-05
+  structured as a complete 5-chapter Compass course «Честный сайт с нуля»
+  (epic tag `founder-guide`, `chapter:` 1–5, Trail/Bridge weave like the
+  reader courses — plan in `context/course-plan-building-in-public.md`).
+  Chapters get retold from lived experience as milestones land. Don't "fix"
+  them into consumer content by other means.
 - The first **reader-facing Compass courses** are in progress: `homeopathy` and
   `herbalism` epics, chapters 1–3 of 11 each (both locales). Chapter 3's
   "next" link is deliberately text-only («готовится») until chapter 4 ships —
