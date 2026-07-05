@@ -7,7 +7,7 @@ export default function GuideCard({ guide }: { guide: Guide }) {
   const { t } = useI18n()
   return (
     <article className="card">
-      <Link to={`/guides/${guide.slug}`} className="card-media">
+      <div className="card-media">
         {guide.image ? (
           <img src={withBase(guide.image)} alt={guide.title} loading="lazy" />
         ) : (
@@ -15,11 +15,13 @@ export default function GuideCard({ guide }: { guide: Guide }) {
             📋
           </div>
         )}
-      </Link>
+      </div>
       <div className="card-body">
         <span className="tag">{t('guides.tag')}</span>
         <h3>
-          <Link to={`/guides/${guide.slug}`}>{guide.title}</Link>
+          <Link to={`/guides/${guide.slug}`} className="card-link">
+            {guide.title}
+          </Link>
         </h3>
         <p className="muted">{guide.excerpt}</p>
       </div>

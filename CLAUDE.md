@@ -215,7 +215,9 @@ via `useI18n()`.
   is **not** a dropdown: it's a single flag-emoji button that **cycles to the
   next locale on click** (no menu), showing the current locale's flag
   (`LOCALE_FLAGS` in `i18n.tsx`) with a `.lang-hint` chip that flashes the next
-  language's flag on click/hover. `ThemeSwitcher` is still the dropdown pattern.
+  language's flag on hover and for 0.5s after a click (a click then suppresses the
+  hover preview until the pointer leaves). `ThemeSwitcher` is still the dropdown
+  pattern.
 - `components/AstroCalendar.tsx` gets month/weekday names from
   `Intl.DateTimeFormat(locale, ...)` instead of the string dictionary — new
   locales get correct calendar names for free, no translation entry needed.

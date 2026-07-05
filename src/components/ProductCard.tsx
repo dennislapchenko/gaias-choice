@@ -6,7 +6,7 @@ import Rating from './Rating'
 export default function ProductCard({ product }: { product: Product }) {
   return (
     <article className="card">
-      <Link to={`/reviews/${product.slug}`} className="card-media">
+      <div className="card-media">
         {product.image ? (
           <img src={withBase(product.image)} alt={product.title} loading="lazy" />
         ) : (
@@ -14,11 +14,18 @@ export default function ProductCard({ product }: { product: Product }) {
             🌿
           </div>
         )}
-      </Link>
+      </div>
       <div className="card-body">
-        <span className="tag">{product.category}</span>
+        <Link
+          to={`/reviews?category=${encodeURIComponent(product.category)}`}
+          className="tag"
+        >
+          {product.category}
+        </Link>
         <h3>
-          <Link to={`/reviews/${product.slug}`}>{product.title}</Link>
+          <Link to={`/reviews/${product.slug}`} className="card-link">
+            {product.title}
+          </Link>
         </h3>
         <div className="card-meta">
           <Rating value={product.rating} />

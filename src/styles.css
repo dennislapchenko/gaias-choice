@@ -353,7 +353,7 @@ h1 {
   font-size: 0.8rem;
   opacity: 0.7;
 }
-.lang-switcher:hover .lang-hint,
+.lang-switcher:not(.dismissed):hover .lang-hint,
 .lang-hint.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
@@ -731,6 +731,7 @@ h1 {
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 }
 .card {
+  position: relative;
   background: var(--white);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -742,6 +743,24 @@ h1 {
 .card:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow);
+}
+/* Whole-card click target: the title link stretches an invisible overlay across
+   the card. Genuinely interactive children (e.g. a filter tag) are raised above
+   it below, so they keep their own behavior. */
+.card-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.card-body a.tag {
+  position: relative;
+  z-index: 2;
+  transition: filter 0.15s ease;
+}
+.card-body a.tag:hover {
+  text-decoration: none;
+  filter: brightness(0.96);
 }
 .card-media {
   display: block;

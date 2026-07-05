@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { getProducts } from '../lib/content'
 import { useI18n } from '../lib/i18n'
 import ProductCard from '../components/ProductCard'
@@ -12,7 +13,14 @@ export default function Reviews() {
     () => [ALL, ...Array.from(new Set(products.map((p) => p.category))).sort()],
     [products],
   )
-  const [active, setActive] = useState(ALL)
+
+  // The active category lives in the URL (`?category=`) so a category tag on any
+  // card — here or on the Home page — can link straight to a filtered view.
+  const [params, setParams] = useSearchParams()
+  const requested = params.get('category')
+  const active = requested && categories.includes(requested) ? requested : ALL
+  const setActive = (c: string) =>
+    setParams(c === ALL ? {} : { category: c }, { replace: true })
 
   const visible = active === ALL ? products : products.filter((p) => p.category === active)
 

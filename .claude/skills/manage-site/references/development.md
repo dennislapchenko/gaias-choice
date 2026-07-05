@@ -14,7 +14,7 @@ Keep this table current — when you add/rename/change a component, update the r
 | To change… | Edit | Notes |
 | --- | --- | --- |
 | Page shell: header, nav, **mobile hamburger menu**, footer | `src/components/Layout.tsx` + `.site-header`/`.nav-toggle`/`.site-nav` in `styles.css` | Nav collapses to a hamburger dropdown ≤820px (closes on nav/Escape/outside-click). Nav items come from `site.yaml` `nav:`/`footerNav:`. |
-| **Language switcher** | `src/components/LanguageSwitcher.tsx` + `.lang-*` in `styles.css` | Flag-emoji button that cycles locale on click (no menu). Flags in `LOCALE_FLAGS` (`lib/i18n.tsx`); `.lang-hint` flashes the next flag. |
+| **Language switcher** | `src/components/LanguageSwitcher.tsx` + `.lang-*` in `styles.css` | Flag-emoji button that cycles locale on click (no menu). Flags in `LOCALE_FLAGS` (`lib/i18n.tsx`). `.lang-hint` flashes the next flag on hover and for 0.5s after a click; a click sets a `dismissed` state (cleared on `mouseleave`) so the hover preview doesn't linger under a stationary cursor — CSS gate is `.lang-switcher:not(.dismissed):hover`. |
 | **Theme/palette switcher** | `src/components/ThemeSwitcher.tsx` + `.theme-*` | Dropdown; palettes are data in `content/themes.yaml` (`lib/theme.ts` applies them). |
 | **Sidebar** (mission, values, almanac) | `src/components/Sidebar.tsx` `WIDGETS` registry + `.side-*`/`.value-badge*` | Composition/order is data: `site.yaml` `sidebar:` list. Value icons: `VALUE_ICONS` map + `icon:` on each value. |
 | Almanac calendar / astrology | `src/components/AstroCalendar.tsx` + `src/lib/astro.ts` | Real ephemeris — extend generators, never a horoscope API. |
@@ -22,7 +22,8 @@ Keep this table current — when you add/rename/change a component, update the r
 | Site name, tagline, mission, values, nav, social | `content/locales/<lng>/site.yaml` | Per locale; shape in `SiteConfig` (`lib/types.ts`). |
 | UI chrome strings (labels, aria) | `src/locales/en.ts` + `ru.ts` | Flat `t()` dictionary; keep both in sync. |
 | Colors, radii, layout, breakpoints | `src/styles.css` | One stylesheet; CSS vars in `:root`. Breakpoints: 900 (sidebar stacks), 820 (nav→hamburger), 720/560/480. |
-| Cards (product/guide) | `src/components/ProductCard.tsx` / `GuideCard.tsx` | Grids collapse to 1 col on mobile. |
+| Cards (product/guide) | `src/components/ProductCard.tsx` / `GuideCard.tsx` + `.card`/`.card-link`/`a.tag` in `styles.css` | **Whole card is clickable** via a stretched-link overlay: the title `<Link className="card-link">` paints a full-card `::after` (needs `.card { position: relative }`). Genuinely interactive children are raised above it (`.card-body a.tag { z-index: 2 }`). Media is a plain `<div>` now (not a second link). Grids collapse to 1 col on mobile. |
+| Review category tag → filtered list | `ProductCard.tsx` tag `<Link>` → `Reviews.tsx` `useSearchParams` | The category chip links to `/reviews?category=<cat>`; `Reviews.tsx` reads the `category` param (validated against known categories, else `All`) so the tag filters from any page, incl. Home. Guide cards use a plain `<span>` tag (no guide taxonomy) so their whole card just navigates. |
 | Routes | `src/App.tsx` | Standalone pages need a route here. |
 
 ## Commands (always via Taskfile — never host npm)
