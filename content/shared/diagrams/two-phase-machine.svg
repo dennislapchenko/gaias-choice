@@ -1,0 +1,31 @@
+<svg viewBox="0 0 640 258" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs><marker id="arr-2pm" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<text x="150" y="26" text-anchor="middle" font-size="12" font-weight="700" fill="var(--muted)">{{buildTitle}}</text>
+<text x="512" y="26" text-anchor="middle" font-size="12" font-weight="700" fill="var(--muted)">{{runTitle}}</text>
+<rect x="14" y="38" width="272" height="158" rx="12" fill="var(--sand-2)" stroke="var(--line)"/>
+<rect x="398" y="38" width="228" height="158" rx="12" fill="var(--sand-2)" stroke="var(--line)"/>
+<line x1="342" y1="34" x2="342" y2="200" stroke="var(--line)" stroke-width="2" stroke-dasharray="5 5"/>
+<rect x="28" y="52" width="112" height="42" rx="9" fill="var(--mint)"/>
+<text x="84" y="70" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">{{srcContent}}</text>
+<text x="84" y="86" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{srcContentSub}}</text>
+<rect x="28" y="140" width="112" height="42" rx="9" fill="var(--peach)"/>
+<text x="84" y="158" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)">{{srcCode}}</text>
+<text x="84" y="174" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{srcCodeSub}}</text>
+<line x1="140" y1="73" x2="166" y2="102" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-2pm)"/>
+<line x1="140" y1="161" x2="166" y2="132" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-2pm)"/>
+<rect x="170" y="92" width="100" height="50" rx="9" fill="var(--sage)"/>
+<text x="220" y="113" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--on-accent)">{{tool}}</text>
+<text x="220" y="130" text-anchor="middle" font-size="10.5" fill="var(--on-accent)">{{toolSub}}</text>
+<line x1="270" y1="117" x2="292" y2="117" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-2pm)"/>
+<rect x="298" y="92" width="88" height="50" rx="9" fill="var(--lilac)"/>
+<text x="342" y="113" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{bundle}}</text>
+<text x="342" y="130" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{bundleSub}}</text>
+<line x1="386" y1="117" x2="408" y2="117" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-2pm)"/>
+<circle cx="428" cy="72" r="4" fill="var(--sage)"/>
+<text x="442" y="76" font-size="12" fill="var(--ink)">{{run1}}</text>
+<circle cx="428" cy="117" r="4" fill="var(--sage)"/>
+<text x="442" y="121" font-size="12" fill="var(--ink)">{{run2}}</text>
+<circle cx="428" cy="162" r="4" fill="var(--sage)"/>
+<text x="442" y="166" font-size="12" fill="var(--ink)">{{run3}}</text>
+<text x="320" y="236" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{footer}}</text>
+</svg>

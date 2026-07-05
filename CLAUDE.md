@@ -55,6 +55,7 @@ context/                 # authoring context (NOT bundled into the site)
   course-plan-homeopathy.md  # «Гомеопатия дома»: full 11-chapter outline, concepts, seeds (ch. 1–3 shipped)
   course-plan-herbalism.md   # «Домашний травник»: full 11-chapter outline, concepts, seeds (ch. 1–3 shipped)
   course-plan-building-in-public.md  # «Честный сайт с нуля»: the founder guides as a 5-chapter course (complete; sanctioned 5-chapter deviation)
+  course-plan-inside-websites.md  # "Inside websites like this": 5-chapter engine-room course on this repo's stack (complete; EN-only)
 public/
   images/*.webp, *.svg   # optimized photos + generated mandala art (see Images)
   favicon.svg
@@ -141,12 +142,16 @@ Compass page shows epics as thumbnails (tabs) and lists the selected epic's
 items, with the epic's `blurb` as a course intro. Epic metadata (title,
 thumbnail, blurb) is configured in
 `site.yaml` `epics:` (`GuideEpic` in `lib/types.ts`); the first configured epic
-is the default. Three epics exist: `founder-guide` («Честный сайт с нуля» /
+is the default. Four epics exist: `founder-guide` («Честный сайт с нуля» /
 "An honest site from zero" — the 5 founder guides as a complete 5-chapter
-course, retrofit 2026-07-05) plus two reader-facing 11-chapter courses in
+course, retrofit 2026-07-05), two reader-facing 11-chapter courses in
 progress — `homeopathy` («Гомеопатия дома») and `herbalism` («Домашний
-травник»), chapters 1–3 each shipped 2026-07-05; all outlines live in
-`context/course-plan-*.md`.
+травник»), chapters 1–3 each shipped 2026-07-05 — and `inside-websites`
+("Inside websites like this" — a complete 5-chapter engine-room course on
+how this site's own stack works, **English-only by owner decision**, absent
+from `ru/site.yaml`, shipped 2026-07-05); all outlines live in
+`context/course-plan-*.md`. Course lengths are standardized: **5 or 11
+chapters** (owner rule, 2026-07-05).
 **Ideology:** each epic should read like a complete, streamlined free course.
 See the "New Compass epic" task in `references/development.md`.
 
@@ -479,6 +484,15 @@ learning the affiliate-content business as they go:
   `herbalism` epics, chapters 1–3 of 11 each (both locales). Chapter 3's
   "next" link is deliberately text-only («готовится») until chapter 4 ships —
   keep that pattern for any course published mid-write.
+- The `inside-websites` epic ("Inside websites like this", 5 chapters,
+  complete, shipped 2026-07-05) is the **engine-room course** — this repo's
+  own architecture taught top-down for developers/designers/ops (and the
+  owner). English-only by owner decision; its diagrams are EN-only embeds
+  (expected parity-check asymmetry). Plan:
+  `context/course-plan-inside-websites.md`. Its chapter art + epic thumbnail
+  come from `task mandalas` (`SETS` in `scripts/generate-mandala.mjs`).
+  Chapter 5's "where it breaks" section states the SPA SEO gap — retell it
+  when the prerendering roadmap item lands.
 - `content/locales/en/products/*` are still **AI placeholder reviews** with fake
   affiliate URLs (`EXAMPLE…`) — flagged for deletion/replacement in the launch
   checklist. Never add a real affiliate program while these exist. Their images

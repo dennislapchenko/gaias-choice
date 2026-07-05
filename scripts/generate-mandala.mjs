@@ -83,7 +83,68 @@ const SETS = {
   guides: {
     outDir: 'public/images',
     prefix: 'guide',
-    items: [],
+    items: [
+      // «Inside websites like this» (inside-websites) — the engine-room course.
+      // Shared cool-blue family, one hue step per chapter, icons per layer.
+      {
+        slug: 'inside-01-the-whole-machine',
+        petalCount: 12,
+        bg: ['#123043', '#1f6a8f', '#061019'],
+        stroke: '#8fd8f5',
+        centerIcon: `
+<path d="M0,-64 L64,-32 L0,0 L-64,-32 Z" fill="#bfeaff" opacity="0.9"/>
+<path d="M0,-34 L64,-2 L0,30 L-64,-2 Z" fill="#5fb6dd" opacity="0.85"/>
+<path d="M0,-4 L64,28 L0,60 L-64,28 Z" fill="#1f6a8f" stroke="#8fd8f5" stroke-width="2" opacity="0.9"/>`,
+      },
+      {
+        slug: 'inside-02-from-markdown-to-bundle',
+        petalCount: 10,
+        bg: ['#132a3d', '#1e5a7a', '#050f18'],
+        stroke: '#8fd0e8',
+        centerIcon: `
+<rect x="-34" y="-88" width="68" height="52" rx="9" fill="#dff2fb" opacity="0.92"/>
+<path d="M-22,-52 L-22,-74 L-12,-62 L-2,-74 L-2,-52" fill="none" stroke="#1e5a7a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12,-70 L22,-70 M12,-58 L24,-58" stroke="#1e5a7a" stroke-width="4" stroke-linecap="round"/>
+<path d="M0,-26 L0,-2 M-11,-13 L0,-2 L11,-13" fill="none" stroke="#8fd0e8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M0,10 L44,32 L0,54 L-44,32 Z" fill="#9fdcf0" opacity="0.95"/>
+<path d="M-44,32 L0,54 L0,90 L-44,68 Z" fill="#4a9cc2" opacity="0.95"/>
+<path d="M44,32 L0,54 L0,90 L44,68 Z" fill="#2c6e91" opacity="0.95"/>`,
+      },
+      {
+        slug: 'inside-03-the-living-page',
+        petalCount: 14,
+        bg: ['#1b2647', '#2f4a8a', '#070b18'],
+        stroke: '#a8bef5',
+        centerIcon: `
+<ellipse cx="0" cy="0" rx="78" ry="30" fill="none" stroke="#a8bef5" stroke-width="4" opacity="0.9"/>
+<ellipse cx="0" cy="0" rx="78" ry="30" fill="none" stroke="#a8bef5" stroke-width="4" opacity="0.9" transform="rotate(60)"/>
+<ellipse cx="0" cy="0" rx="78" ry="30" fill="none" stroke="#a8bef5" stroke-width="4" opacity="0.9" transform="rotate(-60)"/>
+<circle cx="0" cy="0" r="12" fill="#dbe6ff"/>`,
+      },
+      {
+        slug: 'inside-04-shipping-the-box',
+        petalCount: 8,
+        bg: ['#14343d', '#1f6473', '#05100f'],
+        stroke: '#7fd8d8',
+        centerIcon: `
+<rect x="-70" y="-46" width="140" height="80" rx="8" fill="#d7f2f0" opacity="0.92"/>
+<path d="M-46,-46 L-46,34 M-23,-46 L-23,34 M0,-46 L0,34 M23,-46 L23,34 M46,-46 L46,34" stroke="#1f6473" stroke-width="4"/>
+<rect x="-70" y="-46" width="140" height="80" rx="8" fill="none" stroke="#1f6473" stroke-width="4"/>
+<path d="M-72,58 Q-54,48 -36,58 T0,58 T36,58 T72,58" fill="none" stroke="#7fd8d8" stroke-width="4" stroke-linecap="round"/>
+<path d="M-58,76 Q-44,68 -30,76 T-2,76 T26,76 T54,76" fill="none" stroke="#7fd8d8" stroke-width="3" stroke-linecap="round" opacity="0.6"/>`,
+      },
+      {
+        slug: 'inside-05-owning-the-stack',
+        petalCount: 16,
+        bg: ['#1c2f4a', '#3a5f96', '#0a1120'],
+        stroke: '#a8c8f0',
+        centerIcon: `
+<path d="M-80,72 L-12,-46 L18,-2 L40,-26 L80,72 Z" fill="#dce9fb" opacity="0.92"/>
+<path d="M-12,-46 L2,-22 L-6,-14 L8,4 L18,-2 Z" fill="#8fb0dd" opacity="0.8"/>
+<path d="M-12,-46 L-12,-88" stroke="#3a5f96" stroke-width="4" stroke-linecap="round"/>
+<path d="M-12,-88 L26,-77 L-12,-66 Z" fill="#3a5f96"/>`,
+      },
+    ],
   },
 
   // Thumbnails for the epic strip at the top of /guides (site.yaml `epics:`).
@@ -128,6 +189,23 @@ const SETS = {
 <path d="M0,-10 C-40,-15 -55,-50 -35,-75 C-15,-55 -10,-20 0,-10 Z" fill="#3fae7a" opacity="0.9"/>
 <path d="M0,10 C40,5 55,-30 35,-55 C15,-35 10,0 0,10 Z" fill="#57cf94" opacity="0.9"/>
 <path d="M0,30 C-30,35 -42,55 -28,72 C-14,58 -8,40 0,30 Z" fill="#3fae7a" opacity="0.85"/>`,
+      },
+      {
+        // «Inside websites like this» — browser window + code brackets,
+        // distinct from the course's own layered/atom/container chapter icons.
+        slug: 'inside-websites',
+        petalCount: 12,
+        bg: ['#0d2f45', '#1a5f7a', '#04121c'],
+        stroke: '#7fd4f2',
+        centerIcon: `
+<rect x="-70" y="-52" width="140" height="104" rx="12" fill="#0d2f45" stroke="#7fd4f2" stroke-width="3" opacity="0.95"/>
+<line x1="-70" y1="-28" x2="70" y2="-28" stroke="#7fd4f2" stroke-width="2.5"/>
+<circle cx="-54" cy="-40" r="4" fill="#7fd4f2"/>
+<circle cx="-40" cy="-40" r="4" fill="#7fd4f2" opacity="0.7"/>
+<circle cx="-26" cy="-40" r="4" fill="#7fd4f2" opacity="0.45"/>
+<path d="M-34,-8 L-52,8 L-34,24" fill="none" stroke="#bfeaff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M34,-8 L52,8 L34,24" fill="none" stroke="#bfeaff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<line x1="10" y1="-12" x2="-10" y2="28" stroke="#bfeaff" stroke-width="5" stroke-linecap="round"/>`,
       },
     ],
   },

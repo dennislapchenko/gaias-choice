@@ -1,0 +1,28 @@
+<svg viewBox="0 0 640 172" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs><marker id="arr-bpf" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<rect x="16" y="24" width="108" height="86" rx="11" fill="var(--mint)"/>
+<text x="70" y="52" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{s1}}</text>
+<text x="70" y="74" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{s1sub1}}</text>
+<text x="70" y="89" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{s1sub2}}</text>
+<line x1="124" y1="67" x2="146" y2="67" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-bpf)"/>
+<rect x="150" y="24" width="108" height="86" rx="11" fill="var(--peach)"/>
+<text x="204" y="52" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{s2}}</text>
+<text x="204" y="74" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{s2sub1}}</text>
+<text x="204" y="89" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{s2sub2}}</text>
+<line x1="258" y1="67" x2="280" y2="67" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-bpf)"/>
+<rect x="284" y="24" width="108" height="86" rx="11" fill="var(--peach)"/>
+<text x="338" y="52" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{s3}}</text>
+<text x="338" y="74" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{s3sub1}}</text>
+<text x="338" y="89" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{s3sub2}}</text>
+<line x1="392" y1="67" x2="414" y2="67" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-bpf)"/>
+<rect x="418" y="24" width="108" height="86" rx="11" fill="var(--peach)"/>
+<text x="472" y="52" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{s4}}</text>
+<text x="472" y="74" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{s4sub1}}</text>
+<text x="472" y="89" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{s4sub2}}</text>
+<line x1="526" y1="67" x2="548" y2="67" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-bpf)"/>
+<rect x="552" y="24" width="76" height="86" rx="11" fill="var(--sage)"/>
+<text x="590" y="52" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--on-accent)">{{s5}}</text>
+<text x="590" y="74" text-anchor="middle" font-size="10.5" fill="var(--on-accent)">{{s5sub1}}</text>
+<text x="590" y="89" text-anchor="middle" font-size="10.5" fill="var(--on-accent)">{{s5sub2}}</text>
+<text x="320" y="148" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{footer}}</text>
+</svg>

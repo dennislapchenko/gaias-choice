@@ -1,0 +1,29 @@
+<svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs><marker id="arr-spa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<rect x="16" y="24" width="136" height="78" rx="11" fill="var(--mint)"/>
+<text x="84" y="52" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{s1}}</text>
+<text x="84" y="72" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{s1sub1}}</text>
+<text x="84" y="87" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{s1sub2}}</text>
+<line x1="152" y1="63" x2="174" y2="63" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-spa)"/>
+<rect x="178" y="24" width="136" height="78" rx="11" fill="var(--peach)"/>
+<text x="246" y="52" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{s2}}</text>
+<text x="246" y="72" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{s2sub1}}</text>
+<text x="246" y="87" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{s2sub2}}</text>
+<line x1="314" y1="63" x2="336" y2="63" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-spa)"/>
+<rect x="340" y="24" width="136" height="78" rx="11" fill="var(--peach)"/>
+<text x="408" y="52" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{s3}}</text>
+<text x="408" y="72" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{s3sub1}}</text>
+<text x="408" y="87" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{s3sub2}}</text>
+<line x1="476" y1="63" x2="498" y2="63" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-spa)"/>
+<rect x="502" y="24" width="122" height="78" rx="11" fill="var(--sage)"/>
+<text x="563" y="52" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--on-accent)">{{s4}}</text>
+<text x="563" y="72" text-anchor="middle" font-size="10.5" fill="var(--on-accent)">{{s4sub1}}</text>
+<text x="563" y="87" text-anchor="middle" font-size="10.5" fill="var(--on-accent)">{{s4sub2}}</text>
+<line x1="84" y1="102" x2="84" y2="136" stroke="var(--muted)" stroke-width="2" stroke-dasharray="4 4"/>
+<rect x="24" y="140" width="120" height="46" rx="9" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="5 4"/>
+<text x="84" y="160" text-anchor="middle" font-size="11.5" fill="var(--muted)">{{server}}</text>
+<text x="84" y="176" text-anchor="middle" font-size="10.5" fill="var(--muted)">{{serverSub}}</text>
+<line x1="34" y1="182" x2="134" y2="144" stroke="var(--clay)" stroke-width="2.5"/>
+<text x="392" y="163" text-anchor="middle" font-size="12" fill="var(--ink)">{{note}}</text>
+<text x="320" y="218" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{footer}}</text>
+</svg>
