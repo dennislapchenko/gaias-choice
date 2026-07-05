@@ -41,7 +41,7 @@ content/                 # ALL editable content (no code)
     en/                   # English — source of truth, always complete
       site.yaml           # site name, tagline, description, bio, mission, nav, values, heroImage, social
       products/*.md       # reviews  → /reviews/<filename-without-.md>
-      guides/*.md         # guides   → /guides/<filename-without-.md>
+      guides/<epic>/*.md  # guides, grouped in per-epic subfolders → /guides/<filename-without-.md> (subfolder is organizational only, not part of the route)
       pages/*.md          # standalone pages (about, contact, roadmap, disclosure, privacy)
     ru/                   # Russian — filled in section by section, falls back to en/
   themes.yaml            # color palettes (tag + label + default + colors) — shared, not localized
@@ -121,8 +121,13 @@ Markdown body…
 
 ### Adding a guide
 
-`content/locales/en/guides/<slug>.md` — same idea, fields: `title`, `excerpt`,
-`image?`, `date`, `tags?`, `chapter?` (number). The section is user-facing
+`content/locales/en/guides/<epic-tag>/<slug>.md` — same idea, fields: `title`,
+`excerpt`, `image?`, `date`, `tags?`, `chapter?` (number). The `<epic-tag>`
+subfolder (e.g. `guides/homeopathy/`) exists purely to keep `content/guides`
+from becoming one flat pile of files — it plays no role in routing or content
+loading (`content.ts` globs `guides/**/*.md` and slugs are always just the
+filename); a guide's epic membership is decided entirely by its **first tag**,
+independent of which folder it physically sits in. The section is user-facing
 **"Compass" / "Путь"** (nav + `guides.title`) — deliberately not called
 "Guides"/"Courses"/"Learn" in any visible copy, though it's framed as
 course-like collections internally — but the **route and content dir stay
@@ -420,7 +425,7 @@ The owner wants the npm surface kept off the host and minimal.
 The site is in **bootstrap mode** — the owners are first-time site builders
 learning the affiliate-content business as they go:
 
-- `content/locales/en/guides/*` include the **founder guides**: internal
+- `content/locales/en/guides/founder-guide/*` include the **founder guides**: internal
   how-to-build-this-site playbooks (review process, monetization, traffic/SEO,
   launch checklist, master playbook), deliberately public and since 2026-07-05
   structured as a complete 5-chapter Compass course «Честный сайт с нуля»

@@ -63,9 +63,16 @@ function parseFrontmatter(raw: string): { data: Record<string, unknown>; body: s
   return { data: (parseYaml(match[1]) as Record<string, unknown>) ?? {}, body: match[2] }
 }
 
-/** Pulls the `<locale>` and slug out of a `.../content/locales/<locale>/<kind>/<slug>.md` path. */
+/**
+ * Pulls the `<locale>` and slug out of a
+ * `.../content/locales/<locale>/<kind>/[<subfolder>/]<slug>.md` path. Guides
+ * are grouped into epic subfolders on disk (e.g. `guides/homeopathy/…`) for
+ * tidiness, but the subfolder is purely organizational — the slug is always
+ * just the filename, so routes and links are unaffected by which folder a
+ * guide lives in.
+ */
 function localeAndSlugFromPath(path: string, kind: string): { locale: string; slug: string } {
-  const match = new RegExp(`content/locales/([^/]+)/${kind}/([^/]+)\\.md$`).exec(path)
+  const match = new RegExp(`content/locales/([^/]+)/${kind}/(?:.+/)?([^/]+)\\.md$`).exec(path)
   return { locale: match?.[1] ?? 'en', slug: match?.[2] ?? path }
 }
 
@@ -123,7 +130,7 @@ const productModules = import.meta.glob('../../content/locales/*/products/*.md',
   eager: true,
 }) as Record<string, string>
 
-const guideModules = import.meta.glob('../../content/locales/*/guides/*.md', {
+const guideModules = import.meta.glob('../../content/locales/*/guides/**/*.md', {
   query: '?raw',
   import: 'default',
   eager: true,

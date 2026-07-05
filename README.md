@@ -20,7 +20,7 @@ Russian translation):
 | ---------------------------------- | --------------------------------------------- |
 | `content/locales/en/site.yaml`     | Site name, tagline, mission, nav, values      |
 | `content/locales/en/products/*.md` | Product reviews (yaml frontmatter + body)     |
-| `content/locales/en/guides/*.md`   | Guides / checklists                           |
+| `content/locales/en/guides/<epic>/*.md` | Guides / checklists, grouped in per-epic folders |
 | `content/locales/en/pages/*.md`    | Standalone pages (About, Contact)             |
 | `content/themes.yaml`              | Color palettes — shared across all locales    |
 

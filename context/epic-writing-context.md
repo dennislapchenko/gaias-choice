@@ -19,9 +19,11 @@ This file is the *structure and method*; read it together with:
 ## 1. What an epic course is (the content model)
 
 - **11 chapters, one chapter = one page** = one guide file per locale:
-  `content/locales/en/guides/<course-slug>-NN-<chapter-slug>.md` + the RU
-  counterpart with the **same filename** (slug = URL; identical slugs keep the
-  locale fallback working). `NN` = zero-padded chapter number for tidy listings.
+  `content/locales/en/guides/<course-slug>/<course-slug>-NN-<chapter-slug>.md`
+  + the RU counterpart with the **same filename** (slug = URL; identical
+  slugs keep the locale fallback working). `NN` = zero-padded chapter number
+  for tidy listings. The `<course-slug>` subfolder is filesystem tidiness
+  only — it plays no role in routing or epic membership (that's the tag).
 - Frontmatter per chapter: `title`, `excerpt`, `date` (real authoring date),
   **`chapter: N`** (1–11 — drives display order within the epic; sorting +
   "Глава N" labels landed 2026-07-05), `tags:` with the

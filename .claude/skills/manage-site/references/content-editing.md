@@ -24,7 +24,7 @@ pick controls list position. Markdown is GFM (task-list checkboxes render).
   rephrasing anything in `content/locales/ru/`, read
   `context/persona-context.md` (voice DNA + register-calibration table + the
   5-question test) — RU text must sound like her, within the rules above.
-- **Worldview for guides/Learn courses and article suggestions:** draw from
+- **Worldview for guides/Compass courses and article suggestions:** draw from
   `context/ideology-context.md` (Health: Chek, Asprey · Worldview: Buhner,
   Daragan, Ralston · Children: Steiner, Swan; extensible). Sections are domains
   of authority: Health governs food/consumption claims; Children leads on
@@ -61,10 +61,12 @@ tags: [organic, cotton]    # optional
 Ask for real testing notes if the user didn't provide them. Structure sections
 may flex, but verdict-first + a flaws section are fixed.
 
-## Add a guide → `content/locales/en/guides/<slug>.md`
+## Add a guide → `content/locales/en/guides/<epic-tag>/<slug>.md`
 
 Frontmatter: `title`, `excerpt`, `date`, optional `image`, `tags`, optional
-`chapter: N` (course order — see below).
+`chapter: N` (course order — see below). The `<epic-tag>` subfolder (e.g.
+`guides/homeopathy/`) is just filesystem tidiness — a guide's epic is decided
+by its first tag, not by which folder the file sits in.
 
 The **founder guides** (internal playbooks, deliberately public) form the
 5-chapter epic «Честный сайт с нуля» / "An honest site from zero" (tag
