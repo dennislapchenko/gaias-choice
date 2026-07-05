@@ -16,7 +16,7 @@ Keep this table current — when you add/rename/change a component, update the r
 | Page shell: header, nav, **mobile hamburger menu**, footer | `src/components/Layout.tsx` + `.site-header`/`.nav-toggle`/`.site-nav` in `styles.css` | Nav collapses to a hamburger dropdown ≤820px (closes on nav/Escape/outside-click). Nav items come from `site.yaml` `nav:`/`footerNav:`. |
 | **Language switcher** | `src/components/LanguageSwitcher.tsx` + `.lang-*` in `styles.css` | Flag-emoji button that cycles locale on click (no menu). Flags in `LOCALE_FLAGS` (`lib/i18n.tsx`). `.lang-hint` flashes the next flag on hover and for 0.5s after a click; a click sets a `dismissed` state (cleared on `mouseleave`) so the hover preview doesn't linger under a stationary cursor — CSS gate is `.lang-switcher:not(.dismissed):hover`. |
 | **Theme/palette switcher** | `src/components/ThemeSwitcher.tsx` + `.theme-*` | Dropdown; palettes are data in `content/themes.yaml` (`lib/theme.ts` applies them). Each option shows swatches + the **label only** (not the `tag` id / "· default"). |
-| **Sidebar** (mission, values, almanac) | `src/components/Sidebar.tsx` `WIDGETS` registry + `.side-*`/`.value-badge*` | Composition/order is data: `site.yaml` `sidebar:` list. Value icons: `VALUE_ICONS` map + `icon:` on each value. |
+| **Sidebar** (About, Mission & Values, almanac) | `src/components/Sidebar.tsx` `PANELS` registry + `.side-panel*`/`.side-tab*`/`.side-about*`/`.side-mission`/`.value-badge*` | Each `site.yaml` `sidebar:` entry is a **collapsible panel** (flat rectangular toggle). Types: `about` (the linked page's frontmatter `image` + site `description` blurb + link to `/about`, open by default), `missionValues` (mission + values combined, collapsed by default), `almanac` (open by default; label = `sidebar.title`). Desktop = vertical stack of panels; **≤900px** the rail rides to the top (`order:0`) and renders as a `SidebarMobile` tab-row (one open at a time). Breakpoint via `useIsNarrow` (matchMedia, kept in sync with the 900px CSS). Value icons: `VALUE_ICONS` map + `icon:` on each value. |
 | Almanac calendar / astrology | `src/components/AstroCalendar.tsx` + `src/lib/astro.ts` | Real ephemeris — extend generators, never a horoscope API. |
 | Reviews / guides / pages content | `content/locales/<lng>/…` | Markdown+YAML; see `content-editing.md`. |
 | Site name, tagline, mission, values, nav, social | `content/locales/<lng>/site.yaml` | Per locale; shape in `SiteConfig` (`lib/types.ts`). |
@@ -75,15 +75,20 @@ OrbStack: `open -a OrbStack`, wait ~15s, retry.
   in `styles.css` (first-paint frame). Check `onAccent` contrast per palette.
 - **New route/page:** route in `src/App.tsx`; nav from `site.yaml` `nav:` /
   `footerNav:` (never hardcode links in `Layout.tsx`).
-- **Sidebar composition is content-driven:** the left-rail widgets + their
+- **Sidebar composition is content-driven:** the left-rail panels + their
   order come from `site.yaml`'s `sidebar:` list (per locale), each entry a
-  `type` mapped to a component in `src/components/Sidebar.tsx`'s `WIDGETS`
-  registry (`mission`, `values`, `almanac`). Reorder/drop/repeat = edit
-  `site.yaml` only. **New widget type:** add a component + register it in
-  `WIDGETS`, then reference its `type` from `site.yaml` (add to both `en` and
-  `ru`). Unknown types are skipped; no `sidebar:` list falls back to
-  `DEFAULT_SIDEBAR`. The almanac (`AstroCalendar` + `lib/astro.ts`) is real
-  ephemeris math — extend its event generators, never swap in a horoscope API.
+  `type` mapped to an entry in `src/components/Sidebar.tsx`'s `PANELS`
+  registry (`about`, `missionValues`, `almanac`). Reorder/drop/repeat = edit `site.yaml`
+  only. Each panel is a **collapsible flat-rectangular toggle**; `desktopOpen`
+  in the `PANELS` def sets its initial desktop state (mobile always starts
+  closed). **New panel type:** add a `{ label, Body, desktopOpen }` entry to
+  `PANELS`, then reference its `type` from `site.yaml` (both `en` and `ru`).
+  Unknown types are filtered out; no `sidebar:` list falls back to
+  `DEFAULT_SIDEBAR`. **Responsive:** ≤900px the rail moves above the content and
+  `SidebarMobile` renders the toggles as a one-open-at-a-time tab-row (see the
+  `.side-tab*` rules in the `max-width: 900px` block). The almanac
+  (`AstroCalendar` + `lib/astro.ts`) is real ephemeris math — extend its event
+  generators, never swap in a horoscope API.
 - **New content field:** extend the type in `src/lib/types.ts`, render it in
   the component — `content.ts` spreads frontmatter automatically, no parser
   changes needed.

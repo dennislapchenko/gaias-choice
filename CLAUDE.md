@@ -118,7 +118,9 @@ Markdown body…
 
 ### Adding a standalone page
 
-`content/locales/en/pages/<slug>.md` with just `title`. Then wire a route in `App.tsx`
+`content/locales/en/pages/<slug>.md` with just `title` (optional `image:`
+frontmatter — used when a sidebar panel links to the page, e.g. the `about`
+panel). Then wire a route in `App.tsx`
 (`<Route path="/x" element={<MarkdownPage slug="x" />} />`) — pages are the one
 content type that needs a route because their URLs are bespoke.
 
@@ -201,7 +203,7 @@ where a given string lives:
   through `t()` from `useI18n()`.
 
 `SUPPORTED_LOCALES` in `src/lib/i18n.tsx` is `['ru', 'en']` — Russian listed
-first (the order the switcher shows), but `DEFAULT_LOCALE` is still `'en'`.
+first (the order the switcher shows), and `DEFAULT_LOCALE` is `'ru'`.
 The choice persists to `localStorage['gc-lang']`; `initI18n()` runs in
 `main.tsx` before React renders to set `<html lang>` early, mirroring
 `initTheme()`. `I18nProvider` wraps the app and exposes `{ locale, setLocale, t }`
@@ -239,10 +241,17 @@ via `useI18n()`.
 ## Sidebar & celestial almanac
 
 `components/Layout.tsx` wraps every page in a two-column shell
-(`.layout-grid`): a left `Sidebar` + the routed content. The sidebar is sticky on
-desktop and drops **below** the content on phones (`@media (max-width: 900px)`).
-`Sidebar.tsx` is the container for "funky" widgets — add more
-`<section className="side-card">` blocks there.
+(`.layout-grid`): a left `Sidebar` + the routed content. On desktop the sidebar
+is a sticky vertical stack of **collapsible panels** (each a flat rectangular
+toggle). On phones (`@media (max-width: 900px)`) it rides **above** the content
+(`order:0`, in the space freed when the nav collapses to the hamburger) and
+renders as a `SidebarMobile` tab-row — a row of rectangular toggles, one open at
+a time. `Sidebar.tsx`'s `PANELS` registry defines the panels; the composition +
+order are content-driven (`site.yaml` `sidebar:` list, currently `about` +
+`missionValues` + `almanac`). The `about` panel surfaces the linked page's
+frontmatter `image` (via `getPage`), the site `description`, and a link to the
+full `/about` page. Add a new panel by registering a `{ label, Body, desktopOpen }`
+entry and referencing its `type` from `site.yaml`.
 
 The first widget is `AstroCalendar.tsx`: a month grid where days with celestial
 events are marked with astrological glyphs. Hovering/focusing/clicking a marked day

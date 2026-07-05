@@ -383,19 +383,102 @@ h1 {
   }
   .sidebar {
     position: static;
-    order: 2; /* content stays primary on phones */
+    order: 0; /* rail rides up under the header instead of sinking to the bottom */
   }
   .content {
     order: 1;
   }
+  /* Mobile rail = a row of rectangular toggles (tabs) in the freed header space. */
+  .side-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .side-tab {
+    flex: 1 1 40%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 11px 14px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--ink);
+    cursor: pointer;
+    text-align: left;
+  }
+  .side-tab.is-open {
+    background: var(--sage);
+    color: var(--on-accent);
+    border-color: transparent;
+  }
+  .side-tab-body {
+    margin-top: 12px;
+    border-top: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+  }
 }
 
-.side-card {
+/* ---------- Collapsible side panels (flat rectangular toggles) ---------- */
+.side-panel {
+  display: flex;
+  flex-direction: column;
+}
+.side-panel-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 13px 16px;
   background: var(--white);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 18px;
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
 }
+.side-panel-toggle:hover {
+  background: var(--sand-2);
+}
+.side-panel.is-open .side-panel-toggle {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.side-panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-top: none;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+}
+/* down-chevron that flips to point up when the panel/tab is open */
+.side-chevron {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.18s ease;
+  opacity: 0.6;
+  margin-bottom: 3px;
+}
+.side-panel.is-open .side-chevron,
+.side-tab.is-open .side-chevron {
+  transform: rotate(-135deg);
+  margin-bottom: -3px;
+}
+
 /* small uppercase eyebrow shared by the mission + values blocks */
 .side-label {
   margin: 0;
@@ -409,8 +492,8 @@ h1 {
 .side-mission {
   background: var(--sage);
   color: var(--on-accent);
-  border-color: transparent;
-  padding: 20px;
+  border-radius: var(--radius-sm);
+  padding: 18px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -482,17 +565,32 @@ h1 {
   color: var(--muted);
 }
 
-.side-intro {
-  background: linear-gradient(135deg, var(--peach), var(--lilac));
-  border-color: transparent;
+/* About panel: the linked page's image, a short blurb, and a link to the story */
+.side-about-img {
+  display: block;
+  width: 100%;
+  max-height: 160px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
 }
-.side-intro h2 {
-  margin: 0 0 6px;
-  font-size: 1.15rem;
-}
-.side-intro p {
+.side-about-text {
   margin: 0;
   font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.side-about-link {
+  align-self: flex-start;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* almanac subtitle, shown inside the open panel above the calendar */
+.side-intro-text {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+  font-style: italic;
 }
 
 /* ---------- Astro almanac calendar ---------- */

@@ -53,7 +53,9 @@ export interface Guide extends Entry {
   tags?: string[]
 }
 
-export type Page = Entry
+export interface Page extends Entry {
+  image?: string
+}
 
 /** The set of CSS color slots a palette can override. */
 export interface ThemeColors {

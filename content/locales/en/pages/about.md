@@ -1,5 +1,6 @@
 ---
 title: Our story
+image: /images/about.webp
 ---
 
 We didn't set out to run a review site. We set out to travel.

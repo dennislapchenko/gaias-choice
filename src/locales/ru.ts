@@ -62,6 +62,9 @@ const ru: Record<keyof typeof en, string> = {
   'sidebar.intro': 'Как будто из уст самого Дарагана',
   'sidebar.missionLabel': 'Наша миссия',
   'sidebar.valuesLabel': 'Наши ценности',
+  'sidebar.missionValuesLabel': 'Миссия и ценности',
+  'sidebar.aboutLabel': 'О нас',
+  'sidebar.aboutMore': 'Наша история →',
 }
 
 export default ru

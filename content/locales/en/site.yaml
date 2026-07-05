@@ -24,19 +24,18 @@ values:
     icon: mindful
     text: Fewer, better things means less waste, lighter travel, and a smaller footprint.
 
-# Left-rail widgets, in render order. Each `type` maps to a component in
-# src/components/Sidebar.tsx (mission | values | almanac). Reorder, drop, or
+# Left-rail widgets, in render order. Each `type` maps to a collapsible panel in
+# src/components/Sidebar.tsx (about | missionValues | almanac). Reorder, drop, or
 # repeat entries here; adding a brand-new type needs a component in that file.
 sidebar:
-  - type: mission
-  - type: values
+  - type: about
+  - type: missionValues
   - type: almanac
 
 nav:
   - { label: Home, path: / }
   - { label: Reviews, path: /reviews }
   - { label: Guides, path: /guides }
-  - { label: About, path: /about }
   - { label: Roadmap, path: /roadmap }
   - { label: Contact, path: /contact }
 

@@ -61,6 +61,9 @@ const en = {
   'sidebar.intro': 'Kak budto iz ust samogo Daragana',
   'sidebar.missionLabel': 'Our mission',
   'sidebar.valuesLabel': 'What we value',
+  'sidebar.missionValuesLabel': 'Mission & Values',
+  'sidebar.aboutLabel': 'About us',
+  'sidebar.aboutMore': 'Our story →',
 } satisfies Record<string, string>
 
 export default en
