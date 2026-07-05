@@ -39,7 +39,7 @@ content/                 # ALL editable content (no code)
   locales/
     README.md            # how the per-locale content layout works
     en/                   # English — source of truth, always complete
-      site.yaml           # site name, tagline, description, bio, mission, nav, values, heroImage, social
+      site.yaml           # site name, tagline, description, bio, mission, nav, values, heroImage, social, url
       products/*.md       # reviews  → /reviews/<filename-without-.md>
       guides/<epic>/*.md  # guides, grouped in per-epic subfolders → /guides/<filename-without-.md> (subfolder is organizational only, not part of the route)
       pages/*.md          # standalone pages (about, contact, roadmap, disclosure, privacy)
