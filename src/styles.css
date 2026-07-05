@@ -1060,13 +1060,15 @@ h1 {
 }
 @media (max-width: 900px) {
   .detail-layout {
-    display: block;
+    display: flex;
+    flex-direction: column;
   }
   .detail-layout .detail {
     max-width: 760px;
     margin: 0 auto;
   }
   .toc {
+    order: -1;
     position: static;
     max-width: 760px;
     margin: 0 auto 20px;

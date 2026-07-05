@@ -14,7 +14,6 @@ export default function GuideDetail() {
 
   return (
     <div className="detail-layout">
-      <TableOfContents html={guide.html} />
       <article className="detail">
         <Link to="/guides" className="back-link">
           {t('guideDetail.backLink')}
@@ -32,6 +31,7 @@ export default function GuideDetail() {
         )}
         <Markdown html={guide.html} />
       </article>
+      <TableOfContents html={guide.html} />
     </div>
   )
 }
