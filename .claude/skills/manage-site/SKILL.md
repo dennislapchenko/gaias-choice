@@ -98,9 +98,8 @@ AI placeholders slated for deletion. The About story is
 `context/persona-context.md`, "The family — real biography"); what's still
 open is retelling it in their own words. Before editing content,
 check the roadmap so your change moves the current phase forward instead of
-polishing something scheduled for deletion. When a change completes a roadmap
-item, tick its checkbox in `content/locales/en/pages/roadmap.md` and refresh the "Last
-updated" line — the roadmap is public and staleness is a credibility cost.
+polishing something scheduled for deletion. (Ticking the roadmap when a change
+lands is part of the "Update the docs" loop below.)
 
 ## Verify before declaring done
 
@@ -130,6 +129,11 @@ it's part of "done". Concretely, after the work:
 - Update this `SKILL.md` when a rule/process changed.
 - Update `README.md` when the public pitch, stack, commands, or deploy story
   changed — it's a short pitch that must never rot.
+- Update the **public roadmap** when the change lands, advances, or adds scope
+  to a roadmap item — tick/edit the item **in both locales**
+  (`content/locales/en/pages/roadmap.md` + `ru/…`) and refresh both "Last
+  updated" footers. It's prone to drift and it's public; maintenance rules in
+  `references/content-editing.md` "The roadmap".
 
 If you changed something and touched no doc, assume you forgot one — re-check.
 

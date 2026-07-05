@@ -275,6 +275,13 @@ Public, building-in-public, phased with `- [ ]` checkboxes. Maintenance rules:
 - Tick items when milestones actually land; never pre-tick.
 - New scope goes into the matching phase; don't create Phase 5 lightly.
 - Update the "*Last updated: <Month Year>*" footer line on every edit.
+- **The roadmap exists in both locales** — mirror every tick/edit in
+  `ru/pages/roadmap.md` (RU in her voice) and update both footers. Quick
+  parity check: the `- [` checkbox counts must match:
+
+  ```bash
+  for lc in en ru; do printf '%s: ' $lc; grep -c -- '- \[' content/locales/$lc/pages/roadmap.md; done
+  ```
 
 ## site.yaml
 
