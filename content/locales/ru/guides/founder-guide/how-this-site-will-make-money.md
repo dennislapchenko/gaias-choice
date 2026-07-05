@@ -89,6 +89,32 @@ tags: [founder-guide, monetization, affiliate]
 партнёрский доход около 4–6-го месяца, а ощутимый доход ($500+/мес) — где-то в
 промежутке от года до двух. Все, кто обещают быстрее, продают курс, а не сайт.
 
+<figure class="diagram">
+<svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Хронология дохода: месяцы с нулевого по четвёртый — ноль по плану; первые комиссии около четвёртого–шестого месяца; ощутимый доход от пятисот долларов в месяц — где-то в первый-второй год; уровень два — принтабли, почта и спонсорства — после">
+<defs><marker id="arr-inc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<line x1="20" y1="130" x2="624" y2="130" stroke="var(--ink)" stroke-width="2" marker-end="url(#arr-inc)"/>
+<text x="30" y="152" font-size="12" fill="var(--muted)">месяц 0</text>
+<text x="190" y="152" text-anchor="middle" font-size="12" fill="var(--muted)">4–6</text>
+<text x="400" y="152" text-anchor="middle" font-size="12" fill="var(--muted)">год 1–2</text>
+<text x="590" y="152" text-anchor="middle" font-size="12" fill="var(--muted)">дальше</text>
+<rect x="28" y="60" width="130" height="52" rx="10" fill="var(--sand-2)"/>
+<text x="93" y="82" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">$0</text>
+<text x="93" y="100" text-anchor="middle" font-size="12" fill="var(--muted)">по плану, не провал</text>
+<rect x="170" y="60" width="140" height="52" rx="10" fill="var(--mint)"/>
+<text x="240" y="82" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">первые комиссии</text>
+<text x="240" y="100" text-anchor="middle" font-size="12" fill="var(--muted)">если контент настоящий</text>
+<rect x="322" y="60" width="150" height="52" rx="10" fill="var(--peach)"/>
+<text x="397" y="82" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">$500+/мес</text>
+<text x="397" y="100" text-anchor="middle" font-size="12" fill="var(--muted)">ощутимо, со временем</text>
+<rect x="484" y="60" width="140" height="52" rx="10" fill="var(--lilac)"/>
+<text x="554" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">уровень 2</text>
+<text x="554" y="93" text-anchor="middle" font-size="11.5" fill="var(--muted)">принтабли · почта ·</text>
+<text x="554" y="106" text-anchor="middle" font-size="11.5" fill="var(--muted)">спонсоры</text>
+<text x="322" y="34" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">Кто обещает левую половину быстрее — продаёт курс.</text>
+</svg>
+<figcaption>Честная кривая ожиданий: пустые первые месяцы — это план, работающий с нормальной скоростью.</figcaption>
+</figure>
+
 ## Уровень 2: Что идёт после партнёрок
 
 Не сейчас — но Roadmap должна вести сюда:

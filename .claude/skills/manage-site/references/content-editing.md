@@ -41,7 +41,7 @@ rating: 4                  # 0–5 stars; a 5 must survive the "no flaws?" test
 price: "$28"               # optional; always quote it
 # affiliateUrl: "https://…"   # ONLY once enrolled in the program — never a placeholder
 excerpt: One honest sentence a friend would text you about it.
-image: /images/<slug>.webp # optional; owners' own photo (see Images below)
+image: /images/review-<slug>.svg # optional; mandala art by default (see Images below)
 date: 2026-07-05           # today; controls ordering
 tags: [organic, cotton]    # optional
 ---
@@ -105,6 +105,78 @@ containing a colon** — an unquoted `… вечером: ваш …` is a YAML 
 error that blanks the whole SPA (the `import.meta.glob` parse happens at
 runtime for every page).
 
+## Visuals inside guides (tables, diagrams, charts) — the house pattern
+
+Every course chapter should carry 1–3 visuals that cement its concepts (added
+across all 22 guide files 2026-07-05). Two building blocks, both authored
+directly in the markdown — no images, no new deps:
+
+- **GFM tables** for comparisons and reference grids (`gfm: true` is on;
+  styled via `.prose table` in `styles.css`, horizontal-scroll on ≤720px).
+- **Inline SVG figures** for flows, maps, charts, staircases, compasses:
+
+  ```html
+  <figure class="diagram">
+  <svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="…">
+  …
+  </svg>
+  <figcaption>One caption line — adds something, never repeats adjacent prose.</figcaption>
+  </figure>
+  ```
+
+Rules learned the hard way:
+
+- **No blank lines inside the `<figure>` block** — a blank line ends the
+  markdown HTML block and the rest gets re-parsed as markdown. Blank line
+  before and after the block, none within.
+- **Colors are CSS variables only** (`var(--mint)`, `var(--sage)`,
+  `var(--on-accent)`, `var(--ink)`, `var(--muted)`, `var(--line)`,
+  `var(--sand-2)`, `var(--clay)`) so every palette themes the diagram. Accent
+  boxes = `--sage` fill + `--on-accent` text; warning accents = `--clay`.
+- **viewBox width 640**, text 11–15px at that scale; `font-family` inherits
+  via `.prose figure.diagram svg`. Arrowhead `<marker>` ids must be unique
+  per figure on a page (e.g. `arr-map`, `arr-ops`) — ids are document-global.
+- **Give every svg `role="img"` + a real `aria-label`** describing the
+  content (localized).
+- **Text length is the failure mode:** RU labels run long; keep boxes roomy
+  or split lines. After editing any SVG text, run the **overflow audit** in a
+  served `dist/` (browser console, per guide page):
+
+  ```js
+  document.querySelectorAll('.prose figure.diagram svg').forEach((svg,i) => {
+    const vb = svg.viewBox.baseVal;
+    svg.querySelectorAll('text').forEach(t => { if (t.getAttribute('transform')) return;
+      const b = t.getBBox();
+      if (b.x < vb.x - 1 || b.x + b.width > vb.x + vb.width + 1)
+        console.warn(`svg${i} overflow:`, t.textContent, Math.round(b.x), Math.round(b.width)); });
+  });
+  ```
+- Truth-first applies to visuals: charts are qualitative shapes of claims the
+  prose already makes ("not a forecast — the shape of the game"), never
+  invented data points.
+
+### Patching all locales fast (the mirroring workflow)
+
+EN and RU guide files share the same slug and the same `##` heading skeleton,
+and the house SVG pattern keeps **structure identical across locales — only
+`<text>` content, `aria-label`, table cells, and `figcaption` differ.** So:
+
+- **Change with no text in it** (SVG geometry, coordinates, colors, an image
+  ref, frontmatter): apply to `en`, then apply the *identical* edit to the
+  `ru` file at the same anchor (same heading / same SVG element). Pure
+  copy-paste; no translation pass needed — this is deliberately fast.
+- **Change with text in it:** same anchors, but labels/captions get written
+  per locale (RU in her voice — persona-context). Budget for it; there's no
+  shortcut, and that's fine.
+- **Verify parity** after any cross-locale patch (counts must match pairwise):
+
+  ```bash
+  cd content/locales && for f in $(cd en && find guides -name '*.md'); do
+    printf '%-58s fig %s/%s tbl %s/%s\n' "$f" \
+      $(grep -c 'figure class="diagram"' "en/$f") $(grep -c 'figure class="diagram"' "ru/$f") \
+      $(grep -c '^|' "en/$f") $(grep -c '^|' "ru/$f"); done
+  ```
+
 ## Add a standalone page → `content/locales/en/pages/<slug>.md` (+ wiring)
 
 Pages are the one content type needing code wiring:
@@ -136,11 +208,17 @@ item.
 
 ## Images
 
-Drop PNG/JPG into `public/images/`, run `task images` (containerized
-ImageMagick → WebP, max 1400px, q80, deletes originals), then set frontmatter
-`image: /images/<name>.webp` by hand — the task doesn't rewrite references.
-Current images are AI placeholders; real product photos (owners' hands in
-frame) replace them per the launch checklist.
+Two paths, depending on the image:
+
+- **Real photos** (PNG/JPG): drop into `public/images/`, run `task images`
+  (containerized ImageMagick → WebP, max 1400px, q80, deletes originals), then
+  set frontmatter `image: /images/<name>.webp` by hand — the task doesn't
+  rewrite references.
+- **Mandala art** (guide chapters and product reviews): a generated
+  radial-symmetry SVG — see the "Mandala SVG art" entry in `references/development.md`
+  for how to add/regenerate one. This is the default for both guides and
+  reviews today; real product photos (owners' hands in frame) replace review
+  mandalas per the launch checklist when they exist.
 
 ## Compliance quick-reference
 

@@ -5,7 +5,7 @@ rating: 4
 price: "$32"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE5?tag=gaiaschoice-20"
 excerpt: Бутылочки без пластика, которые не мутнеют, не окрашиваются и не впитывают запахи — с чехлом, который выдерживает дорогу.
-image: /images/glass-baby-bottles.webp
+image: /images/review-glass-baby-bottles.svg
 date: 2026-06-15
 tags: [plastic-free, glass, feeding]
 ---

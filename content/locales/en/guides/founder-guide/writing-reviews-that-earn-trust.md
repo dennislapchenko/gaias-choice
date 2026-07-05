@@ -49,6 +49,15 @@ Before a product earns a review:
   how many milliliters it really holds. Concrete numbers nobody else bothered
   to measure are what make a review quotable and rankable.
 
+The bar at a glance:
+
+| | Minimum | What it catches |
+|---|---|---|
+| **Use** | 2 weeks; a month for sleep & feeding gear | how it behaves in a real family day |
+| **Washing** | 3 real washes | shrinking, pilling, retained smells |
+| **Claims** | certificate number verified with the certifier | "organic" and "plastic-free" that aren't |
+| **Numbers** | weighed and measured by us | the figures nobody else publishes |
+
 Keep raw notes per product in a plain text file from day one. The review is the
 notes, cleaned up.
 
@@ -64,6 +73,30 @@ Readers skim. Put the answer first and the story later:
 4. **What we'd change** — the honest flaws section. This is the trust engine.
 5. **Who it's for / alternatives** — including cheaper or simpler options, even
    when they earn us nothing. *Especially* then.
+
+<figure class="diagram">
+<svg viewBox="0 0 640 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Anatomy of a review page, top to bottom: verdict first, how we tested, what's genuinely good, what we'd change, who it's for and alternatives">
+<rect x="150" y="14" width="340" height="302" rx="14" fill="var(--white)" stroke="var(--line)" stroke-width="2"/>
+<rect x="166" y="28" width="308" height="62" rx="10" fill="var(--sage)"/>
+<text x="320" y="54" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--on-accent)">Verdict</text>
+<text x="320" y="74" text-anchor="middle" font-size="12" fill="var(--on-accent)">the answer, in the first ten seconds</text>
+<rect x="166" y="98" width="308" height="48" rx="10" fill="var(--mint)"/>
+<text x="320" y="127" text-anchor="middle" font-size="13.5" fill="var(--ink)">How we tested</text>
+<rect x="166" y="154" width="308" height="48" rx="10" fill="var(--peach)"/>
+<text x="320" y="183" text-anchor="middle" font-size="13.5" fill="var(--ink)">What's genuinely good</text>
+<rect x="166" y="210" width="308" height="48" rx="10" fill="var(--lilac)" stroke="var(--clay)" stroke-width="1.5"/>
+<text x="320" y="232" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">What we'd change</text>
+<text x="320" y="250" text-anchor="middle" font-size="11.5" font-style="italic" fill="var(--clay)">the trust engine</text>
+<rect x="166" y="266" width="308" height="40" rx="10" fill="var(--sand-2)"/>
+<text x="320" y="291" text-anchor="middle" font-size="13.5" fill="var(--ink)">Who it's for / alternatives</text>
+<text x="140" y="60" text-anchor="end" font-size="12" font-style="italic" fill="var(--muted)">skimmers stop here —</text>
+<text x="140" y="76" text-anchor="end" font-size="12" font-style="italic" fill="var(--muted)">and still get the answer</text>
+<text x="500" y="232" font-size="12" font-style="italic" fill="var(--muted)">a review without</text>
+<text x="500" y="248" font-size="12" font-style="italic" fill="var(--muted)">this section</text>
+<text x="500" y="264" font-size="12" font-style="italic" fill="var(--muted)">reads as an ad</text>
+</svg>
+<figcaption>Every review, same skeleton: answer first, evidence after, flaws on the record.</figcaption>
+</figure>
 
 ## The template
 

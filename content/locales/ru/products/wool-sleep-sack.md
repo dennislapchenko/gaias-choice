@@ -5,7 +5,7 @@ rating: 5
 price: "$46"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE4?tag=gaiaschoice-20"
 excerpt: Спальный мешок из мериноса с терморегуляцией, который обеспечивает комфорт малышу и в прохладные ночи, и в тёплые дни.
-image: /images/wool-sleep-sack.webp
+image: /images/review-wool-sleep-sack.svg
 date: 2026-06-28
 tags: [wool, sleep, temperature]
 ---

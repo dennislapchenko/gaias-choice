@@ -38,6 +38,33 @@ tags: [homeopathy]
 
 Традиция раскладывает потенции по грубым полосам: **низкие** (6C, D6–D12 — применяются «материальнее» и повторяются чаще), **средние** (30C — классика острых домашних ситуаций) и **высокие** (200C, 1M и дальше — их классическая школа отдаёт профессионалам: глубокая, конституциональная работа).
 
+<figure class="diagram">
+<svg viewBox="0 0 640 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Шкала потенций от 1C до 1M: низкая полоса около 6C, молекулярный обрыв у 12C, 30C — рабочая лошадка дома, 200C и выше — территория профессионалов">
+<defs><marker id="arr-pot" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<line x1="24" y1="150" x2="620" y2="150" stroke="var(--ink)" stroke-width="2" marker-end="url(#arr-pot)"/>
+<line x1="60" y1="144" x2="60" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="60" y="174" text-anchor="middle" font-size="13" fill="var(--ink)">1C</text>
+<line x1="150" y1="144" x2="150" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="150" y="174" text-anchor="middle" font-size="13" fill="var(--ink)">6C</text>
+<line x1="250" y1="144" x2="250" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="250" y="174" text-anchor="middle" font-size="13" fill="var(--ink)">12C</text>
+<line x1="390" y1="144" x2="390" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="390" y="174" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">30C</text>
+<line x1="520" y1="144" x2="520" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="520" y="174" text-anchor="middle" font-size="13" fill="var(--ink)">200C</text>
+<line x1="590" y1="144" x2="590" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="590" y="174" text-anchor="middle" font-size="13" fill="var(--ink)">1M</text>
+<rect x="110" y="96" width="180" height="38" rx="10" fill="var(--mint)"/>
+<text x="200" y="120" text-anchor="middle" font-size="12.5" fill="var(--ink)">низкие — «материальнее»</text>
+<rect x="330" y="88" width="120" height="46" rx="10" fill="var(--sage)"/>
+<text x="390" y="108" text-anchor="middle" font-size="13" font-weight="700" fill="var(--on-accent)">рабочая</text>
+<text x="390" y="124" text-anchor="middle" font-size="13" font-weight="700" fill="var(--on-accent)">лошадка</text>
+<rect x="486" y="88" width="138" height="46" rx="10" fill="var(--lilac)"/>
+<text x="555" y="108" text-anchor="middle" font-size="12" fill="var(--ink)">территория</text>
+<text x="555" y="124" text-anchor="middle" font-size="12" fill="var(--ink)">профессионалов</text>
+<line x1="250" y1="30" x2="250" y2="140" stroke="var(--clay)" stroke-width="2" stroke-dasharray="5 5"/>
+<text x="258" y="40" font-size="12.5" font-weight="700" fill="var(--clay)">молекулярный обрыв (~12C / D24)</text>
+<text x="258" y="58" font-size="12" fill="var(--muted)">дальше химия не ожидает в пузырьке</text>
+<text x="258" y="74" font-size="12" fill="var(--muted)">ни одной молекулы исходника</text>
+<text x="24" y="206" font-size="12" font-style="italic" fill="var(--muted)">Шкала D (X) — та же игра при 1:10 на шаг: D6 и D12 лежат в низкой полосе.</text>
+</svg>
+<figcaption>Весь шифр этикетки на одной оси: цифра считает шаги, буква называет пропорцию — а аптечка этого курса целиком живёт на 30C.</figcaption>
+</figure>
+
 Домашняя практика — в этом курсе — живёт на **30C**, и это осознанный забор, а не мода. Это потенция, к которой сама традиция домашнего ухода сошлась для острого и самопроходящего; один ясный выбор — минус одна переменная в вашем журнале; и никаких прогулок на территорию, которую любая ответственная школа отдаёт обученным людям. Когда глава 4 будет наполнять вашу коробку, на каждом тюбике будет стоять 30C. Если из этой главы запомнить одну цифру — вот эту.
 
 ### Правило минимума
@@ -48,6 +75,35 @@ tags: [homeopathy]
 - **Доза — это частота, а не количество.** Пять крупинок или три — в этой системе не вопрос: «доза» — это *событие*. Силу регулируют тем, как часто повторяют, а не тем, сколько глотают.
 - **Отклик — остановка.** Едва картина явно сдвинулась — ребёнок затих, сон пришёл, боль отпустила — вы останавливаетесь. Повторять поверх идущего отклика — классическая ошибка новичка, о которой традиция предупреждает громче всего.
 - **Ничего не происходит после нескольких разумных повторов — значит, выбор был неверный.** Не «доза мала». Ответ — пересобрать случай (назад, к сетке из главы 2), а не наращивать.
+
+<figure class="diagram">
+<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Правило минимума как схема: одно средство, одна доза, наблюдать и записывать; при явном сдвиге — остановиться; если после нескольких разумных повторов ничего — пересобрать случай, никогда не наращивать">
+<defs><marker id="arr-min" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<rect x="16" y="36" width="170" height="60" rx="12" fill="var(--mint)"/>
+<text x="101" y="61" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Одно средство,</text>
+<text x="101" y="81" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">одна доза</text>
+<line x1="186" y1="66" x2="228" y2="66" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-min)"/>
+<rect x="236" y="36" width="150" height="60" rx="12" fill="var(--peach)"/>
+<text x="311" y="61" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Смотреть и писать</text>
+<text x="311" y="81" text-anchor="middle" font-size="12.5" fill="var(--muted)">журнал открыт</text>
+<line x1="386" y1="66" x2="428" y2="66" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-min)"/>
+<rect x="436" y="36" width="120" height="60" rx="12" fill="var(--lilac)"/>
+<text x="496" y="72" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Явный сдвиг?</text>
+<line x1="496" y1="96" x2="496" y2="142" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-min)"/>
+<text x="508" y="124" font-size="12.5" font-style="italic" fill="var(--muted)">да</text>
+<rect x="436" y="150" width="120" height="56" rx="12" fill="var(--sage)"/>
+<text x="496" y="175" text-anchor="middle" font-size="14" font-weight="700" fill="var(--on-accent)">Стоп.</text>
+<text x="496" y="193" text-anchor="middle" font-size="12" fill="var(--on-accent)">пусть действует</text>
+<path d="M436 86 C 380 130, 340 150, 302 162" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-min)"/>
+<text x="426" y="114" text-anchor="end" font-size="12.5" font-style="italic" fill="var(--muted)">нет — после разумных повторов</text>
+<rect x="40" y="150" width="256" height="56" rx="12" fill="var(--sand-2)" stroke="var(--clay)" stroke-width="1.5"/>
+<text x="168" y="173" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">Всё ещё ничего: выбор неверный —</text>
+<text x="168" y="192" text-anchor="middle" font-size="12.5" fill="var(--muted)">пересобрать случай по сетке главы 2</text>
+<path d="M60 150 C 48 128, 48 116, 68 100" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arr-min)"/>
+<text x="20" y="236" font-size="12" font-style="italic" fill="var(--muted)">Дозу не наращивают никогда — а красные флаги минуют эту схему целиком: с ними к врачу.</text>
+</svg>
+<figcaption>Доза — это частота, и выходов всегда ровно два: остановка при отклике или пересбор случая.</figcaption>
+</figure>
 
 Слышите, как это рифмуется с главой 1 — минимальное вмешательство, которое действует? И заметьте, что вся эта логика тихо предполагает: отклик вы *узнаете*, когда увидите. А вы узнаете? Как вообще выглядит отклик — и чем он отличается от болезни, которая просто прошла сама? **Этому вопросу отдана целая глава — седьмая.** До неё правило консервативное: сомневаетесь — не повторяйте и запишите, что видели. И забор главы 1 стоит под всем этим нетронутым: красные флаги — к врачу; дозовая логика — только для лёгкого и самопроходящего.
 

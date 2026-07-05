@@ -47,15 +47,15 @@ sidebar:
 epics:
   - tag: founder-guide
     title: Честный сайт с нуля
-    image: /images/guide-eco-items.webp
+    image: /images/epic-founder-guide.svg
     blurb: Бесплатный курс из пяти глав о том, как построить сайт-обзорник, которому верят, — на живом примере этого самого сайта, от первого обзора до запуска. Каждый шаг настоящий, включая те, что дались тяжело.
   - tag: homeopathy
     title: Гомеопатия дома
-    image: /images/guide-natural-vs.webp
+    image: /images/epic-homeopathy.svg
     blurb: Курс из 11 глав — собрать домашнюю аптечку и научиться работать с ней честно, наблюдая и записывая, не подменяя врача.
   - tag: herbalism
     title: Домашний травник
-    image: /images/beeswax.webp
+    image: /images/epic-herbalism.svg
     blurb: Курс из 11 глав — вырастить зелёную полку настоев, масел и настоек и узнать десять растений так, как знают людей.
 
 nav:

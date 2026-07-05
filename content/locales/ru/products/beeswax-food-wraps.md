@@ -5,7 +5,7 @@ rating: 4
 price: "$18"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE3?tag=gaiaschoice-20"
 excerpt: Многоразовые компостируемые обёртки, которые полностью заменили нам рулон пищевой плёнки.
-image: /images/beeswax.webp
+image: /images/review-beeswax-food-wraps.svg
 date: 2026-05-18
 tags: [zero-waste, plastic-free, kitchen]
 ---

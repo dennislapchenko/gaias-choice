@@ -17,10 +17,17 @@ export default function GuideCard({ guide }: { guide: Guide }) {
         )}
       </div>
       <div className="card-body">
-        <span className="tag">{t('guides.tag')}</span>
-        {guide.chapter != null && (
-          <span className="tag">{t('guides.chapter', { n: guide.chapter })}</span>
-        )}
+        <div className="card-tags">
+          <span className="tag">{t('guides.tag')}</span>
+          {guide.chapter != null && (
+            <span className="tag">{t('guides.chapter', { n: guide.chapter })}</span>
+          )}
+          {guide.tags?.map((tag) => (
+            <span key={tag} className="tag">
+              {tag}
+            </span>
+          ))}
+        </div>
         <h3>
           <Link to={`/guides/${guide.slug}`} className="card-link">
             {guide.title}

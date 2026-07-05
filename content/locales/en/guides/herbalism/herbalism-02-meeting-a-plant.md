@@ -38,6 +38,24 @@ The first axis every tradition agrees on. **Warming** plants — ginger, garlic,
 
 The second axis. **Drying** plants — sage famously, and every astringent — tighten tissues and reduce secretions. **Moistening** plants — the mucilage carriers like marshmallow root, and to a gentler degree oats and violet — coat, soothe and lubricate. A dry hacking cough wants moistening, not more drying; a wet, streaming state wants the astringents. Two axes make a compass: ginger is warming-and-drying, marshmallow cooling-and-moistening. Rough coordinates, honestly gathered, beat precise-sounding claims copied from the internet — you'll gather your own tonight.
 
+<figure class="diagram">
+<svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The energetic compass: a cooling-to-warming axis and a moistening-to-drying axis, with ginger warming and drying, thyme warming and mildly drying, sage drying, mint cooling and mildly drying, chamomile mildly cooling, marshmallow cooling and moistening">
+<line x1="40" y1="180" x2="600" y2="180" stroke="var(--line)" stroke-width="2"/>
+<line x1="320" y1="30" x2="320" y2="330" stroke="var(--line)" stroke-width="2"/>
+<text x="46" y="172" font-size="13" font-weight="700" fill="var(--muted)">cooling</text>
+<text x="594" y="172" text-anchor="end" font-size="13" font-weight="700" fill="var(--muted)">warming</text>
+<text x="328" y="44" font-size="13" font-weight="700" fill="var(--muted)">drying</text>
+<text x="328" y="324" font-size="13" font-weight="700" fill="var(--muted)">moistening</text>
+<circle cx="500" cy="90" r="7" fill="var(--clay)"/><text x="500" y="72" text-anchor="middle" font-size="13.5" fill="var(--ink)">ginger</text>
+<circle cx="450" cy="130" r="7" fill="var(--clay)"/><text x="450" y="112" text-anchor="middle" font-size="13.5" fill="var(--ink)">thyme</text>
+<circle cx="340" cy="70" r="7" fill="var(--sage-dark)"/><text x="358" y="64" font-size="13.5" fill="var(--ink)">sage</text>
+<circle cx="170" cy="130" r="7" fill="var(--sage-dark)"/><text x="170" y="112" text-anchor="middle" font-size="13.5" fill="var(--ink)">mint</text>
+<circle cx="240" cy="196" r="7" fill="var(--sage-dark)"/><text x="240" y="222" text-anchor="middle" font-size="13.5" fill="var(--ink)">chamomile</text>
+<circle cx="140" cy="280" r="7" fill="var(--sage-dark)"/><text x="140" y="306" text-anchor="middle" font-size="13.5" fill="var(--ink)">marshmallow</text>
+</svg>
+<figcaption>The energetic compass. The coordinates are rough on purpose — tonight you start plotting your own, by taste.</figcaption>
+</figure>
+
 ### Taste as information
 
 Here is the part that turns your tongue into an instrument. Taste isn't a side effect of a plant — in herbal tradition it's a *readout* of chemistry, and each major taste predicts a family of actions:
@@ -49,6 +67,14 @@ Here is the part that turns your tongue into an instrument. Taste isn't a side e
 - **Pungent** (ginger, garlic) — heat on the tongue: the warming direction made tangible.
 
 Notice what just happened: three of the five tastes *are* the energetic axes, felt directly. The compass isn't book knowledge — it's in your mouth.
+
+| Taste | Where you've already met it | It predicts | Compass direction |
+|---|---|---|---|
+| **Bitter** | chamomile's late finish | digestion waking up | — |
+| **Aromatic** | mint across the room | volatile oils: settling, antimicrobial | — (rides the steam; cover the mug) |
+| **Astringent** | black tea's mouth-pucker | tannins tightening tissue | drying |
+| **Mucilaginous** | marshmallow, chia-water | slippery coating, soothing | moistening |
+| **Pungent** | ginger's heat on the tongue | circulation rising | warming |
 
 ### The plant hour
 

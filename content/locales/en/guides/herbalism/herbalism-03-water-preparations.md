@@ -39,6 +39,13 @@ Water extracts, but plant tissues surrender differently. The rule the whole trad
 
 One plant can need both manners in different parts — but the working question is always the same: *am I holding something delicate or something tough?* Delicate steeps. Tough simmers. That single sentence correctly handles most of the plants you will ever touch — and when a plant seems to give water almost nothing at all, note the suspicion; chapter 5 owes you that story.
 
+| | Infusion | Decoction |
+|---|---|---|
+| For | delicate parts: leaves, flowers, aromatic seeds | tough parts: roots, barks, dried berries, hard seeds |
+| How | pour just-boiled water over, **cover**, steep | gentle simmer, **lid on** |
+| Time | 10–20 minutes | 15–30 minutes |
+| From this course | chamomile, mint, nettle leaf | ginger root, cinnamon bark, rosehips |
+
 ### The power of ratios
 
 Here is where the nettle disappointment gets solved. Water preparation isn't one thing — it's a *dial*, and the tradition uses at least three settings:
@@ -48,6 +55,33 @@ Here is where the nettle disappointment gets solved. Water preparation isn't one
 - **The nourishing infusion:** the herbalist's quart jar — roughly **30 g of dried herb, a liter of just-boiled water, lid on, 4 hours to overnight**, then strain and drink through the next day, plain or however you like it. This is the setting for the great **food-grade** herbs — nettle above all — where the point is minerals and substance, and a long, patient steep is what actually pulls them. This is nettle "like a broth": calcium, magnesium, iron don't leap into water in three minutes.
 
 Same jar on the shelf, three different drinks — and now the chapter 1 principle has numbers: *the preparation is the medicine.* A note for the compass, too: long and strong pulls more of everything, including tannins — your own tongue (astringency, chapter 2) will tell you when you've dialed past pleasant.
+
+<figure class="diagram">
+<svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The three settings of the dial: the everyday cup, one to two teaspoons for ten to fifteen minutes; the strong cup, a tablespoon for fifteen to twenty minutes; the nourishing infusion, thirty grams per liter for four hours to overnight">
+<rect x="16" y="24" width="192" height="180" rx="12" fill="var(--mint)"/>
+<text x="112" y="56" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--ink)">The everyday cup</text>
+<text x="112" y="86" text-anchor="middle" font-size="13" fill="var(--ink)">1–2 tsp per mug</text>
+<text x="112" y="106" text-anchor="middle" font-size="13" fill="var(--ink)">covered, 10–15 min</text>
+<text x="112" y="140" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">the register of daily life —</text>
+<text x="112" y="156" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">taste, habit, a child's</text>
+<text x="112" y="172" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">first acquaintance</text>
+<rect x="224" y="24" width="192" height="180" rx="12" fill="var(--peach)"/>
+<text x="320" y="56" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--ink)">The strong cup</text>
+<text x="320" y="86" text-anchor="middle" font-size="13" fill="var(--ink)">1 tbsp per mug</text>
+<text x="320" y="106" text-anchor="middle" font-size="13" fill="var(--ink)">covered, 15–20 min</text>
+<text x="320" y="140" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">the register of support —</text>
+<text x="320" y="156" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">chapter 1's chamomile</text>
+<text x="320" y="172" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">lives here</text>
+<rect x="432" y="24" width="192" height="180" rx="12" fill="var(--lilac)"/>
+<text x="528" y="56" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--ink)">The nourishing jar</text>
+<text x="528" y="86" text-anchor="middle" font-size="13" fill="var(--ink)">~30 g per liter</text>
+<text x="528" y="106" text-anchor="middle" font-size="13" fill="var(--ink)">lidded, 4 h – overnight</text>
+<text x="528" y="140" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">the register of food —</text>
+<text x="528" y="156" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">minerals and substance,</text>
+<text x="528" y="172" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">nettle above all</text>
+</svg>
+<figcaption>One jar, three settings — the dial is the difference between "just tea" and a preparation you can feel.</figcaption>
+</figure>
 
 The three-steps rule from chapter 1 keeps its authority here: the nourishing infusion is **food** — and it stays on the food step. It doesn't treat anything, and the Health rule of this whole site stands: no jar outruns real meals and real sleep.
 

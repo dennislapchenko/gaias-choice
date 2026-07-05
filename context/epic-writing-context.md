@@ -147,6 +147,17 @@ Concepts inside the Core section get `###` subheadings.
    with «как понять, что получилось» — one observable success criterion.
 7. **Self-check + Bridge** (§3d).
 
+**Visuals (mandatory since 2026-07-05):** every chapter carries **1–3
+visuals** that cement its core concepts — GFM tables for comparisons/reference
+grids, inline-SVG `<figure class="diagram">` blocks for flows, maps, scales,
+compasses, charts. The Gate chapter's map-of-the-course promise is delivered
+as an actual course-map diagram. Full authoring pattern (CSS-var colors,
+no-blank-lines rule, overflow audit) and the cross-locale mirroring workflow:
+`.claude/skills/manage-site/references/content-editing.md`, "Visuals inside
+guides". Visuals obey truth-first: charts draw the qualitative shape of claims
+the prose already makes, never invented data points; captions add a thought,
+never repeat the adjacent sentence.
+
 ## 5. Learning-science ground rules (why the skeleton is shaped this way)
 
 - **Retrieval beats rereading** — self-checks and callback nudges force recall;

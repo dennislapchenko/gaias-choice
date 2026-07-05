@@ -5,7 +5,7 @@ rating: 5
 price: "$28"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE1?tag=gaiaschoice-20"
 excerpt: Дышащая пелёнка с сертификатом GOTS, которая заодно служит одеялом, солнцезащитным экраном и накидкой для кормления.
-image: /images/swaddle.webp
+image: /images/review-organic-cotton-swaddle.svg
 date: 2026-06-20
 tags: [organic, cotton, sleep]
 ---

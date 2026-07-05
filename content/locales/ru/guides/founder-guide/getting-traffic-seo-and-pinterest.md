@@ -52,6 +52,12 @@ tags: [founder-guide, seo, traffic]
   ранжироваться в это десятилетие. За «стеклянные детские бутылочки, которые
   помещаются в ручную кладь» — уже в этом году.
 
+| Фраза | Есть ли шанс? | Почему |
+|---|---|---|
+| «детские бутылочки» | не в это десятилетие | за неё борется весь интернет |
+| «лучшие стеклянные бутылочки в дорогу» | когда-нибудь, с массой | уже, но всё ещё тесно |
+| «стеклянные бутылочки, которые помещаются в ручную кладь» | в этом году | конкретно, отвечаемо — и по-настоящему наше |
+
 Ведите текущий список таких фраз — этот список *и есть* редакционный календарь.
 
 ## Pinterest: недооценённый канал именно для этой ниши
@@ -106,6 +112,33 @@ tags: [founder-guide, seo, traffic]
   не месяцы) — именно поэтому мы с ним и возимся.
 - Каждый месяц **обновляйте один старый материал** — свежесть плюс глубина на
   существующих URL часто обгоняют новый URL.
+
+<figure class="diagram">
+<svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Качественный график трафика за первые двенадцать месяцев: Pinterest подаёт небольшие признаки жизни за недели; поиск стоит около нуля месяцами, а потом растёт с ускорением после тридцати–пятидесяти опубликованных материалов; большинство сайтов бросает в месяцы затишья">
+<rect x="60" y="36" width="220" height="214" rx="8" fill="var(--sand-2)"/>
+<text x="170" y="196" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">месяцы затишья —</text>
+<text x="170" y="212" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">здесь бросает большинство</text>
+<line x1="60" y1="250" x2="620" y2="250" stroke="var(--ink)" stroke-width="2"/>
+<line x1="60" y1="250" x2="60" y2="30" stroke="var(--ink)" stroke-width="2"/>
+<text x="340" y="278" text-anchor="middle" font-size="12.5" fill="var(--muted)">месяцы еженедельных публикаций →</text>
+<text x="44" y="140" text-anchor="middle" font-size="12.5" fill="var(--muted)" transform="rotate(-90 44 140)">посетители</text>
+<text x="160" y="266" text-anchor="middle" font-size="12" fill="var(--muted)">3</text>
+<text x="300" y="266" text-anchor="middle" font-size="12" fill="var(--muted)">6</text>
+<text x="460" y="266" text-anchor="middle" font-size="12" fill="var(--muted)">9</text>
+<text x="606" y="266" text-anchor="middle" font-size="12" fill="var(--muted)">12</text>
+<path d="M60 248 C 160 246, 260 244, 320 238 C 420 228, 520 220, 612 214" fill="none" stroke="var(--clay)" stroke-width="2.5"/>
+<path d="M60 249 C 180 248, 280 247, 340 240 C 420 230, 500 160, 612 60" fill="none" stroke="var(--sage)" stroke-width="3"/>
+<line x1="400" y1="250" x2="400" y2="120" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 5"/>
+<text x="408" y="132" font-size="12" font-style="italic" fill="var(--muted)">~30–50 крепких материалов:</text>
+<text x="408" y="148" font-size="12" font-style="italic" fill="var(--muted)">поиск начинает принимать</text>
+<text x="408" y="164" font-size="12" font-style="italic" fill="var(--muted)">сайт всерьёз</text>
+<line x1="80" y1="40" x2="112" y2="40" stroke="var(--sage)" stroke-width="3"/>
+<text x="120" y="45" font-size="12.5" fill="var(--ink)">поиск Google</text>
+<line x1="80" y1="62" x2="112" y2="62" stroke="var(--clay)" stroke-width="2.5"/>
+<text x="120" y="67" font-size="12.5" fill="var(--ink)">Pinterest</text>
+</svg>
+<figcaption>Не прогноз — форма игры: Pinterest вздрагивает первым, поиск разгоняется поздно, а затишье — фаза, не приговор.</figcaption>
+</figure>
 
 И ещё одна причина, почему терпение здесь несущая конструкция, а не украшение:
 вступить в партнёрские программы до того, как появился трафик, — значит не

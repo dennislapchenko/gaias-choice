@@ -5,7 +5,7 @@ rating: 5
 price: "$28"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE1?tag=gaiaschoice-20"
 excerpt: A breathable GOTS-certified swaddle that doubles as blanket, sunshade, and nursing cover.
-image: /images/swaddle.webp
+image: /images/review-organic-cotton-swaddle.svg
 date: 2026-06-20
 tags: [organic, cotton, sleep]
 ---

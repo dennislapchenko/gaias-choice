@@ -54,8 +54,10 @@ context/                 # authoring context (NOT bundled into the site)
   course-plan-herbalism.md   # «Домашний травник»: full 11-chapter outline, concepts, seeds (ch. 1–3 shipped)
   course-plan-building-in-public.md  # «Честный сайт с нуля»: the founder guides as a 5-chapter course (complete; sanctioned 5-chapter deviation)
 public/
-  images/*.webp          # optimized images referenced by content (see Images)
+  images/*.webp, *.svg   # optimized photos + generated mandala art (see Images)
   favicon.svg
+scripts/
+  generate-mandala.mjs   # generates mandala SVG art (guides/reviews sets, see Images)
 src/
   main.tsx               # React root + BrowserRouter + I18nProvider
   App.tsx                # route table
@@ -167,6 +169,18 @@ the "Guide chapter ordering" / "Guide detail table of contents" rows in
 `context/epic-writing-context.md` for the 11-chapter course blueprint this
 supports.
 
+Guide chapters also **embed their own visuals in the markdown** (since
+2026-07-05): GFM tables (`gfm: true`; styled by `.prose table`) and inline-SVG
+diagrams in `<figure class="diagram">` blocks that color themselves with the
+palette CSS variables, so they re-theme with the palette switcher. No blank
+lines inside a figure block (it's one markdown HTML block), unique `<marker>`
+ids per figure on a page, `role="img"` + localized `aria-label` on every svg.
+SVG *structure* is kept byte-identical between `en`/`ru` — only `<text>`,
+table cells, and `figcaption` differ — which makes cross-locale patches
+mechanical. Authoring rules + the locale-mirroring workflow:
+`.claude/skills/manage-site/references/content-editing.md`, "Visuals inside
+guides".
+
 ### Adding a standalone page
 
 `content/locales/en/pages/<slug>.md` with just `title` (optional `image:`
@@ -185,16 +199,22 @@ under `public/images/`. Referenced from content by absolute path (`/images/x.web
   at 1400px, quality 80), and **removes the originals**. It does NOT rewrite
   content references — update frontmatter `image:` paths by hand afterward.
 - Typical result: ~90% smaller than source PNGs.
-- The current placeholder images are AI art and thematically unrelated to the
-  products — swap for real photos before launch (one-line frontmatter change each).
-- **Guide chapter art is hand-authored SVG**, not photos: each of the 11 guides
-  has a `guide-<slug>.svg` under `public/images/` — a radial-symmetry "mandala"
-  (rotated `<use>` copies of one petal motif around a center, plus a bespoke
-  central icon per topic, e.g. a compass for the kickstart playbook, an eye for
-  trust/observation guides, a leaf for herbalism ch.1). No `task images` step
-  needed (vector, not raster). These are a deliberate style choice, distinct
-  from the photo-based product/about images — keep new guide chapters in the
-  same mandala style unless the owner says otherwise.
+- **Mandala SVG art** — both guide chapters and product reviews use a
+  radial-symmetry "mandala" (rotated `<use>` copies of one petal motif around a
+  center, plus a bespoke central icon per topic, e.g. a compass for the
+  kickstart playbook, a honeycomb hexagon for beeswax wraps) instead of stock
+  photos, matching the site's cosmic/sacred-geometry look. No `task images`
+  step needed (vector, not raster). The original 11 guide-chapter SVGs were
+  hand-authored one-off, before the generator existed. Since 2026-07-05,
+  `scripts/generate-mandala.mjs` generates the shared frame (background
+  gradient, petal ring, concentric rings) from a config; only the center icon
+  per item is still hand-drawn markup, kept in the script's `SETS` config
+  (one named set per content type — currently `guides` for new chapters and
+  `reviews`, which replaced all 6 products' AI-art placeholders). Run
+  `task mandalas SET=<name>` to (re)generate a set; see the "Mandala SVG art"
+  row in `references/development.md` for the full mechanics. Real product
+  photos (owners' hands in frame) still replace review mandalas per the
+  launch checklist, when they exist.
 
 ## Styling & color
 
@@ -277,10 +297,10 @@ via `useI18n()`.
 - `components/LanguageSwitcher.tsx` (in the header, next to `ThemeSwitcher`)
   is **not** a dropdown: it's a single flag-emoji button that **cycles to the
   next locale on click** (no menu), showing the current locale's flag
-  (`LOCALE_FLAGS` in `i18n.tsx`) with a `.lang-hint` chip that flashes the next
-  language's flag on hover and for 0.5s after a click (a click then suppresses the
-  hover preview until the pointer leaves). `ThemeSwitcher` is still the dropdown
-  pattern.
+  (`LOCALE_FLAGS` in `i18n.tsx`). **On hover the flag flips to the next
+  language's flag** (a live preview of where a click leads) and reverts to the
+  selected language's flag on `mouseleave` — no tooltip/chip. `ThemeSwitcher` is
+  still the dropdown pattern.
 - `components/AstroCalendar.tsx` gets month/weekday names + the panel date from
   `Intl.DateTimeFormat(locale, ...)` instead of the string dictionary — new
   locales get correct calendar names for free, no translation entry needed.
@@ -438,8 +458,10 @@ learning the affiliate-content business as they go:
   "next" link is deliberately text-only («готовится») until chapter 4 ships —
   keep that pattern for any course published mid-write.
 - `content/locales/en/products/*` are still **AI placeholder reviews** with fake
-  affiliate URLs (`EXAMPLE…`) and AI images — flagged for deletion/replacement
-  in the launch checklist. Never add a real affiliate program while these exist.
+  affiliate URLs (`EXAMPLE…`) — flagged for deletion/replacement in the launch
+  checklist. Never add a real affiliate program while these exist. Their images
+  are now mandala SVGs (2026-07-05, see Images), not AI photos — real product
+  photos still replace them per the launch checklist.
 - `/roadmap` (public, building-in-public) tracks phases; keep it updated when
   milestones land. `/disclosure` and `/privacy` are compliance groundwork for
   affiliate programs — required before joining any.

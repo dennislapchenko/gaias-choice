@@ -5,7 +5,7 @@ rating: 5
 price: "$12"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE6?tag=gaiaschoice-20"
 excerpt: Один растительный флакон, которым можно мыть тело, посуду и полы — без отдушек и лишнего пластика.
-image: /images/castile-soap.webp
+image: /images/review-castile-soap.svg
 date: 2026-05-30
 tags: [fragrance-free, multi-use, care]
 ---

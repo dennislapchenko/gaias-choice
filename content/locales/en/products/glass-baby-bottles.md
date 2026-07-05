@@ -5,7 +5,7 @@ rating: 4
 price: "$32"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE5?tag=gaiaschoice-20"
 excerpt: Plastic-free bottles that don't cloud, stain, or hold onto smells — with a sleeve that survives travel.
-image: /images/glass-baby-bottles.webp
+image: /images/review-glass-baby-bottles.svg
 date: 2026-06-15
 tags: [plastic-free, glass, feeding]
 ---

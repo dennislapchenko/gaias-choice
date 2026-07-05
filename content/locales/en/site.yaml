@@ -46,15 +46,15 @@ sidebar:
 epics:
   - tag: founder-guide
     title: An honest site from zero
-    image: /images/guide-eco-items.webp
+    image: /images/epic-founder-guide.svg
     blurb: A free five-chapter course on building a review site people trust — taught on the live example of this very site, from first review to launch.
   - tag: homeopathy
     title: Homeopathy at home
-    image: /images/guide-natural-vs.webp
+    image: /images/epic-homeopathy.svg
     blurb: An 11-chapter course — assemble a family remedy kit and learn to use it with honest observation, never replacing your doctor.
   - tag: herbalism
     title: The home herbalist
-    image: /images/beeswax.webp
+    image: /images/epic-herbalism.svg
     blurb: An 11-chapter course — grow a green shelf of infusions, oils and tinctures, and learn ten plants the way you know people.
 
 nav:

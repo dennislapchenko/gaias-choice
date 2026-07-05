@@ -5,7 +5,7 @@ rating: 4
 price: "$34"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE2?tag=gaiaschoice-20"
 excerpt: Контейнер для еды без пластика, устойчивый к протечкам, который переживёт падение на гравийную площадку.
-image: /images/bento.webp
+image: /images/review-stainless-food-container.svg
 date: 2026-06-05
 tags: [plastic-free, stainless, feeding]
 ---

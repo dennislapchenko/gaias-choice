@@ -299,10 +299,6 @@ h1 {
 }
 
 /* ---------- Language switcher (flag toggle — cycles locale on click) ---------- */
-.lang-switcher {
-  position: relative;
-  display: inline-flex;
-}
 .lang-toggle {
   display: inline-flex;
   align-items: center;
@@ -320,38 +316,6 @@ h1 {
 .lang-flag {
   font-size: 1.2rem;
   line-height: 1;
-}
-/* Peek of the language a click switches to — on hover, and flashed after a click. */
-.lang-hint {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 50%;
-  transform: translateX(-50%) translateY(-4px);
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: var(--ink);
-  color: #fff;
-  font-size: 1rem;
-  line-height: 1;
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  transition:
-    opacity 0.18s ease,
-    transform 0.18s ease;
-  z-index: 30;
-}
-.lang-hint-arrow {
-  font-size: 0.8rem;
-  opacity: 0.7;
-}
-.lang-switcher:not(.dismissed):hover .lang-hint,
-.lang-hint.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
 }
 
 /* ---------- Layout ---------- */
@@ -784,6 +748,11 @@ h1 {
     max-width: 220px;
     margin: 0 auto;
   }
+  /* Wide prose tables scroll sideways instead of squeezing the columns */
+  .prose table {
+    display: block;
+    overflow-x: auto;
+  }
 }
 .eyebrow {
   text-transform: uppercase;
@@ -901,6 +870,11 @@ h1 {
 .card-body h3 {
   margin: 0;
   font-size: 1.15rem;
+}
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 .card-meta {
   display: flex;
@@ -1320,6 +1294,53 @@ h1 {
 }
 .prose a {
   text-decoration: underline;
+}
+/* GFM tables — comparison/reference grids inside guides and reviews */
+.prose table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1.5em 0;
+  font-size: 0.95rem;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.prose th,
+.prose td {
+  padding: 10px 14px;
+  text-align: left;
+  vertical-align: top;
+}
+.prose thead th {
+  background: var(--sand-2);
+  font-weight: 600;
+}
+.prose tbody tr + tr td {
+  border-top: 1px solid var(--line);
+}
+/* Inline-SVG diagrams (flows, charts, maps) authored inside the markdown.
+   The SVGs color themselves with the palette CSS vars, so they re-theme. */
+.prose figure.diagram {
+  margin: 1.6em auto;
+  padding: 18px 16px 14px;
+  max-width: 660px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+.prose figure.diagram svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  font-family: inherit;
+}
+.prose figure.diagram figcaption {
+  margin-top: 10px;
+  font-size: 0.88rem;
+  color: var(--muted);
+  text-align: center;
 }
 
 /* ---------- Footer ---------- */

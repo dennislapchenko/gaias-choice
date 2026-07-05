@@ -88,6 +88,13 @@ tasks:
         -define webp:method=6 "${f%.*}.webp" && rm "$f"; done'
       - 'echo "Remember to reference the .webp files in content/ frontmatter."'
 
+  mandalas:
+    desc: 'Generate mandala SVG art for a config set (SET=guides|reviews, optional ONLY=slug1,slug2)'
+    vars:
+      SET: '{{.SET | default "reviews"}}'
+    cmds:
+      - '{{.NODE_RUN}} node scripts/generate-mandala.mjs {{.SET}} {{if .ONLY}}--only={{.ONLY}}{{end}}'
+
   image:
     desc: Build the production Docker image (nginx)
     cmds:

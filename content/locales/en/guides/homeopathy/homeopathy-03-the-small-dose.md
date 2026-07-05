@@ -38,6 +38,33 @@ The arithmetic has a famous cliff in it. Around 12C (or D24), the dilution passe
 
 Tradition sorts potencies into rough bands: **low** (6C, D6–D12 — used more materially, repeated more often), **medium** (30C — the classic acute-care potency), and **high** (200C, 1M and beyond — which classical practice reserves for professional prescribing, deeper or constitutional work).
 
+<figure class="diagram">
+<svg viewBox="0 0 640 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The potency scale from 1C to 1M: low band around 6C, the molecular cliff near 12C, 30C as the home workhorse, and 200C and beyond as professional territory">
+<defs><marker id="arr-pot" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<line x1="24" y1="150" x2="620" y2="150" stroke="var(--ink)" stroke-width="2" marker-end="url(#arr-pot)"/>
+<line x1="60" y1="144" x2="60" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="60" y="174" text-anchor="middle" font-size="13" fill="var(--ink)">1C</text>
+<line x1="150" y1="144" x2="150" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="150" y="174" text-anchor="middle" font-size="13" fill="var(--ink)">6C</text>
+<line x1="250" y1="144" x2="250" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="250" y="174" text-anchor="middle" font-size="13" fill="var(--ink)">12C</text>
+<line x1="390" y1="144" x2="390" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="390" y="174" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">30C</text>
+<line x1="520" y1="144" x2="520" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="520" y="174" text-anchor="middle" font-size="13" fill="var(--ink)">200C</text>
+<line x1="590" y1="144" x2="590" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="590" y="174" text-anchor="middle" font-size="13" fill="var(--ink)">1M</text>
+<rect x="110" y="96" width="180" height="38" rx="10" fill="var(--mint)"/>
+<text x="200" y="120" text-anchor="middle" font-size="12.5" fill="var(--ink)">low — material, repeated</text>
+<rect x="330" y="88" width="120" height="46" rx="10" fill="var(--sage)"/>
+<text x="390" y="108" text-anchor="middle" font-size="13" font-weight="700" fill="var(--on-accent)">the home</text>
+<text x="390" y="124" text-anchor="middle" font-size="13" font-weight="700" fill="var(--on-accent)">workhorse</text>
+<rect x="486" y="88" width="138" height="46" rx="10" fill="var(--lilac)"/>
+<text x="555" y="108" text-anchor="middle" font-size="12" fill="var(--ink)">professional</text>
+<text x="555" y="124" text-anchor="middle" font-size="12" fill="var(--ink)">territory</text>
+<line x1="250" y1="30" x2="250" y2="140" stroke="var(--clay)" stroke-width="2" stroke-dasharray="5 5"/>
+<text x="258" y="40" font-size="12.5" font-weight="700" fill="var(--clay)">the molecular cliff (~12C / D24)</text>
+<text x="258" y="58" font-size="12" fill="var(--muted)">past here, chemistry expects zero</text>
+<text x="258" y="74" font-size="12" fill="var(--muted)">molecules of the source in the vial</text>
+<text x="24" y="206" font-size="12" font-style="italic" fill="var(--muted)">The D (X) scale is the same game at 1:10 per step — D6 and D12 sit in the low band.</text>
+</svg>
+<figcaption>The whole label code on one axis: the number counts the steps, the letter names the ratio — and this course's kit lives entirely at 30C.</figcaption>
+</figure>
+
 Home practice, in this course, lives at **30C**, and this is a deliberate fence, not a fashion: it is the potency the home-prescribing tradition itself converged on for acute, self-limiting situations — one clear choice, one less variable in your journal, and no wandering into territory (very high potencies, chronic prescribing) that every responsible school assigns to trained practitioners. When chapter 4 stocks your kit, every tube in it will say 30C. If you remember one number from this chapter, it's this one.
 
 ### The rule of minimum
@@ -48,6 +75,35 @@ Here is the tradition's dosing logic, and it is nothing like a paracetamol sched
 - **Dose is frequency, not quantity.** Five granules or three is a non-question in this system — a "dose" is an *event*. Intensity is regulated by how often you repeat, not how much you swallow.
 - **Stop on response.** The moment the picture clearly shifts — calmer child, sleep arriving, pain easing — you stop. Repeating into an active response is the classic beginner's error the tradition warns about most.
 - **Nothing happening after a few sensible repetitions means the choice was wrong** — not that the dose was too small. The answer is to re-take the case (back to your chapter 2 grid), never to escalate.
+
+<figure class="diagram">
+<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The rule of minimum as a flow: one remedy, one dose, watch and write; on a clear shift, stop; with no change after a few sensible repeats, re-take the case — never escalate">
+<defs><marker id="arr-min" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<rect x="16" y="36" width="170" height="60" rx="12" fill="var(--mint)"/>
+<text x="101" y="61" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">One remedy,</text>
+<text x="101" y="81" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">one dose</text>
+<line x1="186" y1="66" x2="228" y2="66" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-min)"/>
+<rect x="236" y="36" width="150" height="60" rx="12" fill="var(--peach)"/>
+<text x="311" y="61" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Watch &amp; write</text>
+<text x="311" y="81" text-anchor="middle" font-size="12.5" fill="var(--muted)">journal open</text>
+<line x1="386" y1="66" x2="428" y2="66" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-min)"/>
+<rect x="436" y="36" width="120" height="60" rx="12" fill="var(--lilac)"/>
+<text x="496" y="72" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Clear shift?</text>
+<line x1="496" y1="96" x2="496" y2="142" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-min)"/>
+<text x="508" y="124" font-size="12.5" font-style="italic" fill="var(--muted)">yes</text>
+<rect x="436" y="150" width="120" height="56" rx="12" fill="var(--sage)"/>
+<text x="496" y="175" text-anchor="middle" font-size="14" font-weight="700" fill="var(--on-accent)">Stop.</text>
+<text x="496" y="193" text-anchor="middle" font-size="12" fill="var(--on-accent)">let it act</text>
+<path d="M436 86 C 380 130, 340 150, 302 162" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-min)"/>
+<text x="426" y="114" text-anchor="end" font-size="12.5" font-style="italic" fill="var(--muted)">no — after a few sensible repeats</text>
+<rect x="40" y="150" width="256" height="56" rx="12" fill="var(--sand-2)" stroke="var(--clay)" stroke-width="1.5"/>
+<text x="168" y="173" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">Still nothing: wrong choice —</text>
+<text x="168" y="192" text-anchor="middle" font-size="12.5" fill="var(--muted)">re-take the case with the chapter 2 grid</text>
+<path d="M60 150 C 48 128, 48 116, 68 100" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arr-min)"/>
+<text x="20" y="236" font-size="12" font-style="italic" fill="var(--muted)">Never escalate the dose — and red flags skip this whole chart: they go to the doctor.</text>
+</svg>
+<figcaption>Dose is frequency, and the exit is always one of two: stop on response, or re-take the case.</figcaption>
+</figure>
 
 Notice how this rhymes with the chapter 1 principle: the minimum intervention that acts. And notice what the whole logic quietly assumes: that you can *recognize* a response when you see one. Can you, though? What does a response actually look like — and how do you tell it from the illness simply running its course? **That question gets a whole chapter: chapter 7.** Until then, the rule is conservative: when in doubt, don't repeat, and write down what you saw. And the chapter 1 fence stands untouched underneath all of this: red flags go to the doctor — dosing logic is for the minor and self-limiting only.
 

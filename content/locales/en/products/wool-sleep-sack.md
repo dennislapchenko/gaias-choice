@@ -5,7 +5,7 @@ rating: 5
 price: "$46"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE4?tag=gaiaschoice-20"
 excerpt: A temperature-regulating merino sack that keeps a baby comfortable from chilly nights to warm afternoons.
-image: /images/wool-sleep-sack.webp
+image: /images/review-wool-sleep-sack.svg
 date: 2026-06-28
 tags: [wool, sleep, temperature]
 ---
