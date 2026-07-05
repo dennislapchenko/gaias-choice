@@ -5,7 +5,7 @@ image: /images/about.webp
 
 We didn't set out to run a review site. We set out to travel.
 
-Seven months ago we moved into a camper with our baby and started driving.
+Seven months ago we moved into a self-build camper with our baby(under a year) and started driving.
 Somewhere between a mountain pass and a laundromat parking lot, we realized how
 hard it was to find gear that was **actually natural** — no hidden plastics, no
 mystery fragrances, no synthetic coatings you'd rather not have next to a

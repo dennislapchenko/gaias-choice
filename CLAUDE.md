@@ -39,7 +39,7 @@ content/                 # ALL editable content (no code)
   locales/
     README.md            # how the per-locale content layout works
     en/                   # English — source of truth, always complete
-      site.yaml           # site name, tagline, mission, nav, values, heroImage, social
+      site.yaml           # site name, tagline, description, bio, mission, nav, values, heroImage, social
       products/*.md       # reviews  → /reviews/<filename-without-.md>
       guides/*.md         # guides   → /guides/<filename-without-.md>
       pages/*.md          # standalone pages (about, contact, roadmap, disclosure, privacy)
@@ -288,9 +288,13 @@ renders as a `SidebarMobile` tab-row — a row of rectangular toggles, one open 
 a time. `Sidebar.tsx`'s `PANELS` registry defines the panels; the composition +
 order are content-driven (`site.yaml` `sidebar:` list, currently `about` +
 `missionValues` + `almanac`). The `about` panel surfaces the linked page's
-frontmatter `image` (via `getPage`), the site `description`, and a link to the
-full `/about` page. Add a new panel by registering a `{ label, Body, desktopOpen }`
-entry and referencing its `type` from `site.yaml`.
+frontmatter `image` (via `getPage`), the site `bio` (a short personal line —
+distinct from `description`, which is the longer blurb used on the homepage
+hero), and a link to the full `/about` page. The whole panel body is one click
+target (`.side-about` + `.side-about-link::after`, the same stretched-link
+trick as `.card-link` on product/guide cards) — not just the "Our story" text.
+Add a new panel by registering a `{ label, Body, desktopOpen }` entry and
+referencing its `type` from `site.yaml`.
 
 The first widget is `AstroCalendar.tsx`: a month grid where days with celestial
 events are marked with astrological glyphs. Hovering/focusing/clicking a marked day

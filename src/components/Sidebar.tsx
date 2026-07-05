@@ -60,13 +60,13 @@ function AboutBody({ site, t, locale }: BodyProps) {
   const page = getPage(locale, 'about')
   const image = withBase(page?.image)
   return (
-    <>
+    <div className="side-about">
       {image && <img className="side-about-img" src={image} alt={page?.title ?? ''} loading="lazy" />}
-      <p className="side-about-text">{site.description}</p>
+      <p className="side-about-text">{site.bio}</p>
       <Link className="side-about-link" to="/about">
         {t('sidebar.aboutMore')}
       </Link>
-    </>
+    </div>
   )
 }
 

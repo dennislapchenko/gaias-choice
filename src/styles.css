@@ -565,7 +565,16 @@ h1 {
   color: var(--muted);
 }
 
-/* About panel: the linked page's image, a short blurb, and a link to the story */
+/* About panel: the linked page's image, a short blurb, and a link to the story.
+   The whole block is one click target — `.side-about-link` stretches an
+   invisible overlay across `.side-about`, same trick as `.card-link` on
+   product/guide cards. */
+.side-about {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
 .side-about-img {
   display: block;
   width: 100%;
@@ -583,6 +592,12 @@ h1 {
   align-self: flex-start;
   font-size: 0.85rem;
   font-weight: 600;
+}
+.side-about-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
 }
 
 /* almanac subtitle, shown inside the open panel above the calendar */

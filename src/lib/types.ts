@@ -30,6 +30,7 @@ export interface SiteConfig {
   name: string
   tagline: string
   description: string
+  bio: string // short personal line shown in the sidebar About panel (site.description is used on the homepage hero instead)
   mission: string
   heroImage?: string
   values: ValueItem[]
