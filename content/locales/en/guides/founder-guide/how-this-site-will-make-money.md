@@ -115,7 +115,9 @@ Not now — but the roadmap should point here:
   A free one-pager doubles as the email-list magnet.
 - **Email list.** The only audience we own. Start collecting early — even a simple
   "new reviews, monthly" newsletter. Every future revenue layer multiplies
-  through it. (Dev note: we can self-host — Listmonk, or a tiny custom
+  through it. And the strongest magnet is already on the site: the free
+  Compass courses — a multi-chapter course beats any one-page freebie as a
+  reason to leave an email address. (Dev note: we can self-host — Listmonk, or a tiny custom
   service — instead of paying ConvertKit; a backend is our cheap superpower.)
 - **Display ads — later, maybe never.** Premium networks gate hard (Mediavine
   historically ~50k sessions/month; Raptive ~100k pageviews). AdSense before

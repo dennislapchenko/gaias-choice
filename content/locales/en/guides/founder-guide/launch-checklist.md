@@ -58,6 +58,10 @@ caption: "Six sections, one exam. A page that fails the stranger test gets fixed
 - [ ] 2–3 reader-facing guides rewritten from real experience (the current
       founder guides get replaced gradually — that's fine, they're honest
       about what they are).
+- [ ] Every Compass course says what it is right at the top — founder notes
+      like this course, or a curriculum openly drafted with an LLM from our
+      context and influences. Chapter 1's provenance rule, made checkable:
+      unlabeled is the only dishonest option.
 
 ## 3. Domain & plumbing
 

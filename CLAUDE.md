@@ -479,7 +479,13 @@ learning the affiliate-content business as they go:
   (epic tag `founder-guide`, `chapter:` 1–5, Trail/Bridge weave like the
   reader courses — plan in `context/course-plan-building-in-public.md`).
   Chapters get retold from lived experience as milestones land. Don't "fix"
-  them into consumer content by other means.
+  them into consumer content by other means. Retold 2026-07-05 (both locales):
+  the chapters now state the site's real shape — **reviews are the core, the
+  Compass courses the powerhouse** — and ch. 1 names **the provenance rule**
+  (every page says what it is; some courses are openly LLM-drafted from the
+  owners' context/influences/personality — founder ch. 1 is currently the
+  site's only public disclosure of that). The launch checklist carries an
+  open item to label each reader course's provenance at its top.
 - The first **reader-facing Compass courses** are in progress: `homeopathy` and
   `herbalism` epics, chapters 1–3 of 11 each (both locales). Chapter 3's
   "next" link is deliberately text-only («готовится») until chapter 4 ships —

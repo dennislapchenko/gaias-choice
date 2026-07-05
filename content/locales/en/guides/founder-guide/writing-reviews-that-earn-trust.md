@@ -20,6 +20,13 @@ the one that has to come first — turned into a repeatable process. Everything
 in this guide exists to make the honest answer "yes" — and to make that
 obvious on the page.
 
+One boundary before the rules, because chapter 1 drew it and this chapter
+enforces it: everything below governs **reviews** — the pages that claim
+lived use. The Compass courses make a different claim and live by the
+provenance rule instead — they say openly what they are, including the
+ones drafted with an LLM. The only door a product has into a course is the
+one rule 1 leaves open: named as "we haven't tried this", never rated.
+
 ## The rules
 
 1. **We never review a product we haven't used.** No exceptions, not even

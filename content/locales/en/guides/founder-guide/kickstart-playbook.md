@@ -83,6 +83,32 @@ reviewed must be one we bought (ideally with our own money) and used. The
 placeholder content's only job was to make the layout real — its replacement is
 the actual work.
 
+## The site we planned — and the site we got
+
+An honest note from mid-course, because the site has already outgrown the
+plan above. Gaia's Choice began as one thing: a place for one half of this
+family to publish reviews and the occasional guide. Then the other half —
+the technical one — kept sneaking in mini-course ideas, and the sneaking
+worked: the [Compass](/guides) is now a whole wing of the site, free
+multi-chapter courses standing next to the reviews. So the honest
+description of today's shape: **the reviews are the core** — they are the
+business model at the top of this page, the thing this course teaches —
+and **the courses are the powerhouse**: the deepest pages here, the
+biggest reason to come back, link, or send the site to a friend. The
+Compass builds both assets and converts neither; the money still walks in
+through the reviews (chapter 4).
+
+The courses also forced the literal-truth rule to grow a clause. Some are
+written from lived notes — this founder course is one. Others are **openly
+drafted with an LLM**: we gave the model a lot of context, our influences
+and our personality, so that a topic we care about could be laid out in
+the most streamlined, teachable order — frankly, better than we would have
+laid it out ourselves. That is not a violation of the literal-truth rule;
+hiding it would be. Call the clause **the provenance rule**: every page on
+this site says what it is. A review claims lived use and must prove it —
+that's chapter 2's whole job. A course claims a well-built curriculum —
+and must say openly how it was built.
+
 ## Order of operations
 
 Do these in order. Each one is pointless without the one before it.
@@ -169,6 +195,9 @@ its first dated line.
 
 - Name the two assets — trust and traffic — and say which one has to come first.
 - State the literal-truth rule and apply it to any page on this site.
+- Tell the two content kinds apart by the claim each makes — lived use
+  (reviews, the core) versus a well-built curriculum (courses, the
+  powerhouse) — and state the provenance rule that covers both.
 - Recite the order of operations and explain why each step is pointless
   without the one before it.
 
@@ -180,6 +209,8 @@ Answer from memory:
 2. What was the placeholder content's only legitimate job?
 3. Which step of the order of operations comes right before applying to
    affiliate programs — and why that order?
+4. Some Compass courses are openly drafted with an LLM. Why is that not a
+   violation of the literal-truth rule — and what exactly would violate it?
 
 ## Next
 

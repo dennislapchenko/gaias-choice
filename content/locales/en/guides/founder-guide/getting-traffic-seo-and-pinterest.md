@@ -36,6 +36,16 @@ knows. Two things matter for us:
    traveling with a baby) outrank three hundred scattered ones. We stay narrow
    until we've won the niche.
 
+One honest wrinkle in "narrow": the Compass. The courses (chapter 1 tells
+how they took the site over) mostly aren't gear pages at all — yet they
+serve the same reader, the family that wants things natural and
+thought-through. In the traffic plan they play a different position than
+reviews do: a review hunts buying-intent searches and converts; a free
+multi-chapter course is what gets bookmarked, linked, and sent to a
+friend — the kind of link a review page almost never earns on its own.
+Reviews get found; courses get remembered. Both count toward the content
+mass this chapter ends on.
+
 ### Keyword research without paid tools
 
 For each planned piece, spend fifteen minutes:

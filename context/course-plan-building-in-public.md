@@ -42,6 +42,11 @@ ch. 1's promise. Ch. 5 has no separate Практика: the checklist is the pr
 - **the order of operations / «порядок действий»** — ch. 1; reused in 4 (money is last on purpose)
 - **the weekly rhythm / «недельный ритм»** — ch. 1; reused in 3 (cadence), 5 (what takes over after launch)
 - **the flat months / «месяцы затишья»** — named in ch. 1 (failure list), taught in ch. 3
+- **the provenance rule / «правило происхождения»** — ch. 1 (added in the
+  2026-07-05 retell: a clause of the literal-truth rule — every page says what
+  it is; some Compass courses are openly LLM-drafted from our context,
+  influences and personality); reused in 2 (reviews-vs-courses boundary), 5
+  (checklist item)
 
 ## Seeds (each answered where named — audit holds)
 
@@ -50,6 +55,20 @@ ch. 1's promise. Ch. 5 has no separate Практика: the checklist is the pr
 - ch. 4 → ch. 5: the launch gate that catches every trap
 
 ## Maintenance notes
+
+- **2026-07-05 retell (site shape):** all five chapters now acknowledge what
+  the site became — **reviews are the core, the Compass courses the
+  powerhouse** (owner's framing: the site began as her review site with
+  occasional guides; he overtook it with mini-course ideas). Ch. 1 tells that
+  story («Сайт, который мы задумали, — и сайт, который получился») and names
+  the provenance rule; ch. 2 draws the reviews-vs-courses boundary; ch. 3
+  places courses in the traffic plan (reviews get found, courses get
+  remembered); ch. 4 calls the free courses the email magnet; ch. 5 gained an
+  **unchecked** checklist item: every Compass course states its provenance at
+  the top. The reader courses (homeopathy, herbalism) do NOT carry such a
+  label yet — the founder course's ch. 1 is currently the site's only public
+  disclosure that some courses are LLM-drafted; adding per-course labels is
+  the open task that checklist item points at.
 
 - Chapter order is driven by `chapter:` frontmatter, not `date` — dates keep
   the real authoring days (07-01…07-05) and must not be "fixed" to match order.
