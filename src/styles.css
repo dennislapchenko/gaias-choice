@@ -1649,8 +1649,9 @@ h1 {
   min-width: 0;
 }
 
-/* The copy-template action button (labelled CopyButton). */
-.journal-template-btn {
+/* The copy-template "Contribute!" action button (labelled CopyButton) — shared
+   by /journal and /reviews. */
+.copy-template-btn {
   margin: 0 0 20px;
   padding: 9px 14px;
 }

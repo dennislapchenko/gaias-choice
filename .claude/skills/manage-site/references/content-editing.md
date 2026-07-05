@@ -33,33 +33,28 @@ pick controls list position. Markdown is GFM (task-list checkboxes render).
 
 ## Add a product review → `content/locales/en/products/<slug>.md`
 
-```markdown
----
-title: Product Name
-category: Sleep            # Sleep | Feeding | Care | Kitchen | Travel (filter chips on /reviews)
-rating: 4                  # 0–5 stars; a 5 must survive the "no flaws?" test
-price: "$28"               # optional; always quote it
-# affiliateUrl: "https://…"   # ONLY once enrolled in the program — never a placeholder
-excerpt: One honest sentence a friend would text you about it.
-image: /images/review-<slug>.svg # optional; mandala art by default (see Images below)
-date: 2026-07-05           # today; controls ordering
-tags: [organic, cotton]    # optional
----
+**The canonical scaffold is `content/shared/review-template.<locale>.md`** —
+the same file the "Contribute!" button on `/reviews` copies to the clipboard
+(en + ru; `getReviewTemplate` in `content.ts`). Start every review from it.
+Frontmatter: `title`, `category` (must match the locale's existing category
+set — the filter chips), `rating` 0–5 (a 5 must survive the "no flaws?"
+test), `price` (always quoted), optional `affiliateUrl` (ONLY once enrolled —
+never a placeholder), `excerpt`, optional `image` (mandala SVG by default),
+`date`, optional `tags`.
 
-**Verdict:** …
+The five body sections are **the universal structure of every review** — keep
+them all, in this order:
 
-## How we tested it
-(how long, conditions, bought vs gifted — gifted must be disclosed here)
+1. `**Verdict:** …` — the answer first
+2. `## How we tested it` — duration, conditions, bought vs gifted (gifted
+   must be disclosed here)
+3. `## What's genuinely good`
+4. `## What we'd change` — every review names a flaw
+5. `## Who it's for` — and who should skip it
 
-## What's genuinely good
-
-## What we'd change
-
-## Who it's for
-```
-
-Ask for real testing notes if the user didn't provide them. Structure sections
-may flex, but verdict-first + a flaws section are fixed.
+To change the structure, edit the template files themselves (keep en + ru in
+lockstep) — don't improvise per review. Ask for real testing notes if the
+user didn't provide them.
 
 ## Add a Compass chapter → `content/locales/en/compass/<epic-tag>/<slug>.md`
 
@@ -126,13 +121,14 @@ rail) and opens through the same table-of-contents detail layout as a Compass
 chapter. Use `##`/`###` headings so the TOC renders (3+ needed). RU entries in
 her voice (persona-context).
 
-**The "copy a blank entry template" button** on `/journal` copies a generic,
-topic-agnostic scaffold — the single source is `content/shared/journal-template.<locale>.md`
-(edit that file to change what gets copied; en is the fallback). The seed entry
-`journal/driving-with-a-toddler.md` (en+ru) is a **topic-flavoured template the
-owner fills in** — kept as an explicit, prompt-driven skeleton (honest: it says
-so), not a fabricated trip. A future "even more generic for readers" template is
-just another `content/shared/journal-template.*` variant + button.
+**The "Contribute!" button** on `/journal` copies a generic, topic-agnostic
+scaffold — the single source is `content/shared/journal-template.<locale>.md`
+(edit that file to change what gets copied; en is the fallback). `/reviews`
+has the same button copying the review scaffold — see "Add a product review"
+above; the shared mechanics are the "Contribute!" row in `development.md`.
+The seed entry `journal/driving-with-a-toddler.md` (en+ru) is a
+**topic-flavoured template the owner fills in** — kept as an explicit,
+prompt-driven skeleton (honest: it says so), not a fabricated trip.
 
 ## Visuals inside guides (tables, diagrams, charts) — the house pattern
 

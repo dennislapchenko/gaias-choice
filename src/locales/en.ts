@@ -25,6 +25,7 @@ const en = {
   "reviews.lead": "Every item here has ridden with us for real miles — tested for materials, safety, and how it holds up to life on the road with a baby.",
   "reviews.filterAriaLabel": "Filter by category",
   "reviews.allCategory": "All",
+  "reviews.templateBtn": "Contribute!",
   "reviews.upcomingTitle": "In the works",
   "reviews.upcomingNote": "Gear we're testing next — queued, not yet reviewed.",
 

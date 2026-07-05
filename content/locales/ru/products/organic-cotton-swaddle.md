@@ -2,7 +2,7 @@
 title: Пелёнка-муслин из органического хлопка
 category: Сон
 rating: 5
-price: "$28"
+price: "€28"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE1?tag=gaiaschoice-20"
 excerpt: Дышащая пелёнка с сертификатом GOTS, которая заодно служит одеялом, солнцезащитным экраном и накидкой для кормления.
 image: /images/review-organic-cotton-swaddle.svg

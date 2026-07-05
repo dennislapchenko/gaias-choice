@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { getProducts, getSite } from '../lib/content'
+import { getProducts, getReviewTemplate, getSite } from '../lib/content'
 import { useI18n } from '../lib/i18n'
+import CopyButton from '../components/CopyButton'
 import ProductCard from '../components/ProductCard'
 import UpcomingReviews from '../components/UpcomingReviews'
 
@@ -35,6 +36,12 @@ export default function Reviews() {
 
       <div className="reviews-layout">
         <div className="reviews-main">
+          <CopyButton
+            value={getReviewTemplate(locale)}
+            label={t('reviews.templateBtn')}
+            className="copy-template-btn"
+          />
+
           <div className="filters" role="tablist" aria-label={t('reviews.filterAriaLabel')}>
             {categories.map((c) => (
               <button

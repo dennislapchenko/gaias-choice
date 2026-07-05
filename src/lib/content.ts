@@ -211,10 +211,11 @@ const pageModules = import.meta.glob('../../content/locales/*/pages/*.md', {
   eager: true,
 }) as Record<string, string>
 
-// Blank Journal-entry templates the "copy template" button hands to the owner.
-// One raw markdown scaffold per locale (journal-template.<locale>.md), single
-// source of truth — see getJournalTemplate.
-const journalTemplateModules = import.meta.glob('../../content/shared/journal-template.*.md', {
+// Blank entry templates the "Contribute!" copy buttons hand to the owner. One
+// raw markdown scaffold per kind and locale
+// (content/shared/<kind>-template.<locale>.md), single source of truth — see
+// getJournalTemplate / getReviewTemplate.
+const templateModules = import.meta.glob('../../content/shared/*-template.*.md', {
   query: '?raw',
   import: 'default',
   eager: true,
@@ -234,11 +235,15 @@ sortByDate(productsByLocale)
 sortByDate(compassByLocale)
 sortByDate(journalByLocale)
 
-const journalTemplateByLocale: Partial<Record<Locale, string>> = {}
-for (const [path, raw] of Object.entries(journalTemplateModules)) {
-  const match = /journal-template\.([^.]+)\.md$/.exec(path)
-  journalTemplateByLocale[(match?.[1] ?? 'en') as Locale] = raw
+const templatesByKind: Record<string, Partial<Record<Locale, string>>> = {}
+for (const [path, raw] of Object.entries(templateModules)) {
+  const match = /([\w-]+)-template\.([^.]+)\.md$/.exec(path)
+  if (!match) continue
+  ;(templatesByKind[match[1]] ??= {})[match[2] as Locale] = raw
 }
+
+const templateFor = (kind: string, locale: Locale): string =>
+  templatesByKind[kind]?.[locale] ?? templatesByKind[kind]?.en ?? ''
 
 // Shallow-merge English as the base under the requested locale: a locale's own
 // fields win, but anything it omits (e.g. non-localized `support:` payment
@@ -260,6 +265,8 @@ export const getCompassEntry = (locale: Locale, slug: string) => entryFor(compas
 export const getJournalEntry = (locale: Locale, slug: string) => entryFor(journalByLocale, locale, slug)
 export const getPage = (locale: Locale, slug: string) => entryFor(pagesByLocale, locale, slug)
 
-/** The blank Journal-entry template for the "copy template" button (en fallback). */
-export const getJournalTemplate = (locale: Locale): string =>
-  journalTemplateByLocale[locale] ?? journalTemplateByLocale.en ?? ''
+/** The blank Journal-entry template for the /journal "Contribute!" button (en fallback). */
+export const getJournalTemplate = (locale: Locale): string => templateFor('journal', locale)
+
+/** The blank review template for the /reviews "Contribute!" button (en fallback). */
+export const getReviewTemplate = (locale: Locale): string => templateFor('review', locale)

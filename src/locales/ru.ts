@@ -26,6 +26,7 @@ const ru: Record<keyof typeof en, string> = {
   "reviews.lead": "Каждая вещь здесь проехала с нами реальные километры — мы проверили материалы, безопасность и то, как она выдерживает дорожную жизнь с младенцем.",
   "reviews.filterAriaLabel": "Фильтр по категории",
   "reviews.allCategory": "Все",
+  "reviews.templateBtn": "Сделай вклад!",
   "reviews.upcomingTitle": "В работе",
   "reviews.upcomingNote": "Вещи, которые тестируем следующими, — в очереди, обзора пока нет.",
 

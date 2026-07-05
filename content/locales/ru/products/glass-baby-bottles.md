@@ -2,7 +2,7 @@
 title: Стеклянные детские бутылочки с силиконовым чехлом
 category: Кормление
 rating: 4
-price: "$32"
+price: "€32"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE5?tag=gaiaschoice-20"
 excerpt: Бутылочки без пластика, которые не мутнеют, не окрашиваются и не впитывают запахи — с чехлом, который выдерживает дорогу.
 image: /images/review-glass-baby-bottles.svg

@@ -107,7 +107,7 @@ Copy this into `content/products/<slug>.md` and fill it in:
 title: Product Name
 category: Sleep            # Sleep | Feeding | Care | Kitchen | Travel
 rating: 4                  # 0–5; a 5 must survive the "no flaws?" test
-price: "$28"
+price: "€28"
 # affiliateUrl: add ONLY after joining the program — never a placeholder
 excerpt: One honest sentence a friend would text you about it.
 image: /images/<slug>.webp # our own photo, optimized via `task images`

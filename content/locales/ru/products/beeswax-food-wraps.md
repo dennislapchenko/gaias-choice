@@ -2,7 +2,7 @@
 title: Восковые пищевые обёртки
 category: Кухня
 rating: 4
-price: "$18"
+price: "€18"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE3?tag=gaiaschoice-20"
 excerpt: Многоразовые компостируемые обёртки, которые полностью заменили нам рулон пищевой плёнки.
 image: /images/review-beeswax-food-wraps.svg

@@ -2,7 +2,7 @@
 title: Beeswax Food Wraps
 category: Kitchen
 rating: 4
-price: "$18"
+price: "€18"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE3?tag=gaiaschoice-20"
 excerpt: Reusable, compostable wraps that replaced our entire roll of plastic cling film.
 image: /images/review-beeswax-food-wraps.svg

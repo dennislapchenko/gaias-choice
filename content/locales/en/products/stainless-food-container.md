@@ -2,7 +2,7 @@
 title: Stainless Steel Bento Container
 category: Feeding
 rating: 4
-price: "$34"
+price: "€34"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE2?tag=gaiaschoice-20"
 excerpt: Plastic-free, leak-resistant food storage that survives being dropped on a gravel pitch.
 image: /images/review-stainless-food-container.svg

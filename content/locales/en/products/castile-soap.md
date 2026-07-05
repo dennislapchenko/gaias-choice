@@ -2,7 +2,7 @@
 title: Fragrance-Free Castile Soap
 category: Care
 rating: 5
-price: "$12"
+price: "€12"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE6?tag=gaiaschoice-20"
 excerpt: One plant-based bottle that washes bodies, dishes, and floors — no fragrance, no plastic clutter.
 image: /images/review-castile-soap.svg

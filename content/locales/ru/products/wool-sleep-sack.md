@@ -2,7 +2,7 @@
 title: Спальный мешок из мериносовой шерсти
 category: Сон
 rating: 5
-price: "$46"
+price: "€46"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE4?tag=gaiaschoice-20"
 excerpt: Спальный мешок из мериноса с терморегуляцией, который обеспечивает комфорт малышу и в прохладные ночи, и в тёплые дни.
 image: /images/review-wool-sleep-sack.svg

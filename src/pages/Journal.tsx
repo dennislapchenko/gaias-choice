@@ -30,7 +30,7 @@ export default function Journal() {
           <CopyButton
             value={getJournalTemplate(locale)}
             label={t('journal.templateBtn')}
-            className="journal-template-btn"
+            className="copy-template-btn"
           />
 
           <div className="journal-list">

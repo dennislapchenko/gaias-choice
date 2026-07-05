@@ -63,8 +63,8 @@ content/                 # ALL editable content (no code)
   shared/
     diagrams/*.svg       # diagram templates ({{slot}} tokens) — geometry authored once,
                          # reused by every locale (see Compass below)
-    journal-template.<locale>.md  # blank Journal-entry scaffold behind the /journal
-                                  # "copy template" button (getJournalTemplate)
+    <kind>-template.<locale>.md   # blank scaffolds behind the "Contribute!" copy
+                                  # buttons (journal- on /journal, review- on /reviews)
   themes.yaml            # color palettes (tag + label + default + colors) — not localized
 context/                 # authoring context (NOT bundled into the site)
   persona-context.md     # the author's voice + the family's REAL biography — read before
@@ -140,7 +140,10 @@ Authoring procedures (frontmatter schemas, voice rules, step-by-steps) live in
 
 **Reviews** (`/reviews`, `products/*.md`) — frontmatter `title`, `category`
 (filter chip), `rating` 0–5, optional `price`/`affiliateUrl` (rendered
-`rel=sponsored`)/`image`/`tags`, `excerpt`, `date`. The public queue of
+`rel=sponsored`)/`image`/`tags`, `excerpt`, `date`. Every review follows the
+universal five-section body structure whose canonical source is
+`content/shared/review-template.<locale>.md` — the scaffold the "Contribute!"
+button on `/reviews` copies to the clipboard. The public queue of
 not-yet-written reviews is the `upcoming:` list in `site.yaml`, rendered as the
 "in the works" rail on `/reviews` — entries are `{name, url}` only, explicitly
 not reviews.
@@ -183,8 +186,8 @@ computer-assisted** section, disclosed by the `compass.provenance` banner
 date-ordered blog**, the honest counterpart to the Compass (provenance
 contract: SKILL.md #6). Frontmatter `title`, `excerpt`, `date`, optional
 `tags`/`image`; no per-entry wiring. Lists as plain text rows filterable by
-year; opens through `EntryDetail`. A "copy a blank entry template" button on
-`/journal` copies `content/shared/journal-template.<locale>.md`. The seed
+year; opens through `EntryDetail`. A "Contribute!" button on `/journal`
+copies `content/shared/journal-template.<locale>.md`. The seed
 entry (`journal/driving-with-a-toddler.md`) is an explicit fill-in template,
 not an invented trip.
 
