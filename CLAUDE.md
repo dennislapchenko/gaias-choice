@@ -49,7 +49,7 @@ context/                 # authoring context (NOT bundled into the site)
   persona-context.md     # the author's voice + the family's REAL biography — read before writing/rephrasing RU content or any "who we are" copy
   ideology-context.md    # influences by domain: Health (Chek, Asprey) / Worldview (Buhner, Daragan, Ralston) / Children (Steiner, Swan) — extensible; Health governs food claims
   plan-rephrase-ru-voice.md  # pending task: rephrase all RU content in her voice
-  epic-writing-context.md  # blueprint for 11-chapter Learn epic courses (curriculum, Thread weave, chapter anatomy)
+  epic-writing-context.md  # blueprint for 11-chapter Compass epic courses (curriculum, Thread weave, chapter anatomy)
   course-plan-homeopathy.md  # «Гомеопатия дома»: full 11-chapter outline, concepts, seeds (ch. 1–3 shipped)
   course-plan-herbalism.md   # «Домашний травник»: full 11-chapter outline, concepts, seeds (ch. 1–3 shipped)
 public/
@@ -122,18 +122,20 @@ Markdown body…
 
 `content/locales/en/guides/<slug>.md` — same idea, fields: `title`, `excerpt`,
 `image?`, `date`, `tags?`, `chapter?` (number). The section is user-facing
-**"Learn" / "Обучение"** (nav + `guides.title`), framed as course-like
-collections — but the **route and content dir stay `/guides`** internally.
-**A guide's FIRST tag is its "epic"** (a course): the Learn page shows epics as
-thumbnails (tabs) and lists the selected epic's items, with the epic's `blurb`
-as a course intro. Epic metadata (title, thumbnail, blurb) is configured in
+**"Compass" / "Путь"** (nav + `guides.title`) — deliberately not called
+"Guides"/"Courses"/"Learn" in any visible copy, though it's framed as
+course-like collections internally — but the **route and content dir stay
+`/guides`** internally. **A guide's FIRST tag is its "epic"** (a course): the
+Compass page shows epics as thumbnails (tabs) and lists the selected epic's
+items, with the epic's `blurb` as a course intro. Epic metadata (title,
+thumbnail, blurb) is configured in
 `site.yaml` `epics:` (`GuideEpic` in `lib/types.ts`); the first configured epic
 is the default. Three epics exist: `founder-guide` (the 5 founder guides) plus
 two reader-facing 11-chapter courses in progress — `homeopathy` («Гомеопатия
 дома») and `herbalism` («Домашний травник»), chapters 1–3 each shipped
 2026-07-05; their outlines live in `context/course-plan-*.md`.
 **Ideology:** each epic should read like a complete, streamlined free course.
-See the "New Learn epic" task in `references/development.md`.
+See the "New Compass epic" task in `references/development.md`.
 
 Optional `chapter: N` orders guides within an epic for course sequencing
 (ascending, independent of `date`); guides without it keep the existing
@@ -144,7 +146,7 @@ column next to the article on desktop, a `<details open>` block on mobile
 (expanded by default, still collapsible by tapping the summary), only once a
 guide has 3+ headings (`components/TableOfContents.tsx`). `.detail-layout`
 (`styles.css`) uses `grid-template-areas` with three regions — `nav` (the
-"Back to Learn" link + tags, its own `.detail-nav` wrapper), `article`, and
+"Back to the Compass" link + tags, its own `.detail-nav` wrapper), `article`, and
 `toc` — so the back-link can span full width above the two-column row on
 desktop while, on mobile (`display: flex` + `order`), it renders above the
 TOC, which renders above the article body.
@@ -411,7 +413,7 @@ learning the affiliate-content business as they go:
   master playbook), deliberately public. They will be replaced by
   reader-facing guides once the owners have real first-hand content. Don't
   "fix" them back into consumer content.
-- The first **reader-facing Learn courses** are in progress: `homeopathy` and
+- The first **reader-facing Compass courses** are in progress: `homeopathy` and
   `herbalism` epics, chapters 1–3 of 11 each (both locales). Chapter 3's
   "next" link is deliberately text-only («готовится») until chapter 4 ships —
   keep that pattern for any course published mid-write.

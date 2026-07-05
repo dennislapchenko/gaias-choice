@@ -16,11 +16,11 @@ const ru: Record<keyof typeof en, string> = {
 
   'home.eyebrow': 'Натурально · Без пластика · Без отдушек',
   'home.browseReviews': 'Смотреть обзоры',
-  'home.readGuides': 'Начать обучение',
+  'home.readGuides': 'В путь!',
   'home.featuredReviews': 'Избранные обзоры',
   'home.allReviews': 'Все обзоры →',
-  'home.latestGuides': 'Новое в обучении',
-  'home.allGuides': 'К обучению →',
+  'home.latestGuides': 'Новое на пути',
+  'home.allGuides': 'Весь путь →',
 
   'reviews.title': 'Обзоры',
   'reviews.lead':
@@ -28,7 +28,7 @@ const ru: Record<keyof typeof en, string> = {
   'reviews.filterAriaLabel': 'Фильтр по категории',
   'reviews.allCategory': 'Все',
 
-  'guides.title': 'Обучение',
+  'guides.title': 'Путь',
   'guides.lead':
     'Бесплатные, выстроенные по шагам курсы — без воды и допродаж. Каждый ведёт от начала до конца, по порядку. Пока что это наш план основателей: честный, пошаговый путь, которым мы строим этот сайт в открытую. Курсы для читателей появятся, когда мы наберёмся опыта.',
   'guides.tag': 'Гайд',
@@ -41,7 +41,7 @@ const ru: Record<keyof typeof en, string> = {
   'reviewDetail.backLink': '← Все обзоры',
   'reviewDetail.checkPrice': 'Узнать текущую цену →',
 
-  'guideDetail.backLink': '← К обучению',
+  'guideDetail.backLink': '← К пути',
 
   'notFound.title': 'Страница не найдена',
   'notFound.body': 'Эта тропа пока никуда не ведёт.',

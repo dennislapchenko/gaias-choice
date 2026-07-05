@@ -57,7 +57,7 @@ epics:
 nav:
   - { label: Главная, path: / }
   - { label: Обзоры, path: /reviews }
-  - { label: Обучение, path: /guides }
+  - { label: Путь, path: /guides }
   - { label: Roadmap, path: /roadmap }
   - { label: Контакты, path: /contact }
 

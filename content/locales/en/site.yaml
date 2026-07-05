@@ -55,7 +55,7 @@ epics:
 nav:
   - { label: Home, path: / }
   - { label: Reviews, path: /reviews }
-  - { label: Learn, path: /guides }
+  - { label: Compass, path: /guides }
   - { label: Roadmap, path: /roadmap }
   - { label: Contact, path: /contact }
 

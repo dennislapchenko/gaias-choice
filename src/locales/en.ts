@@ -15,11 +15,11 @@ const en = {
 
   'home.eyebrow': 'Natural · Plastic-free · Fragrance-free',
   'home.browseReviews': 'Browse reviews',
-  'home.readGuides': 'Start learning',
+  'home.readGuides': 'Explore the Compass',
   'home.featuredReviews': 'Featured reviews',
   'home.allReviews': 'All reviews →',
-  'home.latestGuides': 'New in Learn',
-  'home.allGuides': 'Explore Learn →',
+  'home.latestGuides': 'New on the Compass',
+  'home.allGuides': 'More on the Compass →',
 
   'reviews.title': 'Reviews',
   'reviews.lead':
@@ -27,7 +27,7 @@ const en = {
   'reviews.filterAriaLabel': 'Filter by category',
   'reviews.allCategory': 'All',
 
-  'guides.title': 'Learn',
+  'guides.title': 'Compass',
   'guides.lead':
     'Free, structured tracks that read like a real course — no fluff, no upsell. Each one takes you end to end, in order. Right now it’s our founder playbook: the honest, step-by-step path we’re taking to build this site in public. Reader-facing courses will join as we earn the experience.',
   'guides.tag': 'Guide',
@@ -40,7 +40,7 @@ const en = {
   'reviewDetail.backLink': '← All reviews',
   'reviewDetail.checkPrice': 'Check current price →',
 
-  'guideDetail.backLink': '← Back to Learn',
+  'guideDetail.backLink': '← Back to the Compass',
 
   'notFound.title': 'Not found',
   'notFound.body': "This trail doesn't lead anywhere yet.",
