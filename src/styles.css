@@ -303,87 +303,60 @@ h1 {
   }
 }
 
-/* ---------- Language switcher (same shape as the palette switcher above) ---------- */
+/* ---------- Language switcher (flag toggle — cycles locale on click) ---------- */
 .lang-switcher {
   position: relative;
+  display: inline-flex;
 }
 .lang-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 7px 13px;
+  justify-content: center;
+  padding: 6px 10px;
   border: 1px solid var(--line);
   background: var(--white);
   border-radius: 999px;
   cursor: pointer;
-  font-size: 0.9rem;
-  color: var(--ink);
+  line-height: 1;
 }
 .lang-toggle:hover {
   background: var(--sand-2);
 }
-.lang-toggle-code {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--sage-dark);
+.lang-flag {
+  font-size: 1.2rem;
+  line-height: 1;
 }
-.lang-menu {
+/* Peek of the language a click switches to — on hover, and flashed after a click. */
+.lang-hint {
   position: absolute;
-  right: 0;
-  top: calc(100% + 8px);
-  margin: 0;
-  padding: 6px;
-  list-style: none;
-  width: 160px;
-  background: var(--white);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow);
-  z-index: 20;
-}
-.lang-option {
-  display: flex;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 9px 10px;
-  border: 0;
-  background: transparent;
-  border-radius: 12px;
-  cursor: pointer;
-  text-align: left;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+  z-index: 30;
 }
-.lang-option:hover,
-.lang-option.is-active {
-  background: var(--sand-2);
+.lang-hint-arrow {
+  font-size: 0.8rem;
+  opacity: 0.7;
 }
-.lang-option-code {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--sage-dark);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  width: 22px;
-}
-.lang-option-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.25;
-  flex: 1;
-}
-.lang-label {
-  font-weight: 600;
-  font-size: 0.92rem;
-  color: var(--ink);
-}
-.lang-check {
-  color: var(--sage-dark);
-  font-weight: 700;
-}
-@media (max-width: 480px) {
-  .lang-toggle-label {
-    display: none;
-  }
+.lang-switcher:hover .lang-hint,
+.lang-hint.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 /* ---------- Layout ---------- */

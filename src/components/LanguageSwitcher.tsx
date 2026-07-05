@@ -1,74 +1,43 @@
 import { useEffect, useRef, useState } from 'react'
-import { LOCALE_LABELS, SUPPORTED_LOCALES, useI18n, type Locale } from '../lib/i18n'
+import { LOCALE_FLAGS, LOCALE_LABELS, SUPPORTED_LOCALES, useI18n } from '../lib/i18n'
 
+// A flag-emoji button that cycles to the next locale on click — no menu. A small
+// hint flashes the next language's flag after a click (and shows it on hover), so
+// it's clear where another click leads.
 export default function LanguageSwitcher() {
   const { locale, setLocale, t } = useI18n()
-  const [open, setOpen] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
+  const [flash, setFlash] = useState(false)
+  const timer = useRef<number | undefined>(undefined)
 
-  // Close the menu on outside click or Escape.
-  useEffect(() => {
-    if (!open) return
-    const onDown = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
-    }
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
-    document.addEventListener('mousedown', onDown)
-    document.addEventListener('keydown', onKey)
-    return () => {
-      document.removeEventListener('mousedown', onDown)
-      document.removeEventListener('keydown', onKey)
-    }
-  }, [open])
+  const idx = SUPPORTED_LOCALES.indexOf(locale)
+  const next = SUPPORTED_LOCALES[(idx + 1) % SUPPORTED_LOCALES.length]
 
-  const select = (next: Locale) => {
+  useEffect(() => () => window.clearTimeout(timer.current), [])
+
+  const cycle = () => {
     setLocale(next)
-    setOpen(false)
+    setFlash(true)
+    window.clearTimeout(timer.current)
+    timer.current = window.setTimeout(() => setFlash(false), 1100)
   }
 
   return (
-    <div className="lang-switcher" ref={ref}>
+    <div className="lang-switcher">
       <button
         type="button"
         className="lang-toggle"
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        title={t('lang.changeTitle')}
-        onClick={() => setOpen((o) => !o)}
+        onClick={cycle}
+        aria-label={t('lang.changeTitle')}
+        title={LOCALE_LABELS[next]}
       >
-        <span className="lang-toggle-code" aria-hidden="true">
-          {locale.toUpperCase()}
+        <span className="lang-flag" aria-hidden="true">
+          {LOCALE_FLAGS[locale]}
         </span>
-        <span className="lang-toggle-label">{t('lang.toggleLabel')}</span>
       </button>
-
-      {open && (
-        <ul className="lang-menu" role="listbox" aria-label={t('lang.menuAriaLabel')}>
-          {SUPPORTED_LOCALES.map((code) => (
-            <li key={code}>
-              <button
-                type="button"
-                role="option"
-                aria-selected={code === locale}
-                className={`lang-option ${code === locale ? 'is-active' : ''}`}
-                onClick={() => select(code)}
-              >
-                <span className="lang-option-code" aria-hidden="true">
-                  {code.toUpperCase()}
-                </span>
-                <span className="lang-option-text">
-                  <span className="lang-label">{LOCALE_LABELS[code]}</span>
-                </span>
-                {code === locale && (
-                  <span className="lang-check" aria-hidden="true">
-                    ✓
-                  </span>
-                )}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+      <span className={`lang-hint${flash ? ' show' : ''}`} aria-hidden="true">
+        <span className="lang-hint-arrow">→</span>
+        {LOCALE_FLAGS[next]}
+      </span>
     </div>
   )
 }

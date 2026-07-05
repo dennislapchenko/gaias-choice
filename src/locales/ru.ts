@@ -51,8 +51,6 @@ const ru: Record<keyof typeof en, string> = {
   'theme.default': 'по умолчанию',
 
   'lang.changeTitle': 'Сменить язык',
-  'lang.toggleLabel': 'Язык',
-  'lang.menuAriaLabel': 'Язык',
 
   'astro.prevMonth': 'Предыдущий месяц',
   'astro.nextMonth': 'Следующий месяц',

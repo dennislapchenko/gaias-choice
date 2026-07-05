@@ -12,6 +12,12 @@ export const LOCALE_LABELS: Record<Locale, string> = {
   en: 'English',
 }
 
+// Flag emoji shown in the language toggle (which cycles locales on click).
+export const LOCALE_FLAGS: Record<Locale, string> = {
+  ru: '🇷🇺',
+  en: '🇬🇧',
+}
+
 export const DEFAULT_LOCALE: Locale = 'ru'
 
 const STORAGE_KEY = 'gc-lang'

@@ -50,8 +50,6 @@ const en = {
   'theme.default': 'default',
 
   'lang.changeTitle': 'Change language',
-  'lang.toggleLabel': 'Language',
-  'lang.menuAriaLabel': 'Language',
 
   'astro.prevMonth': 'Previous month',
   'astro.nextMonth': 'Next month',

@@ -212,15 +212,16 @@ via `useI18n()`.
   products at all yet), then per-slug (if only some `ru` products exist). The
   site never breaks or shows blank content mid-translation.
 - `components/LanguageSwitcher.tsx` (in the header, next to `ThemeSwitcher`)
-  is styled as its own `.lang-*` CSS block that mirrors `.theme-*` in
-  `styles.css` — same shape, same interaction pattern (dropdown, outside
-  click/Escape to close).
+  is **not** a dropdown: it's a single flag-emoji button that **cycles to the
+  next locale on click** (no menu), showing the current locale's flag
+  (`LOCALE_FLAGS` in `i18n.tsx`) with a `.lang-hint` chip that flashes the next
+  language's flag on click/hover. `ThemeSwitcher` is still the dropdown pattern.
 - `components/AstroCalendar.tsx` gets month/weekday names from
   `Intl.DateTimeFormat(locale, ...)` instead of the string dictionary — new
   locales get correct calendar names for free, no translation entry needed.
-- **Adding a locale:** add its code to `SUPPORTED_LOCALES` + `LOCALE_LABELS`,
-  add `src/locales/<lng>.ts` with every key from `en.ts`, and start dropping
-  files into `content/locales/<lng>/`.
+- **Adding a locale:** add its code to `SUPPORTED_LOCALES` + `LOCALE_LABELS` +
+  `LOCALE_FLAGS` (all in `i18n.tsx`), add `src/locales/<lng>.ts` with every key
+  from `en.ts`, and start dropping files into `content/locales/<lng>/`.
 - **Russian (`ru`) is fully translated** — UI strings (`src/locales/ru.ts`) and
   all content (`content/locales/ru/`: site.yaml, products, guides, pages). The
   `TRANSLATION_STATUS.md` tracker was deleted once complete, as its own header
