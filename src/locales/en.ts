@@ -16,10 +16,13 @@ const en = {
   "home.eyebrow": "Natural · Plastic-free · Fragrance-free",
   "home.browseReviews": "Browse reviews",
   "home.readGuides": "Explore the Compass",
+  "home.readJournal": "Read the Journal",
   "home.featuredReviews": "Featured reviews",
   "home.allReviews": "All reviews →",
   "home.latestGuides": "New on the Compass",
   "home.allGuides": "More on the Compass →",
+  "home.latestJournal": "Fresh from the Journal",
+  "home.allJournal": "All entries →",
 
   "reviews.title": "Reviews",
   "reviews.lead": "Every item here has ridden with us for real miles — tested for materials, safety, and how it holds up to life on the road with a baby.",

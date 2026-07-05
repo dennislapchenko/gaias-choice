@@ -187,7 +187,9 @@ date-ordered blog**, the honest counterpart to the Compass (provenance
 contract: SKILL.md #6). Frontmatter `title`, `excerpt`, `date`, optional
 `tags`/`image`; no per-entry wiring. Lists as plain text rows filterable by
 year; opens through `EntryDetail`. A "Contribute!" button on `/journal`
-copies `content/shared/journal-template.<locale>.md`. The seed
+copies `content/shared/journal-template.<locale>.md`. The landing page
+surfaces it too: a hero "Read the Journal" button and a "Fresh from the
+Journal" section (latest 3 rows) in `Home.tsx`. The seed
 entry (`journal/driving-with-a-toddler.md`) is an explicit fill-in template,
 not an invented trip.
 

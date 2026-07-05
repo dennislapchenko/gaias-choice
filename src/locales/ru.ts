@@ -17,10 +17,13 @@ const ru: Record<keyof typeof en, string> = {
   "home.eyebrow": "Натурально · Без пластика · Без отдушек",
   "home.browseReviews": "Смотреть обзоры",
   "home.readGuides": "В путь!",
+  "home.readJournal": "Читать заметки",
   "home.featuredReviews": "Избранные обзоры",
   "home.allReviews": "Все обзоры →",
   "home.latestGuides": "Новое на пути",
   "home.allGuides": "Весь путь →",
+  "home.latestJournal": "Свежие заметки",
+  "home.allJournal": "Все заметки →",
 
   "reviews.title": "Обзоры",
   "reviews.lead": "Каждая вещь здесь проехала с нами реальные километры — мы проверили материалы, безопасность и то, как она выдерживает дорожную жизнь с младенцем.",
