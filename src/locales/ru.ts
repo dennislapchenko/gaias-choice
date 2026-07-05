@@ -16,11 +16,11 @@ const ru: Record<keyof typeof en, string> = {
 
   'home.eyebrow': 'Натурально · Без пластика · Без отдушек',
   'home.browseReviews': 'Смотреть обзоры',
-  'home.readGuides': 'Читать гайды',
+  'home.readGuides': 'Начать обучение',
   'home.featuredReviews': 'Избранные обзоры',
   'home.allReviews': 'Все обзоры →',
-  'home.latestGuides': 'Свежие гайды',
-  'home.allGuides': 'Все гайды →',
+  'home.latestGuides': 'Новое в обучении',
+  'home.allGuides': 'К обучению →',
 
   'reviews.title': 'Обзоры',
   'reviews.lead':
@@ -28,15 +28,16 @@ const ru: Record<keyof typeof en, string> = {
   'reviews.filterAriaLabel': 'Фильтр по категории',
   'reviews.allCategory': 'Все',
 
-  'guides.title': 'Гайды и чек-листы',
+  'guides.title': 'Обучение',
   'guides.lead':
-    'Пока что здесь гайды от основателей — честный план, по которому мы строим этот сайт, в открытую. Со временем их сменят гайды для читателей, когда мы наберёмся опыта.',
+    'Бесплатные, выстроенные по шагам курсы — без воды и допродаж. Каждый ведёт от начала до конца, по порядку. Пока что это наш план основателей: честный, пошаговый путь, которым мы строим этот сайт в открытую. Курсы для читателей появятся, когда мы наберёмся опыта.',
   'guides.tag': 'Гайд',
+  'guides.epicsAriaLabel': 'Курсы',
 
   'reviewDetail.backLink': '← Все обзоры',
   'reviewDetail.checkPrice': 'Узнать текущую цену →',
 
-  'guideDetail.backLink': '← Все гайды',
+  'guideDetail.backLink': '← К обучению',
 
   'notFound.title': 'Страница не найдена',
   'notFound.body': 'Эта тропа пока никуда не ведёт.',

@@ -33,10 +33,19 @@ sidebar:
   - type: missionValues
   - type: almanac
 
+# Themed guide collections shown as thumbnails at the top of /guides. A guide
+# belongs to the epic whose `tag` equals the guide's FIRST tag. The first epic
+# here is the default selection. Add an epic + tag guides with it to grow this.
+epics:
+  - tag: founder-guide
+    title: Строим публично
+    image: /images/guide-eco-items.webp
+    blurb: Бесплатный честный курс о том, как построить сайт-обзорник эко-товаров с нуля — все реальные шаги, по порядку.
+
 nav:
   - { label: Главная, path: / }
   - { label: Обзоры, path: /reviews }
-  - { label: Гайды, path: /guides }
+  - { label: Обучение, path: /guides }
   - { label: Roadmap, path: /roadmap }
   - { label: Контакты, path: /contact }
 

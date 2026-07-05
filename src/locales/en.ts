@@ -15,11 +15,11 @@ const en = {
 
   'home.eyebrow': 'Natural · Plastic-free · Fragrance-free',
   'home.browseReviews': 'Browse reviews',
-  'home.readGuides': 'Read the guides',
+  'home.readGuides': 'Start learning',
   'home.featuredReviews': 'Featured reviews',
   'home.allReviews': 'All reviews →',
-  'home.latestGuides': 'Latest guides',
-  'home.allGuides': 'All guides →',
+  'home.latestGuides': 'New in Learn',
+  'home.allGuides': 'Explore Learn →',
 
   'reviews.title': 'Reviews',
   'reviews.lead':
@@ -27,15 +27,16 @@ const en = {
   'reviews.filterAriaLabel': 'Filter by category',
   'reviews.allCategory': 'All',
 
-  'guides.title': 'Guides & checklists',
+  'guides.title': 'Learn',
   'guides.lead':
-    "Right now: our founder guides — the honest playbook we're following to build this site, in public. Reader-facing guides will replace them as we earn the experience.",
+    'Free, structured tracks that read like a real course — no fluff, no upsell. Each one takes you end to end, in order. Right now it’s our founder playbook: the honest, step-by-step path we’re taking to build this site in public. Reader-facing courses will join as we earn the experience.',
   'guides.tag': 'Guide',
+  'guides.epicsAriaLabel': 'Courses',
 
   'reviewDetail.backLink': '← All reviews',
   'reviewDetail.checkPrice': 'Check current price →',
 
-  'guideDetail.backLink': '← All guides',
+  'guideDetail.backLink': '← Back to Learn',
 
   'notFound.title': 'Not found',
   'notFound.body': "This trail doesn't lead anywhere yet.",

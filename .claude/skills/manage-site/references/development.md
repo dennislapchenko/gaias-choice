@@ -24,6 +24,7 @@ Keep this table current — when you add/rename/change a component, update the r
 | Colors, radii, layout, breakpoints | `src/styles.css` | One stylesheet; CSS vars in `:root`. Breakpoints: 900 (sidebar stacks), 820 (nav→hamburger), 720/560/480. |
 | Cards (product/guide) | `src/components/ProductCard.tsx` / `GuideCard.tsx` + `.card`/`.card-link`/`a.tag` in `styles.css` | **Whole card is clickable** via a stretched-link overlay: the title `<Link className="card-link">` paints a full-card `::after` (needs `.card { position: relative }`). Genuinely interactive children are raised above it (`.card-body a.tag { z-index: 2 }`). Media is a plain `<div>` now (not a second link). Grids collapse to 1 col on mobile. |
 | Review category tag → filtered list | `ProductCard.tsx` tag `<Link>` → `Reviews.tsx` `useSearchParams` | The category chip links to `/reviews?category=<cat>`; `Reviews.tsx` reads the `category` param (validated against known categories, else `All`) so the tag filters from any page, incl. Home. Guide cards use a plain `<span>` tag (no guide taxonomy) so their whole card just navigates. |
+| **Learn section / epics (courses)** | `src/pages/Guides.tsx` + `.epic-strip`/`.epic-thumb*`/`.epic-blurb` in `styles.css`; config in `site.yaml` `epics:` | The Guides section is user-facing **"Learn" / "Обучение"** (nav label + `guides.title`), framed as course-like collections — but the **route + content dir stay `/guides`** (internal). Epic thumbnails act as tabs; the grid below shows guides whose **first tag** equals the selected epic's `tag`, with the epic's `blurb` shown as a course intro. First epic = default. Membership is data (first tag); display metadata (title, image, blurb) is `site.yaml` `epics:` (`GuideEpic` in `lib/types.ts`). The word "Epic" never appears in UI. |
 | Routes | `src/App.tsx` | Standalone pages need a route here. |
 
 ## Commands (always via Taskfile — never host npm)
@@ -89,6 +90,13 @@ OrbStack: `open -a OrbStack`, wait ~15s, retry.
   `.side-tab*` rules in the `max-width: 900px` block). The almanac
   (`AstroCalendar` + `lib/astro.ts`) is real ephemeris math — extend its event
   generators, never swap in a horoscope API.
+- **New Learn epic / course:** add an entry to `site.yaml` `epics:` (`tag`,
+  `title`, `image`, optional `blurb` course intro) in **both** `en` and `ru`,
+  then tag the guides/checklists/course pieces that belong to it with that `tag`
+  as their **first** tag. It appears as a new thumbnail in the Learn section
+  automatically; the first `epics:` entry is the default selection. No code
+  change (`Guides.tsx` is generic). Ideology: each epic should read like a
+  complete, streamlined free course (Fable 5 will author that content).
 - **New content field:** extend the type in `src/lib/types.ts`, render it in
   the component — `content.ts` spreads frontmatter automatically, no parser
   changes needed.

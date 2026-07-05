@@ -114,7 +114,16 @@ Markdown body…
 ### Adding a guide
 
 `content/locales/en/guides/<slug>.md` — same idea, fields: `title`, `excerpt`,
-`image?`, `date`, `tags?`.
+`image?`, `date`, `tags?`. The section is user-facing **"Learn" / "Обучение"**
+(nav + `guides.title`), framed as course-like collections — but the **route and
+content dir stay `/guides`** internally. **A guide's FIRST tag is its "epic"**
+(a course): the Learn page shows epics as thumbnails (tabs) and lists the
+selected epic's items, with the epic's `blurb` as a course intro. Epic metadata
+(title, thumbnail, blurb) is configured in `site.yaml` `epics:` (`GuideEpic` in
+`lib/types.ts`); the first configured epic is the default. Today every guide's
+first tag is `founder-guide`. **Ideology:** each epic should read like a complete,
+streamlined free course (the actual course content will be authored by Fable 5).
+See the "New Learn epic" task in `references/development.md`.
 
 ### Adding a standalone page
 
