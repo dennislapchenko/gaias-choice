@@ -47,21 +47,21 @@ epics:
   - tag: founder-guide
     title: An honest site from zero
     image: /images/epic-founder-guide.svg
-    blurb: A free five-chapter course on building a review site people trust — taught on the live example of this very site, from first review to launch.
+    blurb: A 5-chapter guide on building a review site people trust — taught on the live example of this very site, from first review to launch.
   - tag: homeopathy
-    title: Homeopathy at home
+    title: Homeopathy
     image: /images/epic-homeopathy.svg
-    blurb: An 11-chapter course — assemble a family remedy kit and learn to use it with honest observation, never replacing your doctor.
+    blurb: A 11-chapter guide — assemble a family remedy kit and learn to use it with honest observation, never replacing your doctor.
   - tag: herbalism
-    title: The home herbalist
+    title: Herbalism
     image: /images/epic-herbalism.svg
-    blurb: An 11-chapter course — grow a green shelf of infusions, oils and tinctures, and learn ten plants the way you know people.
+    blurb: A 11-chapter guide — grow a green shelf of infusions, oils and tinctures, and learn ten plants the way you know people.
   # English-only course (owner decision 2026-07-05) — deliberately absent from
   # ru/site.yaml, so the RU locale never shows this tab.
   - tag: inside-websites
-    title: Inside websites like this
+    title: Inside websites Like This
     image: /images/epic-inside-websites.svg
-    blurb: A free 5-chapter course for developers, designers and ops people — how a modern frontend site works under the hood, taught on this site's own code, from the URL bar down to the lockfile.
+    blurb: A 5-chapter guide for developers, designers and ops people — how a modern frontend site works under the hood, taught on this site's own code, from the URL bar down to the lockfile.
 
 # Reviews queued but not written yet — rendered as an "in the works" strip under
 # the Reviews page subtitle (src/components/UpcomingReviews.tsx). These are NOT
@@ -70,15 +70,15 @@ epics:
 # names stay identical across locales (do-not-translate glossary).
 upcoming:
   - name: Manduca XT Baby Carrier
-    url: 'https://www.amazon.de/-/en/dp/B0CB8N1ZZ8?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1&th=1'
+    url: "https://www.amazon.de/-/en/dp/B0CB8N1ZZ8?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1&th=1"
   - name: Dreamegg White Noise Machine
-    url: 'https://www.amazon.de/-/en/dp/B0B156917Z?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1&th=1'
+    url: "https://www.amazon.de/-/en/dp/B0B156917Z?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1&th=1"
   - name: PandaEar Baby Chair Booster Seat
-    url: 'https://www.amazon.de/-/en/dp/B08BYWRCRH?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_3'
+    url: "https://www.amazon.de/-/en/dp/B08BYWRCRH?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_3"
   - name: Baby Nest for Newborns
-    url: 'https://www.amazon.de/-/en/dp/B0DCW69XXF?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_6'
+    url: "https://www.amazon.de/-/en/dp/B0DCW69XXF?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_6"
   - name: Bubba Bear™ Baby Set with Suction Cup Bowl
-    url: 'https://www.amazon.de/-/en/dp/B08XXBC81T?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1'
+    url: "https://www.amazon.de/-/en/dp/B08XXBC81T?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1"
 
 nav:
   - { label: Home, path: / }
@@ -94,7 +94,7 @@ footerNav:
   - { label: Roadmap, path: /roadmap }
 
 social:
-  - { label: Pinterest, url: 'https://pinterest.com' }
-  - { label: Instagram, url: 'https://instagram.com' }
+  - { label: Pinterest, url: "https://pinterest.com" }
+  - { label: Instagram, url: "https://instagram.com" }
 
 contactEmail: hello@gaias-choice.example

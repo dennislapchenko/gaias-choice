@@ -1,5 +1,5 @@
 name: Gaia's Choice
-tagline: Натуральные вещи для жизни в дороге с малышом
+tagline: Натуральные вещи для жизни в дороге с малышом. Рил ба.
 description: >-
   Честные обзоры из реального опыта — натуральные товары без пластика и отдушек
   для путешествий с малышом на кемпере, машине или с ручной кладью. Мы
@@ -50,11 +50,11 @@ epics:
     image: /images/epic-founder-guide.svg
     blurb: Бесплатный курс из пяти глав о том, как построить сайт-обзорник, которому верят, — на живом примере этого самого сайта, от первого обзора до запуска. Каждый шаг настоящий, включая те, что дались тяжело.
   - tag: homeopathy
-    title: Гомеопатия дома
+    title: Гомеопатия
     image: /images/epic-homeopathy.svg
     blurb: Курс из 11 глав — собрать домашнюю аптечку и научиться работать с ней честно, наблюдая и записывая, не подменяя врача.
   - tag: herbalism
-    title: Домашний травник
+    title: Травничество
     image: /images/epic-herbalism.svg
     blurb: Курс из 11 глав — вырастить зелёную полку настоев, масел и настоек и узнать десять растений так, как знают людей.
 
@@ -65,15 +65,15 @@ epics:
 # Названия брендов/товаров одинаковы во всех локалях (глоссарий do-not-translate).
 upcoming:
   - name: Manduca XT Baby Carrier
-    url: 'https://www.amazon.de/-/en/dp/B0CB8N1ZZ8?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1&th=1'
+    url: "https://www.amazon.de/-/en/dp/B0CB8N1ZZ8?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1&th=1"
   - name: Dreamegg White Noise Machine
-    url: 'https://www.amazon.de/-/en/dp/B0B156917Z?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1&th=1'
+    url: "https://www.amazon.de/-/en/dp/B0B156917Z?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1&th=1"
   - name: PandaEar Baby Chair Booster Seat
-    url: 'https://www.amazon.de/-/en/dp/B08BYWRCRH?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_3'
+    url: "https://www.amazon.de/-/en/dp/B08BYWRCRH?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_3"
   - name: Baby Nest for Newborns
-    url: 'https://www.amazon.de/-/en/dp/B0DCW69XXF?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_6'
+    url: "https://www.amazon.de/-/en/dp/B0DCW69XXF?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_6"
   - name: Bubba Bear™ Baby Set with Suction Cup Bowl
-    url: 'https://www.amazon.de/-/en/dp/B08XXBC81T?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1'
+    url: "https://www.amazon.de/-/en/dp/B08XXBC81T?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1"
 
 nav:
   - { label: Главная, path: / }
@@ -89,7 +89,7 @@ footerNav:
   - { label: Roadmap, path: /roadmap }
 
 social:
-  - { label: Pinterest, url: 'https://pinterest.com' }
-  - { label: Instagram, url: 'https://instagram.com' }
+  - { label: Pinterest, url: "https://pinterest.com" }
+  - { label: Instagram, url: "https://instagram.com" }
 
 contactEmail: hello@gaias-choice.example
