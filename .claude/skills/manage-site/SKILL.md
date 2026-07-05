@@ -63,9 +63,11 @@ for architecture; this skill is the operating manual on top of it.
 ## Project phase awareness
 
 The site is in **bootstrap mode** (see `/roadmap` and the "Current content
-state" section of `CLAUDE.md`): guides are founder-facing playbooks, product
-reviews are still AI placeholders slated for deletion, and About/Contact carry
-a fictional persona pending the owners' real story. Before editing content,
+state" section of `CLAUDE.md`): guides are founder-facing playbooks and product
+reviews are still AI placeholders slated for deletion. The About story is
+**real** (the owners really are a camper family — verified facts in
+`context/persona-context.md`, "The family — real biography"); what's still
+open is retelling it in their own words. Before editing content,
 check the roadmap so your change moves the current phase forward instead of
 polishing something scheduled for deletion. When a change completes a roadmap
 item, tick its checkbox in `content/locales/en/pages/roadmap.md` and refresh the "Last

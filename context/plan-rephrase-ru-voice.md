@@ -3,6 +3,11 @@
 **Status:** done (executed 2026-07-05). Tier 1–3 files rephrased in voice;
 Tier 4 (privacy/disclosure) left untouched — already plain and human, no
 corporate-translation smell to fix. `task typecheck && task build` green.
+**Post-hoc note (2026-07-05, later):** the "fictional camper persona" caveats
+below (about.md/contact.md rows, constraint 2) are obsolete — the camper family
+turned out to be REAL, and verified biography facts now live in
+`persona-context.md` ("The family — real biography"). About was rewritten on
+those facts the same day.
 **Goal:** the current RU content is a competent but soulless translation of the
 EN source. Rephrase every Russian text so a living person — the author
 described in [persona-context.md](persona-context.md) — is speaking, without

@@ -15,9 +15,9 @@ program's terms. Work through this top to bottom.
 
 ## 1. Identity & truth
 
-- [ ] Rewrite **About** to be literally true — who we are, why we care, what
-      stage we're honestly at. Delete the fictional "seven months in a camper"
-      story unless it's actually our story.
+- [ ] Retell **About** in our own words — the facts there are real now (the
+      camper, the baby, the dogs), but the telling is still a drafted skeleton.
+      Our voice, our details, nothing we haven't lived.
 - [ ] Decide the public identity: names? faces? a family pseudonym? (Real
       names and faces convert trust better; decide once, early.)
 - [ ] Update `site.yaml`: real `contactEmail`, real social URLs (or remove the

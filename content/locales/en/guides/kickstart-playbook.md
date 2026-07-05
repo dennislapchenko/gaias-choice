@@ -33,9 +33,11 @@ month lag. There is no shortcut where either arrives first.
 
 ## The uncomfortable truth about our current content
 
-Everything on this site today — the reviews, the old guides, the About story —
-was **AI-generated placeholder text** describing a fictional family's seven
-months on the road. It reads fine. It is also exactly the content Google's
+The reviews and images on this site today are **AI-generated placeholder
+text**. The family in the About story is real — we really did build a camper
+and hit the road with our baby — but the first draft of that story was written
+*for* us, with invented details filled in where the writer didn't know the
+facts. Placeholder text reads fine. It is also exactly the content Google's
 review-system updates are built to bury, and exactly what a real parent smells
 from a paragraph away.
 
@@ -49,10 +51,10 @@ the actual work.
 
 Do these in order. Each one is pointless without the one before it.
 
-1. **Decide who "we" are.** Whose name and face is on the About page? What is
-   our *true* story — even if it's "we're two parents who just started caring
-   about this"? An honest beginner beats a fictional expert. Rewrite
-   `about.md` to be true.
+1. **Own our story.** The About page now states our real facts — the next step
+   is retelling it in our own words and deciding the public identity: names?
+   faces? how much of the homestead dream? An honest beginner beats a polished
+   ghost-writer.
 2. **Own 5–10 products for real.** Buy the gear we'd genuinely research for our
    own kid. Use each item for at least a couple of weeks. Take photos with our
    own hands in the frame.

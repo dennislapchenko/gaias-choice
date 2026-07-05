@@ -13,8 +13,11 @@ pick controls list position. Markdown is GFM (task-list checkboxes render).
 - **Every review names a flaw.** A flawless 5-star review reads as an ad. If
   nothing else, the flaw is the price or who it's *not* for.
 - **Nothing fictional.** No invented experience, durations, or anecdotes. The
-  old placeholder content pretended to be a family with "7 months in a camper" —
-  that persona is banned. Write only what the owners actually did.
+  camper family itself is **real** (Lidia & Denis, baby, two Basenjis — verified
+  facts in `context/persona-context.md`, "The family — real biography"); what's
+  banned is embellishing beyond those facts: invented timelines ("seven months
+  on the road"), invented scenes, or gear experiences the owners haven't
+  reported. Write only what they actually did; when a fact is missing, ask.
 - **Plain, warm, unhyped.** No "game-changer", no exclamation-mark stacking.
   The brand is "buy less, buy better".
 - **Russian content speaks in the author's voice.** Before writing or

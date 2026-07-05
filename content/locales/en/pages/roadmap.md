@@ -15,7 +15,8 @@ The thinking behind each phase lives in our
 - [x] Site scaffolding: content-driven SPA, containerized, deployable
 - [x] Founder guides written (review process, monetization, traffic, launch)
 - [x] Disclosure & privacy pages
-- [ ] True About page — our real story, however unimpressive
+- [x] True About page — real facts only (turns out the camper story was ours all along)
+- [ ] Retell About in our own words — the facts are true, the voice isn't ours yet
 - [ ] Buy the first 5–10 products; start testing notes for each
 - [ ] Real contact email and social accounts in `site.yaml`
 - [ ] Domain purchased and mapped

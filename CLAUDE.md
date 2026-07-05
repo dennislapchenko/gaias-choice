@@ -46,7 +46,7 @@ content/                 # ALL editable content (no code)
     ru/                   # Russian — filled in section by section, falls back to en/
   themes.yaml            # color palettes (tag + label + default + colors) — shared, not localized
 context/                 # authoring context (NOT bundled into the site)
-  persona-context.md     # the author's voice — read before writing/rephrasing RU content
+  persona-context.md     # the author's voice + the family's REAL biography — read before writing/rephrasing RU content or any "who we are" copy
   ideology-context.md    # influences by domain: Health (Chek, Asprey) / Worldview (Buhner, Daragan, Ralston) / Children (Steiner, Swan) — extensible; Health governs food claims
   plan-rephrase-ru-voice.md  # pending task: rephrase all RU content in her voice
   epic-writing-context.md  # blueprint for 11-chapter Learn epic courses (curriculum, Thread weave, chapter anatomy)
@@ -415,9 +415,13 @@ learning the affiliate-content business as they go:
 - `/roadmap` (public, building-in-public) tracks phases; keep it updated when
   milestones land. `/disclosure` and `/privacy` are compliance groundwork for
   affiliate programs — required before joining any.
-- `about.md`/`contact.md` still carry the fictional "7 months in a camper"
-  persona + placeholder email/socials; rewriting them truthfully is a Phase 0
-  roadmap item for the owners (needs their real story — don't invent one).
+- **The camper family is real** (confirmed 2026-07-05): Lidia & Denis, baby
+  born Jan 2025, two Basenjis, a self-built campervan — verified facts live in
+  `context/persona-context.md` ("The family — real biography"). `about.md` and
+  `site.yaml` `bio` now state only those facts; retelling them in the owners'
+  own words is an open roadmap item. Don't extrapolate beyond the bio file
+  (no invented durations, routes, or gear experiences). `contact.md` email +
+  `site.yaml` socials are still placeholders.
 
 ## Status
 

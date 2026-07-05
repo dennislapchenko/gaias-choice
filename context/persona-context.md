@@ -1,10 +1,12 @@
 # Persona context — the author's soul (voice source for all RU content)
 
 **Purpose.** This file is the reference portrait of the site's main author — Lida
-("Lidyushka"). Any rephrasing, rewriting, or new authoring of **Russian** content
-must channel this person. It is built from her own raw texts (appendix at the
-bottom) — not from a marketing brief. When in doubt, reread her words, not this
-summary.
+("Lidyushka") — and, since 2026-07-05, also the **factual biography of the
+family** behind the site (see "The family — real biography" below). Any
+rephrasing, rewriting, or new authoring of **Russian** content must channel this
+person. It is built from her own raw texts and the family's own Workaway bio
+(appendix at the bottom) — not from a marketing brief. When in doubt, reread
+their words, not this summary.
 
 **How to use.** Before writing/rephrasing RU content: read this whole file, then
 run every drafted paragraph through the test at the end ("Would she say this?").
@@ -53,6 +55,39 @@ sentences.
    away. Care = attention + hands-on problem-solving with natural means. The
    butterfly is «она», a person. Tenderness is expressed through diminutives
    («крылышки», four times).
+
+---
+
+## The family — real biography (facts, usable in content)
+
+**The camper-family story is REAL.** Early site docs assumed the "family in a
+camper" About story was an invented AI persona; the owners have confirmed it is
+their actual life. What follows are verified facts from their own Workaway bio
+(verbatim in the appendix). These MAY be stated in site content — unlike
+invented details (specific durations, anecdotes, product experiences), which
+remain banned unless the owners actually report them.
+
+- **Lidia** (b. 1999) and **Denis** (b. 1992) — a creative couple, Russian
+  roots, both born and raised in Latvia; they feel like a blend of both worlds.
+- Their **baby was born in January 2025**; they travel with **two Basenji dogs,
+  Kofik and Zlatka**.
+- They spent **two years building their campervan from scratch**, then hit the
+  road. The van is fully self-sufficient (solar in sunny seasons).
+- The journey is a **search for a place to anchor**: an off-grid home, food
+  forests, animals, a kind sustainable community — their own homestead where
+  people share knowledge and live in harmony with nature.
+- Interests: natural building, woodworking, gardening, animal care,
+  **intuitive parenting**, self-sustainability; Denis is deep into
+  **permaculture design** and works part of the week remotely; Lidia is
+  currently fully devoted to the baby.
+- They're inspired by brave, open-hearted people living permaculture on their
+  land, and are wary of "technocratic overlords" — the tech-skeptic,
+  nature-first stance runs through the whole family, not just the ideology file.
+
+**Using these facts:** the About page, site.yaml `bio`, and any "who we are"
+copy draw from this list. Don't extrapolate beyond it — e.g. don't invent how
+many months they've been driving, which countries, or what gear they've tested.
+When a new fact is needed, ask the owners and add it here.
 
 ---
 
@@ -172,3 +207,50 @@ hype, no exclamation stacking — see `.claude/skills/manage-site/references/con
 > Я принесла кокосовое масло и липкая тема стала сходить, в итоге удалось
 > разомкнуть крылышки но теперь очень масляные и тяжелые стали крылышки. Короче
 > протерла ей их тоником и она улетела!!
+
+**4. The family's Workaway bio (their own words, added 2026-07-05 — the
+factual source for "The family — real biography" above):**
+
+> We are Lidia and Denis — a creative couple, happy parents, and curious souls
+> traveling the world with our little baby, born in January 2025, and our two
+> joyful Basenji dogs, Kofik and Zlatka.
+>
+> Denis was born in 1992 and Lidia in 1999 — both of us are with Russian roots
+> but born and raised in Latvia. We speak Russian but we've always been deeply
+> integrated into Latvian culture and environment. We feel like a blend of both
+> worlds, carrying the warmth and openness of our roots and the creative,
+> nature-connected spirit of the place we grew up in.
+>
+> After spending the last two years building our own campervan from scratch,
+> we've finally hit the road to explore new places and new ways of living. This
+> journey is our way of finding a place to anchor — a spot where we can one day
+> build our off-grid home, grow food forests, take care of animals, and be part
+> of a kind, sustainable community.
+>
+> Together, we dream of creating our own homestead — a space where people can
+> share knowledge, live in harmony with nature, and grow together. We're deeply
+> interested in everything related to natural building, woodworking, gardening,
+> animal care, intuitive parenting, and self-sustainability. Every new
+> experience and skill brings us closer to the life we envision.
+>
+> What inspires us most is meeting brave, open-hearted people, ideally people
+> who have implemented Permaculture principles on their land and see through
+> the veils of technocratic overlords :) We would love to learn, create
+> something meaningful together, exchange ideas, and share what we've learned
+> along the way.
+>
+> Deniss is the main helping hand in our family — he's practical, kind, and
+> loves working outdoors or with his hands. He works part of the week remotely,
+> so he'll be happy to help out during his free time. Currently Deniss is most
+> interested in Permaculture design and quickly gaining theoretical and
+> practical experience. Lidia is fully devoted to our baby right now, so her
+> participation is mostly in light activities and friendly company rather than
+> heavy work.
+>
+> Since we travel and live in our van - we don't need any separate
+> accommodation — we're completely self-sufficient and aim to be as respectful
+> and independent as possible. During sunny seasons we wouldn't need any
+> electricity either.
+>
+> We're looking forward to meeting new friends, exchanging knowledge, and
+> finding our place in the world — one beautiful connection at a time.
