@@ -222,12 +222,17 @@ via `useI18n()`.
   language's flag on hover and for 0.5s after a click (a click then suppresses the
   hover preview until the pointer leaves). `ThemeSwitcher` is still the dropdown
   pattern.
-- `components/AstroCalendar.tsx` gets month/weekday names from
+- `components/AstroCalendar.tsx` gets month/weekday names + the panel date from
   `Intl.DateTimeFormat(locale, ...)` instead of the string dictionary — new
   locales get correct calendar names for free, no translation entry needed.
+- The almanac's **generated event text** (titles, blurbs, planet/sign/aspect
+  names) is *not* in the `t()` dictionary — it lives in `src/lib/astroText.ts`,
+  one `Vocab` per locale, consumed by `eventsForMonth(year, month, locale)`. A
+  new locale needs a `Vocab` entry there or the almanac falls back to English.
 - **Adding a locale:** add its code to `SUPPORTED_LOCALES` + `LOCALE_LABELS` +
   `LOCALE_FLAGS` (all in `i18n.tsx`), add `src/locales/<lng>.ts` with every key
-  from `en.ts`, and start dropping files into `content/locales/<lng>/`.
+  from `en.ts`, add a `Vocab` in `src/lib/astroText.ts` (bodies, sign case forms,
+  aspects, tones), and start dropping files into `content/locales/<lng>/`.
 - **Russian (`ru`) is fully translated** — UI strings (`src/locales/ru.ts`) and
   all content (`content/locales/ru/`: site.yaml, products, guides, pages). The
   `TRANSLATION_STATUS.md` tracker was deleted once complete, as its own header
@@ -274,11 +279,15 @@ ecliptic-of-date** longitudes (the frame serious astrology uses):
 - **Major aspects** between planets (conjunction/sextile/square/trine/opposition)
 - **Eclipses** (solar/lunar)
 
-`eventsForMonth(year, monthIndex)` returns `AstroEvent[]` (memoised per month);
-`AstroCalendar` calls it per viewed month. Longitudes use the `EQJ → ECT`
-rotation (`Rotation_EQJ_ECT`) — verified to match the library's own `SunPosition`
-to the arcminute. Times are shown in the **viewer's local timezone**; events are
-bucketed by local calendar day.
+`eventsForMonth(year, monthIndex, locale)` returns `AstroEvent[]` (memoised per
+locale+month); `AstroCalendar` calls it per viewed month. Longitudes use the
+`EQJ → ECT` rotation (`Rotation_EQJ_ECT`) — verified to match the library's own
+`SunPosition` to the arcminute. Times are shown in the **viewer's local
+timezone** (locale-formatted); events are bucketed by local calendar day. The
+engine is **timezone-aware but not location(lat/long)-aware** — geocentric, so it
+doesn't filter eclipse visibility or compute rise/set/houses/planetary-hours.
+All wording is in `lib/astroText.ts` (see the i18n section); `astro.ts` itself is
+math + glyphs only.
 
 - **Do NOT replace this with a shallow "sun-sign horoscope" API** — that's exactly
   the hipster-fake astrology the owner rejected. If more accuracy/features are

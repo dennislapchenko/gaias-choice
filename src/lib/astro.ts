@@ -4,29 +4,25 @@
 //
 // No API, no key, no network. Everything here is derived from planetary
 // longitudes: Moon phases, sign ingresses, void-of-course Moon, retrograde
-// stations, major aspects, and eclipses, for any month.
+// stations, major aspects, and eclipses, for any month. All human-facing wording
+// lives in ./astroText (per locale); this file is math + glyphs only.
 
 import * as A from 'astronomy-engine'
 import type { AstroEvent } from './types'
+import type { Locale } from './i18n'
+import { astroText, type AstroText } from './astroText'
 
 const DAY_MS = 86_400_000
 const HOUR_MS = 3_600_000
 
-type BodyName =
+export type BodyName =
   | 'Sun' | 'Moon' | 'Mercury' | 'Venus' | 'Mars'
   | 'Jupiter' | 'Saturn' | 'Uranus' | 'Neptune' | 'Pluto'
 
-const BODY: Record<BodyName, { glyph: string; label: string }> = {
-  Sun: { glyph: '☉', label: 'Sun' },
-  Moon: { glyph: '☽', label: 'Moon' },
-  Mercury: { glyph: '☿', label: 'Mercury' },
-  Venus: { glyph: '♀', label: 'Venus' },
-  Mars: { glyph: '♂', label: 'Mars' },
-  Jupiter: { glyph: '♃', label: 'Jupiter' },
-  Saturn: { glyph: '♄', label: 'Saturn' },
-  Uranus: { glyph: '♅', label: 'Uranus' },
-  Neptune: { glyph: '♆', label: 'Neptune' },
-  Pluto: { glyph: '♇', label: 'Pluto' },
+// Locale-neutral glyphs (used for cell/panel icons and aspect blurbs).
+const BODY_GLYPH: Record<BodyName, string> = {
+  Sun: '☉', Moon: '☽', Mercury: '☿', Venus: '♀', Mars: '♂',
+  Jupiter: '♃', Saturn: '♄', Uranus: '♅', Neptune: '♆', Pluto: '♇',
 }
 
 // Planets that get ingress / retrograde / aspect treatment (Moon and Sun handled
@@ -36,34 +32,21 @@ const ASPECT_BODIES: BodyName[] = ['Sun', 'Mercury', 'Venus', 'Mars', 'Jupiter',
 // Classical seven (minus Moon itself) used to judge void-of-course.
 const CLASSICAL: BodyName[] = ['Sun', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn']
 
-const SIGNS = [
-  { name: 'Aries', glyph: '♈', element: 'fire' },
-  { name: 'Taurus', glyph: '♉', element: 'earth' },
-  { name: 'Gemini', glyph: '♊', element: 'air' },
-  { name: 'Cancer', glyph: '♋', element: 'water' },
-  { name: 'Leo', glyph: '♌', element: 'fire' },
-  { name: 'Virgo', glyph: '♍', element: 'earth' },
-  { name: 'Libra', glyph: '♎', element: 'air' },
-  { name: 'Scorpio', glyph: '♏', element: 'water' },
-  { name: 'Sagittarius', glyph: '♐', element: 'fire' },
-  { name: 'Capricorn', glyph: '♑', element: 'earth' },
-  { name: 'Aquarius', glyph: '♒', element: 'air' },
-  { name: 'Pisces', glyph: '♓', element: 'water' },
+// Aspect index here MUST line up with aspectName/aspectTone order in astroText.
+const ASPECTS = [
+  { angle: 0, glyph: '☌' }, // conjunction
+  { angle: 60, glyph: '⚹' }, // sextile
+  { angle: 90, glyph: '□' }, // square
+  { angle: 120, glyph: '△' }, // trine
+  { angle: 180, glyph: '☍' }, // opposition
 ] as const
 
-const ELEMENT_TONE: Record<string, string> = {
-  fire: 'initiative and spirit',
-  earth: 'body, patience and resources',
-  air: 'mind, contact and exchange',
-  water: 'feeling, memory and depth',
-}
-
-const ASPECTS = [
-  { angle: 0, name: 'conjunction', glyph: '☌', tone: 'fusion — energies merge and act as one' },
-  { angle: 60, name: 'sextile', glyph: '⚹', tone: 'opportunity — an open door if you act on it' },
-  { angle: 90, name: 'square', glyph: '□', tone: 'friction — tension that demands adjustment' },
-  { angle: 120, name: 'trine', glyph: '△', tone: 'flow — ease and natural talent' },
-  { angle: 180, name: 'opposition', glyph: '☍', tone: 'polarity — awareness through the other' },
+// Moon-phase search targets + icons (index lines up with phaseName in astroText).
+const PHASES = [
+  { target: 0, icon: '🌑' }, // New Moon
+  { target: 90, icon: '🌓' }, // First Quarter
+  { target: 180, icon: '🌕' }, // Full Moon
+  { target: 270, icon: '🌗' }, // Last Quarter
 ] as const
 
 const wrap360 = (x: number) => ((x % 360) + 360) % 360
@@ -130,37 +113,24 @@ type Raw = { when: Date; title: string; body: string; icon: string; kind: string
 
 const inWindow = (d: Date, start: number, end: number) => d.getTime() >= start && d.getTime() < end
 
-// ---- event generators ----
+// ---- event generators (wording comes from the AstroText bundle `T`) ----
 
-function moonPhases(start: number, end: number, out: Raw[]) {
-  const phases = [
-    { target: 0, name: 'New Moon', icon: '🌑', tone: 'seed an intention; a fresh cycle begins' },
-    { target: 90, name: 'First Quarter', icon: '🌓', tone: 'act through resistance; commit to the build' },
-    { target: 180, name: 'Full Moon', icon: '🌕', tone: 'culmination and clarity; what was hidden shows' },
-    { target: 270, name: 'Last Quarter', icon: '🌗', tone: 'release and reorient; let go of what is done' },
-  ]
-  for (const p of phases) {
+function moonPhases(start: number, end: number, out: Raw[], T: AstroText) {
+  PHASES.forEach((p, phaseIdx) => {
     let from = A.MakeTime(new Date(start))
     for (let i = 0; i < 3; i++) {
       const hit = A.SearchMoonPhase(p.target, from, 40)
       if (!hit || hit.date.getTime() >= end) break
       if (hit.date.getTime() >= start) {
-        const s = SIGNS[signIndex(lon('Moon', hit.date))]
-        out.push({
-          when: hit.date,
-          title: `${p.name} in ${s.name}`,
-          body: 'Moon',
-          icon: p.icon,
-          kind: 'phase',
-          blurb: `${p.tone}. The Moon is in ${s.name} — ${ELEMENT_TONE[s.element]}.`,
-        })
+        const { title, blurb } = T.moonPhase(phaseIdx, signIndex(lon('Moon', hit.date)))
+        out.push({ when: hit.date, title, body: T.label('Moon'), icon: p.icon, kind: 'phase', blurb })
       }
       from = A.MakeTime(new Date(hit.date.getTime() + DAY_MS))
     }
-  }
+  })
 }
 
-function ingresses(body: BodyName, start: number, end: number, out: Raw[]) {
+function ingresses(body: BodyName, start: number, end: number, out: Raw[], T: AstroText) {
   const stepH = body === 'Moon' ? 3 : 12
   const step = stepH * HOUR_MS
   let prevT = start
@@ -171,17 +141,14 @@ function ingresses(body: BodyName, start: number, end: number, out: Raw[]) {
       // boundary between prevIdx and idx (forward or retrograde)
       const boundary = (idx === (prevIdx + 1) % 12 ? idx : prevIdx) * 30
       const when = refine((d) => wrap180(lon(body, d) - boundary), prevT, t)
-      const target = SIGNS[idx]
+      const { title, blurb } = T.ingress(body, idx)
       out.push({
         when,
-        title: `${BODY[body].label} enters ${target.name}`,
-        body,
-        icon: body === 'Moon' ? '☽' : BODY[body].glyph,
+        title,
+        body: T.label(body),
+        icon: body === 'Moon' ? '☽' : BODY_GLYPH[body],
         kind: body === 'Moon' ? 'moon-ingress' : 'ingress',
-        blurb:
-          body === 'Moon'
-            ? `The emotional tone turns to ${target.name} — ${ELEMENT_TONE[target.element]}.`
-            : `${BODY[body].label} shifts into ${target.name} — its themes now colour ${ELEMENT_TONE[target.element]}.`,
+        blurb,
       })
     }
     prevT = t
@@ -189,54 +156,43 @@ function ingresses(body: BodyName, start: number, end: number, out: Raw[]) {
   }
 }
 
-function retrogrades(body: BodyName, start: number, end: number, out: Raw[]) {
+function retrogrades(body: BodyName, start: number, end: number, out: Raw[], T: AstroText) {
   const stations = crossings((d) => speed(body, d), start, end, 24, 100)
   for (const when of stations) {
     const after = speed(body, new Date(when.getTime() + DAY_MS))
     const direct = after > 0
-    const s = SIGNS[signIndex(lon(body, when))]
-    out.push({
-      when,
-      title: `${BODY[body].label} stations ${direct ? 'direct' : 'retrograde'}`,
-      body,
-      icon: direct ? BODY[body].glyph : '℞',
-      kind: 'retrograde',
-      blurb: direct
-        ? `${BODY[body].label} turns direct in ${s.name} — its matters resume forward motion.`
-        : `${BODY[body].label} turns retrograde in ${s.name} — review, revisit, reconsider; outward progress pauses.`,
-    })
+    const { title, blurb } = T.retrograde(body, signIndex(lon(body, when)), direct)
+    out.push({ when, title, body: T.label(body), icon: direct ? BODY_GLYPH[body] : '℞', kind: 'retrograde', blurb })
   }
 }
 
-type AspectDef = (typeof ASPECTS)[number]
-
-function aspects(start: number, end: number, out: Raw[]) {
-  const targets = ASPECTS.flatMap((asp): { r: number; asp: AspectDef }[] =>
-    asp.angle === 0 || asp.angle === 180 ? [{ r: asp.angle, asp }] : [{ r: asp.angle, asp }, { r: 360 - asp.angle, asp }],
-  )
-  for (let i = 0; i < ASPECT_BODIES.length; i++) {
-    for (let j = i + 1; j < ASPECT_BODIES.length; j++) {
-      const b1 = ASPECT_BODIES[i]
-      const b2 = ASPECT_BODIES[j]
-      const rel = (d: Date) => wrap360(lon(b1, d) - lon(b2, d))
-      for (const { r, asp } of targets) {
-        const hits = crossings((d) => wrap180(rel(d) - r), start, end, 12, 90)
-        for (const when of hits) {
-          out.push({
-            when,
-            title: `${BODY[b1].label} ${asp.name} ${BODY[b2].label}`,
-            body: b1,
-            icon: asp.glyph,
-            kind: 'aspect',
-            blurb: `${BODY[b1].glyph} ${asp.glyph} ${BODY[b2].glyph} — ${asp.tone}.`,
-          })
+function aspects(start: number, end: number, out: Raw[], T: AstroText) {
+  for (let ai = 0; ai < ASPECTS.length; ai++) {
+    const asp = ASPECTS[ai]
+    const rs = asp.angle === 0 || asp.angle === 180 ? [asp.angle] : [asp.angle, 360 - asp.angle]
+    for (let i = 0; i < ASPECT_BODIES.length; i++) {
+      for (let j = i + 1; j < ASPECT_BODIES.length; j++) {
+        const b1 = ASPECT_BODIES[i]
+        const b2 = ASPECT_BODIES[j]
+        const rel = (d: Date) => wrap360(lon(b1, d) - lon(b2, d))
+        for (const r of rs) {
+          for (const when of crossings((d) => wrap180(rel(d) - r), start, end, 12, 90)) {
+            out.push({
+              when,
+              title: T.aspectTitle(b1, b2, ai),
+              body: T.label(b1),
+              icon: asp.glyph,
+              kind: 'aspect',
+              blurb: `${BODY_GLYPH[b1]} ${asp.glyph} ${BODY_GLYPH[b2]} — ${T.aspectTone(ai)}.`,
+            })
+          }
         }
       }
     }
   }
 }
 
-function voidOfCourse(start: number, end: number, out: Raw[]) {
+function voidOfCourse(start: number, end: number, out: Raw[], T: AstroText, locale: Locale) {
   // Moon sign-ingress boundaries across (and just around) the window.
   const scanStart = start - 3 * DAY_MS
   const ingressTimes: number[] = []
@@ -269,81 +225,61 @@ function voidOfCourse(start: number, end: number, out: Raw[]) {
     if (!inWindow(new Date(ing), start, end)) continue
     const lastAspect = aspectTimes.filter((t) => t < ing).pop()
     const from = lastAspect ?? ing - DAY_MS
-    const nextSign = SIGNS[signIndex(lon('Moon', new Date(ing + HOUR_MS)))]
-    const until = new Date(ing)
-    out.push({
-      when: new Date(from),
-      title: 'Moon void of course',
-      body: 'Moon',
-      icon: '∅',
-      kind: 'voc',
-      blurb: `The Moon makes no further aspects until it enters ${nextSign.name} at ${fmtTime(until)}. Begin nothing new — finish, rest, reflect.`,
-    })
+    const nextIdx = signIndex(lon('Moon', new Date(ing + HOUR_MS)))
+    const { title, blurb } = T.voc(nextIdx, fmtTime(new Date(ing), locale))
+    out.push({ when: new Date(from), title, body: T.label('Moon'), icon: '∅', kind: 'voc', blurb })
   }
 }
 
-function eclipses(start: number, end: number, out: Raw[]) {
+function eclipses(start: number, end: number, out: Raw[], T: AstroText) {
   const from = A.MakeTime(new Date(start - DAY_MS))
   const lunar = A.SearchLunarEclipse(from)
   if (lunar && inWindow(lunar.peak.date, start, end)) {
-    const s = SIGNS[signIndex(lon('Moon', lunar.peak.date))]
-    out.push({
-      when: lunar.peak.date,
-      title: `Lunar eclipse in ${s.name}`,
-      body: 'Moon',
-      icon: '🌕',
-      kind: 'eclipse',
-      blurb: `A charged Full Moon in ${s.name} — a culmination you don't fully control; something comes to light or completion.`,
-    })
+    const { title, blurb } = T.eclipse('lunar', signIndex(lon('Moon', lunar.peak.date)))
+    out.push({ when: lunar.peak.date, title, body: T.label('Moon'), icon: '🌕', kind: 'eclipse', blurb })
   }
   const solar = A.SearchGlobalSolarEclipse(from)
   if (solar && inWindow(solar.peak.date, start, end)) {
-    const s = SIGNS[signIndex(lon('Sun', solar.peak.date))]
-    out.push({
-      when: solar.peak.date,
-      title: `Solar eclipse in ${s.name}`,
-      body: 'Sun',
-      icon: '🌑',
-      kind: 'eclipse',
-      blurb: `A charged New Moon in ${s.name} — a reset you don't fully steer; a doorway opens.`,
-    })
+    const { title, blurb } = T.eclipse('solar', signIndex(lon('Sun', solar.peak.date)))
+    out.push({ when: solar.peak.date, title, body: T.label('Sun'), icon: '🌑', kind: 'eclipse', blurb })
   }
 }
 
-// ---- date formatting (viewer's local time) ----
+// ---- date formatting (viewer's local time, locale-formatted) ----
 
 const pad = (n: number) => String(n).padStart(2, '0')
 const ymd = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
-const fmtTime = (d: Date) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+const fmtTime = (d: Date, locale: Locale) => d.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })
 
 const cache = new Map<string, AstroEvent[]>()
 
 /** All computed events whose local calendar day falls in the given month. */
-export function eventsForMonth(year: number, monthIndex: number): AstroEvent[] {
-  const key = `${year}-${monthIndex}`
+export function eventsForMonth(year: number, monthIndex: number, locale: Locale): AstroEvent[] {
+  const key = `${locale}-${year}-${monthIndex}`
   const cached = cache.get(key)
   if (cached) return cached
 
+  const T = astroText(locale)
   const start = new Date(year, monthIndex, 1).getTime()
   const end = new Date(year, monthIndex + 1, 1).getTime()
   const raw: Raw[] = []
 
-  moonPhases(start, end, raw)
-  ingresses('Sun', start, end, raw)
-  ingresses('Moon', start, end, raw)
+  moonPhases(start, end, raw, T)
+  ingresses('Sun', start, end, raw, T)
+  ingresses('Moon', start, end, raw, T)
   for (const p of PLANETS) {
-    ingresses(p, start, end, raw)
-    retrogrades(p, start, end, raw)
+    ingresses(p, start, end, raw, T)
+    retrogrades(p, start, end, raw, T)
   }
-  aspects(start, end, raw)
-  voidOfCourse(start, end, raw)
-  eclipses(start, end, raw)
+  aspects(start, end, raw, T)
+  voidOfCourse(start, end, raw, T, locale)
+  eclipses(start, end, raw, T)
 
   const events: AstroEvent[] = raw
     .sort((a, b) => a.when.getTime() - b.when.getTime())
     .map((r) => ({
       date: ymd(r.when),
-      time: fmtTime(r.when),
+      time: fmtTime(r.when, locale),
       title: r.title,
       body: r.body,
       icon: r.icon,

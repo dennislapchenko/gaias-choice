@@ -28,7 +28,9 @@ export default function AstroCalendar() {
   const weekdays = useMemo(() => weekdayNames(locale), [locale])
   const prettyDate = (iso: string) => {
     const [y, m, d] = iso.split('-').map(Number)
-    return `${months[m - 1]} ${d}, ${y}`
+    return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(
+      new Date(y, m - 1, d),
+    )
   }
 
   const today = new Date()
@@ -40,9 +42,9 @@ export default function AstroCalendar() {
   // Computed fresh per month from real ephemeris positions (see lib/astro.ts).
   const eventsByDate = useMemo(() => {
     const map: Record<string, AstroEvent[]> = {}
-    for (const e of eventsForMonth(view.y, view.m)) (map[e.date] ??= []).push(e)
+    for (const e of eventsForMonth(view.y, view.m, locale)) (map[e.date] ??= []).push(e)
     return map
-  }, [view.y, view.m])
+  }, [view.y, view.m, locale])
 
   const daysInMonth = new Date(view.y, view.m + 1, 0).getDate()
   const startOffset = new Date(view.y, view.m, 1).getDay()
