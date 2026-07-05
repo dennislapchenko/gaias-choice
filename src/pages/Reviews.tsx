@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getProducts, getReviewTemplate, getSite } from '../lib/content'
 import { useI18n } from '../lib/i18n'
-import CopyButton from '../components/CopyButton'
 import ProductCard from '../components/ProductCard'
 import Upcoming from '../components/Upcoming'
 
@@ -36,12 +35,6 @@ export default function Reviews() {
 
       <div className="reviews-layout">
         <div className="reviews-main">
-          <CopyButton
-            value={getReviewTemplate(locale)}
-            label={t('reviews.templateBtn')}
-            className="copy-template-btn"
-          />
-
           <div className="filters" role="tablist" aria-label={t('reviews.filterAriaLabel')}>
             {categories.map((c) => (
               <button
@@ -63,7 +56,12 @@ export default function Reviews() {
           </div>
         </div>
 
-        <Upcoming title={t('reviews.upcomingTitle')} note={t('reviews.upcomingNote')} items={upcoming} />
+        <Upcoming
+          title={t('reviews.upcomingTitle')}
+          note={t('reviews.upcomingNote')}
+          items={upcoming}
+          contribute={{ value: getReviewTemplate(locale), label: t('reviews.templateBtn') }}
+        />
       </div>
     </>
   )

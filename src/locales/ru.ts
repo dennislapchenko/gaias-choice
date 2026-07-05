@@ -29,7 +29,7 @@ const ru: Record<keyof typeof en, string> = {
   "reviews.lead": "Каждая вещь здесь проехала с нами реальные километры — мы проверили материалы, безопасность и то, как она выдерживает дорожную жизнь с младенцем.",
   "reviews.filterAriaLabel": "Фильтр по категории",
   "reviews.allCategory": "Все",
-  "reviews.templateBtn": "📝 Сделай вклад!",
+  "reviews.templateBtn": "Сделай вклад!",
   "reviews.upcomingTitle": "В работе",
   "reviews.upcomingNote": "Вещи, которые тестируем следующими, — в очереди, обзора пока нет.",
 
@@ -46,7 +46,7 @@ const ru: Record<keyof typeof en, string> = {
   "journal.tag": "Заметка",
   "journal.allYears": "Все годы",
   "journal.yearsAriaLabel": "Фильтр по годам",
-  "journal.templateBtn": "📝 Сделай вклад!",
+  "journal.templateBtn": "Сделай вклад!",
   "journal.empty": "Пока пусто — первые записи уже в пути.",
   "journal.upcomingTitle": "В работе",
   "journal.upcomingNote": "Заметки, которые мы сейчас проживаем, — в очереди, текста пока нет.",

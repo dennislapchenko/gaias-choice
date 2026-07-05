@@ -28,7 +28,7 @@ const en = {
   "reviews.lead": "Every item here has ridden with us for real miles — tested for materials, safety, and how it holds up to life on the road with a baby.",
   "reviews.filterAriaLabel": "Filter by category",
   "reviews.allCategory": "All",
-  "reviews.templateBtn": "📝 Contribute!",
+  "reviews.templateBtn": "Contribute!",
   "reviews.upcomingTitle": "In the works",
   "reviews.upcomingNote": "Gear we're testing next — queued, not yet reviewed.",
 
@@ -46,7 +46,7 @@ const en = {
   "journal.tag": "Journal",
   "journal.allYears": "All",
   "journal.yearsAriaLabel": "Filter by year",
-  "journal.templateBtn": "📝 Contribute!",
+  "journal.templateBtn": "Contribute!",
   "journal.empty": "No entries yet — the first notes are on their way.",
   "journal.upcomingTitle": "In the works",
   "journal.upcomingNote": "Entries we're living right now — queued, not yet written.",

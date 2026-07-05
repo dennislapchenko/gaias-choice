@@ -1,5 +1,6 @@
 # Course plan — "Inside websites like this" (tag: inside-websites)
 
+This course might be ever-evolving so context has to stay for now
 **Status:** all 5 chapters shipped 2026-07-05. **English only by owner decision
 (2026-07-05)** — no RU counterpart is planned; the epic is deliberately absent
 from `ru/site.yaml` `epics:`, so the RU locale never shows the tab. This is a

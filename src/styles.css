@@ -1714,10 +1714,11 @@ a.upcoming-link:hover {
    .filters chips for years, the .upcoming rail) — the two pages are
    deliberately homogeneous. Only the entry rows are journal-specific. */
 
-/* The copy-template "Contribute!" action button (labelled CopyButton) — shared
-   by /journal and /reviews. */
+/* The copy-template "Contribute!" action button (labelled CopyButton) — lives
+   at the bottom of the .upcoming rail on /journal and /reviews (the rail's
+   flex gap spaces it). */
 .copy-template-btn {
-  margin: 0 0 20px;
+  margin: 0;
   padding: 9px 14px;
 }
 

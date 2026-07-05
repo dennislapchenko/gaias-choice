@@ -1,5 +1,6 @@
 # Course plan — «Честный сайт с нуля» / "An honest site from zero" (tag: founder-guide)
 
+This course might be ever-evolving so context has to stay for now
 **Status:** all 5 chapters shipped 2026-07-05 — a retrofit of the original
 founder guides into course form (same slugs, same facts, continuity weave
 added). Chapters get *retold from lived experience* as roadmap milestones

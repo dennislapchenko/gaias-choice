@@ -2,7 +2,6 @@ import { useSearchParams } from 'react-router-dom'
 import { getJournal, getJournalTemplate, getSite } from '../lib/content'
 import { useI18n } from '../lib/i18n'
 import JournalRow from '../components/JournalRow'
-import CopyButton from '../components/CopyButton'
 import Upcoming from '../components/Upcoming'
 
 const yearOf = (date?: string) => (date ?? '').slice(0, 4)
@@ -36,12 +35,6 @@ export default function Journal() {
 
       <div className="reviews-layout">
         <div className="reviews-main">
-          <CopyButton
-            value={getJournalTemplate(locale)}
-            label={t('journal.templateBtn')}
-            className="copy-template-btn"
-          />
-
           {years.length > 0 && (
             <div className="filters" role="tablist" aria-label={t('journal.yearsAriaLabel')}>
               <button
@@ -75,7 +68,12 @@ export default function Journal() {
           </div>
         </div>
 
-        <Upcoming title={t('journal.upcomingTitle')} note={t('journal.upcomingNote')} items={upcoming} />
+        <Upcoming
+          title={t('journal.upcomingTitle')}
+          note={t('journal.upcomingNote')}
+          items={upcoming}
+          contribute={{ value: getJournalTemplate(locale), label: t('journal.templateBtn') }}
+        />
       </div>
     </>
   )
