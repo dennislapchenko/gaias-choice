@@ -1,69 +1,66 @@
 import en from './en'
 
 /**
- * Not yet translated — every value below is still the English string from
- * ./en.ts, copied on purpose so the UI never shows a missing key. Translate
- * value by value and tick it off in ../../TRANSLATION_STATUS.md as you go.
- * `Record<keyof typeof en, string>` makes TypeScript fail the build if a key
- * here ever drifts out of sync with en.ts.
+ * UI chrome strings, translated. `Record<keyof typeof en, string>` makes
+ * TypeScript fail the build if a key here ever drifts out of sync with en.ts.
  */
 const ru: Record<keyof typeof en, string> = {
-  'nav.primaryAriaLabel': 'Primary',
+  'nav.primaryAriaLabel': 'Главное меню',
 
-  'footer.email': 'Email',
+  'footer.email': 'Эл. почта',
   'footer.disclosure':
-    'Some links are affiliate links. If you buy through them we may earn a small commission at no extra cost to you. We only recommend gear we have actually used.',
-  'footer.disclosureLinkText': 'Full disclosure',
+    'Некоторые ссылки — партнёрские. Если вы покупаете по ним, мы можем получить небольшую комиссию без каких-либо доплат с вашей стороны. Мы рекомендуем только то снаряжение, которое действительно использовали сами.',
+  'footer.disclosureLinkText': 'Полное раскрытие информации',
   'footer.copyright': '© {{year}} {{name}}.',
 
-  'home.eyebrow': 'Natural · Plastic-free · Fragrance-free',
-  'home.browseReviews': 'Browse reviews',
-  'home.readGuides': 'Read the guides',
-  'home.featuredReviews': 'Featured reviews',
-  'home.allReviews': 'All reviews →',
-  'home.latestGuides': 'Latest guides',
-  'home.allGuides': 'All guides →',
+  'home.eyebrow': 'Натурально · Без пластика · Без отдушек',
+  'home.browseReviews': 'Смотреть обзоры',
+  'home.readGuides': 'Читать гайды',
+  'home.featuredReviews': 'Избранные обзоры',
+  'home.allReviews': 'Все обзоры →',
+  'home.latestGuides': 'Свежие гайды',
+  'home.allGuides': 'Все гайды →',
 
-  'reviews.title': 'Reviews',
+  'reviews.title': 'Обзоры',
   'reviews.lead':
-    'Every item here has ridden with us for real miles — tested for materials, safety, and how it holds up to life on the road with a baby.',
-  'reviews.filterAriaLabel': 'Filter by category',
-  'reviews.allCategory': 'All',
+    'Каждая вещь здесь проехала с нами реальные километры — мы проверили материалы, безопасность и то, как она выдерживает дорожную жизнь с младенцем.',
+  'reviews.filterAriaLabel': 'Фильтр по категории',
+  'reviews.allCategory': 'Все',
 
-  'guides.title': 'Guides & checklists',
+  'guides.title': 'Гайды и чек-листы',
   'guides.lead':
-    "Right now: our founder guides — the honest playbook we're following to build this site, in public. Reader-facing guides will replace them as we earn the experience.",
-  'guides.tag': 'Guide',
+    'Пока что здесь гайды от основателей — честный план, по которому мы строим этот сайт, в открытую. Со временем их сменят гайды для читателей, когда мы наберёмся опыта.',
+  'guides.tag': 'Гайд',
 
-  'reviewDetail.backLink': '← All reviews',
-  'reviewDetail.checkPrice': 'Check current price →',
+  'reviewDetail.backLink': '← Все обзоры',
+  'reviewDetail.checkPrice': 'Узнать текущую цену →',
 
-  'guideDetail.backLink': '← All guides',
+  'guideDetail.backLink': '← Все гайды',
 
-  'notFound.title': 'Not found',
-  'notFound.body': "This trail doesn't lead anywhere yet.",
-  'notFound.backHome': 'Back home',
+  'notFound.title': 'Страница не найдена',
+  'notFound.body': 'Эта тропа пока никуда не ведёт.',
+  'notFound.backHome': 'На главную',
 
-  'rating.ariaLabel': '{{value}} out of 5',
+  'rating.ariaLabel': '{{value}} из 5',
   'rating.title': '{{value}} / 5',
 
-  'theme.changeTitle': 'Change color palette',
-  'theme.toggleLabel': 'Palette',
-  'theme.menuAriaLabel': 'Color palette',
-  'theme.default': 'default',
+  'theme.changeTitle': 'Сменить цветовую палитру',
+  'theme.toggleLabel': 'Палитра',
+  'theme.menuAriaLabel': 'Цветовая палитра',
+  'theme.default': 'по умолчанию',
 
-  'lang.changeTitle': 'Change language',
-  'lang.toggleLabel': 'Language',
-  'lang.menuAriaLabel': 'Language',
+  'lang.changeTitle': 'Сменить язык',
+  'lang.toggleLabel': 'Язык',
+  'lang.menuAriaLabel': 'Язык',
 
-  'astro.prevMonth': 'Previous month',
-  'astro.nextMonth': 'Next month',
-  'astro.noEvents': 'No marked events this month.',
-  'astro.note': 'Computed from live ephemeris · shown in your local time',
+  'astro.prevMonth': 'Предыдущий месяц',
+  'astro.nextMonth': 'Следующий месяц',
+  'astro.noEvents': 'В этом месяце нет отмеченных событий.',
+  'astro.note': 'Рассчитано по актуальной эфемериде · показано в вашем местном времени',
   'astro.cellAriaLabel': '{{day}}: {{events}}',
 
-  'sidebar.title': 'Celestial Almanac',
-  'sidebar.intro': 'Kak budto iz ust samogo Daragana',
+  'sidebar.title': 'Небесный альманах',
+  'sidebar.intro': 'Как будто из уст самого Дарагана',
 }
 
 export default ru

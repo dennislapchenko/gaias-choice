@@ -10,19 +10,19 @@ gets translated — see `content/locales/README.md` for where files go and
 
 ## UI chrome strings (`src/locales/ru.ts`)
 
-- [ ] `nav.*`
-- [ ] `footer.*`
-- [ ] `home.*`
-- [ ] `reviews.*`
-- [ ] `guides.*`
-- [ ] `reviewDetail.*`
-- [ ] `guideDetail.*`
-- [ ] `notFound.*`
-- [ ] `rating.*`
-- [ ] `theme.*`
-- [ ] `lang.*`
-- [ ] `astro.*` (note: month/weekday names are handled by `Intl`, not this file — nothing to do there)
-- [ ] `sidebar.*`
+- [x] `nav.*`
+- [x] `footer.*`
+- [x] `home.*`
+- [x] `reviews.*`
+- [x] `guides.*`
+- [x] `reviewDetail.*`
+- [x] `guideDetail.*`
+- [x] `notFound.*`
+- [x] `rating.*`
+- [x] `theme.*`
+- [x] `lang.*`
+- [x] `astro.*` (note: month/weekday names are handled by `Intl`, not this file — nothing to do there)
+- [x] `sidebar.*`
 
 ## Site config — `content/locales/ru/site.yaml`
 
@@ -32,12 +32,12 @@ gets translated — see `content/locales/README.md` for where files go and
 
 ## Products — `content/locales/ru/products/*.md`
 
-- [ ] beeswax-food-wraps.md
-- [ ] castile-soap.md
-- [ ] glass-baby-bottles.md
-- [ ] organic-cotton-swaddle.md
-- [ ] stainless-food-container.md
-- [ ] wool-sleep-sack.md
+- [x] beeswax-food-wraps.md
+- [x] castile-soap.md
+- [x] glass-baby-bottles.md
+- [x] organic-cotton-swaddle.md
+- [x] stainless-food-container.md
+- [x] wool-sleep-sack.md
 
 ## Guides — `content/locales/ru/guides/*.md`
 
