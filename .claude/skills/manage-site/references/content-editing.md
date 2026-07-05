@@ -17,6 +17,16 @@ pick controls list position. Markdown is GFM (task-list checkboxes render).
   that persona is banned. Write only what the owners actually did.
 - **Plain, warm, unhyped.** No "game-changer", no exclamation-mark stacking.
   The brand is "buy less, buy better".
+- **Russian content speaks in the author's voice.** Before writing or
+  rephrasing anything in `content/locales/ru/`, read
+  `context/persona-context.md` (voice DNA + register-calibration table + the
+  5-question test) — RU text must sound like her, within the rules above.
+- **Worldview for guides/Learn courses and article suggestions:** draw from
+  `context/ideology-context.md` (Health: Chek, Asprey · Worldview: Buhner,
+  Daragan, Ralston · Children: Steiner, Swan; extensible). Sections are domains
+  of authority: Health governs food/consumption claims; Children leads on
+  anything child-related. Ideology shapes framing and topic selection — never
+  fabricated claims; truth-first stays senior.
 
 ## Add a product review → `content/locales/en/products/<slug>.md`
 
@@ -50,7 +60,8 @@ may flex, but verdict-first + a flaws section are fixed.
 
 ## Add a guide → `content/locales/en/guides/<slug>.md`
 
-Frontmatter: `title`, `excerpt`, `date`, optional `image`, `tags`.
+Frontmatter: `title`, `excerpt`, `date`, optional `image`, `tags`, optional
+`chapter: N` (course order — see below).
 
 Current guides are **founder guides** (internal playbooks, deliberately
 public). If adding another founder guide, open with the same blockquote the
@@ -64,6 +75,23 @@ existing ones use:
 Reader-facing guides (post-bootstrap) drop that note and follow the voice
 rules above. Don't "fix" founder guides into consumer content — replacing them
 is a deliberate roadmap milestone.
+
+**11-chapter epic courses (Learn):** a course = 11 guide files per locale with
+`chapter: N` frontmatter (1–11, controls order) and the epic tag first in
+`tags`, plus a `site.yaml` `epics:` entry in both locales. The complete
+authoring blueprint — 20/80 curriculum architecture (Gate / Path / Summit),
+the Thread navigation weave (Trail block, spine artifact, callbacks/seeds,
+Bridge block), chapter anatomy, practice-task rules, and shipping checklist —
+lives in `context/epic-writing-context.md`. **Read it before writing or
+editing any course chapter**; its skeleton headings feed the chapter TOC
+sidebar, so don't rename them casually. Two courses exist (ch. 1–3 shipped
+2026-07-05, ch. 4–11 pending): their per-course outlines — chapter one-liners,
+named concepts, seeds, reuse maps — are `context/course-plan-homeopathy.md`
+and `context/course-plan-herbalism.md`; follow the plan when writing the next
+chapter. Frontmatter gotcha learned the hard way: **quote any `title:`/`excerpt:`
+containing a colon** — an unquoted `… вечером: ваш …` is a YAML nested-mapping
+error that blanks the whole SPA (the `import.meta.glob` parse happens at
+runtime for every page).
 
 ## Add a standalone page → `content/locales/en/pages/<slug>.md` (+ wiring)
 

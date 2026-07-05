@@ -45,6 +45,13 @@ content/                 # ALL editable content (no code)
       pages/*.md          # standalone pages (about, contact, roadmap, disclosure, privacy)
     ru/                   # Russian — filled in section by section, falls back to en/
   themes.yaml            # color palettes (tag + label + default + colors) — shared, not localized
+context/                 # authoring context (NOT bundled into the site)
+  persona-context.md     # the author's voice — read before writing/rephrasing RU content
+  ideology-context.md    # influences by domain: Health (Chek, Asprey) / Worldview (Buhner, Daragan, Ralston) / Children (Steiner, Swan) — extensible; Health governs food claims
+  plan-rephrase-ru-voice.md  # pending task: rephrase all RU content in her voice
+  epic-writing-context.md  # blueprint for 11-chapter Learn epic courses (curriculum, Thread weave, chapter anatomy)
+  course-plan-homeopathy.md  # «Гомеопатия дома»: full 11-chapter outline, concepts, seeds (ch. 1–3 shipped)
+  course-plan-herbalism.md   # «Домашний травник»: full 11-chapter outline, concepts, seeds (ch. 1–3 shipped)
 public/
   images/*.webp          # optimized images referenced by content (see Images)
   favicon.svg
@@ -114,16 +121,34 @@ Markdown body…
 ### Adding a guide
 
 `content/locales/en/guides/<slug>.md` — same idea, fields: `title`, `excerpt`,
-`image?`, `date`, `tags?`. The section is user-facing **"Learn" / "Обучение"**
-(nav + `guides.title`), framed as course-like collections — but the **route and
-content dir stay `/guides`** internally. **A guide's FIRST tag is its "epic"**
-(a course): the Learn page shows epics as thumbnails (tabs) and lists the
-selected epic's items, with the epic's `blurb` as a course intro. Epic metadata
-(title, thumbnail, blurb) is configured in `site.yaml` `epics:` (`GuideEpic` in
-`lib/types.ts`); the first configured epic is the default. Today every guide's
-first tag is `founder-guide`. **Ideology:** each epic should read like a complete,
-streamlined free course (the actual course content will be authored by Fable 5).
+`image?`, `date`, `tags?`, `chapter?` (number). The section is user-facing
+**"Learn" / "Обучение"** (nav + `guides.title`), framed as course-like
+collections — but the **route and content dir stay `/guides`** internally.
+**A guide's FIRST tag is its "epic"** (a course): the Learn page shows epics as
+thumbnails (tabs) and lists the selected epic's items, with the epic's `blurb`
+as a course intro. Epic metadata (title, thumbnail, blurb) is configured in
+`site.yaml` `epics:` (`GuideEpic` in `lib/types.ts`); the first configured epic
+is the default. Three epics exist: `founder-guide` (the 5 founder guides) plus
+two reader-facing 11-chapter courses in progress — `homeopathy` («Гомеопатия
+дома») and `herbalism` («Домашний травник»), chapters 1–3 each shipped
+2026-07-05; their outlines live in `context/course-plan-*.md`.
+**Ideology:** each epic should read like a complete, streamlined free course.
 See the "New Learn epic" task in `references/development.md`.
+
+Optional `chapter: N` orders guides within an epic for course sequencing
+(ascending, independent of `date`); guides without it keep the existing
+date-descending order (`Guides.tsx`). `GuideCard`/`GuideDetail` show a small
+"Chapter N" label when set. Guide detail pages (`GuideDetail.tsx`) also render
+a page-local table of contents from the guide's `h2`/`h3` headings — a sticky
+column next to the article on desktop, a collapsible toggle above it on
+mobile, only once a guide has 3+ headings (`components/TableOfContents.tsx`).
+Heading anchor ids are stamped at markdown-render time by a custom `marked`
+renderer in `lib/content.ts` (`headingIdRenderer`), slugified with Cyrillic
+transliteration so Russian headings still get stable, readable anchors. See
+the "Guide chapter ordering" / "Guide detail table of contents" rows in
+`references/development.md` for the full mechanics, and
+`context/epic-writing-context.md` for the 11-chapter course blueprint this
+supports.
 
 ### Adding a standalone page
 
@@ -376,6 +401,10 @@ learning the affiliate-content business as they go:
   master playbook), deliberately public. They will be replaced by
   reader-facing guides once the owners have real first-hand content. Don't
   "fix" them back into consumer content.
+- The first **reader-facing Learn courses** are in progress: `homeopathy` and
+  `herbalism` epics, chapters 1–3 of 11 each (both locales). Chapter 3's
+  "next" link is deliberately text-only («готовится») until chapter 4 ships —
+  keep that pattern for any course published mid-write.
 - `content/locales/en/products/*` are still **AI placeholder reviews** with fake
   affiliate URLs (`EXAMPLE…`) and AI images — flagged for deletion/replacement
   in the launch checklist. Never add a real affiliate program while these exist.
