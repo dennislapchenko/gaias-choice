@@ -66,8 +66,8 @@ may flex, but verdict-first + a flaws section are fixed.
 > **Compass is the site's one openly computer-assisted section** — courses
 > AI-drafted from the owners' context/voice, then edited, disclosed by the
 > `compass.provenance` banner on `/compass`. The **Journal** (`/journal`) is the
-> human-written counterpart — see "Add a Journal entry" below. (`/guides` was
-> renamed to `/compass` 2026-07-06; there is no `guides/` dir or route anymore.)
+> human-written counterpart — see "Add a Journal entry" below. (Full provenance
+> contract: SKILL.md non-negotiable #6.)
 
 Frontmatter: `title`, `excerpt`, `date`, optional `image`, `tags`, optional
 `chapter: N` (course order — see below). The `<epic-tag>` subfolder (e.g.
@@ -103,8 +103,8 @@ editing any course chapter**; its skeleton headings feed the chapter TOC
 sidebar, so don't rename them casually. Courses that exist: the founder
 course and `inside-websites` (both 5 chapters, complete), `trophology` (5
 chapters, complete, en+ru — `context/course-plan-trophology.md`), and two
-reader-facing 11-chapter courses (`homeopathy`, `herbalism`; ch. 1–3 shipped
-2026-07-05, ch. 4–11 pending). Every course has an outline — chapter
+reader-facing 11-chapter courses (`homeopathy`, `herbalism`; ch. 1–3 live,
+ch. 4–11 pending). Every course has an outline — chapter
 one-liners, named concepts, seeds, reuse maps — in
 `context/course-plan-<slug>.md`; follow the plan when writing the next
 chapter. (A 5-chapter course maps Gate = 1 / Path = 2–4 / Summit = 5;
@@ -136,16 +136,16 @@ just another `content/shared/journal-template.*` variant + button.
 
 ## Visuals inside guides (tables, diagrams, charts) — the house pattern
 
-Every course chapter should carry 1–3 visuals that cement its concepts (added
-across all 22 guide files 2026-07-05). Two building blocks, both authored
-directly in the markdown — no images, no new deps:
+Every course chapter should carry 1–3 visuals that cement its concepts. Two
+building blocks, both authored directly in the markdown — no images, no new
+deps:
 
 - **GFM tables** for comparisons and reference grids (`gfm: true` is on;
   styled via `.prose table` in `styles.css`, horizontal-scroll on ≤720px).
   Tables stay **inline per locale** — they're just text, nothing to share.
-- **SVG diagrams** for flows, maps, charts, staircases, compasses. Since
-  2026-07-05 the **geometry is authored once as a shared template** and reused
-  by every locale; only the text differs.
+- **SVG diagrams** for flows, maps, charts, staircases, compasses. The
+  **geometry is authored once as a shared template** and reused by every
+  locale; only the text differs.
 
 ### Diagram templates + fenced blocks (the DRY pattern)
 
@@ -162,9 +162,8 @@ directly in the markdown — no images, no new deps:
 
    No `<figure>`/`<figcaption>` in the template — the renderer adds those. Slot
    names are any `[\w-]+`. **New diagrams: name slots meaningfully**
-   (`{{step1}}`, `{{summit}}`). The 16 diagrams migrated on 2026-07-05 use
-   positional `t1…tN` (auto-extracted, in document order) plus `aria` — leave
-   those as-is.
+   (`{{step1}}`, `{{summit}}`). The original 16 diagrams use positional
+   `t1…tN` (in document order) plus `aria` — leave those as-is.
 
 2. **The embed** — in *each* locale's guide markdown, next to the prose, a
    fenced block whose language is `diagram <name>` and whose YAML body fills the

@@ -8,6 +8,15 @@
 Guidance for working in this repo. Read this first; it captures decisions that
 aren't obvious from the code.
 
+**Doc layout — one fact, one home.** This file holds *architecture and
+invariants*. Process rules (truth-first, provenance contract, committing) live
+in `.claude/skills/manage-site/SKILL.md`; change-X-edit-Y mechanics in
+`references/development.md`; authoring procedures in
+`references/content-editing.md`; voice/worldview source material in `context/`.
+Docs describe **current state only** — no dates, no "renamed from", no
+changelog framing (git history answers those). When you update docs, fix stale
+lines *and* delete anything that has become history rather than state.
+
 ## What this is
 
 **Gaia's Choice** — a content site for honest reviews of natural, plastic-free,
@@ -18,7 +27,8 @@ SSR/SSG site.
 - **Stack:** Vite + React 18 + TypeScript, `react-router-dom` (BrowserRouter).
 - **Content:** authored as Markdown + YAML in `content/`, bundled at build time.
   No backend, no database, no CMS, no runtime data fetching.
-- **Serving:** static build served by nginx in a container, targeting Google Cloud Run.
+- **Serving:** static build served by nginx in a container. Live deploy is
+  GitHub Pages (push to `main`); Cloud Run remains a supported target.
 
 ## Golden rules
 
@@ -28,42 +38,49 @@ SSR/SSG site.
 2. **npm never runs on the host.** All install/build/lint runs inside a
    throwaway `node:22-alpine` container; deps live in a Docker volume. See
    "Supply chain" below. Don't add a plain `npm install` step to any workflow.
-3. **Minimal dependencies.** 5 runtime deps only. Adding one is a real decision —
-   prefer a few lines of code over a new package, and never add something with
-   install scripts (`.npmrc` sets `ignore-scripts=true`).
+3. **Minimal dependencies.** 6 runtime deps only (listed under "Supply chain").
+   Adding one is a real decision — prefer a few lines of code over a new
+   package, and never add something with install scripts (`.npmrc` sets
+   `ignore-scripts=true`).
 
 ## Directory map
 
 ```
 content/                 # ALL editable content (no code)
   locales/
-    README.md            # how the per-locale content layout works
+    README.md            # per-locale layout + the do-not-translate glossary
     en/                   # English — source of truth, always complete
-      site.yaml           # site name, tagline, description, bio, mission, nav, values, heroImage, social, url, epics, upcoming, support (support: is non-localized — authored in en/ only, inherited by other locales via getSite)
+      site.yaml           # name, tagline, description, bio, mission, nav, values,
+                          # heroImage, social, url, epics, upcoming, sidebar, support
+                          # (support: is non-localized — en/ only, inherited via getSite)
       products/*.md       # reviews  → /reviews/<filename-without-.md>
-      compass/<epic>/*.md # Compass course chapters, grouped in per-epic subfolders → /compass/<filename-without-.md> (subfolder is organizational only, not part of the route)
-      journal/*.md        # Journal entries (human-written, date-ordered blog) → /journal/<filename-without-.md> (flat, no subfolders)
-      pages/*.md          # standalone pages (about, contact, roadmap, disclosure, privacy, support)
-    ru/                   # Russian — filled in section by section, falls back to en/
+      compass/<epic>/*.md # Compass course chapters, per-epic subfolders → /compass/<slug>
+                          # (subfolder is organizational only, not part of the route)
+      journal/*.md        # Journal entries (human-written blog) → /journal/<slug> (flat)
+      pages/*.md          # standalone pages (about, contact, roadmap, disclosure,
+                          # privacy, support)
+    ru/                   # Russian — falls back to en/ per collection and per slug
   shared/
-    diagrams/*.svg       # Compass diagram templates ({{slot}} tokens) — geometry authored once, reused by every locale (see Adding a Compass chapter)
-    journal-template.<locale>.md  # blank Journal-entry scaffolds the /journal "copy template" button hands to the owner (getJournalTemplate)
-  themes.yaml            # color palettes (tag + label + default + colors) — shared, not localized
+    diagrams/*.svg       # diagram templates ({{slot}} tokens) — geometry authored once,
+                         # reused by every locale (see Compass below)
+    journal-template.<locale>.md  # blank Journal-entry scaffold behind the /journal
+                                  # "copy template" button (getJournalTemplate)
+  themes.yaml            # color palettes (tag + label + default + colors) — not localized
 context/                 # authoring context (NOT bundled into the site)
-  persona-context.md     # the author's voice + the family's REAL biography — read before writing/rephrasing RU content or any "who we are" copy
-  ideology-context.md    # influences by domain: Health (Chek, Asprey) / Worldview (Buhner, Daragan, Ralston) / Children (Steiner, Swan) — extensible; Health governs food claims
-  plan-rephrase-ru-voice.md  # pending task: rephrase all RU content in her voice
-  epic-writing-context.md  # blueprint for 11-chapter Compass epic courses (curriculum, Thread weave, chapter anatomy)
-  course-plan-homeopathy.md  # «Гомеопатия дома»: full 11-chapter outline, concepts, seeds (ch. 1–3 shipped)
-  course-plan-herbalism.md   # «Домашний травник»: full 11-chapter outline, concepts, seeds (ch. 1–3 shipped)
-  course-plan-building-in-public.md  # «Честный сайт с нуля»: the founder guides as a 5-chapter course (complete; sanctioned 5-chapter deviation)
-  course-plan-inside-websites.md  # "Inside websites like this": 5-chapter engine-room course on this repo's stack (complete; EN-only)
-  course-plan-trophology.md   # «Трофология»: 5-chapter food-combining course (Daniel Reid), full outline + concept/seed map (complete, en+ru)
+  persona-context.md     # the author's voice + the family's REAL biography — read before
+                         # writing/rephrasing RU content or any "who we are" copy
+  ideology-context.md    # influences by domain: Health (Chek, Asprey, Reid) / Worldview
+                         # (Buhner, Daragan, Ralston) / Children (Steiner, Swan);
+                         # Health governs food claims
+  epic-writing-context.md  # blueprint for Compass epic courses (curriculum, Thread
+                           # weave, chapter anatomy)
+  course-plan-*.md       # one outline per course (chapters, concepts, seeds, reuse maps)
+  archive/               # completed plans, kept for reference only — not live context
 public/
   images/*.webp, *.svg   # optimized photos + generated mandala art (see Images)
   favicon.svg
 scripts/
-  generate-mandala.mjs   # generates mandala SVG art (guides/reviews sets, see Images)
+  generate-mandala.mjs   # generates mandala SVG art (see Images)
 src/
   main.tsx               # React root + BrowserRouter + I18nProvider
   App.tsx                # route table
@@ -75,20 +92,20 @@ src/
     i18n.tsx             # locale state, persistence, t() translate function
     theme.ts             # applies/persists color palettes (CSS var overrides)
     astro.ts             # in-browser ephemeris → celestial events (astronomy-engine)
+    astroText.ts         # all almanac wording, one Vocab per locale
+    asset.ts             # withBase/withBaseHtml for BASE_PATH-aware asset URLs
     types.ts             # SiteConfig, Product, Guide, Page, Theme, AstroEvent
   components/            # Layout, Sidebar, AstroCalendar, ThemeSwitcher,
                          # LanguageSwitcher, ProductCard, CompassCard, CompassRow,
                          # JournalRow, UpcomingReviews, Markdown, Rating,
-                         # CopyButton (reusable copy-to-clipboard, icon-only or labelled)
+                         # TableOfContents, CopyButton
   pages/                 # Home, Reviews, ReviewDetail, Compass, Journal,
                          # EntryDetail (shared Compass+Journal detail w/ TOC),
-                         # MarkdownPage (about/contact/etc), Support (config-driven
-                         # donation page), NotFound
+                         # MarkdownPage (about/contact/etc), Support, NotFound
   styles.css             # single hand-written stylesheet (no CSS framework)
 Dockerfile               # multi-stage: node build -> nginx runtime
 nginx/default.conf.template  # $PORT + SPA fallback (envsubst at container boot)
 Taskfile.yml             # all common commands
-TRANSLATION_STATUS.md    # Russian translation checklist — delete once fully translated
 ```
 
 ## How content loading works (`src/lib/content.ts`)
@@ -102,151 +119,80 @@ This is the heart of the site. At **build time**:
 - `parseFrontmatter()` splits the leading `---` YAML block from the body using a
   regex, and parses the YAML with the `yaml` package (browser-safe — this is why
   we do NOT use `gray-matter`, which needs Node's `Buffer`).
-- The body is rendered to HTML with `marked` and injected via
+- The body is rendered to HTML with `marked` (GFM on) and injected via
   `dangerouslySetInnerHTML` in `components/Markdown.tsx`. **Content is trusted**
   (author-controlled), so this is intentional — do not accept untrusted markdown
   here without sanitizing.
 - **The filename (minus `.md`) is the slug / URL.** Renaming a file changes its
   URL. Nothing hardcodes slugs; they're derived from paths.
 - Collections are sorted by `date` descending.
+- A custom `marked` heading renderer (`headingIdRenderer`) stamps anchor ids,
+  slugified with Cyrillic transliteration, so RU headings get stable readable
+  anchors (feeds the entry TOC).
+- A `marked` `renderer.code` override (`renderDiagram`) turns
+  <code>```diagram &lt;name&gt;</code> fenced blocks into shared-template SVG
+  figures (see "Compass" below).
 
-### Adding a review
+Authoring procedures (frontmatter schemas, voice rules, step-by-steps) live in
+`references/content-editing.md` — this section is only the loading mechanics.
 
-Create `content/locales/en/products/<slug>.md` (add a matching file under
-`ru/` too, once translated — see "Language switching / i18n" below):
+## The content sections
 
-```markdown
----
-title: Product Name
-category: Sleep          # becomes a filter chip on /reviews
-rating: 5                # 0–5, rendered as stars
-price: "$28"             # optional, quote it
-affiliateUrl: "https://...?tag=gaiaschoice-20"   # optional; rel=sponsored
-excerpt: One-line summary shown on cards.
-image: /images/name.webp # optional; path under public/
-date: 2026-06-20         # YYYY-MM-DD, controls ordering
-tags: [organic, cotton]  # optional
----
+**Reviews** (`/reviews`, `products/*.md`) — frontmatter `title`, `category`
+(filter chip), `rating` 0–5, optional `price`/`affiliateUrl` (rendered
+`rel=sponsored`)/`image`/`tags`, `excerpt`, `date`. The public queue of
+not-yet-written reviews is the `upcoming:` list in `site.yaml`, rendered as the
+"in the works" rail on `/reviews` — entries are `{name, url}` only, explicitly
+not reviews.
 
-Markdown body…
-```
+**Compass** (`/compass`, `compass/<epic>/*.md`) — the site's **courses**
+section (user-facing "Compass" / «Путь») and the one **openly
+computer-assisted** section, disclosed by the `compass.provenance` banner
+(the full provenance contract is SKILL.md non-negotiable #6). Mechanics:
 
-### Adding a Compass chapter
+- **A chapter's FIRST tag is its epic** (course). The `<epic>` subfolder is
+  filesystem tidiness only — `content.ts` globs `compass/**/*.md`, slug =
+  filename. Epic display metadata (title, thumbnail, blurb) lives in
+  `site.yaml` `epics:`; the first entry is the default tab.
+- Courses are **5 or 11 chapters** (owner rule). Optional `chapter: N`
+  frontmatter orders chapters ascending within an epic (un-chaptered entries
+  keep date-desc). Existing epics: `founder-guide` (5, complete — the founder
+  playbooks as the course «Честный сайт с нуля»), `homeopathy` and `herbalism`
+  (11 each, chapters 1–3 live, rest pending — a mid-write course's last "next"
+  link stays text-only until the next chapter ships), `trophology` (5,
+  complete, en+ru), `inside-websites` (5, complete, **English-only by owner
+  decision** — absent from `ru/site.yaml`, its diagrams are expected EN-only
+  parity-check asymmetries). Outlines live in `context/course-plan-*.md`; the
+  authoring blueprint is `context/epic-writing-context.md`.
+- **EntryDetail** is the shared detail page for Compass chapters *and* Journal
+  entries (`kind` prop picks getter/back-link/tag; chapter label shows for
+  Compass only). It renders a page-local table of contents from `h2`/`h3`
+  headings (3+ required) — sticky right column on desktop, `<details open>` on
+  mobile. Layout/grid details: the TOC row in `references/development.md`.
+- **Diagrams:** geometry is authored once per diagram as a shared template
+  (`content/shared/diagrams/<name>.svg` with `{{slot}}` tokens); each locale's
+  markdown embeds it via a <code>```diagram &lt;name&gt;</code> fenced block
+  whose YAML fills the slots. The renderer HTML-escapes values, uniquifies SVG
+  ids per instance, wraps in `<figure class="diagram">` + `<figcaption>`, and
+  renders a visible `⚠` figcaption instead of throwing (a throw would blank
+  the SPA). Diagrams use palette CSS variables so they re-theme. Authoring
+  rules, overflow audit, and parity checks: `references/content-editing.md`
+  "Visuals inside guides".
 
-The Compass is the site's **courses** section (user-facing **"Compass" / "Путь"**,
-nav + `compass.title`) — and, since 2026-07-06, the **one openly computer-assisted
-section**: its courses are AI-drafted from the owners' context/influences/voice,
-then edited, and the `/compass` landing page carries a `compass.provenance` banner
-saying so. Everything else on the site (Journal, reviews, pages) is human-written.
-The **route + content dir are `/compass`** (renamed from the legacy `/guides`
-2026-07-06 — code, dirs and cross-links all moved; there is no `/guides` anymore).
+**Journal** (`/journal`, `journal/*.md`, flat) — the **human-written,
+date-ordered blog**, the honest counterpart to the Compass (provenance
+contract: SKILL.md #6). Frontmatter `title`, `excerpt`, `date`, optional
+`tags`/`image`; no per-entry wiring. Lists as plain text rows filterable by
+year; opens through `EntryDetail`. A "copy a blank entry template" button on
+`/journal` copies `content/shared/journal-template.<locale>.md`. The seed
+entry (`journal/driving-with-a-toddler.md`) is an explicit fill-in template,
+not an invented trip.
 
-`content/locales/en/compass/<epic-tag>/<slug>.md` — fields: `title`, `excerpt`,
-`image?`, `date`, `tags?`, `chapter?` (number). The `<epic-tag>` subfolder (e.g.
-`compass/homeopathy/`) exists purely to keep `content/*/compass` from becoming one
-flat pile — it plays no role in routing or content loading (`content.ts` globs
-`compass/**/*.md` and slugs are always just the filename); a chapter's epic
-membership is decided entirely by its **first tag**, independent of folder. **A
-chapter's FIRST tag is its "epic"** (a course): the
-Compass page shows epics as thumbnails (tabs) and lists the selected epic's
-items, with the epic's `blurb` as a course intro. Epic metadata (title,
-thumbnail, blurb) is configured in
-`site.yaml` `epics:` (`GuideEpic` in `lib/types.ts`); the first configured epic
-is the default. Five epics exist: `founder-guide` («Честный сайт с нуля» /
-"An honest site from zero" — the 5 founder guides as a complete 5-chapter
-course, retrofit 2026-07-05), two reader-facing 11-chapter courses in
-progress — `homeopathy` («Гомеопатия дома») and `herbalism` («Домашний
-травник»), chapters 1–3 each shipped 2026-07-05 — `trophology` («Трофология» —
-a complete 5-chapter food-combining course after Daniel Reid, en+ru, shipped
-2026-07-05) — and `inside-websites`
-("Inside websites like this" — a complete 5-chapter engine-room course on
-how this site's own stack works, **English-only by owner decision**, absent
-from `ru/site.yaml`, shipped 2026-07-05); all outlines live in
-`context/course-plan-*.md`. Course lengths are standardized: **5 or 11
-chapters** (owner rule, 2026-07-05).
-**Ideology:** each epic should read like a complete, streamlined free course.
-See the "New Compass epic" task in `references/development.md`.
-
-Optional `chapter: N` orders chapters within an epic for course sequencing
-(ascending, independent of `date`); chapters without it keep the existing
-date-descending order (`Compass.tsx`). `CompassRow` (the `/compass` epic listing),
-`CompassCard` (homepage teaser), and `EntryDetail` all show a small "Chapter N"
-label when set (chapter tag shows for Compass only, not Journal). **`EntryDetail`
-is the shared detail component for both Compass chapters and Journal entries**
-(`kind="compass" | "journal"` picks the getter, back-link and section tag); it
-renders a page-local table of contents from the entry's `h2`/`h3` headings — a
-sticky column next to the article on desktop, a `<details open>` block on mobile
-(expanded by default, still collapsible by tapping the summary), only once an
-entry has 3+ headings (`components/TableOfContents.tsx`). `.detail-layout`
-(`styles.css`) uses `grid-template-areas` with four regions — `nav` (the
-"Back to the Compass" link + tags, its own `.detail-nav` wrapper), `header`
-(`.detail-header`: title + date + hero image, split out of the article so the
-TOC can sit below it), `article` (the markdown body), and `toc` — laid out as
-`nav`/`nav`, `header`/`toc`, `article`/`toc` so the back-link spans full width,
-the TOC is a sticky right column beside header+body, and on mobile
-(`display: flex` + `order`) the stack is **nav → header (title + image) → TOC →
-body**. (Review detail pages keep the title/image inside `.detail`, since they
-have no TOC.)
-Heading anchor ids are stamped at markdown-render time by a custom `marked`
-renderer in `lib/content.ts` (`headingIdRenderer`), slugified with Cyrillic
-transliteration so Russian headings still get stable, readable anchors. See
-the "Guide chapter ordering" / "Guide detail table of contents" rows in
-`references/development.md` for the full mechanics, and
-`context/epic-writing-context.md` for the 11-chapter course blueprint this
-supports.
-
-Guide chapters also **embed their own visuals in the markdown** (since
-2026-07-05): GFM tables (`gfm: true`; styled by `.prose table`) and SVG
-diagrams. Tables stay inline per locale (they're just text). **Diagram geometry
-is authored once as a shared template** and reused by every locale (2026-07-05):
-
-- `content/shared/diagrams/<name>.svg` — one SVG per diagram, drawn once, with
-  `{{slot}}` tokens where locale text goes (`{{aria}}` in the `aria-label`,
-  `{{t1}}…{{tN}}` for the `<text>` runs; `{{caption}}` is the figcaption).
-- A guide embeds one via a fenced block — <code>\`\`\`diagram &lt;name&gt;</code>
-  whose YAML body supplies the slot values — placed in *each* locale's markdown
-  next to the prose. So the geometry is never duplicated across locales; only the
-  text differs. Fenced blocks (not raw `<figure>` HTML) also sidestep the
-  "no blank lines inside a markdown HTML block" trap.
-- The renderer lives in `lib/content.ts` (`renderDiagram` + a `marked`
-  `renderer.code` override): it loads the templates via glob, YAML-parses the
-  slot block, HTML-escapes every value, substitutes `{{slots}}`, **suffixes all
-  SVG `id=`/`url(#…)` per instance** (`-i<n>`, so marker ids never collide when
-  diagrams share a page), and wraps the result in `<figure class="diagram">` +
-  `<figcaption>`. A bad template/slot renders a visible `⚠` figcaption +
-  `console.error` rather than throwing (a throw would blank the SPA). Diagrams
-  color themselves with the palette CSS variables, so they re-theme with the
-  switcher; every svg keeps `role="img"` + a localized `aria-label`.
-
-Authoring rules + the template workflow:
-`.claude/skills/manage-site/references/content-editing.md`, "Visuals inside
-guides".
-
-### Adding a Journal entry
-
-The **Journal** (user-facing "Journal" / «Заметки», nav item **before** Compass)
-is a **human-written, date-ordered blog** — the honest counterpart to the
-computer-assisted Compass. `content/locales/en/journal/<slug>.md`, flat (no
-subfolders), frontmatter `title`, `excerpt`, `date`, optional `tags`/`image`.
-No routing wiring needed per entry — `content.ts` globs `journal/*.md`
-(`getJournal` / `getJournalEntry`), and the routes already exist (`/journal`,
-`/journal/:slug`). Entries list on `/journal` (`pages/Journal.tsx`) as plain text
-rows (`JournalRow`, no thumbnail), sorted date-desc, filterable by **year** via a
-TOC-like right sidebar; each entry opens through the same `EntryDetail` +
-table-of-contents layout as a Compass chapter (`kind="journal"`). A **"copy a
-blank entry template"** button on `/journal` copies a scaffold from
-`content/shared/journal-template.<locale>.md` (single source; `getJournalTemplate`)
-via the labelled `CopyButton`. The seed entry (`journal/driving-with-a-toddler.md`,
-en+ru) is a rich, prompt-driven **template for the owner to fill in** — truth-first:
-it's explicitly a skeleton, not an invented trip.
-
-### Adding a standalone page
-
-`content/locales/en/pages/<slug>.md` with just `title` (optional `image:`
-frontmatter — used when a sidebar panel links to the page, e.g. the `about`
-panel). Then wire a route in `App.tsx`
-(`<Route path="/x" element={<MarkdownPage slug="x" />} />`) — pages are the one
-content type that needs a route because their URLs are bespoke.
+**Pages** (`pages/*.md`) — the one content type needing code wiring: a route in
+`App.tsx` (`<MarkdownPage slug="x" />`). The `support` page is the exception —
+a dedicated `pages/Support.tsx` component rendering the non-localized
+`support:` config block (Stripe link, PayPal handle, crypto wallets) from
+`en/site.yaml`; only its intro prose is `pages/support.md`.
 
 ## Images
 
@@ -257,23 +203,18 @@ under `public/images/`. Referenced from content by absolute path (`/images/x.web
   It runs ImageMagick in a container, converts PNG/JPG → WebP (shrink-only cap
   at 1400px, quality 80), and **removes the originals**. It does NOT rewrite
   content references — update frontmatter `image:` paths by hand afterward.
-- Typical result: ~90% smaller than source PNGs.
-- **Mandala SVG art** — both guide chapters and product reviews use a
-  radial-symmetry "mandala" (rotated `<use>` copies of one petal motif around a
-  center, plus a bespoke central icon per topic, e.g. a compass for the
-  kickstart playbook, a honeycomb hexagon for beeswax wraps) instead of stock
-  photos, matching the site's cosmic/sacred-geometry look. No `task images`
-  step needed (vector, not raster). The original 11 guide-chapter SVGs were
-  hand-authored one-off, before the generator existed. Since 2026-07-05,
-  `scripts/generate-mandala.mjs` generates the shared frame (background
-  gradient, petal ring, concentric rings) from a config; only the center icon
-  per item is still hand-drawn markup, kept in the script's `SETS` config
-  (one named set per content type — currently `guides` for new chapters and
-  `reviews`, which replaced all 6 products' AI-art placeholders). Run
-  `task mandalas SET=<name>` to (re)generate a set; see the "Mandala SVG art"
-  row in `references/development.md` for the full mechanics. Real product
-  photos (owners' hands in frame) still replace review mandalas per the
-  launch checklist, when they exist.
+  Typical result: ~90% smaller than source PNGs.
+- **Mandala SVG art** — guide chapters and product reviews use a
+  radial-symmetry "mandala" (rotated `<use>` petal motif + a bespoke central
+  icon per topic) instead of stock photos, matching the site's
+  cosmic/sacred-geometry look. `scripts/generate-mandala.mjs` generates the
+  shared frame from config; only the center icon per item is hand-drawn markup
+  in the script's `SETS` config (one named set per content type: `guides`,
+  `epics`, `reviews`). Run `task mandalas SET=<name>`. The original 11
+  homeopathy/herbalism/founder chapter SVGs predate the generator and are
+  hand-authored one-offs. Vector — no `task images` step. Real product photos
+  (owners' hands in frame) replace review mandalas per the launch checklist
+  when they exist.
 
 ## Styling & color
 
@@ -289,8 +230,7 @@ appear in: the hero gradient, the cycling `.value` cards (`nth-child(3n…)`), a
 `.tag` chips. `--sand` is the page background.
 
 Detail/prose images are capped to 440px tall and centered **only on desktop**
-(`@media (min-width: 700px)`); phones keep the full-width look. See the media
-query at the bottom of `styles.css`.
+(`@media (min-width: 700px)`); phones keep the full-width look.
 
 ### Theming / palette switcher
 
@@ -317,16 +257,15 @@ muddy — nudge the accent hue darker if you need strict AA-small there.
   the choice under `localStorage['gc-theme']`.
 - `initTheme()` runs in `main.tsx` **before** React renders, so the saved palette
   is applied without a flash.
-- `components/ThemeSwitcher.tsx` (in the header) lists every palette with swatches
-  and its **label only** (the `tag` id and "· default" suffix are not shown); a ✓
-  marks the active one. The `tag` is still the stable id persisted to
-  `localStorage['gc-theme']` — it's just no longer surfaced in the menu.
+- `components/ThemeSwitcher.tsx` (in the header) lists every palette with
+  swatches and its **label only** (the `tag` id is not surfaced); a ✓ marks the
+  active one.
 - **To add a palette:** append an entry to `themes.yaml` — no code change. There
   are currently 7 (meadow, bubblegum, citrus, periwinkle, lagoon, sunset, grape).
-- **To make one permanent/default:** set `default: true` on it (and remove it from
-  the others). The current default is **periwinkle**. The `:root` values in
-  `styles.css` are the pre-JS fallback — keep them in sync with whichever palette
-  is `default` if you care about the first-paint frame.
+- **To make one default:** set `default: true` on it (and remove it from the
+  others). The current default is **periwinkle**. The `:root` values in
+  `styles.css` are the pre-JS fallback — keep them in sync with whichever
+  palette is `default` if you care about the first-paint frame.
 
 ### Language switching / i18n
 
@@ -357,15 +296,12 @@ via `useI18n()`.
   a locale can omit any non-localized field (e.g. the `support:` payment block)
   and inherit it from English — author such config once, in `en/site.yaml`.
 - `components/LanguageSwitcher.tsx` (in the header, next to `ThemeSwitcher`)
-  is **not** a dropdown: it's a single flag-emoji button that **cycles to the
-  next locale on click** (no menu), showing the current locale's flag
-  (`LOCALE_FLAGS` in `i18n.tsx`). **On hover the flag flips to the next
-  language's flag** (a live preview of where a click leads) and reverts to the
-  selected language's flag on `mouseleave` — no tooltip/chip. `ThemeSwitcher` is
-  still the dropdown pattern.
+  is **not** a dropdown: a single flag-emoji button that **cycles to the next
+  locale on click**, previewing the next locale's flag on hover
+  (`LOCALE_FLAGS` in `i18n.tsx`).
 - `components/AstroCalendar.tsx` gets month/weekday names + the panel date from
-  `Intl.DateTimeFormat(locale, ...)` instead of the string dictionary — new
-  locales get correct calendar names for free, no translation entry needed.
+  `Intl.DateTimeFormat(locale, ...)` — new locales get correct calendar names
+  for free.
 - The almanac's **generated event text** (titles, blurbs, planet/sign/aspect
   names) is *not* in the `t()` dictionary — it lives in `src/lib/astroText.ts`,
   one `Vocab` per locale, consumed by `eventsForMonth(year, month, locale)`. A
@@ -374,48 +310,34 @@ via `useI18n()`.
   `LOCALE_FLAGS` (all in `i18n.tsx`), add `src/locales/<lng>.ts` with every key
   from `en.ts`, add a `Vocab` in `src/lib/astroText.ts` (bodies, sign case forms,
   aspects, tones), and start dropping files into `content/locales/<lng>/`.
-- **Russian (`ru`) is fully translated** — UI strings (`src/locales/ru.ts`) and
-  all content (`content/locales/ru/`: site.yaml, products, guides, pages). The
-  `TRANSLATION_STATUS.md` tracker was deleted once complete, as its own header
-  instructed.
-- **Do NOT calque proper nouns / terms-of-art when translating.** Keep brand,
-  platform, palette, and product/tech terms in English (e.g. **Roadmap** stays
-  `Roadmap`, not `Дорожная карта`). The full do-not-translate glossary and the
-  reasoning live in `content/locales/README.md` — read it before adding a locale
-  or translating new content.
+- **Russian (`ru`) is fully translated** — UI strings and all content.
+- **Do NOT calque proper nouns / terms-of-art when translating** (Roadmap stays
+  `Roadmap`). The full do-not-translate glossary and reasoning live in
+  `content/locales/README.md` — read it before adding a locale or translating
+  new content.
 
 ## Sidebar & celestial almanac
 
 `components/Layout.tsx` wraps every page in a two-column shell
 (`.layout-grid`): a left `Sidebar` + the routed content. On desktop the sidebar
-is a sticky vertical stack of **collapsible panels** (each a flat rectangular
-toggle). On phones (`@media (max-width: 900px)`) it rides **above** the content
-(`order:0`, in the space freed when the nav collapses to the hamburger) and
-renders as a `SidebarMobile` tab-row — a row of rectangular toggles, one open at
-a time. `Sidebar.tsx`'s `PANELS` registry defines the panels; the composition +
-order are content-driven (`site.yaml` `sidebar:` list, currently `about` +
-`missionValues` + `almanac`). The `about` panel surfaces the linked page's
-frontmatter `image` (via `getPage`), the site `bio` (a short personal line —
-distinct from `description`, which is the longer blurb used on the homepage
-hero), and a link to the full `/about` page. The whole panel body is one click
-target (`.side-about` + `.side-about-link::after`, the same stretched-link
-trick as `.card-link` on product/guide cards) — not just the "Our story" text.
-Add a new panel by registering a `{ label, Body, desktopOpen }` entry and
-referencing its `type` from `site.yaml`. `SidebarMobile` also auto-opens the
-`about` tab when the route is `/support` (family photo above the donation ask);
-keyed on `pathname` only, so it opens once and stays closeable.
+is a sticky vertical stack of **collapsible panels**; on phones
+(`@media (max-width: 900px)`) it rides **above** the content and renders as a
+`SidebarMobile` tab-row (one open at a time). `Sidebar.tsx`'s `PANELS` registry
+defines the panel types (`about`, `missionValues`, `almanac`); the composition +
+order are content-driven (`site.yaml` `sidebar:` list). Wiring details and the
+`/support` auto-open tie-in: the Sidebar row in `references/development.md`.
 
-The first widget is `AstroCalendar.tsx`: a month grid where days with celestial
-events are marked with astrological glyphs. Hovering/focusing/clicking a marked day
-updates a detail panel below the grid (a panel, not a floating tooltip, because a
-tooltip clips in the ~300px rail). It defaults to the current month and today's event.
+The almanac widget is `AstroCalendar.tsx`: a month grid where days with
+celestial events are marked with astrological glyphs; hovering/focusing/clicking
+a marked day updates a detail panel below the grid (a panel, not a tooltip —
+tooltips clip in the ~300px rail). Defaults to the current month and today.
 
 ### The ephemeris engine (`lib/astro.ts`) — serious astrology, not "fun"
 
-This is **real, astronomically-grounded astrology** (Konstantin Daragan worldview
-— see the user memory). Positions come from **`astronomy-engine`** (MIT, zero
-transitive deps), computed **entirely in the browser** — no API, no key, no
-network. `lib/astro.ts` derives events from geocentric, apparent, **tropical,
+This is **real, astronomically-grounded astrology** (Konstantin Daragan
+worldview). Positions come from **`astronomy-engine`** (MIT, zero transitive
+deps), computed **entirely in the browser** — no API, no key, no network.
+`lib/astro.ts` derives events from geocentric, apparent, **tropical,
 ecliptic-of-date** longitudes (the frame serious astrology uses):
 
 - **Moon phases** (New/Quarters/Full, with the Moon's sign)
@@ -427,14 +349,13 @@ ecliptic-of-date** longitudes (the frame serious astrology uses):
 - **Eclipses** (solar/lunar)
 
 `eventsForMonth(year, monthIndex, locale)` returns `AstroEvent[]` (memoised per
-locale+month); `AstroCalendar` calls it per viewed month. Longitudes use the
-`EQJ → ECT` rotation (`Rotation_EQJ_ECT`) — verified to match the library's own
-`SunPosition` to the arcminute. Times are shown in the **viewer's local
-timezone** (locale-formatted); events are bucketed by local calendar day. The
-engine is **timezone-aware but not location(lat/long)-aware** — geocentric, so it
-doesn't filter eclipse visibility or compute rise/set/houses/planetary-hours.
-All wording is in `lib/astroText.ts` (see the i18n section); `astro.ts` itself is
-math + glyphs only.
+locale+month). Longitudes use the `EQJ → ECT` rotation (`Rotation_EQJ_ECT`) —
+verified to match the library's own `SunPosition` to the arcminute. Times are
+shown in the **viewer's local timezone**; events are bucketed by local calendar
+day. The engine is **timezone-aware but not location(lat/long)-aware** —
+geocentric, so it doesn't filter eclipse visibility or compute
+rise/set/houses/planetary-hours. All wording is in `lib/astroText.ts`;
+`astro.ts` itself is math + glyphs only.
 
 - **Do NOT replace this with a shallow "sun-sign horoscope" API** — that's exactly
   the hipster-fake astrology the owner rejected. If more accuracy/features are
@@ -451,16 +372,17 @@ math + glyphs only.
 
 | Command | What |
 | --- | --- |
-| `task dev` | Vite dev server on :5173 |
+| `task dev` | Vite dev server on :5173 (needs a TTY — see development.md) |
 | `task typecheck` | strict `tsc --noEmit` (Vite build does NOT type-check) |
 | `task build` | build SPA to `dist/` |
 | `task images` | optimize `public/images` to WebP |
+| `task mandalas SET=<name>` | generate mandala SVG art for a config set |
 | `task lock` | regenerate `package-lock.json` (no scripts) |
 | `task audit` | `npm audit` |
 | `task image` | build the production Docker image |
 | `task run` | build image + run on :8080 |
 | `task verify` | audit + typecheck + image build |
-| `task deploy` | `gcloud run deploy --source .` (override `REGION=`/`SERVICE=`) |
+| `task deploy` | `gcloud run deploy --source .` (not the current live path) |
 | `task clean` | remove dist, deps volume, task cache, image |
 
 `task dev` regenerates deps only when `package.json`/`package-lock.json` change
@@ -476,9 +398,10 @@ math + glyphs only.
   Note: a missing `/images/foo.png` therefore returns `index.html` (200), not a
   hard 404 — only `/assets/` is strict-404. Harmless today; change the nginx
   config if you need real 404s for assets.
-- **Deploy:** `task deploy` (or `gcloud run deploy gaias-choice --source .
-  --region … --allow-unauthenticated --port 8080`). Domain mapping instructions
-  are in `README.md`.
+- **Live deploy is GitHub Pages:** every push to `main` triggers
+  `.github/workflows/deploy-pages.yml` (build + publish; `BASE_PATH` drives the
+  Vite base). Cloud Run (`task deploy`) remains available but is not the
+  current default. Commit/push rules: SKILL.md "Committing & shipping".
 
 ## Supply chain (the reason for the container dance)
 
@@ -490,9 +413,10 @@ The owner wants the npm surface kept off the host and minimal.
   volume, so it never lands in the working tree. If you see a `node_modules/` on
   the host it's an empty mount stub — safe to delete.
 - `package-lock.json` pins the full tree; `task audit` must stay at 0 vulns.
-- Runtime deps: `react`, `react-dom`, `react-router-dom`, `marked`, `yaml`,
-  `astronomy-engine`. `marked`, `yaml`, and `astronomy-engine` are all browser-safe
-  with zero/low transitive deps (`astronomy-engine`: zero deps, no install script).
+- Runtime deps (6): `react`, `react-dom`, `react-router-dom`, `marked`, `yaml`,
+  `astronomy-engine`. `marked`, `yaml`, and `astronomy-engine` are all
+  browser-safe with zero/low transitive deps (`astronomy-engine`: zero deps,
+  no install script).
 
 ## Dev gotchas
 
@@ -503,85 +427,41 @@ The owner wants the npm surface kept off the host and minimal.
 - **Verifying visually:** build (`task build`) and serve `dist/` with any static
   server; because it's an SPA, deep links only resolve via the nginx fallback, so
   when testing on a plain static server, load `/` and navigate by clicking.
+- More (YAML quoting traps, BASE_PATH, TTY): "Known gotchas" in
+  `references/development.md`.
 
-## Current content state (July 2026)
+## Current content state (bootstrap mode)
 
-The site is in **bootstrap mode** — the owners are first-time site builders
-learning the affiliate-content business as they go:
+The owners are first-time site builders learning the affiliate-content business
+in public. Where things stand (keep this section current *and short* — it
+describes the phase, not the history):
 
-- **Two article sections, split by provenance (2026-07-06):** **Compass**
-  (`/compass`, courses) is the one **openly computer-assisted** section — AI-drafted
-  from the owners' context/voice, then edited; its landing page carries the
-  `compass.provenance` disclosure banner. **Journal** (`/journal`, nav before
-  Compass) is a **human-written, date-ordered blog** — the honest, hand-written
-  counterpart. Reviews are human too. This split is the site's core content
-  contract; keep it (see the Compass/Journal rules in the skill). Journal launched
-  with one seed entry — a fill-in **template** (`journal/driving-with-a-toddler.md`)
-  — plus the "copy a blank entry template" button (`shared/journal-template.*.md`).
-- `content/locales/en/compass/founder-guide/*` include the **founder guides**: internal
-  how-to-build-this-site playbooks (review process, monetization, traffic/SEO,
-  launch checklist, master playbook), deliberately public and since 2026-07-05
-  structured as a complete 5-chapter Compass course «Честный сайт с нуля»
-  (epic tag `founder-guide`, `chapter:` 1–5, Trail/Bridge weave like the
-  reader courses — plan in `context/course-plan-building-in-public.md`).
-  Chapters get retold from lived experience as milestones land. Don't "fix"
-  them into consumer content by other means. Retold 2026-07-05 (both locales):
-  the chapters now state the site's real shape — **reviews are the core, the
-  Compass courses the powerhouse** — and ch. 1 names **the provenance rule**
-  (every page says what it is; some courses are openly LLM-drafted from the
-  owners' context/influences/personality — founder ch. 1 is currently the
-  site's only public disclosure of that). The launch checklist carries an
-  open item to label each reader course's provenance at its top.
-- The first **reader-facing Compass courses** are in progress: `homeopathy` and
-  `herbalism` epics, chapters 1–3 of 11 each (both locales). Chapter 3's
-  "next" link is deliberately text-only («готовится») until chapter 4 ships —
-  keep that pattern for any course published mid-write.
-- The `trophology` epic («Трофология», 5 chapters, complete, both locales,
-  shipped 2026-07-05) is a reader-facing food-combining course built on Daniel
-  Reid's *The Tao of Health, Sex and Longevity* (Reid added to
-  `context/ideology-context.md` under Health). Truth-first stance mirrors
-  homeopathy: taught as a practice to **test in your own digestion journal**,
-  with an honest evidence note (mainstream physiology doesn't endorse strict
-  combining; Reid's dramatic claims are flagged, not repeated). Plan:
-  `context/course-plan-trophology.md`. Spine artifact = digestion journal +
-  a fridge "Table Map". Art via `task mandalas` (`guides` + `epics` sets).
-- The `inside-websites` epic ("Inside websites like this", 5 chapters,
-  complete, shipped 2026-07-05) is the **engine-room course** — this repo's
-  own architecture taught top-down for developers/designers/ops (and the
-  owner). English-only by owner decision; its diagrams are EN-only embeds
-  (expected parity-check asymmetry). Plan:
-  `context/course-plan-inside-websites.md`. Its chapter art + epic thumbnail
-  come from `task mandalas` (`SETS` in `scripts/generate-mandala.mjs`).
-  Chapter 5's "where it breaks" section states the SPA SEO gap — retell it
-  when the prerendering roadmap item lands.
-- `content/locales/en/products/*` are still **AI placeholder reviews** with fake
-  affiliate URLs (`EXAMPLE…`) — flagged for deletion/replacement in the launch
-  checklist. Never add a real affiliate program while these exist. Their images
-  are now mandala SVGs (2026-07-05, see Images), not AI photos — real product
-  photos still replace them per the launch checklist.
-- The **real** review pipeline is tracked publicly by the `upcoming:` list in
-  `site.yaml` — products bought/queued for testing, shown as an "in the works"
-  rail on the right of `/reviews` (`components/UpcomingReviews.tsx`, in the
-  `.reviews-layout` grid; collapses above the grid on mobile). These are NOT
-  reviews (no rating, no affiliate tag — just the product + its Amazon
-  listing); delete an entry when its real review ships.
-- `/roadmap` (public, building-in-public) tracks phases; keep it updated when
-  milestones land. `/disclosure` and `/privacy` are compliance groundwork for
-  affiliate programs — required before joining any.
-- **The camper family is real** (confirmed 2026-07-05): Lidia & Denis, baby
-  born Jan 2025, two Basenjis, a self-built campervan — verified facts live in
-  `context/persona-context.md` ("The family — real biography"). `about.md` and
-  `site.yaml` `bio` now state only those facts; retelling them in the owners'
-  own words is an open roadmap item. Don't extrapolate beyond the bio file
-  (no invented durations, routes, or gear experiences). `contact.md` email +
-  `site.yaml` socials are still placeholders.
+- **Compass courses:** founder course, `trophology`, and `inside-websites`
+  complete; `homeopathy` and `herbalism` at chapters 1–3 of 11. The founder
+  guides are internal playbooks deliberately published as a course — don't
+  "fix" them into consumer content; retelling them from lived experience is a
+  roadmap milestone. The launch checklist carries an open item to label each
+  reader course's provenance at its top.
+- **Journal:** one seed entry — an explicit fill-in template — plus the
+  copy-a-blank-template button.
+- **Reviews:** `products/*` are still **AI placeholder reviews** with fake
+  affiliate URLs (`EXAMPLE…`) — slated for deletion/replacement per the launch
+  checklist. Never add a real affiliate program while these exist. Their
+  images are mandala SVGs; real product photos replace them when reviews ship.
+  The real pipeline is the `upcoming:` rail.
+- **Pages:** `/roadmap` is public building-in-public — keep it updated when
+  milestones land. `/disclosure` and `/privacy` are compliance groundwork,
+  required before joining any affiliate program.
+- **The camper family is real** — Lidia & Denis, baby born Jan 2025, two
+  Basenjis, a self-built campervan; verified facts in
+  `context/persona-context.md` ("The family — real biography"). Don't
+  extrapolate beyond that file (no invented durations, routes, or gear
+  experiences). `contact.md` email + `site.yaml` socials are still
+  placeholders.
 
-## Status
+## Status & shipping
 
-Git repo on `main`, remote `origin` (GitHub). **Ask the owner before
-committing** — never commit automatically. When confirmed: commit on `main`
-with a Conventional-Commits message (`feat:`/`fix:`/`docs:`/`content:`/…, plus
-the `Co-Authored-By: Claude ...` trailer) and `git push origin main`. **Pushing
-`main` is a production deploy** — `.github/workflows/deploy-pages.yml` builds and
-publishes to GitHub Pages on every push. Feature branches + PRs are the planned
-future flow, not yet active.
+Git repo on `main`, remote `origin` (GitHub). **Never commit automatically —
+ask the owner first.** A push to `main` is a production deploy. The full
+commit/shipping procedure (Conventional Commits, no deploy-watching, future PR
+flow) is SKILL.md "Committing & shipping".

@@ -60,14 +60,15 @@ for architecture; this skill is the operating manual on top of it.
    a pop "sun-sign horoscope" API or dumb it down; extend the derivations
    instead.
 6. **Compass is the ONLY computer-assisted section; everything else is written
-   by hand.** The site's content contract (set 2026-07-06): **Compass** (`/compass`,
-   courses) is openly AI-drafted from the owners' context/influences/voice, then
-   edited — disclosed by the `compass.provenance` banner on the landing page.
-   **Journal** (`/journal`, the human blog) and **reviews** are written by the
-   owners; truth-first applies with full force there (no fabricated trips, scenes,
-   or durations). Don't blur the line: don't quietly AI-author a Journal entry or
-   review, and don't strip Compass's provenance disclosure. (The section was
-   renamed `guides`→`compass` on 2026-07-06 — no `/guides` route/dir remains.)
+   by hand.** The site's content contract — this rule is its single canonical
+   statement; other docs link here rather than restating it. **Compass**
+   (`/compass`, courses) is openly AI-drafted from the owners'
+   context/influences/voice, then edited — disclosed by the
+   `compass.provenance` banner on the landing page. **Journal** (`/journal`,
+   the human blog) and **reviews** are written by the owners; truth-first
+   applies with full force there (no fabricated trips, scenes, or durations).
+   Don't blur the line: don't quietly AI-author a Journal entry or review, and
+   don't strip Compass's provenance disclosure.
 
 ## Coding principles
 
@@ -127,8 +128,31 @@ it's part of "done". Concretely, after the work:
   hook). Fix any line the change made stale — don't leave the docs describing a
   state the code no longer matches.
 - Update this `SKILL.md` when a rule/process changed.
+- Update `README.md` when the public pitch, stack, commands, or deploy story
+  changed — it's a short pitch that must never rot.
 
 If you changed something and touched no doc, assume you forgot one — re-check.
+
+**One fact, one home.** Each fact has exactly one canonical location; other
+docs link to it instead of restating it: process rules + the provenance
+contract → this `SKILL.md`; architecture + invariants → `CLAUDE.md`;
+change-X-edit-Y mechanics → `references/development.md`; authoring procedures
+→ `references/content-editing.md`; voice/worldview/course outlines →
+`context/`; public pitch → `README.md`.
+
+**Docs describe current state only — updating means shrinking too.** No dates,
+no "renamed from X", no "shipped on <date>" changelog framing — git history
+answers those. When you touch a doc, also delete anything that has become
+history rather than state, and collapse restated facts into a link to their
+canonical home. A doc that only ever grows ends up skimmed, not read.
+
+**Periodic hygiene (roughly monthly, or whenever the docs feel heavy):**
+compact the docs per the rules above, move finished plans from `context/` to
+`context/archive/`, prune stale one-off entries from
+`.claude/settings.local.json`, and run the `consolidate-memory` skill
+(`/anthropic-skills:consolidate-memory`) so the assistant's cross-session
+memory gets the same treatment — memories should hold preferences and
+pointers, not facts the repo docs already record.
 
 ## Committing & shipping
 
