@@ -10,7 +10,15 @@ export function withBase(path: string | undefined): string | undefined {
   return BASE + path.slice(1)
 }
 
-/** Rewrite root-absolute /images/... refs inside rendered markdown HTML. */
+/**
+ * Rewrite root-absolute `href`/`src` refs (images, and internal links like
+ * `/guides/<slug>`) inside rendered markdown HTML so they resolve under the
+ * GitHub Pages subpath instead of the domain root. Markdown links are plain
+ * `<a>` tags (not router `<Link>`s), so without this a click is a real
+ * browser navigation straight to `href` — missing the base prefix sends it
+ * to the wrong origin-relative URL entirely. Protocol-relative (`//host/…`)
+ * and absolute (`https://…`) URLs are left untouched via the `(?!\/)` guard.
+ */
 export function withBaseHtml(html: string): string {
-  return html.replaceAll('="/images/', `="${BASE}images/`)
+  return html.replace(/(href|src)="\/(?!\/)/g, `$1="${BASE}`)
 }
