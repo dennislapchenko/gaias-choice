@@ -2,7 +2,7 @@ import { parse as parseYaml } from 'yaml'
 import { marked, Renderer } from 'marked'
 import { withBaseHtml } from './asset'
 import themesRaw from '../../content/themes.yaml?raw'
-import type { Entry, Guide, Page, Product, SiteConfig, Theme } from './types'
+import type { CompassEntry, Entry, JournalEntry, Page, Product, SiteConfig, Theme } from './types'
 import type { Locale } from './i18n'
 
 marked.setOptions({ gfm: true, breaks: false })
@@ -126,11 +126,11 @@ function parseFrontmatter(raw: string): { data: Record<string, unknown>; body: s
 
 /**
  * Pulls the `<locale>` and slug out of a
- * `.../content/locales/<locale>/<kind>/[<subfolder>/]<slug>.md` path. Guides
- * are grouped into epic subfolders on disk (e.g. `guides/homeopathy/…`) for
- * tidiness, but the subfolder is purely organizational — the slug is always
+ * `.../content/locales/<locale>/<kind>/[<subfolder>/]<slug>.md` path. Compass
+ * chapters are grouped into epic subfolders on disk (e.g. `compass/homeopathy/…`)
+ * for tidiness, but the subfolder is purely organizational — the slug is always
  * just the filename, so routes and links are unaffected by which folder a
- * guide lives in.
+ * chapter lives in. (Journal entries are flat, no subfolder.)
  */
 function localeAndSlugFromPath(path: string, kind: string): { locale: string; slug: string } {
   const match = new RegExp(`content/locales/([^/]+)/${kind}/(?:.+/)?([^/]+)\\.md$`).exec(path)
@@ -191,13 +191,30 @@ const productModules = import.meta.glob('../../content/locales/*/products/*.md',
   eager: true,
 }) as Record<string, string>
 
-const guideModules = import.meta.glob('../../content/locales/*/guides/**/*.md', {
+// Compass chapters (courses) — grouped in per-epic subfolders on disk.
+const compassModules = import.meta.glob('../../content/locales/*/compass/**/*.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>
+
+// Journal — a flat, date-ordered blog (no subfolders).
+const journalModules = import.meta.glob('../../content/locales/*/journal/*.md', {
   query: '?raw',
   import: 'default',
   eager: true,
 }) as Record<string, string>
 
 const pageModules = import.meta.glob('../../content/locales/*/pages/*.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>
+
+// Blank Journal-entry templates the "copy template" button hands to the owner.
+// One raw markdown scaffold per locale (journal-template.<locale>.md), single
+// source of truth — see getJournalTemplate.
+const journalTemplateModules = import.meta.glob('../../content/shared/journal-template.*.md', {
   query: '?raw',
   import: 'default',
   eager: true,
@@ -210,10 +227,18 @@ for (const [path, raw] of Object.entries(siteModules)) {
 }
 
 const productsByLocale = loadCollection<Product>(productModules, 'products')
-const guidesByLocale = loadCollection<Guide>(guideModules, 'guides')
+const compassByLocale = loadCollection<CompassEntry>(compassModules, 'compass')
+const journalByLocale = loadCollection<JournalEntry>(journalModules, 'journal')
 const pagesByLocale = loadCollection<Page>(pageModules, 'pages')
 sortByDate(productsByLocale)
-sortByDate(guidesByLocale)
+sortByDate(compassByLocale)
+sortByDate(journalByLocale)
+
+const journalTemplateByLocale: Partial<Record<Locale, string>> = {}
+for (const [path, raw] of Object.entries(journalTemplateModules)) {
+  const match = /journal-template\.([^.]+)\.md$/.exec(path)
+  journalTemplateByLocale[(match?.[1] ?? 'en') as Locale] = raw
+}
 
 // Shallow-merge English as the base under the requested locale: a locale's own
 // fields win, but anything it omits (e.g. non-localized `support:` payment
@@ -226,9 +251,15 @@ export const getSite = (locale: Locale): SiteConfig => {
 }
 
 export const getProducts = (locale: Locale): Product[] => collectionFor(productsByLocale, locale)
-export const getGuides = (locale: Locale): Guide[] => collectionFor(guidesByLocale, locale)
+export const getCompass = (locale: Locale): CompassEntry[] => collectionFor(compassByLocale, locale)
+export const getJournal = (locale: Locale): JournalEntry[] => collectionFor(journalByLocale, locale)
 export const getPages = (locale: Locale): Page[] => collectionFor(pagesByLocale, locale)
 
 export const getProduct = (locale: Locale, slug: string) => entryFor(productsByLocale, locale, slug)
-export const getGuide = (locale: Locale, slug: string) => entryFor(guidesByLocale, locale, slug)
+export const getCompassEntry = (locale: Locale, slug: string) => entryFor(compassByLocale, locale, slug)
+export const getJournalEntry = (locale: Locale, slug: string) => entryFor(journalByLocale, locale, slug)
 export const getPage = (locale: Locale, slug: string) => entryFor(pagesByLocale, locale, slug)
+
+/** The blank Journal-entry template for the "copy template" button (en fallback). */
+export const getJournalTemplate = (locale: Locale): string =>
+  journalTemplateByLocale[locale] ?? journalTemplateByLocale.en ?? ''

@@ -26,12 +26,12 @@ export interface UpcomingItem {
 }
 
 /**
- * A themed collection of guides ("epic"). Membership is derived from a guide's
- * FIRST tag matching `tag`; this config only supplies the display metadata
- * (thumbnail + title) and the order the collections appear in on /guides.
+ * A themed collection of Compass chapters ("epic"). Membership is derived from a
+ * chapter's FIRST tag matching `tag`; this config only supplies the display
+ * metadata (thumbnail + title) and the order the collections appear in on /compass.
  */
 export interface GuideEpic {
-  tag: string // matches guides' first tag (e.g. "founder-guide")
+  tag: string // matches a compass chapter's first tag (e.g. "founder-guide")
   title: string // shown on the thumbnail (the word "Epic" never appears in UI)
   image?: string // thumbnail image, path under public/
   blurb?: string // one-line course intro shown under the strip when this epic is active
@@ -65,7 +65,7 @@ export interface SiteConfig {
   heroImage?: string
   values: ValueItem[]
   sidebar?: SidebarWidget[] // left-rail composition + order; falls back to a default when absent
-  epics?: GuideEpic[] // themed guide collections shown as thumbnails on /guides
+  epics?: GuideEpic[] // themed Compass collections shown as thumbnails on /compass
   upcoming?: UpcomingItem[] // reviews queued but not yet written, shown on /reviews
   support?: SupportConfig // payment methods for /support; non-localized, so authored in en/ only and inherited by other locales (see getSite)
   nav: NavItem[]
@@ -92,11 +92,20 @@ export interface Product extends Entry {
   tags?: string[]
 }
 
-export interface Guide extends Entry {
+/**
+ * A dated, markdown article — the shared shape behind both a Journal entry (a
+ * human-written blog post) and a Compass chapter. Listed date-descending; both
+ * render through the same detail layout (pages/EntryDetail.tsx).
+ */
+export interface JournalEntry extends Entry {
   excerpt: string
   date: string
   image?: string
   tags?: string[]
+}
+
+/** A Compass course chapter — a Journal-shaped article plus optional course order. */
+export interface CompassEntry extends JournalEntry {
   chapter?: number // optional course order within an epic; ascending, takes precedence over date
 }
 

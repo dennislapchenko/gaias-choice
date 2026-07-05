@@ -41,11 +41,13 @@ content/                 # ALL editable content (no code)
     en/                   # English — source of truth, always complete
       site.yaml           # site name, tagline, description, bio, mission, nav, values, heroImage, social, url, epics, upcoming, support (support: is non-localized — authored in en/ only, inherited by other locales via getSite)
       products/*.md       # reviews  → /reviews/<filename-without-.md>
-      guides/<epic>/*.md  # guides, grouped in per-epic subfolders → /guides/<filename-without-.md> (subfolder is organizational only, not part of the route)
+      compass/<epic>/*.md # Compass course chapters, grouped in per-epic subfolders → /compass/<filename-without-.md> (subfolder is organizational only, not part of the route)
+      journal/*.md        # Journal entries (human-written, date-ordered blog) → /journal/<filename-without-.md> (flat, no subfolders)
       pages/*.md          # standalone pages (about, contact, roadmap, disclosure, privacy, support)
     ru/                   # Russian — filled in section by section, falls back to en/
   shared/
-    diagrams/*.svg       # guide diagram templates ({{slot}} tokens) — geometry authored once, reused by every locale (see Adding a guide)
+    diagrams/*.svg       # Compass diagram templates ({{slot}} tokens) — geometry authored once, reused by every locale (see Adding a Compass chapter)
+    journal-template.<locale>.md  # blank Journal-entry scaffolds the /journal "copy template" button hands to the owner (getJournalTemplate)
   themes.yaml            # color palettes (tag + label + default + colors) — shared, not localized
 context/                 # authoring context (NOT bundled into the site)
   persona-context.md     # the author's voice + the family's REAL biography — read before writing/rephrasing RU content or any "who we are" copy
@@ -75,9 +77,11 @@ src/
     astro.ts             # in-browser ephemeris → celestial events (astronomy-engine)
     types.ts             # SiteConfig, Product, Guide, Page, Theme, AstroEvent
   components/            # Layout, Sidebar, AstroCalendar, ThemeSwitcher,
-                         # LanguageSwitcher, ProductCard, GuideCard, GuideRow,
-                         # UpcomingReviews, Markdown, Rating, CopyButton (reusable copy-to-clipboard)
-  pages/                 # Home, Reviews, ReviewDetail, Guides, GuideDetail,
+                         # LanguageSwitcher, ProductCard, CompassCard, CompassRow,
+                         # JournalRow, UpcomingReviews, Markdown, Rating,
+                         # CopyButton (reusable copy-to-clipboard, icon-only or labelled)
+  pages/                 # Home, Reviews, ReviewDetail, Compass, Journal,
+                         # EntryDetail (shared Compass+Journal detail w/ TOC),
                          # MarkdownPage (about/contact/etc), Support (config-driven
                          # donation page), NotFound
   styles.css             # single hand-written stylesheet (no CSS framework)
@@ -127,19 +131,23 @@ tags: [organic, cotton]  # optional
 Markdown body…
 ```
 
-### Adding a guide
+### Adding a Compass chapter
 
-`content/locales/en/guides/<epic-tag>/<slug>.md` — same idea, fields: `title`,
-`excerpt`, `image?`, `date`, `tags?`, `chapter?` (number). The `<epic-tag>`
-subfolder (e.g. `guides/homeopathy/`) exists purely to keep `content/guides`
-from becoming one flat pile of files — it plays no role in routing or content
-loading (`content.ts` globs `guides/**/*.md` and slugs are always just the
-filename); a guide's epic membership is decided entirely by its **first tag**,
-independent of which folder it physically sits in. The section is user-facing
-**"Compass" / "Путь"** (nav + `guides.title`) — deliberately not called
-"Guides"/"Courses"/"Learn" in any visible copy, though it's framed as
-course-like collections internally — but the **route and content dir stay
-`/guides`** internally. **A guide's FIRST tag is its "epic"** (a course): the
+The Compass is the site's **courses** section (user-facing **"Compass" / "Путь"**,
+nav + `compass.title`) — and, since 2026-07-06, the **one openly computer-assisted
+section**: its courses are AI-drafted from the owners' context/influences/voice,
+then edited, and the `/compass` landing page carries a `compass.provenance` banner
+saying so. Everything else on the site (Journal, reviews, pages) is human-written.
+The **route + content dir are `/compass`** (renamed from the legacy `/guides`
+2026-07-06 — code, dirs and cross-links all moved; there is no `/guides` anymore).
+
+`content/locales/en/compass/<epic-tag>/<slug>.md` — fields: `title`, `excerpt`,
+`image?`, `date`, `tags?`, `chapter?` (number). The `<epic-tag>` subfolder (e.g.
+`compass/homeopathy/`) exists purely to keep `content/*/compass` from becoming one
+flat pile — it plays no role in routing or content loading (`content.ts` globs
+`compass/**/*.md` and slugs are always just the filename); a chapter's epic
+membership is decided entirely by its **first tag**, independent of folder. **A
+chapter's FIRST tag is its "epic"** (a course): the
 Compass page shows epics as thumbnails (tabs) and lists the selected epic's
 items, with the epic's `blurb` as a course intro. Epic metadata (title,
 thumbnail, blurb) is configured in
@@ -159,15 +167,17 @@ chapters** (owner rule, 2026-07-05).
 **Ideology:** each epic should read like a complete, streamlined free course.
 See the "New Compass epic" task in `references/development.md`.
 
-Optional `chapter: N` orders guides within an epic for course sequencing
-(ascending, independent of `date`); guides without it keep the existing
-date-descending order (`Guides.tsx`). `GuideRow` (the `/guides` epic listing),
-`GuideCard` (homepage teaser), and `GuideDetail` all show a small "Chapter N"
-label when set. Guide detail pages (`GuideDetail.tsx`) also render
-a page-local table of contents from the guide's `h2`/`h3` headings — a sticky
-column next to the article on desktop, a `<details open>` block on mobile
-(expanded by default, still collapsible by tapping the summary), only once a
-guide has 3+ headings (`components/TableOfContents.tsx`). `.detail-layout`
+Optional `chapter: N` orders chapters within an epic for course sequencing
+(ascending, independent of `date`); chapters without it keep the existing
+date-descending order (`Compass.tsx`). `CompassRow` (the `/compass` epic listing),
+`CompassCard` (homepage teaser), and `EntryDetail` all show a small "Chapter N"
+label when set (chapter tag shows for Compass only, not Journal). **`EntryDetail`
+is the shared detail component for both Compass chapters and Journal entries**
+(`kind="compass" | "journal"` picks the getter, back-link and section tag); it
+renders a page-local table of contents from the entry's `h2`/`h3` headings — a
+sticky column next to the article on desktop, a `<details open>` block on mobile
+(expanded by default, still collapsible by tapping the summary), only once an
+entry has 3+ headings (`components/TableOfContents.tsx`). `.detail-layout`
 (`styles.css`) uses `grid-template-areas` with four regions — `nav` (the
 "Back to the Compass" link + tags, its own `.detail-nav` wrapper), `header`
 (`.detail-header`: title + date + hero image, split out of the article so the
@@ -211,6 +221,24 @@ is authored once as a shared template** and reused by every locale (2026-07-05):
 Authoring rules + the template workflow:
 `.claude/skills/manage-site/references/content-editing.md`, "Visuals inside
 guides".
+
+### Adding a Journal entry
+
+The **Journal** (user-facing "Journal" / «Заметки», nav item **before** Compass)
+is a **human-written, date-ordered blog** — the honest counterpart to the
+computer-assisted Compass. `content/locales/en/journal/<slug>.md`, flat (no
+subfolders), frontmatter `title`, `excerpt`, `date`, optional `tags`/`image`.
+No routing wiring needed per entry — `content.ts` globs `journal/*.md`
+(`getJournal` / `getJournalEntry`), and the routes already exist (`/journal`,
+`/journal/:slug`). Entries list on `/journal` (`pages/Journal.tsx`) as plain text
+rows (`JournalRow`, no thumbnail), sorted date-desc, filterable by **year** via a
+TOC-like right sidebar; each entry opens through the same `EntryDetail` +
+table-of-contents layout as a Compass chapter (`kind="journal"`). A **"copy a
+blank entry template"** button on `/journal` copies a scaffold from
+`content/shared/journal-template.<locale>.md` (single source; `getJournalTemplate`)
+via the labelled `CopyButton`. The seed entry (`journal/driving-with-a-toddler.md`,
+en+ru) is a rich, prompt-driven **template for the owner to fill in** — truth-first:
+it's explicitly a skeleton, not an invented trip.
 
 ### Adding a standalone page
 
@@ -481,7 +509,16 @@ The owner wants the npm surface kept off the host and minimal.
 The site is in **bootstrap mode** — the owners are first-time site builders
 learning the affiliate-content business as they go:
 
-- `content/locales/en/guides/founder-guide/*` include the **founder guides**: internal
+- **Two article sections, split by provenance (2026-07-06):** **Compass**
+  (`/compass`, courses) is the one **openly computer-assisted** section — AI-drafted
+  from the owners' context/voice, then edited; its landing page carries the
+  `compass.provenance` disclosure banner. **Journal** (`/journal`, nav before
+  Compass) is a **human-written, date-ordered blog** — the honest, hand-written
+  counterpart. Reviews are human too. This split is the site's core content
+  contract; keep it (see the Compass/Journal rules in the skill). Journal launched
+  with one seed entry — a fill-in **template** (`journal/driving-with-a-toddler.md`)
+  — plus the "copy a blank entry template" button (`shared/journal-template.*.md`).
+- `content/locales/en/compass/founder-guide/*` include the **founder guides**: internal
   how-to-build-this-site playbooks (review process, monetization, traffic/SEO,
   launch checklist, master playbook), deliberately public and since 2026-07-05
   structured as a complete 5-chapter Compass course «Честный сайт с нуля»

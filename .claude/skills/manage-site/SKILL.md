@@ -28,7 +28,7 @@ for architecture; this skill is the operating manual on top of it.
 
 | Task smells like… | Do this |
 | --- | --- |
-| Reviews, guides, pages, site copy, images, roadmap, voice/tone | Read `references/content-editing.md` |
+| Reviews, Compass courses, Journal entries, pages, site copy, images, roadmap, voice/tone | Read `references/content-editing.md` |
 | Build, verify, preview, deploy, routes, themes, components, CSS | Read `references/development.md` |
 | Both (e.g. "add a page" = content + route) | Read both — page wiring spans them |
 
@@ -59,6 +59,15 @@ for architecture; this skill is the operating manual on top of it.
    ephemeris (Daragan-style, tropical ecliptic-of-date). Never replace it with
    a pop "sun-sign horoscope" API or dumb it down; extend the derivations
    instead.
+6. **Compass is the ONLY computer-assisted section; everything else is written
+   by hand.** The site's content contract (set 2026-07-06): **Compass** (`/compass`,
+   courses) is openly AI-drafted from the owners' context/influences/voice, then
+   edited — disclosed by the `compass.provenance` banner on the landing page.
+   **Journal** (`/journal`, the human blog) and **reviews** are written by the
+   owners; truth-first applies with full force there (no fabricated trips, scenes,
+   or durations). Don't blur the line: don't quietly AI-author a Journal entry or
+   review, and don't strip Compass's provenance disclosure. (The section was
+   renamed `guides`→`compass` on 2026-07-06 — no `/guides` route/dir remains.)
 
 ## Coding principles
 
@@ -81,8 +90,9 @@ for architecture; this skill is the operating manual on top of it.
 ## Project phase awareness
 
 The site is in **bootstrap mode** (see `/roadmap` and the "Current content
-state" section of `CLAUDE.md`): guides are founder-facing playbooks and product
-reviews are still AI placeholders slated for deletion. The About story is
+state" section of `CLAUDE.md`): the Compass founder course is a founder-facing
+playbook, the Journal has one seed template entry, and product reviews are still
+AI placeholders slated for deletion. The About story is
 **real** (the owners really are a camper family — verified facts in
 `context/persona-context.md`, "The family — real biography"); what's still
 open is retelling it in their own words. Before editing content,

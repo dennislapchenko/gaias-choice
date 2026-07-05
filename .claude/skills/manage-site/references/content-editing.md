@@ -24,7 +24,7 @@ pick controls list position. Markdown is GFM (task-list checkboxes render).
   rephrasing anything in `content/locales/ru/`, read
   `context/persona-context.md` (voice DNA + register-calibration table + the
   5-question test) — RU text must sound like her, within the rules above.
-- **Worldview for guides/Compass courses and article suggestions:** draw from
+- **Worldview for Compass courses, Journal entries and article suggestions:** draw from
   `context/ideology-context.md` (Health: Chek, Asprey · Worldview: Buhner,
   Daragan, Ralston · Children: Steiner, Swan; extensible). Sections are domains
   of authority: Health governs food/consumption claims; Children leads on
@@ -61,11 +61,17 @@ tags: [organic, cotton]    # optional
 Ask for real testing notes if the user didn't provide them. Structure sections
 may flex, but verdict-first + a flaws section are fixed.
 
-## Add a guide → `content/locales/en/guides/<epic-tag>/<slug>.md`
+## Add a Compass chapter → `content/locales/en/compass/<epic-tag>/<slug>.md`
+
+> **Compass is the site's one openly computer-assisted section** — courses
+> AI-drafted from the owners' context/voice, then edited, disclosed by the
+> `compass.provenance` banner on `/compass`. The **Journal** (`/journal`) is the
+> human-written counterpart — see "Add a Journal entry" below. (`/guides` was
+> renamed to `/compass` 2026-07-06; there is no `guides/` dir or route anymore.)
 
 Frontmatter: `title`, `excerpt`, `date`, optional `image`, `tags`, optional
 `chapter: N` (course order — see below). The `<epic-tag>` subfolder (e.g.
-`guides/homeopathy/`) is just filesystem tidiness — a guide's epic is decided
+`compass/homeopathy/`) is just filesystem tidiness — a chapter's epic is decided
 by its first tag, not by which folder the file sits in.
 
 The **founder guides** (internal playbooks, deliberately public) form the
@@ -106,6 +112,27 @@ everything else in the blueprint is unchanged.) Frontmatter gotcha learned the h
 containing a colon** — an unquoted `… вечером: ваш …` is a YAML nested-mapping
 error that blanks the whole SPA (the `import.meta.glob` parse happens at
 runtime for every page).
+
+## Add a Journal entry → `content/locales/en/journal/<slug>.md`
+
+The **Journal** (user-facing "Journal" / «Заметки») is the site's
+**human-written, date-ordered blog** — the honest counterpart to the
+computer-assisted Compass. **Truth-first is the whole point here:** real notes
+from the road only, no invented trips, durations, or scenes (the standing rules
+above apply in full). Frontmatter: `title`, `excerpt`, `date`, optional `tags`,
+optional `image`. Flat folder (no epic subfolders), no code/route wiring — the
+file appears on `/journal` (newest first, filed under its year in the filter
+rail) and opens through the same table-of-contents detail layout as a Compass
+chapter. Use `##`/`###` headings so the TOC renders (3+ needed). RU entries in
+her voice (persona-context).
+
+**The "copy a blank entry template" button** on `/journal` copies a generic,
+topic-agnostic scaffold — the single source is `content/shared/journal-template.<locale>.md`
+(edit that file to change what gets copied; en is the fallback). The seed entry
+`journal/driving-with-a-toddler.md` (en+ru) is a **topic-flavoured template the
+owner fills in** — kept as an explicit, prompt-driven skeleton (honest: it says
+so), not a fabricated trip. A future "even more generic for readers" template is
+just another `content/shared/journal-template.*` variant + button.
 
 ## Visuals inside guides (tables, diagrams, charts) — the house pattern
 
@@ -204,9 +231,9 @@ Rules learned the hard way:
 
   ```bash
   cd content/locales
-  for lc in en ru; do printf '%s: ' $lc; grep -rho '```diagram [a-z-]*' $lc/guides | sort | wc -l; done
+  for lc in en ru; do printf '%s: ' $lc; grep -rho '```diagram [a-z-]*' $lc/compass | sort | wc -l; done
   # every referenced name has a template file:
-  comm -23 <(grep -rho '```diagram [a-z-]*' */guides | sed 's/.*diagram //' | sort -u) \
+  comm -23 <(grep -rho '```diagram [a-z-]*' */compass | sed 's/.*diagram //' | sort -u) \
            <(ls ../shared/diagrams | sed 's/\.svg$//' | sort)
   ```
 

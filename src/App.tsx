@@ -3,8 +3,9 @@ import Layout from './components/Layout'
 import Home from './pages/Home'
 import Reviews from './pages/Reviews'
 import ReviewDetail from './pages/ReviewDetail'
-import Guides from './pages/Guides'
-import GuideDetail from './pages/GuideDetail'
+import Compass from './pages/Compass'
+import Journal from './pages/Journal'
+import EntryDetail from './pages/EntryDetail'
 import MarkdownPage from './pages/MarkdownPage'
 import Support from './pages/Support'
 import NotFound from './pages/NotFound'
@@ -16,8 +17,10 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/reviews" element={<Reviews />} />
         <Route path="/reviews/:slug" element={<ReviewDetail />} />
-        <Route path="/guides" element={<Guides />} />
-        <Route path="/guides/:slug" element={<GuideDetail />} />
+        <Route path="/journal" element={<Journal />} />
+        <Route path="/journal/:slug" element={<EntryDetail kind="journal" />} />
+        <Route path="/compass" element={<Compass />} />
+        <Route path="/compass/:slug" element={<EntryDetail kind="compass" />} />
         <Route path="/about" element={<MarkdownPage slug="about" />} />
         <Route path="/contact" element={<MarkdownPage slug="contact" />} />
         <Route path="/roadmap" element={<MarkdownPage slug="roadmap" />} />

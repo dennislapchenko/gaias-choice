@@ -1,15 +1,15 @@
 import { Link } from 'react-router-dom'
-import { getGuides, getProducts, getSite } from '../lib/content'
+import { getCompass, getProducts, getSite } from '../lib/content'
 import { useI18n } from '../lib/i18n'
 import { withBase } from '../lib/asset'
 import ProductCard from '../components/ProductCard'
-import GuideCard from '../components/GuideCard'
+import CompassCard from '../components/CompassCard'
 
 export default function Home() {
   const { locale, t } = useI18n()
   const site = getSite(locale)
   const featuredProducts = getProducts(locale).slice(0, 3)
-  const latestGuides = getGuides(locale).slice(0, 2)
+  const latestGuides = getCompass(locale).slice(0, 2)
 
   return (
     <>
@@ -19,7 +19,7 @@ export default function Home() {
           <h1>{site.tagline}</h1>
           <p className="lead">{site.description}</p>
           <div className="hero-actions">
-            <Link to="/guides" className="btn btn-primary">
+            <Link to="/compass" className="btn btn-primary">
               {t('home.readGuides')}
             </Link>
             <Link to="/reviews" className="btn btn-ghost">
@@ -51,13 +51,13 @@ export default function Home() {
       <section className="section">
         <div className="section-head">
           <h2>{t('home.latestGuides')}</h2>
-          <Link to="/guides" className="link-more">
+          <Link to="/compass" className="link-more">
             {t('home.allGuides')}
           </Link>
         </div>
         <div className="grid grid-2">
           {latestGuides.map((g) => (
-            <GuideCard key={g.slug} guide={g} />
+            <CompassCard key={g.slug} entry={g} />
           ))}
         </div>
       </section>

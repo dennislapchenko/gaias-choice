@@ -41,18 +41,18 @@ sidebar:
   - type: missionValues
   - type: almanac
 
-# Themed guide collections shown as thumbnails at the top of /guides. A guide
-# belongs to the epic whose `tag` equals the guide's FIRST tag. The first epic
-# here is the default selection. Add an epic + tag guides with it to grow this.
+# Themed Compass collections shown as thumbnails at the top of /compass. A
+# chapter belongs to the epic whose `tag` equals its FIRST tag. The first epic
+# here is the default selection. Add an epic + tag chapters with it to grow this.
 epics:
   - tag: founder-guide
     title: Честный сайт с нуля
     image: /images/epic-founder-guide.svg
-    blurb: Бесплатный курс из пяти глав о том, как построить сайт-обзорник, которому верят, — на живом примере этого самого сайта, от первого обзора до запуска. Каждый шаг настоящий, включая те, что дались тяжело.
+    blurb: Kурс из 5 глав — о том, как построить сайт-обзорник и блог с курсами, которому верят, — на живом примере этого самого сайта, от первого обзора до запуска. Каждый шаг настоящий, включая те, что дались тяжело.
   - tag: homeopathy
     title: Гомеопатия
     image: /images/epic-homeopathy.svg
-    blurb: Курс из 11 глав — собрать домашнюю аптечку и научиться работать с ней честно, наблюдая и записывая, не подменяя врача.
+    blurb: Курс из 11 глав — собрать домашнюю аптечку и научиться работать с ней честно, наблюдая и записывая, не подменяя врача категорически.
   - tag: herbalism
     title: Травничество
     image: /images/epic-herbalism.svg
@@ -60,7 +60,7 @@ epics:
   - tag: trophology
     title: Трофология
     image: /images/epic-trophology.svg
-    blurb: Курс из 5 глав о сочетании продуктов — собрать карту на холодильник и дневник пищеварения и проверить, от каких привычек за столом вам правда легче, — судя по своему телу, а не по догме.
+    blurb: Курс из 5 глав — о сочетании продуктов — собрать карту на холодильник и дневник пищеварения и проверить, от каких привычек за столом вам правда легче, — судя по своему телу, а не по догме.
 
 # Обзоры в очереди, ещё не написанные, — показываются полосой «в работе» под
 # подзаголовком страницы обзоров (src/components/UpcomingReviews.tsx). Это НЕ
@@ -82,7 +82,8 @@ upcoming:
 nav:
   - { label: Главная, path: / }
   - { label: Обзоры, path: /reviews }
-  - { label: Путь, path: /guides }
+  - { label: Заметки, path: /journal }
+  - { label: Путь, path: /compass }
   - { label: Roadmap, path: /roadmap }
   - { label: Контакты, path: /contact }
   - { label: Поддержать, path: /support }

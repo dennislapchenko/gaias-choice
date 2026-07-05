@@ -40,14 +40,14 @@ sidebar:
   - type: missionValues
   - type: almanac
 
-# Themed guide collections shown as thumbnails at the top of /guides. A guide
-# belongs to the epic whose `tag` equals the guide's FIRST tag. The first epic
-# here is the default selection. Add an epic + tag guides with it to grow this.
+# Themed Compass collections shown as thumbnails at the top of /compass. A
+# chapter belongs to the epic whose `tag` equals its FIRST tag. The first epic
+# here is the default selection. Add an epic + tag chapters with it to grow this.
 epics:
   - tag: founder-guide
     title: An honest site from zero
     image: /images/epic-founder-guide.svg
-    blurb: A 5-chapter guide on building a review site people trust — taught on the live example of this very site, from first review to launch.
+    blurb: A 5-chapter guide — on building a review site people trust — taught on the live example of this very site, from first review to launch.
   - tag: homeopathy
     title: Homeopathy
     image: /images/epic-homeopathy.svg
@@ -104,7 +104,8 @@ support:
 nav:
   - { label: Home, path: / }
   - { label: Reviews, path: /reviews }
-  - { label: Compass, path: /guides }
+  - { label: Journal, path: /journal }
+  - { label: Compass, path: /compass }
   - { label: Roadmap, path: /roadmap }
   - { label: Contact, path: /contact }
   - { label: Support, path: /support }

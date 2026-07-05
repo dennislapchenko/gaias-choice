@@ -29,12 +29,21 @@ const ru: Record<keyof typeof en, string> = {
   "reviews.upcomingTitle": "В работе",
   "reviews.upcomingNote": "Вещи, которые тестируем следующими, — в очереди, обзора пока нет.",
 
-  "guides.title": "Путь",
-  "guides.lead":
-    "Бесплатные, выстроенные по шагам статьи и курсы — без воды и допродаж. Каждый ведёт от начала до конца, по порядку. Пока что это наш план основателей: честный, пошаговый путь, которым мы строим этот сайт в открытую. Курсы для читателей появятся, когда мы наберёмся опыта.",
-  "guides.tag": "Гайд",
-  "guides.epicsAriaLabel": "Курсы",
-  "guides.chapter": "Глава {{n}}",
+  "compass.title": "Путь",
+  "compass.lead": "Бесплатные, выстроенные мини-курсы — без воды и допродаж. Каждый ведёт от начала до конца, по порядку.",
+  "compass.provenance":
+    "Честно: этот раздел сделан с помощью машины. Курсы «Пути» мы набрасываем с ИИ — из нашего же контекста, влияний и голоса — а потом правим руками. Потому что понятно и терпеливо объяснять — единственное, в чём машина и правда помогает. Так сделан только этот раздел: «Заметки» и все обзоры мы пишем сами.",
+  "compass.tag": "Гайд",
+  "compass.epicsAriaLabel": "Курсы",
+  "compass.chapter": "Глава {{n}}",
+
+  "journal.title": "Заметки",
+  "journal.lead": "Записки из дороги, написанные от руки, — что вышло на самом деле, что бы сделали иначе, какие мелочи оказались важными. Без курса, без глянца. Сверху — свежее.",
+  "journal.tag": "Заметка",
+  "journal.allYears": "Все годы",
+  "journal.yearsAriaLabel": "Фильтр по годам",
+  "journal.templateBtn": "Сделай вклад!",
+  "journal.empty": "Пока пусто — первые записи уже в пути.",
 
   "toc.ariaLabel": "На этой странице",
   "toc.toggle": "На этой странице",
@@ -42,7 +51,8 @@ const ru: Record<keyof typeof en, string> = {
   "reviewDetail.backLink": "← Все обзоры",
   "reviewDetail.checkPrice": "Узнать текущую цену →",
 
-  "guideDetail.backLink": "← К пути",
+  "compassDetail.backLink": "← К пути",
+  "journalDetail.backLink": "← К заметкам",
 
   "notFound.title": "Страница не найдена",
   "notFound.body": "Эта тропа пока никуда не ведёт.",
@@ -76,8 +86,7 @@ const ru: Record<keyof typeof en, string> = {
   "copy.copied": "Скопировано",
 
   "support.cardTitle": "Карта · Apple Pay · Google Pay",
-  "support.cardText":
-    "Оплата в одно касание через Apple Pay и Google Pay на базе Stripe уже в пути. Загляните чуть позже.",
+  "support.cardText": "Оплата в одно касание через Apple Pay и Google Pay на базе Stripe уже в пути. Загляните чуть позже.",
   "support.cardCta": "Поддержать картой",
   "support.comingSoon": "Скоро",
   "support.paypalTitle": "PayPal",
@@ -85,10 +94,8 @@ const ru: Record<keyof typeof en, string> = {
   "support.paypalCta": "Поддержать через PayPal",
   "support.cryptoTitle": "Криптовалюта",
   "support.cryptoIntro": "Удобнее криптой? Отправьте на один из кошельков ниже.",
-  "support.cryptoWarn":
-    "Проверьте сеть перед отправкой — монеты, отправленные в неверной сети, вернуть нельзя.",
-  "support.thanks":
-    "Спасибо — правда. Даже просто поделиться обзором с другом, которому он нужен, помогает больше, чем кажется.",
+  "support.cryptoWarn": "Проверьте сеть перед отправкой — монеты, отправленные в неверной сети, вернуть нельзя.",
+  "support.thanks": "Спасибо — правда. Даже просто поделиться обзором с другом, которому он нужен, помогает больше, чем кажется.",
 };
 
 export default ru;

@@ -34,14 +34,20 @@ async function writeToClipboard(text: string): Promise<boolean> {
 // container's CSS (see `.copy-btn` + the `.crypto-copy` reveal rule in
 // styles.css) so it works standalone too. Meant for any copyable field — wallet
 // addresses today, more (emails, referral links, API-ish values) later.
+//
+// Icon-only by default (the wallet use). Pass `label` for a labelled action
+// button (the Journal "copy template" button): the text renders beside the icon
+// and swaps to the localized "Copied" on success.
 export default function CopyButton({
   value,
   className,
   ariaLabel,
+  label,
 }: {
   value: string
   className?: string
   ariaLabel?: string // overrides the default "Copy" label (e.g. "Copy BTC address")
+  label?: string // visible button text; when set, renders a labelled button
 }) {
   const { t } = useI18n()
   const [copied, setCopied] = useState(false)
@@ -56,15 +62,16 @@ export default function CopyButton({
     timer.current = window.setTimeout(() => setCopied(false), 1600)
   }
 
-  const label = copied ? t('copy.copied') : ariaLabel ?? t('copy.copy')
+  const copiedText = t('copy.copied')
+  const aria = copied ? copiedText : ariaLabel ?? label ?? t('copy.copy')
 
   return (
     <button
       type="button"
       className={`copy-btn${copied ? ' is-copied' : ''}${className ? ` ${className}` : ''}`}
       onClick={copy}
-      aria-label={label}
-      title={label}
+      aria-label={aria}
+      title={aria}
     >
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         {copied ? (
@@ -76,6 +83,7 @@ export default function CopyButton({
           </>
         )}
       </svg>
+      {label != null && <span className="copy-btn-label">{copied ? copiedText : label}</span>}
     </button>
   )
 }

@@ -12,7 +12,7 @@ export function withBase(path: string | undefined): string | undefined {
 
 /**
  * Rewrite root-absolute `href`/`src` refs (images, and internal links like
- * `/guides/<slug>`) inside rendered markdown HTML so they resolve under the
+ * `/compass/<slug>`) inside rendered markdown HTML so they resolve under the
  * GitHub Pages subpath instead of the domain root. Markdown links are plain
  * `<a>` tags (not router `<Link>`s), so without this a click is a real
  * browser navigation straight to `href` — missing the base prefix sends it

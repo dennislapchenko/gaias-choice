@@ -28,12 +28,22 @@ const en = {
   "reviews.upcomingTitle": "In the works",
   "reviews.upcomingNote": "Gear we're testing next — queued, not yet reviewed.",
 
-  "guides.title": "Compass",
-  "guides.lead":
-    "Free, structured guides that read like a real course — no fluff, no upsell. Each one takes you end to end, in order. Right now it’s our founder playbook: the honest, step-by-step path we’re taking to build this site in public. Reader-facing courses will join as we earn the experience.",
-  "guides.tag": "Guide",
-  "guides.epicsAriaLabel": "Courses",
-  "guides.chapter": "Chapter {{n}}",
+  "compass.title": "Compass",
+  "compass.lead": "Free, structured mini-courses — no fluff, no upsell. Each one takes you end to end, in order.",
+  "compass.provenance":
+    "Openly computer-assisted. The Compass courses are drafted with an AI from our own context, influences and voice, then edited — because clear, patient teaching is the one thing we think a machine genuinely helps with. It’s the only part of the site made this way: the Journal and every review are written by hand.",
+  "compass.tag": "Guide",
+  "compass.epicsAriaLabel": "Courses",
+  "compass.chapter": "Chapter {{n}}",
+
+  "journal.title": "Journal",
+  "journal.lead":
+    "Notes from the road, written by hand — what actually happened, what we’d do differently, the small things that turned out to matter. No course, no polish. Newest first.",
+  "journal.tag": "Journal",
+  "journal.allYears": "All",
+  "journal.yearsAriaLabel": "Filter by year",
+  "journal.templateBtn": "Contribute!",
+  "journal.empty": "No entries yet — the first notes are on their way.",
 
   "toc.ariaLabel": "On this page",
   "toc.toggle": "On this page",
@@ -41,7 +51,8 @@ const en = {
   "reviewDetail.backLink": "← All reviews",
   "reviewDetail.checkPrice": "Check current price →",
 
-  "guideDetail.backLink": "← Back to the Compass",
+  "compassDetail.backLink": "← Back to the Compass",
+  "journalDetail.backLink": "← Back to the Journal",
 
   "notFound.title": "Not found",
   "notFound.body": "This trail doesn't lead anywhere yet.",
@@ -75,8 +86,7 @@ const en = {
   "copy.copied": "Copied",
 
   "support.cardTitle": "Card · Apple Pay · Google Pay",
-  "support.cardText":
-    "One-tap checkout with Apple Pay and Google Pay, powered by Stripe, is on its way. Check back soon.",
+  "support.cardText": "One-tap checkout with Apple Pay and Google Pay, powered by Stripe, is on its way. Check back soon.",
   "support.cardCta": "Support with card",
   "support.comingSoon": "Coming soon",
   "support.paypalTitle": "PayPal",
@@ -84,10 +94,8 @@ const en = {
   "support.paypalCta": "Support via PayPal",
   "support.cryptoTitle": "Crypto",
   "support.cryptoIntro": "Prefer crypto? Send to one of the wallets below.",
-  "support.cryptoWarn":
-    "Double-check the network before sending — coins sent on the wrong network can't be recovered.",
-  "support.thanks":
-    "Thank you — truly. Even just sharing a review with a friend who needs it helps more than you'd think.",
+  "support.cryptoWarn": "Double-check the network before sending — coins sent on the wrong network can't be recovered.",
+  "support.thanks": "Thank you — truly. Even just sharing a review with a friend who needs it helps more than you'd think.",
 } satisfies Record<string, string>;
 
 export default en;
