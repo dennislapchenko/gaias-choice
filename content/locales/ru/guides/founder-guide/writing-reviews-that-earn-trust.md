@@ -80,29 +80,22 @@ tags: [founder-guide, reviews, process]
 5. **Кому подходит / альтернативы** — включая более дешёвые или простые варианты,
    даже когда они нам ничего не приносят. *Особенно* тогда.
 
-<figure class="diagram">
-<svg viewBox="0 0 640 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Анатомия страницы обзора, сверху вниз: вердикт первым, как мы тестировали, что по-настоящему хорошо, что бы мы изменили, кому подходит и альтернативы">
-<rect x="150" y="14" width="340" height="302" rx="14" fill="var(--white)" stroke="var(--line)" stroke-width="2"/>
-<rect x="166" y="28" width="308" height="62" rx="10" fill="var(--sage)"/>
-<text x="320" y="54" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--on-accent)">Вердикт</text>
-<text x="320" y="74" text-anchor="middle" font-size="12" fill="var(--on-accent)">ответ — в первые десять секунд</text>
-<rect x="166" y="98" width="308" height="48" rx="10" fill="var(--mint)"/>
-<text x="320" y="127" text-anchor="middle" font-size="13.5" fill="var(--ink)">Как мы тестировали</text>
-<rect x="166" y="154" width="308" height="48" rx="10" fill="var(--peach)"/>
-<text x="320" y="183" text-anchor="middle" font-size="13.5" fill="var(--ink)">Что по-настоящему хорошо</text>
-<rect x="166" y="210" width="308" height="48" rx="10" fill="var(--lilac)" stroke="var(--clay)" stroke-width="1.5"/>
-<text x="320" y="232" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">Что бы мы изменили</text>
-<text x="320" y="250" text-anchor="middle" font-size="11.5" font-style="italic" fill="var(--clay)">двигатель доверия</text>
-<rect x="166" y="266" width="308" height="40" rx="10" fill="var(--sand-2)"/>
-<text x="320" y="291" text-anchor="middle" font-size="13.5" fill="var(--ink)">Кому подходит / альтернативы</text>
-<text x="140" y="60" text-anchor="end" font-size="11" font-style="italic" fill="var(--muted)">читающий по диагонали</text>
-<text x="140" y="76" text-anchor="end" font-size="11" font-style="italic" fill="var(--muted)">уйдёт с ответом</text>
-<text x="500" y="232" font-size="12" font-style="italic" fill="var(--muted)">обзор без этого</text>
-<text x="500" y="248" font-size="12" font-style="italic" fill="var(--muted)">раздела читается</text>
-<text x="500" y="264" font-size="12" font-style="italic" fill="var(--muted)">как реклама</text>
-</svg>
-<figcaption>Каждый обзор — один скелет: ответ вперёд, доказательства следом, недостатки — в протокол.</figcaption>
-</figure>
+```diagram review-anatomy
+aria: "Анатомия страницы обзора, сверху вниз: вердикт первым, как мы тестировали, что по-настоящему хорошо, что бы мы изменили, кому подходит и альтернативы"
+t1: "Вердикт"
+t2: "ответ — в первые десять секунд"
+t3: "Как мы тестировали"
+t4: "Что по-настоящему хорошо"
+t5: "Что бы мы изменили"
+t6: "двигатель доверия"
+t7: "Кому подходит / альтернативы"
+t8: "читающий по диагонали"
+t9: "уйдёт с ответом"
+t10: "обзор без этого"
+t11: "раздела читается"
+t12: "как реклама"
+caption: "Каждый обзор — один скелет: ответ вперёд, доказательства следом, недостатки — в протокол."
+```
 
 ## Шаблон
 

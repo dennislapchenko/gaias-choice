@@ -87,31 +87,24 @@ things right typically sees first affiliate income around month 4–6 and
 meaningful income ($500+/mo) somewhere in year one-to-two. Anyone promising
 faster is selling a course.
 
-<figure class="diagram">
-<svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Income timeline: months zero to four earn nothing by design; first affiliate income around months four to six; meaningful income of five hundred dollars a month or more somewhere in years one to two; layer two of printables, email and sponsorships comes after">
-<defs><marker id="arr-inc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
-<line x1="20" y1="130" x2="624" y2="130" stroke="var(--ink)" stroke-width="2" marker-end="url(#arr-inc)"/>
-<text x="30" y="152" font-size="12" fill="var(--muted)">month 0</text>
-<text x="190" y="152" text-anchor="middle" font-size="12" fill="var(--muted)">4–6</text>
-<text x="400" y="152" text-anchor="middle" font-size="12" fill="var(--muted)">year 1–2</text>
-<text x="590" y="152" text-anchor="middle" font-size="12" fill="var(--muted)">beyond</text>
-<rect x="28" y="60" width="130" height="52" rx="10" fill="var(--sand-2)"/>
-<text x="93" y="82" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">$0</text>
-<text x="93" y="100" text-anchor="middle" font-size="12" fill="var(--muted)">by design, not failure</text>
-<rect x="170" y="60" width="140" height="52" rx="10" fill="var(--mint)"/>
-<text x="240" y="82" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">first commissions</text>
-<text x="240" y="100" text-anchor="middle" font-size="12" fill="var(--muted)">if the content is real</text>
-<rect x="322" y="60" width="150" height="52" rx="10" fill="var(--peach)"/>
-<text x="397" y="82" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">$500+/mo</text>
-<text x="397" y="100" text-anchor="middle" font-size="12" fill="var(--muted)">meaningful, eventually</text>
-<rect x="484" y="60" width="140" height="52" rx="10" fill="var(--lilac)"/>
-<text x="554" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">layer 2</text>
-<text x="554" y="93" text-anchor="middle" font-size="11.5" fill="var(--muted)">printables · email ·</text>
-<text x="554" y="106" text-anchor="middle" font-size="11.5" fill="var(--muted)">sponsors</text>
-<text x="322" y="34" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">Anyone promising a faster left half is selling a course.</text>
-</svg>
-<figcaption>The honest expectation curve — the empty first months are the plan working at normal speed.</figcaption>
-</figure>
+```diagram income-timeline
+aria: "Income timeline: months zero to four earn nothing by design; first affiliate income around months four to six; meaningful income of five hundred dollars a month or more somewhere in years one to two; layer two of printables, email and sponsorships comes after"
+t1: "month 0"
+t2: "4–6"
+t3: "year 1–2"
+t4: "beyond"
+t5: "$0"
+t6: "by design, not failure"
+t7: "first commissions"
+t8: "if the content is real"
+t9: "$500+/mo"
+t10: "meaningful, eventually"
+t11: "layer 2"
+t12: "printables · email ·"
+t13: "sponsors"
+t14: "Anyone promising a faster left half is selling a course."
+caption: "The honest expectation curve — the empty first months are the plan working at normal speed."
+```
 
 ## Layer 2: What comes after affiliates
 

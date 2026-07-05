@@ -57,26 +57,22 @@ tags: [herbalism]
 2. **Поддержка.** Прицельное, короткое применение при лёгком и самопроходящем: сбитая коленка, беспокойный вечер, тяжёлый живот после сытного стола. Здесь живёт настоящее мастерство — и настоящие правила: доза, срок, кому можно (детям, беременным и тем, кто на лекарствах, — отдельная осторожность, глава 7).
 3. **Врач.** Всё остальное. Инфекции, требующие лечения; всё хроническое; всё тяжёлое или нарастающее; затруднённое дыхание; высокая или упорная температура; аллергические реакции — и *всё*, что касается грудничка: с малышами сначала педиатр, всегда. **Трава никогда не покупает отсрочку.** Без исключений — и курс будет повторять это нарочно.
 
-<figure class="diagram">
-<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Три ступени лестницей: первая — еда, вторая — поддержка, третья — врач">
-<rect x="16" y="170" width="192" height="74" rx="12" fill="var(--mint)"/>
-<text x="112" y="196" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--ink)">1 · Еда</text>
-<text x="112" y="214" text-anchor="middle" font-size="12" fill="var(--muted)">кухонная крепость, благополучие —</text>
-<text x="112" y="230" text-anchor="middle" font-size="12" fill="var(--muted)">здесь живёт большая часть курса</text>
-<rect x="224" y="110" width="192" height="134" rx="12" fill="var(--peach)"/>
-<text x="320" y="136" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--ink)">2 · Поддержка</text>
-<text x="320" y="154" text-anchor="middle" font-size="12" fill="var(--muted)">коротко и прицельно, при лёгком</text>
-<text x="320" y="170" text-anchor="middle" font-size="12" fill="var(--muted)">и самопроходящем — с правилами:</text>
-<text x="320" y="186" text-anchor="middle" font-size="12" fill="var(--muted)">доза, срок, кому можно</text>
-<rect x="432" y="36" width="192" height="208" rx="12" fill="var(--lilac)" stroke="var(--clay)" stroke-width="1.5"/>
-<text x="528" y="64" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--ink)">3 · Врач</text>
-<text x="528" y="84" text-anchor="middle" font-size="12" fill="var(--muted)">всё остальное — инфекции,</text>
-<text x="528" y="100" text-anchor="middle" font-size="12" fill="var(--muted)">хроническое, нарастающее</text>
-<text x="528" y="126" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--clay)">трава не покупает отсрочку</text>
-<text x="528" y="146" text-anchor="middle" font-size="12" fill="var(--muted)">малыши: сначала педиатр, всегда</text>
-</svg>
-<figcaption>Три ступени — несущая конструкция безопасности курса. Сомневаетесь — по этой лестнице только вверх.</figcaption>
-</figure>
+```diagram three-steps-staircase
+aria: "Три ступени лестницей: первая — еда, вторая — поддержка, третья — врач"
+t1: "1 · Еда"
+t2: "кухонная крепость, благополучие —"
+t3: "здесь живёт большая часть курса"
+t4: "2 · Поддержка"
+t5: "коротко и прицельно, при лёгком"
+t6: "и самопроходящем — с правилами:"
+t7: "доза, срок, кому можно"
+t8: "3 · Врач"
+t9: "всё остальное — инфекции,"
+t10: "хроническое, нарастающее"
+t11: "трава не покупает отсрочку"
+t12: "малыши: сначала педиатр, всегда"
+caption: "Три ступени — несущая конструкция безопасности курса. Сомневаетесь — по этой лестнице только вверх."
+```
 
 И ещё одна честная строка — потому что по правилам этого дома всеми утверждениями о еде командует раздел «Здоровье»: травы — не диета и не её замена. Никакой настой не обгонит настоящую еду, настоящий сон и дневной свет. Зелёная полка *добавляет* к накормленной семье. Спасать она не умеет.
 
@@ -88,33 +84,31 @@ tags: [herbalism]
 
 Знакомьтесь: хребет курса, то, что вы будете строить одиннадцать глав, — **зелёная полка**. Настоящая полка на вашей кухне, которая будет прирастать по приготовлению за главу: сегодня — первая банка; к главе 3 — станция настоев; к главе 4 — десять подписанных банок; с главы 5 — тихо зреющая настойка; с главы 6 — календульное масло; к главе 8 — собственные сушёные запасы. Глава 11 поставит вас перед готовой полкой и спросит, сдержала ли та обещание этой главы.
 
-<figure class="diagram">
-<svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Хронология зелёной полки: первая банка в главе 1, станция настоев в главе 3, десять банок в главе 4, настойка с главы 5, календульное масло в главе 6, свои сушёные запасы к главе 8, готовая полка в главе 11">
-<line x1="30" y1="105" x2="610" y2="105" stroke="var(--line)" stroke-width="3"/>
-<circle cx="60" cy="105" r="15" fill="var(--sage)"/><text x="60" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--on-accent)">1</text>
-<text x="60" y="72" text-anchor="middle" font-size="12.5" fill="var(--ink)">первая банка</text>
-<text x="60" y="88" text-anchor="middle" font-size="12" fill="var(--muted)">сегодня</text>
-<circle cx="150" cy="105" r="15" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/><text x="150" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">3</text>
-<text x="150" y="140" text-anchor="middle" font-size="12.5" fill="var(--ink)">станция</text>
-<text x="150" y="156" text-anchor="middle" font-size="12.5" fill="var(--ink)">настоев</text>
-<circle cx="240" cy="105" r="15" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/><text x="240" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">4</text>
-<text x="240" y="72" text-anchor="middle" font-size="12.5" fill="var(--ink)">десять</text>
-<text x="240" y="88" text-anchor="middle" font-size="12.5" fill="var(--ink)">подписанных банок</text>
-<circle cx="330" cy="105" r="15" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/><text x="330" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">5</text>
-<text x="330" y="140" text-anchor="middle" font-size="12.5" fill="var(--ink)">настойка</text>
-<text x="330" y="156" text-anchor="middle" font-size="12.5" fill="var(--ink)">зреет</text>
-<circle cx="420" cy="105" r="15" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/><text x="420" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">6</text>
-<text x="420" y="72" text-anchor="middle" font-size="12.5" fill="var(--ink)">календульное</text>
-<text x="420" y="88" text-anchor="middle" font-size="12.5" fill="var(--ink)">масло</text>
-<circle cx="510" cy="105" r="15" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/><text x="510" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">8</text>
-<text x="510" y="140" text-anchor="middle" font-size="12.5" fill="var(--ink)">свои сушёные</text>
-<text x="510" y="156" text-anchor="middle" font-size="12.5" fill="var(--ink)">запасы</text>
-<circle cx="592" cy="105" r="15" fill="var(--sage)"/><text x="592" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--on-accent)">11</text>
-<text x="592" y="72" text-anchor="middle" font-size="12.5" fill="var(--ink)">готовая</text>
-<text x="592" y="88" text-anchor="middle" font-size="12.5" fill="var(--ink)">полка</text>
-</svg>
-<figcaption>Зелёная полка, глава за главой, — то, что этот курс строит на самом деле: по приготовлению за раз.</figcaption>
-</figure>
+```diagram green-shelf-timeline
+aria: "Хронология зелёной полки: первая банка в главе 1, станция настоев в главе 3, десять банок в главе 4, настойка с главы 5, календульное масло в главе 6, свои сушёные запасы к главе 8, готовая полка в главе 11"
+t1: "1"
+t2: "первая банка"
+t3: "сегодня"
+t4: "3"
+t5: "станция"
+t6: "настоев"
+t7: "4"
+t8: "десять"
+t9: "подписанных банок"
+t10: "5"
+t11: "настойка"
+t12: "зреет"
+t13: "6"
+t14: "календульное"
+t15: "масло"
+t16: "8"
+t17: "свои сушёные"
+t18: "запасы"
+t19: "11"
+t20: "готовая"
+t21: "полка"
+caption: "Зелёная полка, глава за главой, — то, что этот курс строит на самом деле: по приготовлению за раз."
+```
 
 А вот первый кирпич — сегодняшний, разобранный до конца: **настоящий настой ромашки**.
 

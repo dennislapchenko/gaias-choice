@@ -56,32 +56,28 @@ tags: [herbalism]
 
 Одна банка на полке — три разных напитка. Теперь у принципа главы 1 есть цифры: *приготовление и есть лекарство.* И заметка для компаса: долго и крепко тянет больше всего сразу — включая танины; собственный язык (вяжущее, глава 2) сам скажет, когда вы перекрутили регулятор за «приятно».
 
-<figure class="diagram">
-<svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Три деления регулятора: будничная кружка — одна-две чайные ложки на 10–15 минут; крепкая кружка — столовая ложка на 15–20 минут; питательный настой — 30 граммов на литр, от четырёх часов до ночи">
-<rect x="16" y="24" width="192" height="180" rx="12" fill="var(--mint)"/>
-<text x="112" y="56" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--ink)">Будничная кружка</text>
-<text x="112" y="86" text-anchor="middle" font-size="13" fill="var(--ink)">1–2 ч. л. на кружку</text>
-<text x="112" y="106" text-anchor="middle" font-size="13" fill="var(--ink)">накрыто, 10–15 мин</text>
-<text x="112" y="140" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">регистр повседневности —</text>
-<text x="112" y="156" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">вкус, привычка, первое</text>
-<text x="112" y="172" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">знакомство ребёнка</text>
-<rect x="224" y="24" width="192" height="180" rx="12" fill="var(--peach)"/>
-<text x="320" y="56" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--ink)">Крепкая кружка</text>
-<text x="320" y="86" text-anchor="middle" font-size="13" fill="var(--ink)">1 ст. л. на кружку</text>
-<text x="320" y="106" text-anchor="middle" font-size="13" fill="var(--ink)">накрыто, 15–20 мин</text>
-<text x="320" y="140" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">регистр поддержки —</text>
-<text x="320" y="156" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">здесь живёт ромашка</text>
-<text x="320" y="172" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">из главы 1</text>
-<rect x="432" y="24" width="192" height="180" rx="12" fill="var(--lilac)"/>
-<text x="528" y="56" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--ink)">Питательная банка</text>
-<text x="528" y="86" text-anchor="middle" font-size="13" fill="var(--ink)">~30 г на литр</text>
-<text x="528" y="106" text-anchor="middle" font-size="13" fill="var(--ink)">крышка, 4 ч – ночь</text>
-<text x="528" y="140" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">регистр еды —</text>
-<text x="528" y="156" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">минералы и вещество,</text>
-<text x="528" y="172" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">крапива прежде всех</text>
-</svg>
-<figcaption>Одна банка — три деления. Регулятор и есть разница между «просто чаем» и приготовлением, которое чувствуешь.</figcaption>
-</figure>
+```diagram three-strengths-cards
+aria: "Три деления регулятора: будничная кружка — одна-две чайные ложки на 10–15 минут; крепкая кружка — столовая ложка на 15–20 минут; питательный настой — 30 граммов на литр, от четырёх часов до ночи"
+t1: "Будничная кружка"
+t2: "1–2 ч. л. на кружку"
+t3: "накрыто, 10–15 мин"
+t4: "регистр повседневности —"
+t5: "вкус, привычка, первое"
+t6: "знакомство ребёнка"
+t7: "Крепкая кружка"
+t8: "1 ст. л. на кружку"
+t9: "накрыто, 15–20 мин"
+t10: "регистр поддержки —"
+t11: "здесь живёт ромашка"
+t12: "из главы 1"
+t13: "Питательная банка"
+t14: "~30 г на литр"
+t15: "крышка, 4 ч – ночь"
+t16: "регистр еды —"
+t17: "минералы и вещество,"
+t18: "крапива прежде всех"
+caption: "Одна банка — три деления. Регулятор и есть разница между «просто чаем» и приготовлением, которое чувствуешь."
+```
 
 Правило трёх ступеней из главы 1 сохраняет здесь всю власть: питательный настой — **еда**, и на пищевой ступени он остаётся. Он ничего не лечит, и правило Здоровья этого сайта стоит как стояло: никакая банка не обгонит настоящую еду и настоящий сон.
 

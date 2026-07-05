@@ -30,34 +30,26 @@ By the end of this chapter you will be able to:
 
 And here is the promised map of the whole territory — where you are standing and what the road ahead is shaped like:
 
-<figure class="diagram">
-<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Map of the course: the Gate, chapter 1; the Path, chapters 2 to 9; the Summit, chapters 10 and 11">
-<defs><marker id="arr-map" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
-<rect x="16" y="118" width="86" height="26" rx="13" fill="var(--sage)"/>
-<text x="59" y="135" text-anchor="middle" font-size="12.5" fill="var(--on-accent)">you are here</text>
-<rect x="16" y="152" width="160" height="88" rx="12" fill="var(--mint)"/>
-<text x="96" y="178" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">The Gate</text>
-<text x="96" y="196" text-anchor="middle" font-size="12.5" fill="var(--muted)">chapter 1</text>
-<text x="96" y="214" text-anchor="middle" font-size="12.5" fill="var(--ink)">the territory in miniature</text>
-<text x="96" y="230" text-anchor="middle" font-size="12.5" fill="var(--ink)">+ your first real step</text>
-<line x1="176" y1="196" x2="224" y2="196" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-map)"/>
-<rect x="232" y="106" width="240" height="134" rx="12" fill="var(--peach)"/>
-<text x="352" y="132" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">The Path</text>
-<text x="352" y="150" text-anchor="middle" font-size="12.5" fill="var(--muted)">chapters 2–9</text>
-<text x="352" y="170" text-anchor="middle" font-size="12.5" fill="var(--ink)">one load-bearing skill</text>
-<text x="352" y="186" text-anchor="middle" font-size="12.5" fill="var(--ink)">per chapter</text>
-<text x="352" y="212" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">a complete working foundation</text>
-<text x="352" y="228" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">by the end of chapter 9</text>
-<line x1="472" y1="160" x2="520" y2="160" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-map)"/>
-<rect x="528" y="56" width="96" height="184" rx="12" fill="var(--lilac)"/>
-<text x="576" y="86" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">Summit</text>
-<text x="576" y="104" text-anchor="middle" font-size="12.5" fill="var(--muted)">ch. 10–11</text>
-<text x="576" y="132" text-anchor="middle" font-size="12.5" fill="var(--ink)">synthesis,</text>
-<text x="576" y="148" text-anchor="middle" font-size="12.5" fill="var(--ink)">no new</text>
-<text x="576" y="164" text-anchor="middle" font-size="12.5" fill="var(--ink)">fundamentals</text>
-</svg>
-<figcaption>The course's shape: one chapter of Gate, eight of Path, two of Summit — and you can stop after chapter 9 with a complete, working foundation.</figcaption>
-</figure>
+```diagram homeopathy-course-map
+aria: "Map of the course: the Gate, chapter 1; the Path, chapters 2 to 9; the Summit, chapters 10 and 11"
+t1: "you are here"
+t2: "The Gate"
+t3: "chapter 1"
+t4: "the territory in miniature"
+t5: "+ your first real step"
+t6: "The Path"
+t7: "chapters 2–9"
+t8: "one load-bearing skill"
+t9: "per chapter"
+t10: "a complete working foundation"
+t11: "by the end of chapter 9"
+t12: "Summit"
+t13: "ch. 10–11"
+t14: "synthesis,"
+t15: "no new"
+t16: "fundamentals"
+caption: "The course's shape: one chapter of Gate, eight of Path, two of Summit — and you can stop after chapter 9 with a complete, working foundation."
+```
 
 ## The core
 
@@ -69,32 +61,21 @@ The everyday example is the onion. Slice one and you get streaming eyes and a wa
 
 Note what the principle is **not**: it is not "herbs" (herbalism works with material doses of whole plants — that's our other course), and it is not "natural = safe = works". It is one specific idea: match the remedy's known symptom picture to the sick person's symptom picture.
 
-<figure class="diagram">
-<svg viewBox="0 0 640 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Flow: a healthy person taking a substance produces a symptom picture; a sick person observed closely shows a symptom picture; when the two pictures are similar, the matching remedy is given in a minimal dose">
-<defs><marker id="arr-lcl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
-<rect x="16" y="30" width="180" height="66" rx="12" fill="var(--mint)"/>
-<text x="106" y="57" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Healthy person</text>
-<text x="106" y="77" text-anchor="middle" font-size="12.5" fill="var(--muted)">takes the substance</text>
-<line x1="196" y1="63" x2="248" y2="63" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-lcl)"/>
-<rect x="256" y="30" width="176" height="66" rx="12" fill="var(--peach)"/>
-<text x="344" y="57" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Its symptom picture</text>
-<text x="344" y="77" text-anchor="middle" font-size="12.5" fill="var(--muted)">recorded: eyes stream, nose runs</text>
-<rect x="16" y="154" width="180" height="66" rx="12" fill="var(--mint)"/>
-<text x="106" y="181" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Sick person</text>
-<text x="106" y="201" text-anchor="middle" font-size="12.5" fill="var(--muted)">observed closely — your journal</text>
-<line x1="196" y1="187" x2="248" y2="187" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-lcl)"/>
-<rect x="256" y="154" width="176" height="66" rx="12" fill="var(--peach)"/>
-<text x="344" y="181" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Their symptom picture</text>
-<text x="344" y="201" text-anchor="middle" font-size="12.5" fill="var(--muted)">watery eyes, running nose…</text>
-<line x1="432" y1="70" x2="490" y2="105" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-lcl)"/>
-<line x1="432" y1="180" x2="490" y2="145" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-lcl)"/>
-<text x="462" y="132" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">similar?</text>
-<rect x="496" y="92" width="128" height="66" rx="12" fill="var(--sage)"/>
-<text x="560" y="119" text-anchor="middle" font-size="14" font-weight="700" fill="var(--on-accent)">The remedy</text>
-<text x="560" y="139" text-anchor="middle" font-size="12.5" fill="var(--on-accent)">in a minimal dose</text>
-</svg>
-<figcaption>Like cures like, in one glance: a picture the substance is known to produce, a picture the sick person shows — similarity is the whole hinge.</figcaption>
-</figure>
+```diagram like-cures-like-flow
+aria: "Flow: a healthy person taking a substance produces a symptom picture; a sick person observed closely shows a symptom picture; when the two pictures are similar, the matching remedy is given in a minimal dose"
+t1: "Healthy person"
+t2: "takes the substance"
+t3: "Its symptom picture"
+t4: "recorded: eyes stream, nose runs"
+t5: "Sick person"
+t6: "observed closely — your journal"
+t7: "Their symptom picture"
+t8: "watery eyes, running nose…"
+t9: "similar?"
+t10: "The remedy"
+t11: "in a minimal dose"
+caption: "Like cures like, in one glance: a picture the substance is known to produce, a picture the sick person shows — similarity is the whole hinge."
+```
 
 ### The picture, not the diagnosis
 

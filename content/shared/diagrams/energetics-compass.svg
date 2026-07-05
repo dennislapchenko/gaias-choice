@@ -1,0 +1,14 @@
+<svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<line x1="40" y1="180" x2="600" y2="180" stroke="var(--line)" stroke-width="2"/>
+<line x1="320" y1="30" x2="320" y2="330" stroke="var(--line)" stroke-width="2"/>
+<text x="46" y="172" font-size="13" font-weight="700" fill="var(--muted)">{{t1}}</text>
+<text x="594" y="172" text-anchor="end" font-size="13" font-weight="700" fill="var(--muted)">{{t2}}</text>
+<text x="328" y="44" font-size="13" font-weight="700" fill="var(--muted)">{{t3}}</text>
+<text x="328" y="324" font-size="13" font-weight="700" fill="var(--muted)">{{t4}}</text>
+<circle cx="500" cy="90" r="7" fill="var(--clay)"/><text x="500" y="72" text-anchor="middle" font-size="13.5" fill="var(--ink)">{{t5}}</text>
+<circle cx="450" cy="130" r="7" fill="var(--clay)"/><text x="450" y="112" text-anchor="middle" font-size="13.5" fill="var(--ink)">{{t6}}</text>
+<circle cx="340" cy="70" r="7" fill="var(--sage-dark)"/><text x="358" y="64" font-size="13.5" fill="var(--ink)">{{t7}}</text>
+<circle cx="170" cy="130" r="7" fill="var(--sage-dark)"/><text x="170" y="112" text-anchor="middle" font-size="13.5" fill="var(--ink)">{{t8}}</text>
+<circle cx="240" cy="196" r="7" fill="var(--sage-dark)"/><text x="240" y="222" text-anchor="middle" font-size="13.5" fill="var(--ink)">{{t9}}</text>
+<circle cx="140" cy="280" r="7" fill="var(--sage-dark)"/><text x="140" y="306" text-anchor="middle" font-size="13.5" fill="var(--ink)">{{t10}}</text>
+</svg>

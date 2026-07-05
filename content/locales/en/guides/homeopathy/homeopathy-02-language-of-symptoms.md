@@ -57,23 +57,16 @@ Order matters. Homeopathic tradition weighs symptoms roughly like this, from hea
 3. **The local complaint with its modalities** — the sore throat, the bruise, the cough;
 4. **The diagnosis name** — least useful of all, which still startles newcomers.
 
-<figure class="diagram">
-<svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The weighing of symptoms, heaviest to lightest: mental and emotional state, then general signs, then the local complaint with modalities, then the diagnosis name">
-<defs><marker id="arr-wgt" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
-<line x1="30" y1="24" x2="30" y2="216" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-wgt)"/>
-<text x="22" y="120" text-anchor="middle" font-size="12" fill="var(--muted)" transform="rotate(-90 22 120)">weight in the tradition</text>
-<rect x="56" y="20" width="560" height="42" rx="10" fill="var(--sage)"/>
-<text x="336" y="46" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--on-accent)">1 · Mind and mood — irritable or weepy, solitude or company</text>
-<rect x="106" y="70" width="460" height="42" rx="10" fill="var(--mint)"/>
-<text x="336" y="96" text-anchor="middle" font-size="14" fill="var(--ink)">2 · Generals — thirst, chilliness, restlessness, sleep</text>
-<rect x="156" y="120" width="360" height="42" rx="10" fill="var(--peach)"/>
-<text x="336" y="146" text-anchor="middle" font-size="14" fill="var(--ink)">3 · The local complaint + its modalities</text>
-<rect x="216" y="170" width="240" height="42" rx="10" fill="var(--sand-2)"/>
-<text x="336" y="196" text-anchor="middle" font-size="14" fill="var(--muted)">4 · The diagnosis name</text>
-<text x="630" y="196" text-anchor="end" font-size="11" font-style="italic" fill="var(--muted)">← everyday speech lives here</text>
-</svg>
-<figcaption>The heavier the symptom, the more it steers everything that follows in this course.</figcaption>
-</figure>
+```diagram symptom-weight-ladder
+aria: "The weighing of symptoms, heaviest to lightest: mental and emotional state, then general signs, then the local complaint with modalities, then the diagnosis name"
+t1: "weight in the tradition"
+t2: "1 · Mind and mood — irritable or weepy, solitude or company"
+t3: "2 · Generals — thirst, chilliness, restlessness, sleep"
+t4: "3 · The local complaint + its modalities"
+t5: "4 · The diagnosis name"
+t6: "← everyday speech lives here"
+caption: "The heavier the symptom, the more it steers everything that follows in this course."
+```
 
 Notice that this ranking is exactly upside-down from how we normally talk about illness. Everyday speech starts and ends at level 4. The journal you started in chapter 1 is how you train yourself to live at levels 1–3.
 
@@ -109,33 +102,22 @@ Three evenings, 15 minutes each, away from the screen:
 2. **Evenings 2 and 3:** pick one household member (yourself included, healthy or not — the grid works on healthy days too, and healthy-day entries become priceless baselines). Fill the grid from the day's real observations. If a child is your subject, gather it the attunement way: watch, don't interrogate.
 3. Each evening, before closing the journal, hunt for one **strange-rare-peculiar** candidate in what you wrote. If you find one, underline it. If you don't — write "nothing peculiar today," which is itself honest data.
 
-<figure class="diagram">
-<svg viewBox="0 0 640 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The observation grid: a journal spread with six zones — local complaint, better from and worse from, time, generals, mind and mood, context">
-<rect x="20" y="16" width="600" height="288" rx="14" fill="var(--white)" stroke="var(--line)" stroke-width="2"/>
-<line x1="320" y1="16" x2="320" y2="304" stroke="var(--line)" stroke-width="2" stroke-dasharray="6 6"/>
-<line x1="20" y1="112" x2="620" y2="112" stroke="var(--line)" stroke-width="1.5"/>
-<line x1="20" y1="208" x2="620" y2="208" stroke="var(--line)" stroke-width="1.5"/>
-<text x="40" y="46" font-size="14.5" font-weight="700" fill="var(--ink)">Local complaint</text>
-<text x="40" y="66" font-size="12" fill="var(--muted)">what, where, since when</text>
-<text x="340" y="46" font-size="14.5" font-weight="700" fill="var(--ink)">Better from / worse from</text>
-<text x="340" y="66" font-size="12" fill="var(--muted)">warmth, motion, pressure, fuss…</text>
-<text x="40" y="142" font-size="14.5" font-weight="700" fill="var(--ink)">Time</text>
-<text x="40" y="162" font-size="12" fill="var(--muted)">the worst hour, if there is one</text>
-<text x="340" y="142" font-size="14.5" font-weight="700" fill="var(--ink)">Generals</text>
-<text x="340" y="162" font-size="12" fill="var(--muted)">thirst, temperature, appetite, sleep</text>
-<text x="40" y="238" font-size="14.5" font-weight="700" fill="var(--ink)">Mind and mood</text>
-<text x="40" y="258" font-size="12" fill="var(--muted)">and what they want from people</text>
-<text x="340" y="238" font-size="14.5" font-weight="700" fill="var(--ink)">Context</text>
-<text x="340" y="258" font-size="12" fill="var(--muted)">what came before — bad night, soaking, news</text>
-<line x1="40" y1="84" x2="290" y2="84" stroke="var(--sand-2)" stroke-width="2"/>
-<line x1="340" y1="84" x2="590" y2="84" stroke="var(--sand-2)" stroke-width="2"/>
-<line x1="40" y1="180" x2="290" y2="180" stroke="var(--sand-2)" stroke-width="2"/>
-<line x1="340" y1="180" x2="590" y2="180" stroke="var(--sand-2)" stroke-width="2"/>
-<line x1="40" y1="276" x2="290" y2="276" stroke="var(--sand-2)" stroke-width="2"/>
-<line x1="340" y1="276" x2="590" y2="276" stroke="var(--sand-2)" stroke-width="2"/>
-</svg>
-<figcaption>The observation grid — six zones across one journal spread: the whole grammar of this chapter on one page.</figcaption>
-</figure>
+```diagram observation-grid
+aria: "The observation grid: a journal spread with six zones — local complaint, better from and worse from, time, generals, mind and mood, context"
+t1: "Local complaint"
+t2: "what, where, since when"
+t3: "Better from / worse from"
+t4: "warmth, motion, pressure, fuss…"
+t5: "Time"
+t6: "the worst hour, if there is one"
+t7: "Generals"
+t8: "thirst, temperature, appetite, sleep"
+t9: "Mind and mood"
+t10: "and what they want from people"
+t11: "Context"
+t12: "what came before — bad night, soaking, news"
+caption: "The observation grid — six zones across one journal spread: the whole grammar of this chapter on one page."
+```
 
 **How to know it worked:** by the third evening you catch yourself noticing a modality *in the moment* ("she went quiet the second we stepped into the cool air") — before journal time, without trying. That's the language starting to speak itself.
 

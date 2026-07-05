@@ -1,0 +1,23 @@
+<svg viewBox="0 0 640 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs><marker id="arr-pot" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<line x1="24" y1="150" x2="620" y2="150" stroke="var(--ink)" stroke-width="2" marker-end="url(#arr-pot)"/>
+<line x1="60" y1="144" x2="60" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="60" y="174" text-anchor="middle" font-size="13" fill="var(--ink)">{{t1}}</text>
+<line x1="150" y1="144" x2="150" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="150" y="174" text-anchor="middle" font-size="13" fill="var(--ink)">{{t2}}</text>
+<line x1="250" y1="144" x2="250" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="250" y="174" text-anchor="middle" font-size="13" fill="var(--ink)">{{t3}}</text>
+<line x1="390" y1="144" x2="390" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="390" y="174" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{t4}}</text>
+<line x1="520" y1="144" x2="520" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="520" y="174" text-anchor="middle" font-size="13" fill="var(--ink)">{{t5}}</text>
+<line x1="590" y1="144" x2="590" y2="156" stroke="var(--ink)" stroke-width="2"/><text x="590" y="174" text-anchor="middle" font-size="13" fill="var(--ink)">{{t6}}</text>
+<rect x="110" y="96" width="180" height="38" rx="10" fill="var(--mint)"/>
+<text x="200" y="120" text-anchor="middle" font-size="12.5" fill="var(--ink)">{{t7}}</text>
+<rect x="330" y="88" width="120" height="46" rx="10" fill="var(--sage)"/>
+<text x="390" y="108" text-anchor="middle" font-size="13" font-weight="700" fill="var(--on-accent)">{{t8}}</text>
+<text x="390" y="124" text-anchor="middle" font-size="13" font-weight="700" fill="var(--on-accent)">{{t9}}</text>
+<rect x="486" y="88" width="138" height="46" rx="10" fill="var(--lilac)"/>
+<text x="555" y="108" text-anchor="middle" font-size="12" fill="var(--ink)">{{t10}}</text>
+<text x="555" y="124" text-anchor="middle" font-size="12" fill="var(--ink)">{{t11}}</text>
+<line x1="250" y1="30" x2="250" y2="140" stroke="var(--clay)" stroke-width="2" stroke-dasharray="5 5"/>
+<text x="258" y="40" font-size="12.5" font-weight="700" fill="var(--clay)">{{t12}}</text>
+<text x="258" y="58" font-size="12" fill="var(--muted)">{{t13}}</text>
+<text x="258" y="74" font-size="12" fill="var(--muted)">{{t14}}</text>
+<text x="24" y="206" font-size="12" font-style="italic" fill="var(--muted)">{{t15}}</text>
+</svg>

@@ -42,39 +42,29 @@ Gaia's Choice — это **нишевый партнёрский контент-
 глава 5 — ворота, через которые мы проходим, прежде чем назвать всё это
 запущенным.
 
-<figure class="diagram">
-<svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Пять глав: глава 1 — модель, глава 2 — доверие, глава 3 — трафик, глава 4 — доход, глава 5 — ворота запуска">
-<defs><marker id="arr-fmap" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
-<text x="66" y="34" text-anchor="middle" font-size="11.5" fill="var(--muted)">ВРАТА</text>
-<text x="320" y="34" text-anchor="middle" font-size="11.5" fill="var(--muted)">ПУТЬ</text>
-<text x="574" y="34" text-anchor="middle" font-size="11.5" fill="var(--muted)">ВЕРШИНА</text>
-<rect x="16" y="46" width="100" height="96" rx="12" fill="var(--mint)"/>
-<text x="66" y="78" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">1 · Модель</text>
-<text x="66" y="102" text-anchor="middle" font-size="11.5" fill="var(--muted)">эта глава</text>
-<line x1="116" y1="94" x2="138" y2="94" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-fmap)"/>
-<rect x="144" y="46" width="100" height="96" rx="12" fill="var(--peach)"/>
-<text x="194" y="78" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">2 · Доверие</text>
-<text x="194" y="102" text-anchor="middle" font-size="11.5" fill="var(--muted)">обзоры, которым</text>
-<text x="194" y="117" text-anchor="middle" font-size="11.5" fill="var(--muted)">верят</text>
-<line x1="244" y1="94" x2="266" y2="94" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-fmap)"/>
-<rect x="272" y="46" width="100" height="96" rx="12" fill="var(--peach)"/>
-<text x="322" y="78" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">3 · Трафик</text>
-<text x="322" y="102" text-anchor="middle" font-size="11.5" fill="var(--muted)">поиск, Pinterest,</text>
-<text x="322" y="117" text-anchor="middle" font-size="11.5" fill="var(--muted)">терпение</text>
-<line x1="372" y1="94" x2="394" y2="94" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-fmap)"/>
-<rect x="400" y="46" width="100" height="96" rx="12" fill="var(--peach)"/>
-<text x="450" y="78" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">4 · Доход</text>
-<text x="450" y="102" text-anchor="middle" font-size="11.5" fill="var(--muted)">честная</text>
-<text x="450" y="117" text-anchor="middle" font-size="11.5" fill="var(--muted)">математика</text>
-<line x1="500" y1="94" x2="522" y2="94" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-fmap)"/>
-<rect x="528" y="46" width="96" height="96" rx="12" fill="var(--sage)"/>
-<text x="576" y="78" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--on-accent)">5 · Ворота</text>
-<text x="576" y="102" text-anchor="middle" font-size="11.5" fill="var(--on-accent)">чек-лист</text>
-<text x="576" y="117" text-anchor="middle" font-size="11.5" fill="var(--on-accent)">запуска</text>
-<text x="320" y="180" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">Доверие и трафик — единственные два актива; главы строят их именно в этом порядке.</text>
-</svg>
-<figcaption>Весь курс одной строкой: модель, два актива, деньги — и ворота, через которые мы проходим перед словом «запущено».</figcaption>
-</figure>
+```diagram founder-course-map
+aria: "Пять глав: глава 1 — модель, глава 2 — доверие, глава 3 — трафик, глава 4 — доход, глава 5 — ворота запуска"
+t1: "ВРАТА"
+t2: "ПУТЬ"
+t3: "ВЕРШИНА"
+t4: "1 · Модель"
+t5: ""
+t6: "эта глава"
+t7: "2 · Доверие"
+t8: "обзоры, которым"
+t9: "верят"
+t10: "3 · Трафик"
+t11: "поиск, Pinterest,"
+t12: "терпение"
+t13: "4 · Доход"
+t14: "честная"
+t15: "математика"
+t16: "5 · Ворота"
+t17: ""
+t18: "чек-лист запуска"
+t19: "Доверие и трафик — единственные два актива; главы строят их именно в этом порядке."
+caption: "Весь курс одной строкой: модель, два актива, деньги — и ворота, через которые мы проходим перед словом «запущено»."
+```
 
 ## Неудобная правда о нашем нынешнем контенте
 
@@ -119,35 +109,22 @@ Gaia's Choice — это **нишевый партнёрский контент-
    Заявка с текстом-заглушкой ведёт к отказу или бану, и второго шанса может не
    быть.
 
-<figure class="diagram">
-<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Порядок действий: присвоить свою историю, реально владеть продуктами, написать первые десять настоящих обзоров, запуститься как следует, публиковать в ритме — и только потом партнёрские программы">
-<defs><marker id="arr-ops" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
-<rect x="16" y="30" width="180" height="70" rx="12" fill="var(--mint)"/>
-<text x="106" y="60" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">1 · Своя история</text>
-<text x="106" y="80" text-anchor="middle" font-size="12" fill="var(--muted)">настоящие факты, свои слова</text>
-<line x1="196" y1="65" x2="222" y2="65" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-ops)"/>
-<rect x="230" y="30" width="180" height="70" rx="12" fill="var(--mint)"/>
-<text x="320" y="60" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">2 · Свои продукты</text>
-<text x="320" y="80" text-anchor="middle" font-size="12" fill="var(--muted)">купить, пожить с ними, снять</text>
-<line x1="410" y1="65" x2="436" y2="65" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-ops)"/>
-<rect x="444" y="30" width="180" height="70" rx="12" fill="var(--mint)"/>
-<text x="534" y="60" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">3 · 10 настоящих обзоров</text>
-<text x="534" y="80" text-anchor="middle" font-size="12" fill="var(--muted)">заглушки удаляются по ходу</text>
-<path d="M534 100 C 534 130, 534 130, 534 152" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-ops)"/>
-<rect x="444" y="160" width="180" height="70" rx="12" fill="var(--peach)"/>
-<text x="534" y="190" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">4 · Настоящий запуск</text>
-<text x="534" y="210" text-anchor="middle" font-size="12" fill="var(--muted)">домен, документы, аналитика</text>
-<line x1="436" y1="195" x2="418" y2="195" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-ops)"/>
-<rect x="230" y="160" width="180" height="70" rx="12" fill="var(--peach)"/>
-<text x="320" y="190" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">5 · Недельный ритм</text>
-<text x="320" y="210" text-anchor="middle" font-size="12" fill="var(--muted)">публиковать, улучшать, мерить</text>
-<line x1="222" y1="195" x2="204" y2="195" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-ops)"/>
-<rect x="16" y="160" width="180" height="70" rx="12" fill="var(--sage)"/>
-<text x="106" y="190" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--on-accent)">6 · Партнёрки</text>
-<text x="106" y="210" text-anchor="middle" font-size="12" fill="var(--on-accent)">когда контент настоящий</text>
-</svg>
-<figcaption>Порядок действий: каждый шаг бессмыслен без предыдущего — поэтому это список, а не меню.</figcaption>
-</figure>
+```diagram order-of-operations
+aria: "Порядок действий: присвоить свою историю, реально владеть продуктами, написать первые десять настоящих обзоров, запуститься как следует, публиковать в ритме — и только потом партнёрские программы"
+t1: "1 · Своя история"
+t2: "настоящие факты, свои слова"
+t3: "2 · Свои продукты"
+t4: "купить, пожить с ними, снять"
+t5: "3 · 10 настоящих обзоров"
+t6: "заглушки удаляются по ходу"
+t7: "4 · Настоящий запуск"
+t8: "домен, документы, аналитика"
+t9: "5 · Недельный ритм"
+t10: "публиковать, улучшать, мерить"
+t11: "6 · Партнёрки"
+t12: "когда контент настоящий"
+caption: "Порядок действий: каждый шаг бессмыслен без предыдущего — поэтому это список, а не меню."
+```
 
 Поэтапная версия с вехами живёт на публичной странице [Roadmap](/roadmap).
 

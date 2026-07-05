@@ -21,32 +21,19 @@ chapter 1's literal-truth rule made checkable, section 2 is chapter 2's craft,
 sections 5–6 serve chapter 3's channels, and section 4 guards chapter 4's
 programs. Work through it top to bottom.
 
-<figure class="diagram">
-<svg viewBox="0 0 640 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Six checklist sections — identity and truth, content, domain and plumbing, legal and compliance, measurement, distribution — all feed one gate: the soft-launch test, would I trust this if a stranger made it; only then, launch">
-<defs><marker id="arr-gate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
-<rect x="16" y="20" width="192" height="44" rx="10" fill="var(--mint)"/>
-<text x="112" y="47" text-anchor="middle" font-size="13" fill="var(--ink)">1 · Identity &amp; truth</text>
-<rect x="16" y="76" width="192" height="44" rx="10" fill="var(--mint)"/>
-<text x="112" y="103" text-anchor="middle" font-size="13" fill="var(--ink)">2 · Content</text>
-<rect x="224" y="20" width="192" height="44" rx="10" fill="var(--peach)"/>
-<text x="320" y="47" text-anchor="middle" font-size="13" fill="var(--ink)">3 · Domain &amp; plumbing</text>
-<rect x="224" y="76" width="192" height="44" rx="10" fill="var(--peach)"/>
-<text x="320" y="103" text-anchor="middle" font-size="13" fill="var(--ink)">4 · Legal &amp; compliance</text>
-<rect x="432" y="20" width="192" height="44" rx="10" fill="var(--lilac)"/>
-<text x="528" y="47" text-anchor="middle" font-size="13" fill="var(--ink)">5 · Measurement</text>
-<rect x="432" y="76" width="192" height="44" rx="10" fill="var(--lilac)"/>
-<text x="528" y="103" text-anchor="middle" font-size="13" fill="var(--ink)">6 · Distribution</text>
-<line x1="112" y1="120" x2="240" y2="160" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-gate)"/>
-<line x1="320" y1="120" x2="320" y2="158" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-gate)"/>
-<line x1="528" y1="120" x2="400 " y2="160" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-gate)"/>
-<rect x="150" y="166" width="340" height="66" rx="12" fill="var(--sage)"/>
-<text x="320" y="193" text-anchor="middle" font-size="14" font-weight="700" fill="var(--on-accent)">7 · The soft-launch test</text>
-<text x="320" y="215" text-anchor="middle" font-size="12.5" font-style="italic" fill="var(--on-accent)">"Would I trust this if a stranger made it?"</text>
-<line x1="320" y1="232" x2="320" y2="258" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-gate)"/>
-<text x="336" y="278" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">launch — quietly</text>
-</svg>
-<figcaption>Six sections, one exam. A page that fails the stranger test gets fixed or deleted — the gate doesn't argue.</figcaption>
-</figure>
+```diagram launch-gate-funnel
+aria: "Six checklist sections — identity and truth, content, domain and plumbing, legal and compliance, measurement, distribution — all feed one gate: the soft-launch test, would I trust this if a stranger made it; only then, launch"
+t1: "1 · Identity & truth"
+t2: "2 · Content"
+t3: "3 · Domain & plumbing"
+t4: "4 · Legal & compliance"
+t5: "5 · Measurement"
+t6: "6 · Distribution"
+t7: "7 · The soft-launch test"
+t8: "\"Would I trust this if a stranger made it?\""
+t9: "launch — quietly"
+caption: "Six sections, one exam. A page that fails the stranger test gets fixed or deleted — the gate doesn't argue."
+```
 
 ## 1. Identity & truth
 

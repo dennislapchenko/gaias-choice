@@ -42,40 +42,29 @@ chapter 3 brings the traffic, chapter 4 turns them into income without
 corrupting either, and chapter 5 is the gate we walk through before calling
 any of it launched.
 
-<figure class="diagram">
-<svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The five chapters: chapter 1 the model, chapter 2 trust, chapter 3 traffic, chapter 4 income, chapter 5 the launch gate">
-<defs><marker id="arr-fmap" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
-<text x="66" y="34" text-anchor="middle" font-size="11.5" fill="var(--muted)">THE GATE</text>
-<text x="320" y="34" text-anchor="middle" font-size="11.5" fill="var(--muted)">THE PATH</text>
-<text x="574" y="34" text-anchor="middle" font-size="11.5" fill="var(--muted)">THE SUMMIT</text>
-<rect x="16" y="46" width="100" height="96" rx="12" fill="var(--mint)"/>
-<text x="66" y="78" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">1 · The</text>
-<text x="66" y="96" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">model</text>
-<text x="66" y="120" text-anchor="middle" font-size="11.5" fill="var(--muted)">this chapter</text>
-<line x1="116" y1="94" x2="138" y2="94" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-fmap)"/>
-<rect x="144" y="46" width="100" height="96" rx="12" fill="var(--peach)"/>
-<text x="194" y="78" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">2 · Trust</text>
-<text x="194" y="102" text-anchor="middle" font-size="11.5" fill="var(--muted)">reviews that</text>
-<text x="194" y="117" text-anchor="middle" font-size="11.5" fill="var(--muted)">earn it</text>
-<line x1="244" y1="94" x2="266" y2="94" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-fmap)"/>
-<rect x="272" y="46" width="100" height="96" rx="12" fill="var(--peach)"/>
-<text x="322" y="78" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">3 · Traffic</text>
-<text x="322" y="102" text-anchor="middle" font-size="11.5" fill="var(--muted)">search, Pinterest,</text>
-<text x="322" y="117" text-anchor="middle" font-size="11.5" fill="var(--muted)">patience</text>
-<line x1="372" y1="94" x2="394" y2="94" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-fmap)"/>
-<rect x="400" y="46" width="100" height="96" rx="12" fill="var(--peach)"/>
-<text x="450" y="78" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">4 · Income</text>
-<text x="450" y="102" text-anchor="middle" font-size="11.5" fill="var(--muted)">the honest</text>
-<text x="450" y="117" text-anchor="middle" font-size="11.5" fill="var(--muted)">math</text>
-<line x1="500" y1="94" x2="522" y2="94" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-fmap)"/>
-<rect x="528" y="46" width="96" height="96" rx="12" fill="var(--sage)"/>
-<text x="576" y="78" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--on-accent)">5 · The</text>
-<text x="576" y="96" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--on-accent)">gate</text>
-<text x="576" y="120" text-anchor="middle" font-size="11.5" fill="var(--on-accent)">launch checklist</text>
-<text x="320" y="180" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">Trust and traffic are the only two assets — the chapters build them in that order.</text>
-</svg>
-<figcaption>The whole course on one line: the model, the two assets, the money, and the gate we walk through before calling it launched.</figcaption>
-</figure>
+```diagram founder-course-map
+aria: "The five chapters: chapter 1 the model, chapter 2 trust, chapter 3 traffic, chapter 4 income, chapter 5 the launch gate"
+t1: "THE GATE"
+t2: "THE PATH"
+t3: "THE SUMMIT"
+t4: "1 · The"
+t5: "model"
+t6: "this chapter"
+t7: "2 · Trust"
+t8: "reviews that"
+t9: "earn it"
+t10: "3 · Traffic"
+t11: "search, Pinterest,"
+t12: "patience"
+t13: "4 · Income"
+t14: "the honest"
+t15: "math"
+t16: "5 · The"
+t17: "gate"
+t18: "launch checklist"
+t19: "Trust and traffic are the only two assets — the chapters build them in that order."
+caption: "The whole course on one line: the model, the two assets, the money, and the gate we walk through before calling it launched."
+```
 
 ## The uncomfortable truth about our current content
 
@@ -118,35 +107,22 @@ Do these in order. Each one is pointless without the one before it.
    [chapter 4: How This Site Will Make Money](/guides/how-this-site-will-make-money).
    Applying with placeholder content gets us rejected or banned.
 
-<figure class="diagram">
-<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Order of operations: own our story, own the products, write the first ten real reviews, launch properly, publish on a rhythm, and only then apply for affiliate programs">
-<defs><marker id="arr-ops" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
-<rect x="16" y="30" width="180" height="70" rx="12" fill="var(--mint)"/>
-<text x="106" y="60" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">1 · Own our story</text>
-<text x="106" y="80" text-anchor="middle" font-size="12" fill="var(--muted)">real facts, our own words</text>
-<line x1="196" y1="65" x2="222" y2="65" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-ops)"/>
-<rect x="230" y="30" width="180" height="70" rx="12" fill="var(--mint)"/>
-<text x="320" y="60" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">2 · Own the products</text>
-<text x="320" y="80" text-anchor="middle" font-size="12" fill="var(--muted)">buy, use for weeks, photograph</text>
-<line x1="410" y1="65" x2="436" y2="65" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-ops)"/>
-<rect x="444" y="30" width="180" height="70" rx="12" fill="var(--mint)"/>
-<text x="534" y="60" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">3 · 10 real reviews</text>
-<text x="534" y="80" text-anchor="middle" font-size="12" fill="var(--muted)">placeholders deleted as we go</text>
-<path d="M534 100 C 534 130, 534 130, 534 152" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-ops)"/>
-<rect x="444" y="160" width="180" height="70" rx="12" fill="var(--peach)"/>
-<text x="534" y="190" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">4 · Launch properly</text>
-<text x="534" y="210" text-anchor="middle" font-size="12" fill="var(--muted)">domain, legal pages, analytics</text>
-<line x1="436" y1="195" x2="418" y2="195" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-ops)"/>
-<rect x="230" y="160" width="180" height="70" rx="12" fill="var(--peach)"/>
-<text x="320" y="190" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">5 · Weekly rhythm</text>
-<text x="320" y="210" text-anchor="middle" font-size="12" fill="var(--muted)">publish, improve, pin, measure</text>
-<line x1="222" y1="195" x2="204" y2="195" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-ops)"/>
-<rect x="16" y="160" width="180" height="70" rx="12" fill="var(--sage)"/>
-<text x="106" y="190" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--on-accent)">6 · Affiliate programs</text>
-<text x="106" y="210" text-anchor="middle" font-size="12" fill="var(--on-accent)">only once content is real</text>
-</svg>
-<figcaption>The order of operations — each step is pointless without the one before it, which is the whole reason it's a list and not a menu.</figcaption>
-</figure>
+```diagram order-of-operations
+aria: "Order of operations: own our story, own the products, write the first ten real reviews, launch properly, publish on a rhythm, and only then apply for affiliate programs"
+t1: "1 · Own our story"
+t2: "real facts, our own words"
+t3: "2 · Own the products"
+t4: "buy, use for weeks, photograph"
+t5: "3 · 10 real reviews"
+t6: "placeholders deleted as we go"
+t7: "4 · Launch properly"
+t8: "domain, legal pages, analytics"
+t9: "5 · Weekly rhythm"
+t10: "publish, improve, pin, measure"
+t11: "6 · Affiliate programs"
+t12: "only once content is real"
+caption: "The order of operations — each step is pointless without the one before it, which is the whole reason it's a list and not a menu."
+```
 
 The phased version with milestones lives on the public [Roadmap](/roadmap).
 

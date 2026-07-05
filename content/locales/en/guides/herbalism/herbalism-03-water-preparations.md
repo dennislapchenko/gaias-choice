@@ -56,32 +56,28 @@ Here is where the nettle disappointment gets solved. Water preparation isn't one
 
 Same jar on the shelf, three different drinks — and now the chapter 1 principle has numbers: *the preparation is the medicine.* A note for the compass, too: long and strong pulls more of everything, including tannins — your own tongue (astringency, chapter 2) will tell you when you've dialed past pleasant.
 
-<figure class="diagram">
-<svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The three settings of the dial: the everyday cup, one to two teaspoons for ten to fifteen minutes; the strong cup, a tablespoon for fifteen to twenty minutes; the nourishing infusion, thirty grams per liter for four hours to overnight">
-<rect x="16" y="24" width="192" height="180" rx="12" fill="var(--mint)"/>
-<text x="112" y="56" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--ink)">The everyday cup</text>
-<text x="112" y="86" text-anchor="middle" font-size="13" fill="var(--ink)">1–2 tsp per mug</text>
-<text x="112" y="106" text-anchor="middle" font-size="13" fill="var(--ink)">covered, 10–15 min</text>
-<text x="112" y="140" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">the register of daily life —</text>
-<text x="112" y="156" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">taste, habit, a child's</text>
-<text x="112" y="172" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">first acquaintance</text>
-<rect x="224" y="24" width="192" height="180" rx="12" fill="var(--peach)"/>
-<text x="320" y="56" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--ink)">The strong cup</text>
-<text x="320" y="86" text-anchor="middle" font-size="13" fill="var(--ink)">1 tbsp per mug</text>
-<text x="320" y="106" text-anchor="middle" font-size="13" fill="var(--ink)">covered, 15–20 min</text>
-<text x="320" y="140" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">the register of support —</text>
-<text x="320" y="156" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">chapter 1's chamomile</text>
-<text x="320" y="172" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">lives here</text>
-<rect x="432" y="24" width="192" height="180" rx="12" fill="var(--lilac)"/>
-<text x="528" y="56" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--ink)">The nourishing jar</text>
-<text x="528" y="86" text-anchor="middle" font-size="13" fill="var(--ink)">~30 g per liter</text>
-<text x="528" y="106" text-anchor="middle" font-size="13" fill="var(--ink)">lidded, 4 h – overnight</text>
-<text x="528" y="140" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">the register of food —</text>
-<text x="528" y="156" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">minerals and substance,</text>
-<text x="528" y="172" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">nettle above all</text>
-</svg>
-<figcaption>One jar, three settings — the dial is the difference between "just tea" and a preparation you can feel.</figcaption>
-</figure>
+```diagram three-strengths-cards
+aria: "The three settings of the dial: the everyday cup, one to two teaspoons for ten to fifteen minutes; the strong cup, a tablespoon for fifteen to twenty minutes; the nourishing infusion, thirty grams per liter for four hours to overnight"
+t1: "The everyday cup"
+t2: "1–2 tsp per mug"
+t3: "covered, 10–15 min"
+t4: "the register of daily life —"
+t5: "taste, habit, a child's"
+t6: "first acquaintance"
+t7: "The strong cup"
+t8: "1 tbsp per mug"
+t9: "covered, 15–20 min"
+t10: "the register of support —"
+t11: "chapter 1's chamomile"
+t12: "lives here"
+t13: "The nourishing jar"
+t14: "~30 g per liter"
+t15: "lidded, 4 h – overnight"
+t16: "the register of food —"
+t17: "minerals and substance,"
+t18: "nettle above all"
+caption: "One jar, three settings — the dial is the difference between \"just tea\" and a preparation you can feel."
+```
 
 The three-steps rule from chapter 1 keeps its authority here: the nourishing infusion is **food** — and it stays on the food step. It doesn't treat anything, and the Health rule of this whole site stands: no jar outruns real meals and real sleep.
 

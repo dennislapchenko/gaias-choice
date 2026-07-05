@@ -1,0 +1,24 @@
+<svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<line x1="30" y1="105" x2="610" y2="105" stroke="var(--line)" stroke-width="3"/>
+<circle cx="60" cy="105" r="15" fill="var(--sage)"/><text x="60" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--on-accent)">{{t1}}</text>
+<text x="60" y="72" text-anchor="middle" font-size="12.5" fill="var(--ink)">{{t2}}</text>
+<text x="60" y="88" text-anchor="middle" font-size="12" fill="var(--muted)">{{t3}}</text>
+<circle cx="150" cy="105" r="15" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/><text x="150" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{t4}}</text>
+<text x="150" y="140" text-anchor="middle" font-size="12.5" fill="var(--ink)">{{t5}}</text>
+<text x="150" y="156" text-anchor="middle" font-size="12.5" fill="var(--ink)">{{t6}}</text>
+<circle cx="240" cy="105" r="15" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/><text x="240" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{t7}}</text>
+<text x="240" y="72" text-anchor="middle" font-size="12.5" fill="var(--ink)">{{t8}}</text>
+<text x="240" y="88" text-anchor="middle" font-size="12.5" fill="var(--ink)">{{t9}}</text>
+<circle cx="330" cy="105" r="15" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/><text x="330" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{t10}}</text>
+<text x="330" y="140" text-anchor="middle" font-size="12.5" fill="var(--ink)">{{t11}}</text>
+<text x="330" y="156" text-anchor="middle" font-size="12.5" fill="var(--ink)">{{t12}}</text>
+<circle cx="420" cy="105" r="15" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/><text x="420" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{t13}}</text>
+<text x="420" y="72" text-anchor="middle" font-size="12.5" fill="var(--ink)">{{t14}}</text>
+<text x="420" y="88" text-anchor="middle" font-size="12.5" fill="var(--ink)">{{t15}}</text>
+<circle cx="510" cy="105" r="15" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/><text x="510" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{t16}}</text>
+<text x="510" y="140" text-anchor="middle" font-size="12.5" fill="var(--ink)">{{t17}}</text>
+<text x="510" y="156" text-anchor="middle" font-size="12.5" fill="var(--ink)">{{t18}}</text>
+<circle cx="592" cy="105" r="15" fill="var(--sage)"/><text x="592" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--on-accent)">{{t19}}</text>
+<text x="592" y="72" text-anchor="middle" font-size="12.5" fill="var(--ink)">{{t20}}</text>
+<text x="592" y="88" text-anchor="middle" font-size="12.5" fill="var(--ink)">{{t21}}</text>
+</svg>

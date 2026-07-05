@@ -44,6 +44,8 @@ content/                 # ALL editable content (no code)
       guides/<epic>/*.md  # guides, grouped in per-epic subfolders → /guides/<filename-without-.md> (subfolder is organizational only, not part of the route)
       pages/*.md          # standalone pages (about, contact, roadmap, disclosure, privacy)
     ru/                   # Russian — filled in section by section, falls back to en/
+  shared/
+    diagrams/*.svg       # guide diagram templates ({{slot}} tokens) — geometry authored once, reused by every locale (see Adding a guide)
   themes.yaml            # color palettes (tag + label + default + colors) — shared, not localized
 context/                 # authoring context (NOT bundled into the site)
   persona-context.md     # the author's voice + the family's REAL biography — read before writing/rephrasing RU content or any "who we are" copy
@@ -170,14 +172,29 @@ the "Guide chapter ordering" / "Guide detail table of contents" rows in
 supports.
 
 Guide chapters also **embed their own visuals in the markdown** (since
-2026-07-05): GFM tables (`gfm: true`; styled by `.prose table`) and inline-SVG
-diagrams in `<figure class="diagram">` blocks that color themselves with the
-palette CSS variables, so they re-theme with the palette switcher. No blank
-lines inside a figure block (it's one markdown HTML block), unique `<marker>`
-ids per figure on a page, `role="img"` + localized `aria-label` on every svg.
-SVG *structure* is kept byte-identical between `en`/`ru` — only `<text>`,
-table cells, and `figcaption` differ — which makes cross-locale patches
-mechanical. Authoring rules + the locale-mirroring workflow:
+2026-07-05): GFM tables (`gfm: true`; styled by `.prose table`) and SVG
+diagrams. Tables stay inline per locale (they're just text). **Diagram geometry
+is authored once as a shared template** and reused by every locale (2026-07-05):
+
+- `content/shared/diagrams/<name>.svg` — one SVG per diagram, drawn once, with
+  `{{slot}}` tokens where locale text goes (`{{aria}}` in the `aria-label`,
+  `{{t1}}…{{tN}}` for the `<text>` runs; `{{caption}}` is the figcaption).
+- A guide embeds one via a fenced block — <code>\`\`\`diagram &lt;name&gt;</code>
+  whose YAML body supplies the slot values — placed in *each* locale's markdown
+  next to the prose. So the geometry is never duplicated across locales; only the
+  text differs. Fenced blocks (not raw `<figure>` HTML) also sidestep the
+  "no blank lines inside a markdown HTML block" trap.
+- The renderer lives in `lib/content.ts` (`renderDiagram` + a `marked`
+  `renderer.code` override): it loads the templates via glob, YAML-parses the
+  slot block, HTML-escapes every value, substitutes `{{slots}}`, **suffixes all
+  SVG `id=`/`url(#…)` per instance** (`-i<n>`, so marker ids never collide when
+  diagrams share a page), and wraps the result in `<figure class="diagram">` +
+  `<figcaption>`. A bad template/slot renders a visible `⚠` figcaption +
+  `console.error` rather than throwing (a throw would blank the SPA). Diagrams
+  color themselves with the palette CSS variables, so they re-theme with the
+  switcher; every svg keeps `role="img"` + a localized `aria-label`.
+
+Authoring rules + the template workflow:
 `.claude/skills/manage-site/references/content-editing.md`, "Visuals inside
 guides".
 

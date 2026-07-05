@@ -149,10 +149,14 @@ Concepts inside the Core section get `###` subheadings.
 
 **Visuals (mandatory since 2026-07-05):** every chapter carries **1–3
 visuals** that cement its core concepts — GFM tables for comparisons/reference
-grids, inline-SVG `<figure class="diagram">` blocks for flows, maps, scales,
-compasses, charts. The Gate chapter's map-of-the-course promise is delivered
-as an actual course-map diagram. Full authoring pattern (CSS-var colors,
-no-blank-lines rule, overflow audit) and the cross-locale mirroring workflow:
+grids (authored inline per locale), and SVG diagrams for flows, maps, scales,
+compasses, charts. Diagram **geometry is authored once as a shared template**
+(`content/shared/diagrams/<name>.svg`, with `{{slot}}` tokens) and embedded in
+each locale's markdown via a `` ```diagram <name> `` fenced block whose YAML
+supplies the per-locale text — so geometry is never mirrored by hand. The Gate
+chapter's map-of-the-course promise is delivered as an actual course-map
+diagram. Full authoring pattern (template + fenced-block syntax, CSS-var colors,
+overflow audit, parity checks):
 `.claude/skills/manage-site/references/content-editing.md`, "Visuals inside
 guides". Visuals obey truth-first: charts draw the qualitative shape of claims
 the prose already makes, never invented data points; captions add a thought,

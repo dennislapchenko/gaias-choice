@@ -113,34 +113,68 @@ directly in the markdown — no images, no new deps:
 
 - **GFM tables** for comparisons and reference grids (`gfm: true` is on;
   styled via `.prose table` in `styles.css`, horizontal-scroll on ≤720px).
-- **Inline SVG figures** for flows, maps, charts, staircases, compasses:
+  Tables stay **inline per locale** — they're just text, nothing to share.
+- **SVG diagrams** for flows, maps, charts, staircases, compasses. Since
+  2026-07-05 the **geometry is authored once as a shared template** and reused
+  by every locale; only the text differs.
 
-  ```html
-  <figure class="diagram">
-  <svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="…">
-  …
-  </svg>
-  <figcaption>One caption line — adds something, never repeats adjacent prose.</figcaption>
-  </figure>
-  ```
+### Diagram templates + fenced blocks (the DRY pattern)
+
+1. **The template** — `content/shared/diagrams/<name>.svg`, the whole SVG drawn
+   once, with `{{slot}}` tokens wherever locale text goes:
+
+   ```html
+   <svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+   …
+   <text x="66" y="78" text-anchor="middle" font-size="13.5" fill="var(--ink)">{{step1}}</text>
+   …
+   </svg>
+   ```
+
+   No `<figure>`/`<figcaption>` in the template — the renderer adds those. Slot
+   names are any `[\w-]+`. **New diagrams: name slots meaningfully**
+   (`{{step1}}`, `{{summit}}`). The 16 diagrams migrated on 2026-07-05 use
+   positional `t1…tN` (auto-extracted, in document order) plus `aria` — leave
+   those as-is.
+
+2. **The embed** — in *each* locale's guide markdown, next to the prose, a
+   fenced block whose language is `diagram <name>` and whose YAML body fills the
+   slots (every template slot **plus** the required `caption`):
+
+   ````markdown
+   ```diagram founder-course-map
+   aria: "The five chapters, gate to summit"
+   step1: "1 · The model"
+   summit: "5 · The gate"
+   caption: "One caption line — adds something, never repeats adjacent prose."
+   ```
+   ````
+
+3. **The renderer** (`renderDiagram` + a `marked` `renderer.code` override in
+   `src/lib/content.ts`) substitutes slots, HTML-escapes every value, suffixes
+   all SVG ids per instance (so marker ids never collide), and wraps the result
+   in `<figure class="diagram">` + `<figcaption>`. A missing template/slot or
+   bad YAML renders a visible `⚠` figcaption (never throws — a throw blanks the
+   whole SPA); check the browser console for `[diagram]` errors.
 
 Rules learned the hard way:
 
-- **No blank lines inside the `<figure>` block** — a blank line ends the
-  markdown HTML block and the rest gets re-parsed as markdown. Blank line
-  before and after the block, none within.
+- **Fenced block, not raw `<figure>` HTML.** (The old inline-`<figure>` pattern
+  tripped on "a blank line ends the markdown HTML block"; fenced blocks don't.)
 - **Colors are CSS variables only** (`var(--mint)`, `var(--sage)`,
   `var(--on-accent)`, `var(--ink)`, `var(--muted)`, `var(--line)`,
   `var(--sand-2)`, `var(--clay)`) so every palette themes the diagram. Accent
   boxes = `--sage` fill + `--on-accent` text; warning accents = `--clay`.
 - **viewBox width 640**, text 11–15px at that scale; `font-family` inherits
-  via `.prose figure.diagram svg`. Arrowhead `<marker>` ids must be unique
-  per figure on a page (e.g. `arr-map`, `arr-ops`) — ids are document-global.
-- **Give every svg `role="img"` + a real `aria-label`** describing the
-  content (localized).
-- **Text length is the failure mode:** RU labels run long; keep boxes roomy
-  or split lines. After editing any SVG text, run the **overflow audit** in a
-  served `dist/` (browser console, per guide page):
+  via `.prose figure.diagram svg`. Marker ids in the template can be simple
+  (`arr-fmap`) — the renderer makes them unique per instance automatically.
+- **The template carries `role="img"` + `aria-label="{{aria}}"`**; each locale
+  supplies the real `aria` text in its fenced block.
+- **Size text for the longest locale.** RU labels run long; the *one* template's
+  boxes/line-splits must fit RU (an empty slot value `""` is fine when a locale
+  needs fewer lines than the template provides). After editing a template or any
+  slot text, run the **overflow audit** in a served `dist/` (browser console,
+  per guide page):
 
   ```js
   document.querySelectorAll('.prose figure.diagram svg').forEach((svg,i) => {
@@ -155,26 +189,23 @@ Rules learned the hard way:
   prose already makes ("not a forecast — the shape of the game"), never
   invented data points.
 
-### Patching all locales fast (the mirroring workflow)
+### Editing across locales (much smaller job now)
 
-EN and RU guide files share the same slug and the same `##` heading skeleton,
-and the house SVG pattern keeps **structure identical across locales — only
-`<text>` content, `aria-label`, table cells, and `figcaption` differ.** So:
-
-- **Change with no text in it** (SVG geometry, coordinates, colors, an image
-  ref, frontmatter): apply to `en`, then apply the *identical* edit to the
-  `ru` file at the same anchor (same heading / same SVG element). Pure
-  copy-paste; no translation pass needed — this is deliberately fast.
-- **Change with text in it:** same anchors, but labels/captions get written
-  per locale (RU in her voice — persona-context). Budget for it; there's no
-  shortcut, and that's fine.
-- **Verify parity** after any cross-locale patch (counts must match pairwise):
+- **Geometry / layout / color change:** edit the *one* template in
+  `content/shared/diagrams/` — every locale updates at once. No mirroring.
+- **Text change:** edit the slot value in each locale's fenced block (RU in her
+  voice — persona-context). The template is untouched.
+- **New diagram:** add the template SVG, then add a `diagram <name>` fenced
+  block to each locale's guide.
+- **Verify parity** — every locale should reference each diagram, and every
+  referenced template must exist:
 
   ```bash
-  cd content/locales && for f in $(cd en && find guides -name '*.md'); do
-    printf '%-58s fig %s/%s tbl %s/%s\n' "$f" \
-      $(grep -c 'figure class="diagram"' "en/$f") $(grep -c 'figure class="diagram"' "ru/$f") \
-      $(grep -c '^|' "en/$f") $(grep -c '^|' "ru/$f"); done
+  cd content/locales
+  for lc in en ru; do printf '%s: ' $lc; grep -rho '```diagram [a-z-]*' $lc/guides | sort | wc -l; done
+  # every referenced name has a template file:
+  comm -23 <(grep -rho '```diagram [a-z-]*' */guides | sed 's/.*diagram //' | sort -u) \
+           <(ls ../shared/diagrams | sed 's/\.svg$//' | sort)
   ```
 
 ## Add a standalone page → `content/locales/en/pages/<slug>.md` (+ wiring)

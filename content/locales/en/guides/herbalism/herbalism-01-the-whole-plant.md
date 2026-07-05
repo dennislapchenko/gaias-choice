@@ -57,26 +57,22 @@ Everything herbal in this course lives on a three-step staircase. Learn it now; 
 2. **Support.** Focused, short-term use for minor self-limiting complaints — the scraped knee, the restless evening, the heavy stomach after a rich meal. Real skill lives here, and so do real rules: dose, duration, and who it's for (children, and anyone pregnant or on medication, get extra care — chapter 7).
 3. **The doctor.** Everything else. Infections that need treatment, anything chronic, anything severe or worsening, difficulty breathing, high or persistent fever, allergic reactions — and *everything* concerning a baby: for infants, the pediatrician comes first, always. **A plant must never buy delay.** No exceptions, and this course will keep repeating that on purpose.
 
-<figure class="diagram">
-<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The three steps as a staircase: step one, food; step two, support; step three, the doctor">
-<rect x="16" y="170" width="192" height="74" rx="12" fill="var(--mint)"/>
-<text x="112" y="196" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--ink)">1 · Food</text>
-<text x="112" y="214" text-anchor="middle" font-size="12" fill="var(--muted)">kitchen-strength wellbeing —</text>
-<text x="112" y="230" text-anchor="middle" font-size="12" fill="var(--muted)">most of this course lives here</text>
-<rect x="224" y="110" width="192" height="134" rx="12" fill="var(--peach)"/>
-<text x="320" y="136" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--ink)">2 · Support</text>
-<text x="320" y="154" text-anchor="middle" font-size="12" fill="var(--muted)">short and focused, for the minor</text>
-<text x="320" y="170" text-anchor="middle" font-size="12" fill="var(--muted)">and self-limiting — with real rules:</text>
-<text x="320" y="186" text-anchor="middle" font-size="12" fill="var(--muted)">dose, duration, who it's for</text>
-<rect x="432" y="36" width="192" height="208" rx="12" fill="var(--lilac)" stroke="var(--clay)" stroke-width="1.5"/>
-<text x="528" y="64" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--ink)">3 · The doctor</text>
-<text x="528" y="84" text-anchor="middle" font-size="12" fill="var(--muted)">everything else — infections,</text>
-<text x="528" y="100" text-anchor="middle" font-size="12" fill="var(--muted)">chronic, severe, worsening</text>
-<text x="528" y="126" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--clay)">a plant never buys delay</text>
-<text x="528" y="146" text-anchor="middle" font-size="12" fill="var(--muted)">babies: pediatrician first, always</text>
-</svg>
-<figcaption>The three steps — the course's safety architecture. When in doubt, the staircase only ever goes up.</figcaption>
-</figure>
+```diagram three-steps-staircase
+aria: "The three steps as a staircase: step one, food; step two, support; step three, the doctor"
+t1: "1 · Food"
+t2: "kitchen-strength wellbeing —"
+t3: "most of this course lives here"
+t4: "2 · Support"
+t5: "short and focused, for the minor"
+t6: "and self-limiting — with real rules:"
+t7: "dose, duration, who it's for"
+t8: "3 · The doctor"
+t9: "everything else — infections,"
+t10: "chronic, severe, worsening"
+t11: "a plant never buys delay"
+t12: "babies: pediatrician first, always"
+caption: "The three steps — the course's safety architecture. When in doubt, the staircase only ever goes up."
+```
 
 One more honest line, because our house rules put the Health domain in charge of all food claims: herbs are not a diet and not a substitute for one. No infusion outruns real food, real sleep, and daylight. The green shelf *adds* to a well-fed family; it rescues nothing.
 
@@ -88,33 +84,31 @@ Everything in this course gets tested the same way: **prepare, taste, observe, w
 
 Meet the course's spine — the thing you'll build for eleven chapters: the **green shelf**. A real shelf in your kitchen that will grow a preparation at a time: tonight a first jar; an infusion station by chapter 3; ten labeled herb jars by chapter 4; a tincture quietly maturing from chapter 5; calendula oil from chapter 6; your own dried harvest by chapter 8. Chapter 11 stands you in front of the finished shelf and asks whether it kept this chapter's promise.
 
-<figure class="diagram">
-<svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Timeline of the green shelf: first jar in chapter 1, infusion station in chapter 3, ten jars in chapter 4, a tincture from chapter 5, calendula oil in chapter 6, your own harvest by chapter 8, the finished shelf in chapter 11">
-<line x1="30" y1="105" x2="610" y2="105" stroke="var(--line)" stroke-width="3"/>
-<circle cx="60" cy="105" r="15" fill="var(--sage)"/><text x="60" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--on-accent)">1</text>
-<text x="60" y="72" text-anchor="middle" font-size="12.5" fill="var(--ink)">first jar</text>
-<text x="60" y="88" text-anchor="middle" font-size="12" fill="var(--muted)">tonight</text>
-<circle cx="150" cy="105" r="15" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/><text x="150" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">3</text>
-<text x="150" y="140" text-anchor="middle" font-size="12.5" fill="var(--ink)">infusion</text>
-<text x="150" y="156" text-anchor="middle" font-size="12.5" fill="var(--ink)">station</text>
-<circle cx="240" cy="105" r="15" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/><text x="240" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">4</text>
-<text x="240" y="72" text-anchor="middle" font-size="12.5" fill="var(--ink)">ten labeled</text>
-<text x="240" y="88" text-anchor="middle" font-size="12.5" fill="var(--ink)">herb jars</text>
-<circle cx="330" cy="105" r="15" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/><text x="330" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">5</text>
-<text x="330" y="140" text-anchor="middle" font-size="12.5" fill="var(--ink)">a tincture,</text>
-<text x="330" y="156" text-anchor="middle" font-size="12.5" fill="var(--ink)">maturing</text>
-<circle cx="420" cy="105" r="15" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/><text x="420" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">6</text>
-<text x="420" y="72" text-anchor="middle" font-size="12.5" fill="var(--ink)">calendula</text>
-<text x="420" y="88" text-anchor="middle" font-size="12.5" fill="var(--ink)">oil</text>
-<circle cx="510" cy="105" r="15" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/><text x="510" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">8</text>
-<text x="510" y="140" text-anchor="middle" font-size="12.5" fill="var(--ink)">your own</text>
-<text x="510" y="156" text-anchor="middle" font-size="12.5" fill="var(--ink)">dried harvest</text>
-<circle cx="592" cy="105" r="15" fill="var(--sage)"/><text x="592" y="110" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--on-accent)">11</text>
-<text x="592" y="72" text-anchor="middle" font-size="12.5" fill="var(--ink)">the finished</text>
-<text x="592" y="88" text-anchor="middle" font-size="12.5" fill="var(--ink)">shelf</text>
-</svg>
-<figcaption>The green shelf, chapter by chapter — the artifact this whole course builds, one preparation at a time.</figcaption>
-</figure>
+```diagram green-shelf-timeline
+aria: "Timeline of the green shelf: first jar in chapter 1, infusion station in chapter 3, ten jars in chapter 4, a tincture from chapter 5, calendula oil in chapter 6, your own harvest by chapter 8, the finished shelf in chapter 11"
+t1: "1"
+t2: "first jar"
+t3: "tonight"
+t4: "3"
+t5: "infusion"
+t6: "station"
+t7: "4"
+t8: "ten labeled"
+t9: "herb jars"
+t10: "5"
+t11: "a tincture,"
+t12: "maturing"
+t13: "6"
+t14: "calendula"
+t15: "oil"
+t16: "8"
+t17: "your own"
+t18: "dried harvest"
+t19: "11"
+t20: "the finished"
+t21: "shelf"
+caption: "The green shelf, chapter by chapter — the artifact this whole course builds, one preparation at a time."
+```
 
 And here is tonight's first brick, worked through completely — **the real chamomile infusion**:
 

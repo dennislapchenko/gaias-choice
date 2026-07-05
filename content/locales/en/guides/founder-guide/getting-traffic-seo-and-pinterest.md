@@ -109,32 +109,23 @@ and social previews don't run JS at all. Concretely missing today:
 - Every month, **update one old piece** — freshness plus depth on existing
   URLs often beats a new URL.
 
-<figure class="diagram">
-<svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A qualitative chart of traffic over the first twelve months: Pinterest shows small life within weeks; search stays near zero for months, then compounds once thirty to fifty pieces are published; most sites quit during the flat months">
-<rect x="60" y="36" width="220" height="214" rx="8" fill="var(--sand-2)"/>
-<text x="170" y="196" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">the flat months —</text>
-<text x="170" y="212" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">where most sites quit</text>
-<line x1="60" y1="250" x2="620" y2="250" stroke="var(--ink)" stroke-width="2"/>
-<line x1="60" y1="250" x2="60" y2="30" stroke="var(--ink)" stroke-width="2"/>
-<text x="340" y="278" text-anchor="middle" font-size="12.5" fill="var(--muted)">months publishing weekly →</text>
-<text x="44" y="140" text-anchor="middle" font-size="12.5" fill="var(--muted)" transform="rotate(-90 44 140)">visitors</text>
-<text x="160" y="266" text-anchor="middle" font-size="12" fill="var(--muted)">3</text>
-<text x="300" y="266" text-anchor="middle" font-size="12" fill="var(--muted)">6</text>
-<text x="460" y="266" text-anchor="middle" font-size="12" fill="var(--muted)">9</text>
-<text x="606" y="266" text-anchor="middle" font-size="12" fill="var(--muted)">12</text>
-<path d="M60 248 C 160 246, 260 244, 320 238 C 420 228, 520 220, 612 214" fill="none" stroke="var(--clay)" stroke-width="2.5"/>
-<path d="M60 249 C 180 248, 280 247, 340 240 C 420 230, 500 160, 612 60" fill="none" stroke="var(--sage)" stroke-width="3"/>
-<line x1="400" y1="250" x2="400" y2="120" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 5"/>
-<text x="408" y="132" font-size="12" font-style="italic" fill="var(--muted)">~30–50 solid pieces:</text>
-<text x="408" y="148" font-size="12" font-style="italic" fill="var(--muted)">search starts taking</text>
-<text x="408" y="164" font-size="12" font-style="italic" fill="var(--muted)">the site seriously</text>
-<line x1="80" y1="40" x2="112" y2="40" stroke="var(--sage)" stroke-width="3"/>
-<text x="120" y="45" font-size="12.5" fill="var(--ink)">Google search</text>
-<line x1="80" y1="62" x2="112" y2="62" stroke="var(--clay)" stroke-width="2.5"/>
-<text x="120" y="67" font-size="12.5" fill="var(--ink)">Pinterest</text>
-</svg>
-<figcaption>Not a forecast — the shape of the game: Pinterest twitches first, search compounds late, and the flat months are a phase, not a verdict.</figcaption>
-</figure>
+```diagram traffic-flat-months
+aria: "A qualitative chart of traffic over the first twelve months: Pinterest shows small life within weeks; search stays near zero for months, then compounds once thirty to fifty pieces are published; most sites quit during the flat months"
+t1: "the flat months —"
+t2: "where most sites quit"
+t3: "months publishing weekly →"
+t4: "visitors"
+t5: "3"
+t6: "6"
+t7: "9"
+t8: "12"
+t9: "~30–50 solid pieces:"
+t10: "search starts taking"
+t11: "the site seriously"
+t12: "Google search"
+t13: "Pinterest"
+caption: "Not a forecast — the shape of the game: Pinterest twitches first, search compounds late, and the flat months are a phase, not a verdict."
+```
 
 One more reason patience is structural rather than decorative: joining
 affiliate programs before there's traffic doesn't just earn nothing — it can

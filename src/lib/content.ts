@@ -30,6 +30,62 @@ function slugify(text: string): string {
   )
 }
 
+const escapeHtml = (s: string): string =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
+// Shared diagram templates: one SVG per diagram in content/shared/diagrams/,
+// with {{slot}} tokens where locale text goes. Guides embed them via a
+// ```diagram <name> fenced block whose YAML body supplies the slot values
+// (including `aria` and `caption`) — so geometry lives once for all locales.
+const diagramModules = import.meta.glob('../../content/shared/diagrams/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>
+
+const diagramTemplates: Record<string, string> = {}
+for (const [path, raw] of Object.entries(diagramModules)) {
+  const name = /([^/]+)\.svg$/.exec(path)?.[1] ?? path
+  diagramTemplates[name] = raw.trim()
+}
+
+// SVG ids (arrow markers) are document-global; suffixing per instance keeps
+// them unique however many diagrams share a page or a template.
+let diagramInstance = 0
+
+/** A visible-in-page error beats a thrown one, which would blank the whole SPA. */
+const diagramError = (message: string): string => {
+  console.error(`[diagram] ${message}`)
+  return `<figure class="diagram"><figcaption>⚠ ${escapeHtml(message)}</figcaption></figure>\n`
+}
+
+function renderDiagram(name: string, yamlBody: string): string {
+  const template = diagramTemplates[name]
+  if (!template) return diagramError(`unknown template "${name}" — expected content/shared/diagrams/${name}.svg`)
+  let slots: Record<string, unknown>
+  try {
+    slots = (parseYaml(yamlBody) as Record<string, unknown>) ?? {}
+  } catch (err) {
+    return diagramError(`"${name}": bad YAML in slot block — ${String(err)}`)
+  }
+  const missing: string[] = []
+  const suffix = `-i${++diagramInstance}`
+  const svg = template
+    .replace(/id="([^"]+)"/g, (_, id: string) => `id="${id}${suffix}"`)
+    .replace(/url\(#([^)]+)\)/g, (_, id: string) => `url(#${id}${suffix})`)
+    .replace(/\{\{([\w-]+)\}\}/g, (_, key: string) => {
+      const value = slots[key]
+      if (typeof value !== 'string') {
+        missing.push(key)
+        return ''
+      }
+      return escapeHtml(value)
+    })
+  if (missing.length > 0) return diagramError(`"${name}": missing slot(s) ${missing.join(', ')}`)
+  if (typeof slots.caption !== 'string') return diagramError(`"${name}": missing "caption" slot`)
+  return `<figure class="diagram">\n${svg}\n<figcaption>${escapeHtml(slots.caption)}</figcaption>\n</figure>\n`
+}
+
 /**
  * Builds a `marked` renderer that stamps h2/h3 with stable, deduped slug ids
  * (e.g. `#setup`, `#setup-2`) so a per-page table of contents can link/scroll
@@ -48,6 +104,11 @@ function headingIdRenderer(): Renderer {
     seen.set(base, count + 1)
     const id = count === 0 ? base : `${base}-${count + 1}`
     return `<h${depth} id="${id}">${text}</h${depth}>\n`
+  }
+  renderer.code = function (token) {
+    const match = /^diagram\s+(\S+)\s*$/.exec(token.lang ?? '')
+    if (match) return renderDiagram(match[1], token.text)
+    return Renderer.prototype.code.call(this, token)
   }
   return renderer
 }

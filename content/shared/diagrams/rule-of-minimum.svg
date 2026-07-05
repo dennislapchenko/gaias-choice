@@ -1,0 +1,25 @@
+<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs><marker id="arr-min" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<rect x="16" y="36" width="170" height="60" rx="12" fill="var(--mint)"/>
+<text x="101" y="61" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">{{t1}}</text>
+<text x="101" y="81" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">{{t2}}</text>
+<line x1="186" y1="66" x2="228" y2="66" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-min)"/>
+<rect x="236" y="36" width="150" height="60" rx="12" fill="var(--peach)"/>
+<text x="311" y="61" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">{{t3}}</text>
+<text x="311" y="81" text-anchor="middle" font-size="12.5" fill="var(--muted)">{{t4}}</text>
+<line x1="386" y1="66" x2="428" y2="66" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-min)"/>
+<rect x="436" y="36" width="120" height="60" rx="12" fill="var(--lilac)"/>
+<text x="496" y="72" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">{{t5}}</text>
+<line x1="496" y1="96" x2="496" y2="142" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-min)"/>
+<text x="508" y="124" font-size="12.5" font-style="italic" fill="var(--muted)">{{t6}}</text>
+<rect x="436" y="150" width="120" height="56" rx="12" fill="var(--sage)"/>
+<text x="496" y="175" text-anchor="middle" font-size="14" font-weight="700" fill="var(--on-accent)">{{t7}}</text>
+<text x="496" y="193" text-anchor="middle" font-size="12" fill="var(--on-accent)">{{t8}}</text>
+<path d="M436 86 C 380 130, 340 150, 302 162" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-min)"/>
+<text x="426" y="114" text-anchor="end" font-size="12.5" font-style="italic" fill="var(--muted)">{{t9}}</text>
+<rect x="40" y="150" width="256" height="56" rx="12" fill="var(--sand-2)" stroke="var(--clay)" stroke-width="1.5"/>
+<text x="168" y="173" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">{{t10}}</text>
+<text x="168" y="192" text-anchor="middle" font-size="12.5" fill="var(--muted)">{{t11}}</text>
+<path d="M60 150 C 48 128, 48 116, 68 100" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#arr-min)"/>
+<text x="20" y="236" font-size="12" font-style="italic" fill="var(--muted)">{{t12}}</text>
+</svg>

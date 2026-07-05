@@ -22,32 +22,19 @@ tags: [founder-guide, launch, checklist]
 охраняет программы главы 4. Пройдите его сверху вниз, честно, без «сойдёт и
 так».
 
-<figure class="diagram">
-<svg viewBox="0 0 640 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Шесть разделов чек-листа — идентичность и правда, контент, домен и инфраструктура, документы и соответствие, измерение, дистрибуция — сходятся к одним воротам: тесту тихого запуска «поверил бы я этому, если бы это сделал незнакомец?», и только затем — запуск">
-<defs><marker id="arr-gate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
-<rect x="16" y="20" width="192" height="44" rx="10" fill="var(--mint)"/>
-<text x="112" y="47" text-anchor="middle" font-size="13" fill="var(--ink)">1 · Идентичность и правда</text>
-<rect x="16" y="76" width="192" height="44" rx="10" fill="var(--mint)"/>
-<text x="112" y="103" text-anchor="middle" font-size="13" fill="var(--ink)">2 · Контент</text>
-<rect x="224" y="20" width="192" height="44" rx="10" fill="var(--peach)"/>
-<text x="320" y="47" text-anchor="middle" font-size="13" fill="var(--ink)">3 · Домен и инфраструктура</text>
-<rect x="224" y="76" width="192" height="44" rx="10" fill="var(--peach)"/>
-<text x="320" y="103" text-anchor="middle" font-size="13" fill="var(--ink)">4 · Документы и программы</text>
-<rect x="432" y="20" width="192" height="44" rx="10" fill="var(--lilac)"/>
-<text x="528" y="47" text-anchor="middle" font-size="13" fill="var(--ink)">5 · Измерение</text>
-<rect x="432" y="76" width="192" height="44" rx="10" fill="var(--lilac)"/>
-<text x="528" y="103" text-anchor="middle" font-size="13" fill="var(--ink)">6 · Дистрибуция</text>
-<line x1="112" y1="120" x2="240" y2="160" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-gate)"/>
-<line x1="320" y1="120" x2="320" y2="158" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-gate)"/>
-<line x1="528" y1="120" x2="400" y2="160" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-gate)"/>
-<rect x="150" y="166" width="340" height="66" rx="12" fill="var(--sage)"/>
-<text x="320" y="193" text-anchor="middle" font-size="14" font-weight="700" fill="var(--on-accent)">7 · Тест тихого запуска</text>
-<text x="320" y="215" text-anchor="middle" font-size="12.5" font-style="italic" fill="var(--on-accent)">«Поверил бы я этому, если бы это сделал незнакомец?»</text>
-<line x1="320" y1="232" x2="320" y2="258" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-gate)"/>
-<text x="336" y="278" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">запуск — тихо</text>
-</svg>
-<figcaption>Шесть разделов, один экзамен. Страница, проваливающая тест незнакомца, чинится или удаляется — ворота не торгуются.</figcaption>
-</figure>
+```diagram launch-gate-funnel
+aria: "Шесть разделов чек-листа — идентичность и правда, контент, домен и инфраструктура, документы и соответствие, измерение, дистрибуция — сходятся к одним воротам: тесту тихого запуска «поверил бы я этому, если бы это сделал незнакомец?», и только затем — запуск"
+t1: "1 · Идентичность и правда"
+t2: "2 · Контент"
+t3: "3 · Домен и инфраструктура"
+t4: "4 · Документы и программы"
+t5: "5 · Измерение"
+t6: "6 · Дистрибуция"
+t7: "7 · Тест тихого запуска"
+t8: "«Поверил бы я этому, если бы это сделал незнакомец?»"
+t9: "запуск — тихо"
+caption: "Шесть разделов, один экзамен. Страница, проваливающая тест незнакомца, чинится или удаляется — ворота не торгуются."
+```
 
 ## 1. Идентичность и правда
 

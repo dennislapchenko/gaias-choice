@@ -30,34 +30,26 @@ tags: [homeopathy]
 
 А вот и обещанная карта всей территории — где вы стоите и как выглядит дорога впереди:
 
-<figure class="diagram">
-<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Карта курса: Врата — глава 1, Путь — главы 2–9, Вершина — главы 10 и 11">
-<defs><marker id="arr-map" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
-<rect x="16" y="118" width="86" height="26" rx="13" fill="var(--sage)"/>
-<text x="59" y="135" text-anchor="middle" font-size="12.5" fill="var(--on-accent)">вы здесь</text>
-<rect x="16" y="152" width="160" height="88" rx="12" fill="var(--mint)"/>
-<text x="96" y="178" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">Врата</text>
-<text x="96" y="196" text-anchor="middle" font-size="12.5" fill="var(--muted)">глава 1</text>
-<text x="96" y="214" text-anchor="middle" font-size="12.5" fill="var(--ink)">вся территория в миниатюре</text>
-<text x="96" y="230" text-anchor="middle" font-size="12.5" fill="var(--ink)">+ первый настоящий шаг</text>
-<line x1="176" y1="196" x2="224" y2="196" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-map)"/>
-<rect x="232" y="106" width="240" height="134" rx="12" fill="var(--peach)"/>
-<text x="352" y="132" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">Путь</text>
-<text x="352" y="150" text-anchor="middle" font-size="12.5" fill="var(--muted)">главы 2–9</text>
-<text x="352" y="170" text-anchor="middle" font-size="12.5" fill="var(--ink)">одно опорное умение</text>
-<text x="352" y="186" text-anchor="middle" font-size="12.5" fill="var(--ink)">на главу</text>
-<text x="352" y="212" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">полный рабочий фундамент</text>
-<text x="352" y="228" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">к концу главы 9</text>
-<line x1="472" y1="160" x2="520" y2="160" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-map)"/>
-<rect x="528" y="56" width="96" height="184" rx="12" fill="var(--lilac)"/>
-<text x="576" y="86" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">Вершина</text>
-<text x="576" y="104" text-anchor="middle" font-size="12.5" fill="var(--muted)">гл. 10–11</text>
-<text x="576" y="132" text-anchor="middle" font-size="12.5" fill="var(--ink)">синтез,</text>
-<text x="576" y="148" text-anchor="middle" font-size="12.5" fill="var(--ink)">без новых</text>
-<text x="576" y="164" text-anchor="middle" font-size="12.5" fill="var(--ink)">основ</text>
-</svg>
-<figcaption>Форма курса: одна глава Врат, восемь — Пути, две — Вершины. После главы 9 можно честно остановиться — фундамент уже рабочий.</figcaption>
-</figure>
+```diagram homeopathy-course-map
+aria: "Карта курса: Врата — глава 1, Путь — главы 2–9, Вершина — главы 10 и 11"
+t1: "вы здесь"
+t2: "Врата"
+t3: "глава 1"
+t4: "вся территория в миниатюре"
+t5: "+ первый настоящий шаг"
+t6: "Путь"
+t7: "главы 2–9"
+t8: "одно опорное умение"
+t9: "на главу"
+t10: "полный рабочий фундамент"
+t11: "к концу главы 9"
+t12: "Вершина"
+t13: "гл. 10–11"
+t14: "синтез,"
+t15: "без новых"
+t16: "основ"
+caption: "Форма курса: одна глава Врат, восемь — Пути, две — Вершины. После главы 9 можно честно остановиться — фундамент уже рабочий."
+```
 
 ## Суть
 
@@ -69,32 +61,21 @@ tags: [homeopathy]
 
 Заметьте, чем принцип **не** является. Это не «травки» — травничество работает с материальными дозами целых растений, про это у нас отдельный курс. И это не «натуральное — значит безопасное — значит работает». Это одна конкретная идея: совместить известную картину средства с картиной болезни конкретного человека.
 
-<figure class="diagram">
-<svg viewBox="0 0 640 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Схема: у здорового человека вещество вызывает картину симптомов; у больного, за которым внимательно наблюдают, есть своя картина; если картины похожи — даётся минимальная доза подходящего средства">
-<defs><marker id="arr-lcl" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
-<rect x="16" y="30" width="180" height="66" rx="12" fill="var(--mint)"/>
-<text x="106" y="57" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Здоровый человек</text>
-<text x="106" y="77" text-anchor="middle" font-size="12.5" fill="var(--muted)">принимает вещество</text>
-<line x1="196" y1="63" x2="248" y2="63" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-lcl)"/>
-<rect x="256" y="30" width="176" height="66" rx="12" fill="var(--peach)"/>
-<text x="344" y="57" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Картина вещества</text>
-<text x="344" y="77" text-anchor="middle" font-size="12.5" fill="var(--muted)">записана: слёзы, течёт нос</text>
-<rect x="16" y="154" width="180" height="66" rx="12" fill="var(--mint)"/>
-<text x="106" y="181" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Больной</text>
-<text x="106" y="201" text-anchor="middle" font-size="12.5" fill="var(--muted)">наблюдение — ваш журнал</text>
-<line x1="196" y1="187" x2="248" y2="187" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-lcl)"/>
-<rect x="256" y="154" width="176" height="66" rx="12" fill="var(--peach)"/>
-<text x="344" y="181" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Картина болезни</text>
-<text x="344" y="201" text-anchor="middle" font-size="12.5" fill="var(--muted)">глаза слезятся, из носа льёт…</text>
-<line x1="432" y1="70" x2="490" y2="105" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-lcl)"/>
-<line x1="432" y1="180" x2="490" y2="145" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-lcl)"/>
-<text x="462" y="132" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">похожи?</text>
-<rect x="496" y="92" width="128" height="66" rx="12" fill="var(--sage)"/>
-<text x="560" y="119" text-anchor="middle" font-size="14" font-weight="700" fill="var(--on-accent)">Средство</text>
-<text x="560" y="139" text-anchor="middle" font-size="12.5" fill="var(--on-accent)">в минимальной дозе</text>
-</svg>
-<figcaption>Подобное — подобным, одним взглядом: картина, которую вещество создаёт, и картина, которую показывает больной. Весь метод держится на их сходстве.</figcaption>
-</figure>
+```diagram like-cures-like-flow
+aria: "Схема: у здорового человека вещество вызывает картину симптомов; у больного, за которым внимательно наблюдают, есть своя картина; если картины похожи — даётся минимальная доза подходящего средства"
+t1: "Здоровый человек"
+t2: "принимает вещество"
+t3: "Картина вещества"
+t4: "записана: слёзы, течёт нос"
+t5: "Больной"
+t6: "наблюдение — ваш журнал"
+t7: "Картина болезни"
+t8: "глаза слезятся, из носа льёт…"
+t9: "похожи?"
+t10: "Средство"
+t11: "в минимальной дозе"
+caption: "Подобное — подобным, одним взглядом: картина, которую вещество создаёт, и картина, которую показывает больной. Весь метод держится на их сходстве."
+```
 
 ### Картина, а не диагноз
 

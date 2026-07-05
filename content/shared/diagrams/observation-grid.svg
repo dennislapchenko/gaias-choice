@@ -1,0 +1,24 @@
+<svg viewBox="0 0 640 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<rect x="20" y="16" width="600" height="288" rx="14" fill="var(--white)" stroke="var(--line)" stroke-width="2"/>
+<line x1="320" y1="16" x2="320" y2="304" stroke="var(--line)" stroke-width="2" stroke-dasharray="6 6"/>
+<line x1="20" y1="112" x2="620" y2="112" stroke="var(--line)" stroke-width="1.5"/>
+<line x1="20" y1="208" x2="620" y2="208" stroke="var(--line)" stroke-width="1.5"/>
+<text x="40" y="46" font-size="14.5" font-weight="700" fill="var(--ink)">{{t1}}</text>
+<text x="40" y="66" font-size="12" fill="var(--muted)">{{t2}}</text>
+<text x="340" y="46" font-size="14.5" font-weight="700" fill="var(--ink)">{{t3}}</text>
+<text x="340" y="66" font-size="12" fill="var(--muted)">{{t4}}</text>
+<text x="40" y="142" font-size="14.5" font-weight="700" fill="var(--ink)">{{t5}}</text>
+<text x="40" y="162" font-size="12" fill="var(--muted)">{{t6}}</text>
+<text x="340" y="142" font-size="14.5" font-weight="700" fill="var(--ink)">{{t7}}</text>
+<text x="340" y="162" font-size="12" fill="var(--muted)">{{t8}}</text>
+<text x="40" y="238" font-size="14.5" font-weight="700" fill="var(--ink)">{{t9}}</text>
+<text x="40" y="258" font-size="12" fill="var(--muted)">{{t10}}</text>
+<text x="340" y="238" font-size="14.5" font-weight="700" fill="var(--ink)">{{t11}}</text>
+<text x="340" y="258" font-size="12" fill="var(--muted)">{{t12}}</text>
+<line x1="40" y1="84" x2="290" y2="84" stroke="var(--sand-2)" stroke-width="2"/>
+<line x1="340" y1="84" x2="590" y2="84" stroke="var(--sand-2)" stroke-width="2"/>
+<line x1="40" y1="180" x2="290" y2="180" stroke="var(--sand-2)" stroke-width="2"/>
+<line x1="340" y1="180" x2="590" y2="180" stroke="var(--sand-2)" stroke-width="2"/>
+<line x1="40" y1="276" x2="290" y2="276" stroke="var(--sand-2)" stroke-width="2"/>
+<line x1="340" y1="276" x2="590" y2="276" stroke="var(--sand-2)" stroke-width="2"/>
+</svg>
