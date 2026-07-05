@@ -1027,15 +1027,23 @@ h1 {
 .detail-layout {
   display: grid;
   grid-template-columns: minmax(0, 760px) 220px;
+  grid-template-areas:
+    'nav nav'
+    'article toc';
   justify-content: center;
   align-items: start;
   gap: 32px;
 }
+.detail-nav {
+  grid-area: nav;
+}
 .detail-layout .detail {
+  grid-area: article;
   max-width: none;
   margin: 0;
 }
 .toc {
+  grid-area: toc;
   position: sticky;
   top: 84px;
 }
@@ -1082,6 +1090,11 @@ h1 {
   .detail-layout {
     display: flex;
     flex-direction: column;
+  }
+  .detail-nav {
+    order: -2;
+    max-width: 760px;
+    margin: 0 auto;
   }
   .detail-layout .detail {
     max-width: 760px;

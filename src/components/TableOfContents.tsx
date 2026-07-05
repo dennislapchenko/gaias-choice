@@ -1,23 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useI18n } from '../lib/i18n'
 
-// True below the point where the detail layout collapses to a single column
-// (kept in sync with the `max-width: 900px` rule in styles.css, same
-// breakpoint the site-wide sidebar uses — see components/Sidebar.tsx).
-function useIsNarrow() {
-  const query = '(max-width: 900px)'
-  const [narrow, setNarrow] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia(query).matches,
-  )
-  useEffect(() => {
-    const mq = window.matchMedia(query)
-    const onChange = () => setNarrow(mq.matches)
-    mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
-  }, [])
-  return narrow
-}
-
 interface TocItem {
   id: string
   text: string
@@ -49,7 +32,6 @@ export default function TableOfContents({ html }: { html: string }) {
   const { t } = useI18n()
   const items = useMemo(() => extractHeadings(html), [html])
   const [activeId, setActiveId] = useState<string | null>(null)
-  const narrow = useIsNarrow()
 
   useEffect(() => {
     if (items.length < 3) return
@@ -85,7 +67,7 @@ export default function TableOfContents({ html }: { html: string }) {
   if (items.length < 3) return null
 
   return (
-    <details className="toc" open={!narrow}>
+    <details className="toc" open>
       <summary className="toc-toggle">{t('toc.toggle')}</summary>
       <nav className="toc-nav" aria-label={t('toc.ariaLabel')}>
         <ul className="toc-list">

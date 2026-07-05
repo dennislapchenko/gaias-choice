@@ -140,8 +140,14 @@ Optional `chapter: N` orders guides within an epic for course sequencing
 date-descending order (`Guides.tsx`). `GuideCard`/`GuideDetail` show a small
 "Chapter N" label when set. Guide detail pages (`GuideDetail.tsx`) also render
 a page-local table of contents from the guide's `h2`/`h3` headings — a sticky
-column next to the article on desktop, a collapsible toggle above it on
-mobile, only once a guide has 3+ headings (`components/TableOfContents.tsx`).
+column next to the article on desktop, a `<details open>` block on mobile
+(expanded by default, still collapsible by tapping the summary), only once a
+guide has 3+ headings (`components/TableOfContents.tsx`). `.detail-layout`
+(`styles.css`) uses `grid-template-areas` with three regions — `nav` (the
+"Back to Learn" link + tags, its own `.detail-nav` wrapper), `article`, and
+`toc` — so the back-link can span full width above the two-column row on
+desktop while, on mobile (`display: flex` + `order`), it renders above the
+TOC, which renders above the article body.
 Heading anchor ids are stamped at markdown-render time by a custom `marked`
 renderer in `lib/content.ts` (`headingIdRenderer`), slugified with Cyrillic
 transliteration so Russian headings still get stable, readable anchors. See

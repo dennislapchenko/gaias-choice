@@ -14,7 +14,7 @@ export default function GuideDetail() {
 
   return (
     <div className="detail-layout">
-      <article className="detail">
+      <div className="detail-nav">
         <Link to="/guides" className="back-link">
           {t('guideDetail.backLink')}
         </Link>
@@ -22,6 +22,8 @@ export default function GuideDetail() {
         {guide.chapter != null && (
           <span className="tag">{t('guides.chapter', { n: guide.chapter })}</span>
         )}
+      </div>
+      <article className="detail">
         <h1>{guide.title}</h1>
         <div className="detail-meta">
           <span className="muted">{guide.date}</span>
