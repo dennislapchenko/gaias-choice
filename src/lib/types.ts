@@ -11,18 +11,27 @@ export interface ValueItem {
 
 /** One entry in the left-rail widget list — `type` maps to a component in Sidebar.tsx's registry. */
 export interface SidebarWidget {
-  type: string // mission | values | almanac | … (unknown types are skipped)
+  type: string // about | missionValues | respected | almanac | … (unknown types are skipped)
+}
+
+/** One teacher/influence in the sidebar "Respected" panel. The substance behind
+ *  each entry lives in context/ideology-context.md — keep the two in sync. */
+export interface RespectedPerson {
+  name: string // original spelling in every locale — people's names are never translated
+  bio: string // shortest who-they-are, 1–2 sentences
+  why: string // the one deep reason they're respected here
+  url?: string // their website/social page — the detail card links out to it
 }
 
 /**
- * A review that's queued but not written yet — rendered as a flat "in the works"
- * strip under the Reviews page subtitle (UpcomingReviews.tsx). Not a review:
- * no rating, no affiliate tag — just the product name + its Amazon listing so
- * the queue is public. Remove an entry once its real review ships.
+ * Something queued but not written yet — rendered as the "in the works" rail
+ * (Upcoming.tsx) on /reviews (`upcoming:`) and /journal (`upcomingJournal:`).
+ * Not real content: no rating, no date — just the name, plus a reference link
+ * for products. Remove an entry once the real review/entry ships.
  */
 export interface UpcomingItem {
   name: string
-  url: string // product listing (Amazon, for now) — reference only, not an affiliate link
+  url?: string // product listing (Amazon, for now) — reference only, not an affiliate link; journal ideas have none
 }
 
 /**
@@ -64,9 +73,11 @@ export interface SiteConfig {
   mission: string
   heroImage?: string
   values: ValueItem[]
+  respected?: RespectedPerson[] // teachers/influences listed in the sidebar "Respected" panel
   sidebar?: SidebarWidget[] // left-rail composition + order; falls back to a default when absent
   epics?: GuideEpic[] // themed Compass collections shown as thumbnails on /compass
   upcoming?: UpcomingItem[] // reviews queued but not yet written, shown on /reviews
+  upcomingJournal?: UpcomingItem[] // journal entries planned but not yet written, shown on /journal (no urls)
   support?: SupportConfig // payment methods for /support; non-localized, so authored in en/ only and inherited by other locales (see getSite)
   nav: NavItem[]
   footerNav?: NavItem[]

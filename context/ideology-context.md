@@ -291,3 +291,8 @@ Append under the fitting section (or create one), keeping this shape:
 
 Then add one line to the "shared threads" section **only if** the new person
 genuinely reinforces or adds a thread.
+
+Also add the person to the sidebar "Respected" panel — the `respected:` list in
+`content/locales/{en,ru}/site.yaml` (name + shortest bio + the one deep reason
++ their site/social `url`; same order as this file; the name keeps its original
+spelling in every locale). That list is the public mirror of this one.

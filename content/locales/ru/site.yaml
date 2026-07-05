@@ -33,12 +33,56 @@ values:
     icon: mindful
     text: Меньше вещей, но лучше — это меньше отходов, более лёгкая дорога и меньший след. Осознанность — не лозунг, а то, что реально проверяется в поездке.
 
+# Учителя, стоящие за мировоззрением сайта, — панель «Кого мы уважаем» в левой
+# колонке. Суть (идеи, оговорки) — в context/ideology-context.md; держим списки
+# синхронными, порядок тот же. Имена людей и названия книг НЕ переводим
+# (глоссарий do-not-translate) — во всех локалях оригинальное написание.
+respected:
+  - name: Paul Chek
+    bio: Пионер холистического здоровья, основатель CHEK Institute.
+    why: Взвешивает каждый выбор сразу на четырёх весах — сон, еда, движение, радость — и первым делом спрашивает, какой мечте служат твои ежедневные привычки.
+    url: "https://chekinstitute.com"
+  - name: Dave Asprey
+    bio: Основатель биохакинга и Bulletproof.
+    why: Сначала убери яд, потом добавляй умное — и верь измерению, а не догме, даже собственной.
+    url: "https://daveasprey.com"
+  - name: Daniel Reid
+    bio: Автор "The Tao of Health, Sex and Longevity"; открыл Западу даосскую практику здоровья и сочетание продуктов.
+    why: Пищеварение для него — ремесло, которое тело уже знает — ешь проще и суди собственным желудком.
+    url: "https://www.danreid.org"
+  - name: Stephen Harrod Buhner
+    bio: Травник, автор "Plant Intelligence and the Imaginal Realm".
+    why: Понимает Гею буквально — мир жив и разумен, а сердце — орган, которым его воспринимают.
+    url: "https://www.stephenharrodbuhner.com"
+  - name: Konstantin Daragan
+    bio: Астролог; его строгая эфемеридная техника лежит в основе нашего альманаха.
+    why: Если входишь в немейнстримную область — входи на самом серьёзном её уровне, или не входи вовсе.
+    url: "https://astrology-online.ru"
+  - name: Peter Ralston
+    bio: Первый неазиат — чемпион мира по полноконтактным боевым искусствам (1978), основатель Cheng Hsin; автор "The Book of Not Knowing".
+    why: Незнание — честная точка отсчёта — никогда не принимай концепцию за опыт.
+    url: "https://chenghsin.com"
+  - name: Mooji
+    bio: Учитель недвойственности (Anthony Paul Moo-Young).
+    why: «Будь никем и ничем — и посмотри, потеряешь ли что-то, кроме иллюзий». Корень нашего «меньше, но лучше».
+    url: "https://mooji.org"
+  - name: Rudolf Steiner
+    bio: Австрийский философ (1861–1925), основатель вальдорфской педагогики.
+    why: Среда и есть учебная программа — ребёнок впитывает весь мир вокруг, поэтому материалы и ритм никогда не мелочи.
+    url: "https://rsarchive.org"
+  - name: Teal Swan
+    bio: Современный учитель об эмоциях и травме.
+    why: Ребёнку нужно чувствовать, что его чувствуют, — настройка на ребёнка, а не управление им, и есть сердце родительства.
+    url: "https://tealswan.com"
+
 # Left-rail widgets, in render order. Each `type` maps to a collapsible panel in
-# src/components/Sidebar.tsx (about | missionValues | almanac). Reorder, drop, or
-# repeat entries here; adding a brand-new type needs a component in that file.
+# src/components/Sidebar.tsx (about | missionValues | respected | almanac).
+# Reorder, drop, or repeat entries here; adding a brand-new type needs a
+# component in that file.
 sidebar:
   - type: about
   - type: missionValues
+  - type: respected
   - type: almanac
 
 # Themed Compass collections shown as thumbnails at the top of /compass. A
@@ -78,6 +122,14 @@ upcoming:
     url: "https://www.amazon.de/-/en/dp/B0DCW69XXF?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_6"
   - name: Bubba Bear™ Baby Set with Suction Cup Bowl
     url: "https://www.amazon.de/-/en/dp/B08XXBC81T?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1"
+
+# Заметки в планах, ещё не написанные, — та же полоса «в работе», что и у
+# обзоров, на /journal. Без `url`: это идеи, а не товары. Заголовки локализуются
+# (это проза, не бренды; Bulletproof — бренд, остаётся). Удаляем запись, когда
+# выходит настоящая заметка.
+upcomingJournal:
+  - name: Bulletproof-кофе — взлёты и падения
+  - name: Тесная жизнь на 6 м² кемпера
 
 nav:
   - { label: Главная, path: / }

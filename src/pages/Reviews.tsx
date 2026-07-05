@@ -4,7 +4,7 @@ import { getProducts, getReviewTemplate, getSite } from '../lib/content'
 import { useI18n } from '../lib/i18n'
 import CopyButton from '../components/CopyButton'
 import ProductCard from '../components/ProductCard'
-import UpcomingReviews from '../components/UpcomingReviews'
+import Upcoming from '../components/Upcoming'
 
 const ALL = 'All'
 
@@ -63,7 +63,7 @@ export default function Reviews() {
           </div>
         </div>
 
-        <UpcomingReviews items={upcoming} />
+        <Upcoming title={t('reviews.upcomingTitle')} note={t('reviews.upcomingNote')} items={upcoming} />
       </div>
     </>
   )

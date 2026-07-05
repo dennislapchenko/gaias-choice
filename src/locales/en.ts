@@ -28,7 +28,7 @@ const en = {
   "reviews.lead": "Every item here has ridden with us for real miles — tested for materials, safety, and how it holds up to life on the road with a baby.",
   "reviews.filterAriaLabel": "Filter by category",
   "reviews.allCategory": "All",
-  "reviews.templateBtn": "Contribute!",
+  "reviews.templateBtn": "📝 Contribute!",
   "reviews.upcomingTitle": "In the works",
   "reviews.upcomingNote": "Gear we're testing next — queued, not yet reviewed.",
 
@@ -46,8 +46,10 @@ const en = {
   "journal.tag": "Journal",
   "journal.allYears": "All",
   "journal.yearsAriaLabel": "Filter by year",
-  "journal.templateBtn": "Contribute!",
+  "journal.templateBtn": "📝 Contribute!",
   "journal.empty": "No entries yet — the first notes are on their way.",
+  "journal.upcomingTitle": "In the works",
+  "journal.upcomingNote": "Entries we're living right now — queued, not yet written.",
 
   "toc.ariaLabel": "On this page",
   "toc.toggle": "On this page",
@@ -78,12 +80,14 @@ const en = {
   "astro.note": "Computed from live ephemeris · shown in your local time",
   "astro.cellAriaLabel": "{{day}}: {{events}}",
 
-  "sidebar.title": "Celestial Almanac",
+  "sidebar.title": "🌌 Celestial Almanac",
   "sidebar.intro": "Kak budto iz ust samogo Daragana",
   "sidebar.missionLabel": "Our mission",
   "sidebar.valuesLabel": "What we value",
-  "sidebar.missionValuesLabel": "Mission & Values",
-  "sidebar.aboutLabel": "About us",
+  "sidebar.missionValuesLabel": "⚖️ Mission & Values",
+  "sidebar.respectedLabel": "✊ Respected",
+  "sidebar.respectedVisit": "Their world ↗",
+  "sidebar.aboutLabel": "🌞 About us",
   "sidebar.aboutMore": "Our story →",
 
   "copy.copy": "Copy",

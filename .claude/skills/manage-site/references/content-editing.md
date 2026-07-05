@@ -117,9 +117,15 @@ from the road only, no invented trips, durations, or scenes (the standing rules
 above apply in full). Frontmatter: `title`, `excerpt`, `date`, optional `tags`,
 optional `image`. Flat folder (no epic subfolders), no code/route wiring — the
 file appears on `/journal` (newest first, filed under its year in the filter
-rail) and opens through the same table-of-contents detail layout as a Compass
+chips) and opens through the same table-of-contents detail layout as a Compass
 chapter. Use `##`/`###` headings so the TOC renders (3+ needed). RU entries in
 her voice (persona-context).
+
+**The "in the works" queue:** planned-but-unwritten entries live in
+`upcomingJournal:` in `site.yaml` (both locales; titles are localized prose,
+no urls) and render as the right-hand rail on `/journal` — same idea as the
+reviews `upcoming:` queue. Add an idea when it's real, delete it when the
+entry ships.
 
 **The "Contribute!" button** on `/journal` copies a generic, topic-agnostic
 scaffold — the single source is `content/shared/journal-template.<locale>.md`

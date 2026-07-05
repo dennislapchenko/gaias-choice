@@ -51,7 +51,8 @@ content/                 # ALL editable content (no code)
     README.md            # per-locale layout + the do-not-translate glossary
     en/                   # English — source of truth, always complete
       site.yaml           # name, tagline, description, bio, mission, nav, values,
-                          # heroImage, social, url, epics, upcoming, sidebar, support
+                          # respected, heroImage, social, url, epics, upcoming,
+                          # upcomingJournal, sidebar, support
                           # (support: is non-localized — en/ only, inherited via getSite)
       products/*.md       # reviews  → /reviews/<filename-without-.md>
       compass/<epic>/*.md # Compass course chapters, per-epic subfolders → /compass/<slug>
@@ -97,7 +98,7 @@ src/
     types.ts             # SiteConfig, Product, Guide, Page, Theme, AstroEvent
   components/            # Layout, Sidebar, AstroCalendar, ThemeSwitcher,
                          # LanguageSwitcher, ProductCard, CompassCard, CompassRow,
-                         # JournalRow, UpcomingReviews, Markdown, Rating,
+                         # JournalRow, Upcoming, Markdown, Rating,
                          # TableOfContents, CopyButton
   pages/                 # Home, Reviews, ReviewDetail, Compass, Journal,
                          # EntryDetail (shared Compass+Journal detail w/ TOC),
@@ -145,8 +146,8 @@ universal five-section body structure whose canonical source is
 `content/shared/review-template.<locale>.md` — the scaffold the "Contribute!"
 button on `/reviews` copies to the clipboard. The public queue of
 not-yet-written reviews is the `upcoming:` list in `site.yaml`, rendered as the
-"in the works" rail on `/reviews` — entries are `{name, url}` only, explicitly
-not reviews.
+"in the works" rail on `/reviews` (shared `Upcoming` component) — entries are
+`{name, url}` only, explicitly not reviews.
 
 **Compass** (`/compass`, `compass/<epic>/*.md`) — the site's **courses**
 section (user-facing "Compass" / «Путь») and the one **openly
@@ -185,8 +186,11 @@ computer-assisted** section, disclosed by the `compass.provenance` banner
 **Journal** (`/journal`, `journal/*.md`, flat) — the **human-written,
 date-ordered blog**, the honest counterpart to the Compass (provenance
 contract: SKILL.md #6). Frontmatter `title`, `excerpt`, `date`, optional
-`tags`/`image`; no per-entry wiring. Lists as plain text rows filterable by
-year; opens through `EntryDetail`. A "Contribute!" button on `/journal`
+`tags`/`image`; no per-entry wiring. The listing page shares the Reviews shell
+(same layout, year chips where Reviews has category chips via `?year=`, and an
+"in the works" rail from `site.yaml` `upcomingJournal:` — planned entry titles,
+no urls, localized); entries list as plain text rows and open through
+`EntryDetail`. A "Contribute!" button on `/journal`
 copies `content/shared/journal-template.<locale>.md`. The landing page
 surfaces it too: a hero "Read the Journal" button and a "Fresh from the
 Journal" section (latest 3 rows) in `Home.tsx`. The seed
@@ -328,9 +332,15 @@ via `useI18n()`.
 is a sticky vertical stack of **collapsible panels**; on phones
 (`@media (max-width: 900px)`) it rides **above** the content and renders as a
 `SidebarMobile` tab-row (one open at a time). `Sidebar.tsx`'s `PANELS` registry
-defines the panel types (`about`, `missionValues`, `almanac`); the composition +
-order are content-driven (`site.yaml` `sidebar:` list). Wiring details and the
-`/support` auto-open tie-in: the Sidebar row in `references/development.md`.
+defines the panel types (`about`, `missionValues`, `respected`, `almanac`); the
+composition + order are content-driven (`site.yaml` `sidebar:` list). The
+`respected` panel shows the teachers behind the worldview from `site.yaml`'s
+`respected:` list — surname chips over one detail card that links out to the
+person's `url:`; a display-layer mirror of `context/ideology-context.md`
+(same people, same order; adding an influence means updating both; names keep
+their original spelling in every locale). Wiring
+details and the `/support` auto-open tie-in: the Sidebar row in
+`references/development.md`.
 
 The almanac widget is `AstroCalendar.tsx`: a month grid where days with
 celestial events are marked with astrological glyphs; hovering/focusing/clicking

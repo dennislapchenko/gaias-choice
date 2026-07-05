@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactElement, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import AstroCalendar from './AstroCalendar'
 import { useI18n, type Locale } from '../lib/i18n'
@@ -97,6 +97,53 @@ function MissionValuesBody({ site, t }: BodyProps) {
   )
 }
 
+// The teachers behind the site's worldview (site.yaml `respected:`; substance
+// in context/ideology-context.md). Nine people would make a huge list, so the
+// panel is a cloud of surname chips over ONE detail card: pick a chip, read the
+// card. The card links out to the person's site when `url:` is set (names are
+// never translated, so chips/state keys are locale-stable).
+function RespectedBody({ site, t }: BodyProps) {
+  const people = site.respected ?? []
+  const [activeName, setActiveName] = useState<string | undefined>(undefined)
+  if (!people.length) return null
+  const active = people.find((p) => p.name === activeName) ?? people[0]
+
+  const card = (
+    <>
+      <h3 className="respected-name">{active.name}</h3>
+      <p className="respected-bio">{active.bio}</p>
+      <p className="respected-why">{active.why}</p>
+    </>
+  )
+
+  return (
+    <div className="respected">
+      <div className="respected-cloud">
+        {people.map((p) => (
+          <button
+            key={p.name}
+            type="button"
+            className={`respected-chip${p.name === active.name ? ' is-active' : ''}`}
+            aria-pressed={p.name === active.name}
+            onClick={() => setActiveName(p.name)}
+          >
+            {/* surname only — the full name lives on the card */}
+            {p.name.split(' ').pop()}
+          </button>
+        ))}
+      </div>
+      {active.url ? (
+        <a className="respected-card" href={active.url} target="_blank" rel="noopener noreferrer">
+          {card}
+          <span className="respected-visit">{t('sidebar.respectedVisit')}</span>
+        </a>
+      ) : (
+        <div className="respected-card">{card}</div>
+      )}
+    </div>
+  )
+}
+
 function AlmanacBody({ t }: BodyProps) {
   return (
     <>
@@ -108,7 +155,7 @@ function AlmanacBody({ t }: BodyProps) {
 
 interface PanelDef {
   label: (t: Translate) => string
-  Body: (props: BodyProps) => ReactNode
+  Body: (props: BodyProps) => ReactElement | null
   // Whether the panel starts open on desktop. On mobile every panel starts
   // closed (the toggles act like tabs — see SidebarMobile).
   desktopOpen: boolean
@@ -120,6 +167,7 @@ interface PanelDef {
 const PANELS: Record<string, PanelDef> = {
   about: { label: (t) => t('sidebar.aboutLabel'), Body: AboutBody, desktopOpen: true },
   missionValues: { label: (t) => t('sidebar.missionValuesLabel'), Body: MissionValuesBody, desktopOpen: false },
+  respected: { label: (t) => t('sidebar.respectedLabel'), Body: RespectedBody, desktopOpen: false },
   almanac: { label: (t) => t('sidebar.title'), Body: AlmanacBody, desktopOpen: true },
 }
 
@@ -241,11 +289,16 @@ export default function Sidebar() {
 
   return (
     <aside className="sidebar" aria-label="Almanac and extras">
-      {widgets.map((w, i) => (
-        <CollapsiblePanel key={`${w.type}-${i}`} label={PANELS[w.type].label(t)} defaultOpen={PANELS[w.type].desktopOpen}>
-          {PANELS[w.type].Body({ site, t, locale })}
-        </CollapsiblePanel>
-      ))}
+      {widgets.map((w, i) => {
+        // Render as a JSX component (not a plain call) so stateful bodies keep
+        // their own hook scope instead of leaking hooks into Sidebar's.
+        const Panel = PANELS[w.type]
+        return (
+          <CollapsiblePanel key={`${w.type}-${i}`} label={Panel.label(t)} defaultOpen={Panel.desktopOpen}>
+            <Panel.Body site={site} t={t} locale={locale} />
+          </CollapsiblePanel>
+        )
+      })}
     </aside>
   )
 }

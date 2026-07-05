@@ -32,12 +32,55 @@ values:
     icon: mindful
     text: Fewer, better things means less waste, lighter travel, and a smaller footprint.
 
+# The teachers behind the site's worldview, shown in the sidebar "Respected"
+# panel. Their substance (ideas we carry, cautions) lives in
+# context/ideology-context.md — keep the two lists in sync, same order.
+respected:
+  - name: Paul Chek
+    bio: Holistic-health pioneer, founder of the CHEK Institute.
+    why: He weighs every choice on four scales at once — rest, food, movement, joy — and asks first what dream your daily habits serve.
+    url: "https://chekinstitute.com"
+  - name: Dave Asprey
+    bio: Founder of biohacking and Bulletproof.
+    why: Remove the poison before adding the clever — and trust measurement over dogma, even your own.
+    url: "https://daveasprey.com"
+  - name: Daniel Reid
+    bio: Author of "The Tao of Health, Sex and Longevity"; brought Taoist health practice and food combining to the West.
+    why: He treats digestion as a craft the body already knows — eat simply, and let your own gut be the judge.
+    url: "https://www.danreid.org"
+  - name: Stephen Harrod Buhner
+    bio: Herbalist, author of "Plant Intelligence and the Imaginal Realm".
+    why: He takes Gaia literally — the world is alive and intelligent, and the heart is an organ for perceiving it.
+    url: "https://www.stephenharrodbuhner.com"
+  - name: Konstantin Daragan
+    bio: Astrologer; his ephemeris-grade technique powers our almanac.
+    why: If you enter a non-mainstream domain, enter it at its most rigorous — or not at all.
+    url: "https://astrology-online.ru"
+  - name: Peter Ralston
+    bio: First non-Asian world champion of full-contact martial arts (1978), founder of Cheng Hsin; author of "The Book of Not Knowing".
+    why: Not-knowing is the honest starting point — never mistake a concept for an experience.
+    url: "https://chenghsin.com"
+  - name: Mooji
+    bio: Non-duality teacher (Anthony Paul Moo-Young).
+    why: '"Be nobody and nothing — and see if you lose anything but illusions." The root of owning things without being owned.'
+    url: "https://mooji.org"
+  - name: Rudolf Steiner
+    bio: Austrian philosopher (1861–1925), founder of Waldorf education.
+    why: The environment is the curriculum — a child absorbs the whole world around them, so materials and rhythm are never details.
+    url: "https://rsarchive.org"
+  - name: Teal Swan
+    bio: Contemporary teacher on emotion and trauma.
+    why: Children need to feel felt — attunement, not management, is the heart of parenting.
+    url: "https://tealswan.com"
+
 # Left-rail widgets, in render order. Each `type` maps to a collapsible panel in
-# src/components/Sidebar.tsx (about | missionValues | almanac). Reorder, drop, or
-# repeat entries here; adding a brand-new type needs a component in that file.
+# src/components/Sidebar.tsx (about | missionValues | respected | almanac).
+# Reorder, drop, or repeat entries here; adding a brand-new type needs a
+# component in that file.
 sidebar:
   - type: about
   - type: missionValues
+  - type: respected
   - type: almanac
 
 # Themed Compass collections shown as thumbnails at the top of /compass. A
@@ -83,6 +126,14 @@ upcoming:
     url: "https://www.amazon.de/-/en/dp/B0DCW69XXF?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_6"
   - name: Bubba Bear™ Baby Set with Suction Cup Bowl
     url: "https://www.amazon.de/-/en/dp/B08XXBC81T?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1"
+
+# Journal entries planned but not written yet — the same "in the works" rail as
+# upcoming reviews, on /journal. No `url`: these are ideas, not products.
+# Titles ARE localized (they're prose, not brand names). Delete an entry when
+# the real journal entry ships.
+upcomingJournal:
+  - name: Bulletproof coffee, ups and downs
+  - name: Tight life in 6 m² of the van
 
 # Payment methods for the /support page (src/pages/Support.tsx). These values are
 # the SAME in every language, so they live here in en/ only — ru/site.yaml omits

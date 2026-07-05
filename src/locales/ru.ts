@@ -29,7 +29,7 @@ const ru: Record<keyof typeof en, string> = {
   "reviews.lead": "Каждая вещь здесь проехала с нами реальные километры — мы проверили материалы, безопасность и то, как она выдерживает дорожную жизнь с младенцем.",
   "reviews.filterAriaLabel": "Фильтр по категории",
   "reviews.allCategory": "Все",
-  "reviews.templateBtn": "Сделай вклад!",
+  "reviews.templateBtn": "📝 Сделай вклад!",
   "reviews.upcomingTitle": "В работе",
   "reviews.upcomingNote": "Вещи, которые тестируем следующими, — в очереди, обзора пока нет.",
 
@@ -46,8 +46,10 @@ const ru: Record<keyof typeof en, string> = {
   "journal.tag": "Заметка",
   "journal.allYears": "Все годы",
   "journal.yearsAriaLabel": "Фильтр по годам",
-  "journal.templateBtn": "Сделай вклад!",
+  "journal.templateBtn": "📝 Сделай вклад!",
   "journal.empty": "Пока пусто — первые записи уже в пути.",
+  "journal.upcomingTitle": "В работе",
+  "journal.upcomingNote": "Заметки, которые мы сейчас проживаем, — в очереди, текста пока нет.",
 
   "toc.ariaLabel": "На этой странице",
   "toc.toggle": "На этой странице",
@@ -78,12 +80,14 @@ const ru: Record<keyof typeof en, string> = {
   "astro.note": "Рассчитано по актуальной эфемериде · показано в вашем местном времени",
   "astro.cellAriaLabel": "{{day}}: {{events}}",
 
-  "sidebar.title": "Небесный альманах",
+  "sidebar.title": "🌌 Небесный альманах",
   "sidebar.intro": "Как будто из уст самого Дарагана",
   "sidebar.missionLabel": "Наша миссия",
   "sidebar.valuesLabel": "Наши ценности",
-  "sidebar.missionValuesLabel": "Миссия и ценности",
-  "sidebar.aboutLabel": "О нас",
+  "sidebar.missionValuesLabel": "⚖️ Миссия и ценности",
+  "sidebar.respectedLabel": "✊ Кого мы уважаем",
+  "sidebar.respectedVisit": "В их мир ↗",
+  "sidebar.aboutLabel": "🌞 О нас",
   "sidebar.aboutMore": "Наша история →",
 
   "copy.copy": "Копировать",

@@ -36,6 +36,9 @@ reader would recognize in English, leave it in English. A native calque like
 Keep in English (non-exhaustive):
 
 - **Brand:** `Gaia's Choice` (it's the logo/wordmark — never translate).
+- **People's names:** always the original spelling, never transliterated —
+  `Paul Chek`, not `Пол Чек` (the `respected:` list in `site.yaml`, authors
+  cited in guides, anyone). Book titles likewise stay in the original.
 - **Site sections / nav that are terms-of-art:** `Roadmap` (a startup/
   building-in-public term — stays English in nav, footer, page `title`, and
   in-prose references to that page). Ordinary nav words with plain native
