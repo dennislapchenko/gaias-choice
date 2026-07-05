@@ -19,11 +19,11 @@ export default function Home() {
           <h1>{site.tagline}</h1>
           <p className="lead">{site.description}</p>
           <div className="hero-actions">
-            <Link to="/reviews" className="btn btn-primary">
-              {t('home.browseReviews')}
-            </Link>
-            <Link to="/guides" className="btn btn-ghost">
+            <Link to="/guides" className="btn btn-primary">
               {t('home.readGuides')}
+            </Link>
+            <Link to="/reviews" className="btn btn-ghost">
+              {t('home.browseReviews')}
             </Link>
           </div>
         </div>
