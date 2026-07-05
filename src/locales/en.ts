@@ -32,6 +32,10 @@ const en = {
     'Free, structured tracks that read like a real course — no fluff, no upsell. Each one takes you end to end, in order. Right now it’s our founder playbook: the honest, step-by-step path we’re taking to build this site in public. Reader-facing courses will join as we earn the experience.',
   'guides.tag': 'Guide',
   'guides.epicsAriaLabel': 'Courses',
+  'guides.chapter': 'Chapter {{n}}',
+
+  'toc.ariaLabel': 'On this page',
+  'toc.toggle': 'On this page',
 
   'reviewDetail.backLink': '← All reviews',
   'reviewDetail.checkPrice': 'Check current price →',

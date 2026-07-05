@@ -18,7 +18,16 @@ export default function Guides() {
   // With epics configured, the window shows the active epic's guides; without
   // any (older config), it falls back to showing every guide.
   const activeEpic = epics.find((e) => e.tag === activeTag)
-  const visible = activeTag ? guides.filter((g) => g.tags?.[0] === activeTag) : guides
+  const filtered = activeTag ? guides.filter((g) => g.tags?.[0] === activeTag) : guides
+  // Chaptered guides (course order) sort ascending and come first; guides
+  // without a chapter keep the existing date-descending order (e.g. the
+  // founder-guide epic, which has no chapter numbers).
+  const visible = [...filtered].sort((a, b) => {
+    if (a.chapter != null && b.chapter != null) return a.chapter - b.chapter
+    if (a.chapter != null) return -1
+    if (b.chapter != null) return 1
+    return 0
+  })
 
   return (
     <>

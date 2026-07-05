@@ -3,6 +3,7 @@ import { getGuide } from '../lib/content'
 import { useI18n } from '../lib/i18n'
 import { withBase } from '../lib/asset'
 import Markdown from '../components/Markdown'
+import TableOfContents from '../components/TableOfContents'
 import NotFound from './NotFound'
 
 export default function GuideDetail() {
@@ -12,17 +13,25 @@ export default function GuideDetail() {
   if (!guide) return <NotFound />
 
   return (
-    <article className="detail">
-      <Link to="/guides" className="back-link">
-        {t('guideDetail.backLink')}
-      </Link>
-      <span className="tag">{t('guides.tag')}</span>
-      <h1>{guide.title}</h1>
-      <div className="detail-meta">
-        <span className="muted">{guide.date}</span>
-      </div>
-      {guide.image && <img className="detail-image" src={withBase(guide.image)} alt={guide.title} />}
-      <Markdown html={guide.html} />
-    </article>
+    <div className="detail-layout">
+      <TableOfContents html={guide.html} />
+      <article className="detail">
+        <Link to="/guides" className="back-link">
+          {t('guideDetail.backLink')}
+        </Link>
+        <span className="tag">{t('guides.tag')}</span>
+        {guide.chapter != null && (
+          <span className="tag">{t('guides.chapter', { n: guide.chapter })}</span>
+        )}
+        <h1>{guide.title}</h1>
+        <div className="detail-meta">
+          <span className="muted">{guide.date}</span>
+        </div>
+        {guide.image && (
+          <img className="detail-image" src={withBase(guide.image)} alt={guide.title} />
+        )}
+        <Markdown html={guide.html} />
+      </article>
+    </div>
   )
 }

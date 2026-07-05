@@ -998,6 +998,115 @@ h1 {
   max-width: 760px;
   margin: 0 auto;
 }
+/* Guide detail pages wrap the article with a page-local table of contents
+   (see components/TableOfContents.tsx). It's a second, page-local nav — the
+   site-wide left rail already lives one level up (components/Sidebar.tsx) —
+   so it sits as a sticky column *inside* this grid rather than competing with
+   it. When a guide has <3 headings TableOfContents renders null, .detail-layout
+   collapses to a single child, and .detail's own centering takes over. */
+.detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 760px) 220px;
+  justify-content: center;
+  align-items: start;
+  gap: 32px;
+}
+.detail-layout .detail {
+  max-width: none;
+  margin: 0;
+}
+.toc {
+  position: sticky;
+  top: 84px;
+}
+.toc-toggle {
+  display: none; /* desktop: no collapse affordance, the column is always visible */
+}
+.toc-nav {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  max-height: calc(100vh - 116px);
+  overflow-y: auto;
+}
+.toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.toc-item a {
+  display: block;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.4;
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  padding-left: 10px;
+}
+.toc-item a:hover {
+  color: var(--ink);
+}
+.toc-item a.is-active {
+  color: var(--sage-dark);
+  border-left-color: var(--sage);
+  font-weight: 600;
+}
+.toc-item-h3 a {
+  padding-left: 22px;
+}
+@media (max-width: 900px) {
+  .detail-layout {
+    display: block;
+  }
+  .detail-layout .detail {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .toc {
+    position: static;
+    max-width: 760px;
+    margin: 0 auto 20px;
+  }
+  .toc-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 13px 16px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--ink);
+    cursor: pointer;
+    list-style: none;
+  }
+  .toc-toggle::-webkit-details-marker {
+    display: none;
+  }
+  .toc-toggle::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    opacity: 0.6;
+    transition: transform 0.18s ease;
+  }
+  .toc[open] > .toc-toggle::after {
+    transform: rotate(-135deg);
+  }
+  .toc-nav {
+    margin-top: 8px;
+    max-height: none;
+  }
+}
 .detail h1 {
   margin: 10px 0 12px;
 }

@@ -1,11 +1,56 @@
 import { parse as parseYaml } from 'yaml'
-import { marked } from 'marked'
+import { marked, Renderer } from 'marked'
 import { withBaseHtml } from './asset'
 import themesRaw from '../../content/themes.yaml?raw'
 import type { Entry, Guide, Page, Product, SiteConfig, Theme } from './types'
 import type { Locale } from './i18n'
 
 marked.setOptions({ gfm: true, breaks: false })
+
+// Transliterates Cyrillic to Latin so RU headings still get readable, ASCII,
+// URL-safe anchor ids (rather than raw percent-encoding).
+const CYRILLIC_MAP: Record<string, string> = {
+  а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z', и: 'i',
+  й: 'y', к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't',
+  у: 'u', ф: 'f', х: 'kh', ц: 'ts', ч: 'ch', ш: 'sh', щ: 'shch', ъ: '', ы: 'y',
+  ь: '', э: 'e', ю: 'yu', я: 'ya',
+}
+
+/** Plain-text heading -> a stable, URL-safe, lowercase slug (dashes, ASCII). */
+function slugify(text: string): string {
+  const transliterated = text
+    .toLowerCase()
+    .split('')
+    .map((ch) => CYRILLIC_MAP[ch] ?? ch)
+    .join('')
+  return (
+    transliterated
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'section'
+  )
+}
+
+/**
+ * Builds a `marked` renderer that stamps h2/h3 with stable, deduped slug ids
+ * (e.g. `#setup`, `#setup-2`) so a per-page table of contents can link/scroll
+ * to them. Recent `marked` versions stopped generating heading ids, and each
+ * document needs its own dedupe counters, so a fresh renderer is created per
+ * `marked.parse()` call (see `loadCollection`).
+ */
+function headingIdRenderer(): Renderer {
+  const renderer = new Renderer()
+  const seen = new Map<string, number>()
+  renderer.heading = ({ tokens, depth }) => {
+    const text = renderer.parser.parseInline(tokens)
+    const plain = tokens.map((tok) => tok.raw).join('')
+    const base = slugify(plain)
+    const count = seen.get(base) ?? 0
+    seen.set(base, count + 1)
+    const id = count === 0 ? base : `${base}-${count + 1}`
+    return `<h${depth} id="${id}">${text}</h${depth}>\n`
+  }
+  return renderer
+}
 
 // Palettes are shared across locales — not translated.
 export const themes = parseYaml(themesRaw) as Theme[]
@@ -32,7 +77,8 @@ function loadCollection<T extends Entry>(
   for (const [path, raw] of Object.entries(modules)) {
     const { locale, slug } = localeAndSlugFromPath(path, kind)
     const { data, body } = parseFrontmatter(raw)
-    const entry = { slug, ...data, html: withBaseHtml(marked.parse(body) as string) } as T
+    const html = marked.parse(body, { renderer: headingIdRenderer() }) as string
+    const entry = { slug, ...data, html: withBaseHtml(html) } as T
     ;(grouped[locale as Locale] ??= []).push(entry)
   }
   return grouped

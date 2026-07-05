@@ -64,6 +64,7 @@ export interface Guide extends Entry {
   date: string
   image?: string
   tags?: string[]
+  chapter?: number // optional course order within an epic; ascending, takes precedence over date
 }
 
 export interface Page extends Entry {
