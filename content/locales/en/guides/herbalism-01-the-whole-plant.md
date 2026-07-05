@@ -1,6 +1,7 @@
 ---
 title: "The whole plant: where herbalism begins"
 excerpt: "Why a plant is not a pill, why relationship beats a catalog, where the doctor's territory starts — and your first real infusion tonight."
+image: /images/guide-herbalism-01-whole-plant.svg
 date: 2026-07-05
 chapter: 1
 tags: [herbalism]

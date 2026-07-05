@@ -1,7 +1,7 @@
 ---
 title: "Как получить трафик: SEO, Pinterest и терпение"
 excerpt: Как люди на самом деле будут находить этот сайт — подбор ключевых слов для новичков, почему Pinterest подходит этой нише и какая техническая SEO-работа нужна нашему стеку.
-image: /images/guide-packing-light.webp
+image: /images/guide-packing-light.svg
 date: 2026-07-02
 chapter: 3
 tags: [founder-guide, seo, traffic]

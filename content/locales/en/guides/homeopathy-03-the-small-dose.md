@@ -1,6 +1,7 @@
 ---
 title: "The small dose: what the label actually says"
 excerpt: "Potencies decoded — what C, D and 30C mean, the rule of minimum, how remedies are handled and stored — and the trip to the pharmacy that starts your kit."
+image: /images/guide-homeopathy-03-the-small-dose.svg
 date: 2026-07-05
 chapter: 3
 tags: [homeopathy]

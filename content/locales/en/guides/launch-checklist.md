@@ -1,7 +1,7 @@
 ---
 title: "The Launch Checklist"
 excerpt: Everything that must be true before we call this site launched — identity, content, legal pages, measurement, and distribution.
-image: /images/guide-toddler-checklist.webp
+image: /images/guide-toddler-checklist.svg
 date: 2026-07-01
 chapter: 5
 tags: [founder-guide, launch, checklist]

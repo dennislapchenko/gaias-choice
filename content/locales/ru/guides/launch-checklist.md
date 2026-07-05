@@ -1,7 +1,7 @@
 ---
 title: "Чек-лист запуска"
 excerpt: Всё, что должно стать правдой, прежде чем мы назовём сайт запущенным — идентичность, контент, юридические страницы, измерения и дистрибуция.
-image: /images/guide-toddler-checklist.webp
+image: /images/guide-toddler-checklist.svg
 date: 2026-07-01
 chapter: 5
 tags: [founder-guide, launch, checklist]

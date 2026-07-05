@@ -1,7 +1,7 @@
 ---
 title: "Getting Traffic: SEO, Pinterest, and Patience"
 excerpt: How people will actually find this site — keyword research for beginners, why Pinterest fits this niche, and the technical SEO work our stack needs.
-image: /images/guide-packing-light.webp
+image: /images/guide-packing-light.svg
 date: 2026-07-02
 chapter: 3
 tags: [founder-guide, seo, traffic]

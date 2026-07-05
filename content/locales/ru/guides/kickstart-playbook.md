@@ -1,7 +1,7 @@
 ---
 title: "Плейбук запуска: как мы строим Gaia's Choice"
 excerpt: Генеральный план — что за бизнес на самом деле представляет собой сайт с обзорами, порядок действий и что делать в этом месяце.
-image: /images/guide-eco-items.webp
+image: /images/guide-eco-items.svg
 date: 2026-07-05
 chapter: 1
 tags: [founder-guide, playbook]

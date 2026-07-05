@@ -1,7 +1,7 @@
 ---
 title: "Writing Reviews That Earn Trust (Our Process)"
 excerpt: The testing process, the review structure, and the exact template we use — so every review is one we could defend to a reader's face.
-image: /images/guide-natural-vs.webp
+image: /images/guide-natural-vs.svg
 date: 2026-07-04
 chapter: 2
 tags: [founder-guide, reviews, process]

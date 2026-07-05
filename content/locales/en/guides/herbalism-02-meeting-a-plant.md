@@ -1,6 +1,7 @@
 ---
 title: "Meeting a plant: energetics and the taste that tells the truth"
 excerpt: "Warming or cooling, drying or moistening; bitter, aromatic, astringent — the sensory grammar that lets every plant introduce itself. Plus the one-plant-one-hour practice."
+image: /images/guide-herbalism-02-meeting-a-plant.svg
 date: 2026-07-05
 chapter: 2
 tags: [herbalism]

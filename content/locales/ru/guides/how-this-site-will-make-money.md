@@ -1,7 +1,7 @@
 ---
 title: "Как этот сайт будет зарабатывать (с честной математикой)"
 excerpt: Партнёрские программы, реалистичная математика комиссий, что идёт после партнёрок — и ловушки, из-за которых новые сайты банят.
-image: /images/guide-toiletries.webp
+image: /images/guide-toiletries.svg
 date: 2026-07-03
 chapter: 4
 tags: [founder-guide, monetization, affiliate]

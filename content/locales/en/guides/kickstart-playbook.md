@@ -1,7 +1,7 @@
 ---
 title: "The Kickstart Playbook: How We Build Gaia's Choice"
 excerpt: The master plan — what kind of business a review site actually is, the order of operations, and what to do this month.
-image: /images/guide-eco-items.webp
+image: /images/guide-eco-items.svg
 date: 2026-07-05
 chapter: 1
 tags: [founder-guide, playbook]

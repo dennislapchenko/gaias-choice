@@ -1,6 +1,7 @@
 ---
 title: "Water: infusion and decoction"
 excerpt: "Leaves steep, roots simmer, and ratios change everything: the two water methods, the overnight nourishing infusion, the daily-cup habit — and your shelf's infusion station."
+image: /images/guide-herbalism-03-water-preparations.svg
 date: 2026-07-05
 chapter: 3
 tags: [herbalism]

@@ -1,0 +1,37 @@
+<svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="46%" r="72%">
+    <stop offset="0%" stop-color="#3a2154"/>
+    <stop offset="55%" stop-color="#7a3b12"/>
+    <stop offset="100%" stop-color="#1a0f2b"/>
+    </radialGradient>
+    <path id="petal44830" d="M400,190 Q430,125.0 400,60 Q370,125.0 400,190 Z" fill="none" stroke="#f4b860" stroke-width="1.8" opacity="0.4"/>
+    
+    
+  </defs>
+  <rect width="800" height="800" fill="url(#bg)"/>
+  <circle cx="400" cy="400" r="360" fill="none" stroke="#f4b860" stroke-width="1" opacity="0.28"/>
+  <circle cx="400" cy="400" r="280" fill="none" stroke="#f4b860" stroke-width="1" opacity="0.28"/>
+  <circle cx="400" cy="400" r="130" fill="none" stroke="#f4b860" stroke-width="1" opacity="0.28"/>
+  <use href="#petal44830" transform="rotate(0.0 400 400)"/>
+  <use href="#petal44830" transform="rotate(30.0 400 400)"/>
+  <use href="#petal44830" transform="rotate(60.0 400 400)"/>
+  <use href="#petal44830" transform="rotate(90.0 400 400)"/>
+  <use href="#petal44830" transform="rotate(120.0 400 400)"/>
+  <use href="#petal44830" transform="rotate(150.0 400 400)"/>
+  <use href="#petal44830" transform="rotate(180.0 400 400)"/>
+  <use href="#petal44830" transform="rotate(210.0 400 400)"/>
+  <use href="#petal44830" transform="rotate(240.0 400 400)"/>
+  <use href="#petal44830" transform="rotate(270.0 400 400)"/>
+  <use href="#petal44830" transform="rotate(300.0 400 400)"/>
+  <use href="#petal44830" transform="rotate(330.0 400 400)"/>
+  
+  <g transform="translate(400,400)" fill="none" stroke="#ffe3ad" stroke-width="2.4">
+    <circle r="70" opacity="0.9"/>
+    <path d="M0,-58 L14,-10 L0,0 L-14,-10 Z" fill="#ffe3ad" stroke="none" opacity="0.95"/>
+    <path d="M0,58 L14,10 L0,0 L-14,10 Z" fill="#c97b2e" stroke="none" opacity="0.85"/>
+    <path d="M-58,0 L-10,14 L0,0 L-10,-14 Z" fill="#c97b2e" stroke="none" opacity="0.7"/>
+    <path d="M58,0 L10,14 L0,0 L10,-14 Z" fill="#c97b2e" stroke="none" opacity="0.7"/>
+    <circle r="8" fill="#ffe3ad" stroke="none"/>
+  </g>
+</svg>

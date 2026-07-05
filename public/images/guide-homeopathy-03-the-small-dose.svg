@@ -1,0 +1,41 @@
+<svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="46%" r="72%">
+    <stop offset="0%" stop-color="#0f2a35"/>
+    <stop offset="55%" stop-color="#1a3a4a"/>
+    <stop offset="100%" stop-color="#03090c"/>
+    </radialGradient>
+    <circle id="dot48230" cx="400" cy="160" r="5" fill="#bfe6f0" opacity="0.7"/>
+    
+    <circle id="dot48999" cx="400" cy="240" r="6" fill="#8fd0e0" opacity="0.6"/>
+  </defs>
+  <rect width="800" height="800" fill="url(#bg)"/>
+  <circle cx="400" cy="400" r="355" fill="none" stroke="#bfe6f0" stroke-width="1" opacity="0.28"/>
+  <circle cx="400" cy="400" r="280" fill="none" stroke="#bfe6f0" stroke-width="1" opacity="0.28"/>
+  <circle cx="400" cy="400" r="200" fill="none" stroke="#bfe6f0" stroke-width="1" opacity="0.28"/>
+  <use href="#dot48230" transform="rotate(0.0 400 400)"/>
+  <use href="#dot48230" transform="rotate(30.0 400 400)"/>
+  <use href="#dot48230" transform="rotate(60.0 400 400)"/>
+  <use href="#dot48230" transform="rotate(90.0 400 400)"/>
+  <use href="#dot48230" transform="rotate(120.0 400 400)"/>
+  <use href="#dot48230" transform="rotate(150.0 400 400)"/>
+  <use href="#dot48230" transform="rotate(180.0 400 400)"/>
+  <use href="#dot48230" transform="rotate(210.0 400 400)"/>
+  <use href="#dot48230" transform="rotate(240.0 400 400)"/>
+  <use href="#dot48230" transform="rotate(270.0 400 400)"/>
+  <use href="#dot48230" transform="rotate(300.0 400 400)"/>
+  <use href="#dot48230" transform="rotate(330.0 400 400)"/>
+  <use href="#dot48999" transform="rotate(0.0 400 400)"/>
+  <use href="#dot48999" transform="rotate(45.0 400 400)"/>
+  <use href="#dot48999" transform="rotate(90.0 400 400)"/>
+  <use href="#dot48999" transform="rotate(135.0 400 400)"/>
+  <use href="#dot48999" transform="rotate(180.0 400 400)"/>
+  <use href="#dot48999" transform="rotate(225.0 400 400)"/>
+  <use href="#dot48999" transform="rotate(270.0 400 400)"/>
+  <use href="#dot48999" transform="rotate(315.0 400 400)"/>
+  <g transform="translate(400,400)" fill="none" stroke="#e8f8fc" stroke-width="2.2">
+    <path d="M-26,-90 L26,-90 L26,-30 L52,40 A52,52 0 0 1 -52,40 L-26,-30 Z" fill="#bfe6f0" opacity="0.25"/>
+    <path d="M-26,-90 L26,-90 L26,-30 L52,40 A52,52 0 0 1 -52,40 L-26,-30 Z"/>
+    <circle r="10" cy="18" fill="#bfe6f0" stroke="none" opacity="0.9"/>
+  </g>
+</svg>

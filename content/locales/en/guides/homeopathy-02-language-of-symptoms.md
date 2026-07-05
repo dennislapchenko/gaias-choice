@@ -1,6 +1,7 @@
 ---
 title: "The language of symptoms: how to look so that you see"
 excerpt: "Modalities, the totality, and the strange-rare-peculiar: the observation grammar the whole method runs on — and a three-evening practice to learn it."
+image: /images/guide-homeopathy-02-language-of-symptoms.svg
 date: 2026-07-05
 chapter: 2
 tags: [homeopathy]

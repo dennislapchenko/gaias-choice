@@ -1,7 +1,7 @@
 ---
 title: "How This Site Will Make Money (Honest Math Included)"
 excerpt: Affiliate programs, realistic commission math, what comes after affiliates — and the traps that get new sites banned.
-image: /images/guide-toiletries.webp
+image: /images/guide-toiletries.svg
 date: 2026-07-03
 chapter: 4
 tags: [founder-guide, monetization, affiliate]

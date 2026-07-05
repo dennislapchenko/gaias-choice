@@ -1,7 +1,7 @@
 ---
 title: "Как писать обзоры, которым доверяют (наш процесс)"
 excerpt: Процесс тестирования, структура обзора и точный шаблон, который мы используем — чтобы каждый обзор был таким, который мы могли бы защитить читателю в лицо.
-image: /images/guide-natural-vs.webp
+image: /images/guide-natural-vs.svg
 date: 2026-07-04
 chapter: 2
 tags: [founder-guide, reviews, process]

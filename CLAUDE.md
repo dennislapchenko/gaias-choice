@@ -182,6 +182,14 @@ under `public/images/`. Referenced from content by absolute path (`/images/x.web
 - Typical result: ~90% smaller than source PNGs.
 - The current placeholder images are AI art and thematically unrelated to the
   products — swap for real photos before launch (one-line frontmatter change each).
+- **Guide chapter art is hand-authored SVG**, not photos: each of the 11 guides
+  has a `guide-<slug>.svg` under `public/images/` — a radial-symmetry "mandala"
+  (rotated `<use>` copies of one petal motif around a center, plus a bespoke
+  central icon per topic, e.g. a compass for the kickstart playbook, an eye for
+  trust/observation guides, a leaf for herbalism ch.1). No `task images` step
+  needed (vector, not raster). These are a deliberate style choice, distinct
+  from the photo-based product/about images — keep new guide chapters in the
+  same mandala style unless the owner says otherwise.
 
 ## Styling & color
 

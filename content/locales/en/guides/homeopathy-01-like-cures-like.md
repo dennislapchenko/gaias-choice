@@ -1,6 +1,7 @@
 ---
 title: "Like cures like: where homeopathy begins"
 excerpt: "The core idea of homeopathy, its honest limits, the map of all 11 chapters — and your first real step tonight, an observation journal."
+image: /images/guide-homeopathy-01-like-cures-like.svg
 date: 2026-07-05
 chapter: 1
 tags: [homeopathy]
