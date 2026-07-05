@@ -6,6 +6,7 @@
 # `sage` is the primary accent; `mint`/`peach`/`lilac` are three pastel slots.
 
 - tag: meadow
+  label: Meadow
   colors:
     sage: "#6f8f6a"
     sageDark: "#52704f"
@@ -19,6 +20,7 @@
     lilac: "#e7ddf7"
 
 - tag: bubblegum
+  label: Bubblegum
   colors:
     sage: "#c85088"
     sageDark: "#a23c6c"
@@ -32,6 +34,7 @@
     lilac: "#d6eefb"
 
 - tag: citrus
+  label: Citrus
   colors:
     sage: "#bf6a2e"
     sageDark: "#9c521f"
@@ -45,6 +48,7 @@
     lilac: "#dcefc7"
 
 - tag: periwinkle
+  label: Periwinkle
   default: true
   colors:
     sage: "#7c6cc4"
@@ -59,6 +63,7 @@
     lilac: "#f0dcf7"
 
 - tag: lagoon
+  label: Lagoon
   colors:
     sage: "#1f9e96"
     sageDark: "#157a73"
@@ -72,6 +77,7 @@
     lilac: "#cfe6f7"
 
 - tag: sunset
+  label: Sunset
   colors:
     sage: "#e0654e"
     sageDark: "#bd4b37"
@@ -85,6 +91,7 @@
     lilac: "#ffe9c2"
 
 - tag: grape
+  label: Grape
   colors:
     sage: "#9b4bc4"
     sageDark: "#7d37a2"

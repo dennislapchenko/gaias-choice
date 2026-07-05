@@ -19,6 +19,9 @@ export default function App() {
         <Route path="/guides/:slug" element={<GuideDetail />} />
         <Route path="/about" element={<MarkdownPage slug="about" />} />
         <Route path="/contact" element={<MarkdownPage slug="contact" />} />
+        <Route path="/roadmap" element={<MarkdownPage slug="roadmap" />} />
+        <Route path="/disclosure" element={<MarkdownPage slug="disclosure" />} />
+        <Route path="/privacy" element={<MarkdownPage slug="privacy" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>

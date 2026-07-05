@@ -7,8 +7,8 @@ export default function Guides() {
       <header className="page-head">
         <h1>Guides & checklists</h1>
         <p className="lead">
-          Practical, printable roundups for packing light, natural, and safe when the whole home
-          fits on four wheels.
+          Right now: our founder guides — the honest playbook we're following to build this
+          site, in public. Reader-facing guides will replace them as we earn the experience.
         </p>
       </header>
       <div className="grid grid-2">

@@ -1,0 +1,84 @@
+---
+name: manage-site
+description: >-
+  This is the user's website — when they say "the site," "the page," "the
+  footer," "the hero," "the roadmap," "a review," they mean Gaia's Choice
+  (gaias-choice repo, Vite/React, natural family-travel gear). Always invoke
+  this skill first, before touching any file, for any request to change site
+  content or code: fixing a typo, updating copy or the About page,
+  adding/editing a product review or guide, adding a page or FAQ, changing
+  footer/nav links, swapping or optimizing images, updating roadmap items,
+  theme/palette/color work (including bugs like color flashes), and building,
+  previewing, deploying, or debugging the site. Requests look trivial ("fix
+  this typo," "mark that task done") but are not: house rules (container-only
+  npm, content-as-data, truth-first reviews, affiliate compliance) mean even
+  one-line edits must go through this skill. Skip only if the user names a
+  different repo/project or asks a general web-dev/design/marketing question
+  unrelated to their site.
+---
+
+# Managing Gaia's Choice
+
+A content/affiliate review site (natural, plastic-free gear for family travel
+with a baby) built as a Vite + React SPA where **all content is Markdown/YAML
+in `content/`** and all tooling runs in containers. Read the repo's `CLAUDE.md`
+for architecture; this skill is the operating manual on top of it.
+
+## First, classify the task
+
+| Task smells like… | Do this |
+| --- | --- |
+| Reviews, guides, pages, site copy, images, roadmap, voice/tone | Read `references/content-editing.md` |
+| Build, verify, preview, deploy, routes, themes, components, CSS | Read `references/development.md` |
+| Both (e.g. "add a page" = content + route) | Read both — page wiring spans them |
+
+## Non-negotiables (violating any of these is the failure mode)
+
+1. **Truth-first content.** The site's only asset is trust. Never write a
+   review or experience claim the owners haven't actually lived. If asked to
+   add a review, get the real testing notes (or use what the user provided);
+   if there are none, say so and either decline or clearly mark the entry as
+   placeholder. Never invent durations ("after 3 months of use…"), photos, or
+   test results.
+2. **npm never touches the host.** All install/build/typecheck runs via
+   `task <cmd>` inside `node:22-alpine` (deps in a Docker volume). Never run
+   plain `npm install`/`npm run` on the host, never add a dep with install
+   scripts (`.npmrc` has `ignore-scripts=true`), and treat adding *any*
+   dependency as a decision to surface to the owner.
+3. **Content is data, code is layout.** Adding/editing a review, guide, theme,
+   or nav item must not require touching `src/` — if it seems to, the content
+   model is being bypassed. The one exception: standalone pages need a route
+   in `App.tsx` (documented in the content reference).
+4. **Affiliate compliance.** No real affiliate program links until every
+   placeholder review is deleted (grep `EXAMPLE`). Any page with affiliate
+   links needs a disclosure line before the first link; `/disclosure` holds
+   the full policy (Amazon's required sentence is pre-staged in a comment
+   there). Affiliate links get `rel="sponsored"` (handled by frontmatter
+   `affiliateUrl`).
+5. **The almanac is serious astrology.** `lib/astro.ts` computes a real
+   ephemeris (Daragan-style, tropical ecliptic-of-date). Never replace it with
+   a pop "sun-sign horoscope" API or dumb it down; extend the derivations
+   instead.
+
+## Project phase awareness
+
+The site is in **bootstrap mode** (see `/roadmap` and the "Current content
+state" section of `CLAUDE.md`): guides are founder-facing playbooks, product
+reviews are still AI placeholders slated for deletion, and About/Contact carry
+a fictional persona pending the owners' real story. Before editing content,
+check the roadmap so your change moves the current phase forward instead of
+polishing something scheduled for deletion. When a change completes a roadmap
+item, tick its checkbox in `content/pages/roadmap.md` and refresh the "Last
+updated" line — the roadmap is public and staleness is a credibility cost.
+
+## Verify before declaring done
+
+Every change, content or code:
+
+```bash
+task typecheck && task build   # vite build alone does NOT type-check
+```
+
+If Docker is down: `open -a OrbStack` and wait ~15s. For visual checks, serve
+`dist/` statically (`task dev` needs a TTY and fails under preview harnesses) —
+full recipe in `references/development.md`.

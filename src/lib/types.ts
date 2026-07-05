@@ -16,6 +16,7 @@ export interface SiteConfig {
   heroImage?: string
   values: ValueItem[]
   nav: NavItem[]
+  footerNav?: NavItem[]
   social: { label: string; url: string }[]
   contactEmail: string
 }

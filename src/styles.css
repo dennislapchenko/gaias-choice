@@ -1,19 +1,19 @@
 :root {
-  /* Fallback = the default palette (bubblegum) in content/themes.yaml, used for
+  /* Fallback = the default palette (periwinkle) in content/themes.yaml, used for
      the first paint before theme.ts applies the stored/default palette. */
-  --sage: #c85088;
-  --sage-dark: #a23c6c;
+  --sage: #7c6cc4;
+  --sage-dark: #5f4fa8;
   --on-accent: #ffffff; /* contrast-safe text on the accent, per palette */
-  --clay: #cf5f92;
-  --sand: #fff6fb;
-  --sand-2: #f6e6ef;
+  --clay: #8f6fc7;
+  --sand: #f7f5ff;
+  --sand-2: #ebe7fb;
   /* three pastel background slots, themeable per palette */
-  --mint: #ffd9e8;
-  --peach: #e6dcff;
-  --lilac: #d6eefb;
+  --mint: #e0dcfb;
+  --peach: #dbe7fb;
+  --lilac: #f0dcf7;
   --ink: #2f2c27;
   --muted: #6f6a60;
-  --line: #f0d9e6;
+  --line: #e2dcf7;
   --white: #ffffff;
   --radius: 22px; /* round-ish: cards, hero, images, bands */
   --radius-sm: 14px; /* smaller inner elements (menus, option rows) */

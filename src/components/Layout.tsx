@@ -54,6 +54,11 @@ export default function Layout({ children }: { children: ReactNode }) {
             <p className="muted">{site.tagline}</p>
           </div>
           <div className="footer-links">
+            {(site.footerNav ?? []).map((item) => (
+              <Link key={item.path} to={item.path}>
+                {item.label}
+              </Link>
+            ))}
             {site.social.map((s) => (
               <a key={s.url} href={s.url} target="_blank" rel="noopener noreferrer">
                 {s.label}
@@ -65,7 +70,8 @@ export default function Layout({ children }: { children: ReactNode }) {
         <div className="container disclosure muted">
           <p>
             Some links are affiliate links. If you buy through them we may earn a small
-            commission at no extra cost to you. We only recommend gear we have actually used.
+            commission at no extra cost to you. We only recommend gear we have actually
+            used. <Link to="/disclosure">Full disclosure</Link>.
           </p>
           <p>© {new Date().getFullYear()} {site.name}.</p>
         </div>

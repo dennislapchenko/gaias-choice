@@ -35,7 +35,7 @@ content/                 # ALL editable content (no code)
   themes.yaml            # color palettes (tag + label + default + colors)
   products/*.md          # reviews  → /reviews/<filename-without-.md>
   guides/*.md            # guides   → /guides/<filename-without-.md>
-  pages/*.md             # standalone pages (about, contact)
+  pages/*.md             # standalone pages (about, contact, roadmap, disclosure, privacy)
 public/
   images/*.webp          # optimized images referenced by content (see Images)
   favicon.svg
@@ -165,7 +165,7 @@ muddy — nudge the accent hue darker if you need strict AA-small there.
 - **To add a palette:** append an entry to `themes.yaml` — no code change. There
   are currently 7 (meadow, bubblegum, citrus, periwinkle, lagoon, sunset, grape).
 - **To make one permanent/default:** set `default: true` on it (and remove it from
-  the others). The current default is **bubblegum**. The `:root` values in
+  the others). The current default is **periwinkle**. The `:root` values in
   `styles.css` are the pre-JS fallback — keep them in sync with whichever palette
   is `default` if you care about the first-paint frame.
 
@@ -271,6 +271,26 @@ The owner wants the npm surface kept off the host and minimal.
 - **Verifying visually:** build (`task build`) and serve `dist/` with any static
   server; because it's an SPA, deep links only resolve via the nginx fallback, so
   when testing on a plain static server, load `/` and navigate by clicking.
+
+## Current content state (July 2026)
+
+The site is in **bootstrap mode** — the owners are first-time site builders
+learning the affiliate-content business as they go:
+
+- `content/guides/*` are **founder guides**: internal how-to-build-this-site
+  playbooks (review process, monetization, traffic/SEO, launch checklist,
+  master playbook), deliberately public. They will be replaced by
+  reader-facing guides once the owners have real first-hand content. Don't
+  "fix" them back into consumer content.
+- `content/products/*` are still **AI placeholder reviews** with fake
+  affiliate URLs (`EXAMPLE…`) and AI images — flagged for deletion/replacement
+  in the launch checklist. Never add a real affiliate program while these exist.
+- `/roadmap` (public, building-in-public) tracks phases; keep it updated when
+  milestones land. `/disclosure` and `/privacy` are compliance groundwork for
+  affiliate programs — required before joining any.
+- `about.md`/`contact.md` still carry the fictional "7 months in a camper"
+  persona + placeholder email/socials; rewriting them truthfully is a Phase 0
+  roadmap item for the owners (needs their real story — don't invent one).
 
 ## Status
 
