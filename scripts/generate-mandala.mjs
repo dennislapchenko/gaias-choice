@@ -144,6 +144,75 @@ const SETS = {
 <path d="M-12,-46 L-12,-88" stroke="#3a5f96" stroke-width="4" stroke-linecap="round"/>
 <path d="M-12,-88 L26,-77 L-12,-66 Z" fill="#3a5f96"/>`,
       },
+
+      // «Трофология» / "Trophology" (trophology) — food combining. Warm
+      // terracotta/amber family (distinct from homeopathy purple, herbalism
+      // green, inside blue, founder gold); one icon per chapter concept.
+      {
+        // ch. 1 — the stomach's two opposite juices (acid + alkaline drops).
+        slug: 'trophology-01-stomach-not-a-blender',
+        petalCount: 12,
+        bg: ['#3d1f0c', '#7a3f14', '#160a02'],
+        stroke: '#f0b36a',
+        centerIcon: `
+<path d="M-30,-46 C-14,-18 -6,-8 -6,4 A24,24 0 1 1 -54,4 C-54,-8 -46,-18 -30,-46 Z" fill="#e08a4a" opacity="0.92"/>
+<path d="M30,-46 C46,-18 54,-8 54,4 A24,24 0 1 1 6,4 C6,-8 14,-18 30,-46 Z" fill="#8fc9c0" opacity="0.9"/>
+<path d="M0,-40 L0,40" stroke="#f2dcc0" stroke-width="3" stroke-dasharray="4 5" opacity="0.7"/>`,
+      },
+      {
+        // ch. 2 — the plate split down the middle: protein | starch.
+        slug: 'trophology-02-the-master-rule',
+        petalCount: 10,
+        bg: ['#402008', '#833f0f', '#170902'],
+        stroke: '#f2a65a',
+        centerIcon: `
+<circle cx="0" cy="0" r="72" fill="#f2dcc0" opacity="0.92"/>
+<path d="M0,-72 A72,72 0 0 1 0,72 Z" fill="#d98a4a" opacity="0.9"/>
+<line x1="0" y1="-72" x2="0" y2="72" stroke="#7a3f14" stroke-width="4"/>
+<circle cx="0" cy="0" r="72" fill="none" stroke="#7a3f14" stroke-width="3"/>`,
+      },
+      {
+        // ch. 3 — timing: a clock face with a leaf sprig.
+        slug: 'trophology-03-fruit-melons-and-timing',
+        petalCount: 14,
+        bg: ['#3a2410', '#7a4a1a', '#150c04'],
+        stroke: '#f0c070',
+        centerIcon: `
+<circle cx="0" cy="6" r="62" fill="#f2dcc0" opacity="0.92" stroke="#7a3f14" stroke-width="3"/>
+<line x1="0" y1="6" x2="0" y2="-32" stroke="#7a3f14" stroke-width="5" stroke-linecap="round"/>
+<line x1="0" y1="6" x2="30" y2="20" stroke="#7a3f14" stroke-width="4" stroke-linecap="round"/>
+<circle cx="0" cy="6" r="6" fill="#7a3f14"/>
+<path d="M0,-56 C-18,-64 -30,-82 -20,-96 C-4,-88 2,-70 0,-56 Z" fill="#9ec96a" opacity="0.92"/>`,
+      },
+      {
+        // ch. 4 — the combining map: a rounded grid.
+        slug: 'trophology-04-the-combining-map',
+        petalCount: 8,
+        bg: ['#3d1c14', '#7e3822', '#160806'],
+        stroke: '#f2a67a',
+        centerIcon: `
+<rect x="-64" y="-64" width="128" height="128" rx="16" fill="#f2dcc0" opacity="0.92" stroke="#7a3f14" stroke-width="3"/>
+<line x1="0" y1="-64" x2="0" y2="64" stroke="#7a3f14" stroke-width="3"/>
+<line x1="-64" y1="0" x2="64" y2="0" stroke="#7a3f14" stroke-width="3"/>
+<circle cx="-32" cy="-32" r="13" fill="#4f9a86"/>
+<circle cx="32" cy="32" r="13" fill="#4f9a86"/>
+<path d="M22,-40 L44,-40 M22,-24 L44,-24" stroke="#c65a24" stroke-width="5" stroke-linecap="round"/>
+<path d="M-44,24 L-22,24 M-44,40 L-22,40" stroke="#c65a24" stroke-width="5" stroke-linecap="round"/>`,
+      },
+      {
+        // ch. 5 — the real table: a plate with fork and knife.
+        slug: 'trophology-05-the-real-table',
+        petalCount: 16,
+        bg: ['#42230c', '#864614', '#180b03'],
+        stroke: '#f4bb70',
+        centerIcon: `
+<circle cx="0" cy="0" r="52" fill="#f2dcc0" opacity="0.92" stroke="#7a3f14" stroke-width="3"/>
+<circle cx="0" cy="0" r="34" fill="none" stroke="#c98a52" stroke-width="2" opacity="0.7"/>
+<path d="M-86,-56 L-86,-22 M-78,-56 L-78,-22 M-70,-56 L-70,-22" stroke="#f0d8bc" stroke-width="4" stroke-linecap="round"/>
+<path d="M-78,-22 L-78,58" stroke="#f0d8bc" stroke-width="7" stroke-linecap="round"/>
+<path d="M78,-56 L78,58" stroke="#f0d8bc" stroke-width="7" stroke-linecap="round"/>
+<path d="M78,-56 C92,-48 92,-22 78,-16 Z" fill="#f0d8bc" opacity="0.85"/>`,
+      },
     ],
   },
 
@@ -206,6 +275,20 @@ const SETS = {
 <path d="M-34,-8 L-52,8 L-34,24" fill="none" stroke="#bfeaff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M34,-8 L52,8 L34,24" fill="none" stroke="#bfeaff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
 <line x1="10" y1="-12" x2="-10" y2="28" stroke="#bfeaff" stroke-width="5" stroke-linecap="round"/>`,
+      },
+      {
+        // «Трофология» — a yin-yang made warm (the Taoist balance of foods),
+        // distinct from the course's own plate/clock/grid chapter icons.
+        slug: 'trophology',
+        petalCount: 14,
+        bg: ['#3a1d0a', '#8a4614', '#140902'],
+        stroke: '#f0b36a',
+        centerIcon: `
+<circle cx="0" cy="0" r="80" fill="#f2dcc0" opacity="0.95"/>
+<path d="M0,-80 A80,80 0 0 1 0,80 A40,40 0 0 1 0,0 A40,40 0 0 0 0,-80 Z" fill="#b04e1e"/>
+<circle cx="0" cy="-40" r="13" fill="#f2dcc0"/>
+<circle cx="0" cy="40" r="13" fill="#b04e1e"/>
+<circle cx="0" cy="0" r="80" fill="none" stroke="#f0b36a" stroke-width="3" opacity="0.85"/>`,
       },
     ],
   },

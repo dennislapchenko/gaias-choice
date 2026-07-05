@@ -1,0 +1,19 @@
+<svg viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs><marker id="arr-split" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<rect x="20" y="66" width="196" height="88" rx="12" fill="var(--sand-2)" stroke="var(--clay)" stroke-width="1.5"/>
+<text x="118" y="94" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">{{t1}}</text>
+<text x="118" y="114" text-anchor="middle" font-size="12.5" fill="var(--muted)">{{t2}}</text>
+<text x="118" y="134" text-anchor="middle" font-size="12" font-style="italic" fill="var(--clay)">{{t3}}</text>
+<line x1="216" y1="110" x2="262" y2="72" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-split)"/>
+<line x1="216" y1="110" x2="262" y2="148" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-split)"/>
+<rect x="270" y="26" width="300" height="72" rx="12" fill="var(--peach)"/>
+<text x="420" y="52" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">{{t4}}</text>
+<text x="420" y="72" text-anchor="middle" font-size="12.5" fill="var(--ink)">{{t5}}</text>
+<text x="420" y="90" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{t6}}</text>
+<rect x="270" y="122" width="300" height="72" rx="12" fill="var(--mint)"/>
+<text x="420" y="148" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">{{t7}}</text>
+<text x="420" y="168" text-anchor="middle" font-size="12.5" fill="var(--ink)">{{t8}}</text>
+<text x="420" y="186" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{t9}}</text>
+<path d="M588 56 l7 8 l13 -18" fill="none" stroke="var(--sage)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M588 152 l7 8 l13 -18" fill="none" stroke="var(--sage)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

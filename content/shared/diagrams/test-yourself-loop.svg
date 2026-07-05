@@ -1,0 +1,22 @@
+<svg viewBox="0 0 640 270" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs><marker id="arr-loop" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<rect x="248" y="10" width="144" height="46" rx="12" fill="var(--peach)"/>
+<text x="320" y="30" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{t1}}</text>
+<text x="320" y="47" text-anchor="middle" font-size="11.5" fill="var(--muted)">{{t2}}</text>
+<rect x="472" y="112" width="152" height="46" rx="12" fill="var(--mint)"/>
+<text x="548" y="132" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{t3}}</text>
+<text x="548" y="149" text-anchor="middle" font-size="11.5" fill="var(--muted)">{{t4}}</text>
+<rect x="248" y="214" width="144" height="46" rx="12" fill="var(--lilac)"/>
+<text x="320" y="234" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{t5}}</text>
+<text x="320" y="251" text-anchor="middle" font-size="11.5" fill="var(--muted)">{{t6}}</text>
+<rect x="16" y="112" width="152" height="46" rx="12" fill="var(--peach)"/>
+<text x="92" y="132" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{t7}}</text>
+<text x="92" y="149" text-anchor="middle" font-size="11.5" fill="var(--muted)">{{t8}}</text>
+<path d="M392 40 C 470 52, 520 80, 536 108" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-loop)"/>
+<path d="M540 158 C 512 200, 450 224, 396 232" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-loop)"/>
+<path d="M244 232 C 190 224, 128 200, 100 160" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-loop)"/>
+<path d="M104 108 C 120 80, 170 52, 244 40" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-loop)"/>
+<rect x="238" y="112" width="164" height="46" rx="14" fill="var(--sage)"/>
+<text x="320" y="132" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--on-accent)">{{t9}}</text>
+<text x="320" y="149" text-anchor="middle" font-size="11.5" fill="var(--on-accent)">{{t10}}</text>
+</svg>

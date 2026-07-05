@@ -94,13 +94,15 @@ the Thread navigation weave (Trail block, spine artifact, callbacks/seeds,
 Bridge block), chapter anatomy, practice-task rules, and shipping checklist —
 lives in `context/epic-writing-context.md`. **Read it before writing or
 editing any course chapter**; its skeleton headings feed the chapter TOC
-sidebar, so don't rename them casually. Three courses exist: the founder
-course (5 chapters, complete — `context/course-plan-building-in-public.md`)
-and two reader-facing 11-chapter courses (ch. 1–3 shipped 2026-07-05,
-ch. 4–11 pending) with outlines — chapter one-liners, named concepts, seeds,
-reuse maps — in `context/course-plan-homeopathy.md` and
-`context/course-plan-herbalism.md`; follow the plan when writing the next
-chapter. Frontmatter gotcha learned the hard way: **quote any `title:`/`excerpt:`
+sidebar, so don't rename them casually. Courses that exist: the founder
+course and `inside-websites` (both 5 chapters, complete), `trophology` (5
+chapters, complete, en+ru — `context/course-plan-trophology.md`), and two
+reader-facing 11-chapter courses (`homeopathy`, `herbalism`; ch. 1–3 shipped
+2026-07-05, ch. 4–11 pending). Every course has an outline — chapter
+one-liners, named concepts, seeds, reuse maps — in
+`context/course-plan-<slug>.md`; follow the plan when writing the next
+chapter. (A 5-chapter course maps Gate = 1 / Path = 2–4 / Summit = 5;
+everything else in the blueprint is unchanged.) Frontmatter gotcha learned the hard way: **quote any `title:`/`excerpt:`
 containing a colon** — an unquoted `… вечером: ваш …` is a YAML nested-mapping
 error that blanks the whole SPA (the `import.meta.glob` parse happens at
 runtime for every page).

@@ -56,6 +56,10 @@ epics:
     title: Herbalism
     image: /images/epic-herbalism.svg
     blurb: A 11-chapter guide — grow a green shelf of infusions, oils and tinctures, and learn ten plants the way you know people.
+  - tag: trophology
+    title: Trophology
+    image: /images/epic-trophology.svg
+    blurb: A 5-chapter guide to food combining — build a fridge chart and a digestion journal, then test which eating habits actually leave you lighter, judged by your own body, never by dogma.
   # English-only course (owner decision 2026-07-05) — deliberately absent from
   # ru/site.yaml, so the RU locale never shows this tab.
   - tag: inside-websites

@@ -71,6 +71,41 @@ reasons; encouragement to test and observe rather than believe labels.
 method and the toxin-avoidance lens, we do not blanket-endorse his product
 line. House truth-first rules always win over ideology.
 
+### Daniel Reid — trophology and the Taoist table
+
+Author of *The Tao of Health, Sex and Longevity*; popularizer of Taoist
+health practice for the West, and (through Herbert Shelton) of **trophology**,
+the science of food combining.
+
+**Core ideas we carry:**
+- **Food combining (trophology):** the stomach secretes different, near-opposite
+  juices for different foods — acid + pepsin for concentrated protein, alkaline
+  ptyalin for starch — so mixing opposites digests neither cleanly; the
+  highest-leverage rule is protein and starch at separate meals. Fruit and
+  melon want an empty stomach; simpler meals digest easier.
+- **Taoist table manners over rules:** eat to 70–80% full, chew thoroughly,
+  avoid ice-cold drinks with meals, eat closer to raw and less processed — these
+  help almost any meal, well-combined or not.
+- **Season and climate shape the plate** (Yin/Yang, Four Energies) — warming
+  foods in winter, cooling in summer; ties naturally to the almanac's rhythm.
+
+**How it shows on the site:** the `trophology` Compass course
+(`context/course-plan-trophology.md`) is built on Reid; food-comfort framing
+across content borrows the combining lens; the season-and-food idea cross-links
+to the almanac.
+
+**Caution:** Reid makes many **strong, dated, or unsupported claims** (specific
+disease causation from "putrefaction", the Pottenger-cats → human-sterility
+leap, grains "not meant for humans", sweeping raw-vs-pasteurized-milk
+conclusions). We carry the **practice** (combining, timing, simpler meals,
+table manners) and the **test-it-yourself frame**, and we do **not** repeat the
+polemical claims as established. Mainstream physiology does not endorse strict
+food combining, and combining-diet trials don't beat balanced ones — stated
+honestly per truth-first; the course's ground is *subjective digestive comfort*,
+tested in the reader's own journal (Ralston). Health-domain precedence still
+holds: whole-food, meat-inclusive baseline; no medical claims; infant feeding
+belongs to a pediatrician.
+
 ## Worldview
 
 ### Stephen Harrod Buhner — the world is alive and intelligent

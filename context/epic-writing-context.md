@@ -226,8 +226,10 @@ Meat-free framing follows the precedence rule in ideology-context §How-to-use.
   chapters** — a 5-chapter course maps Gate = 1 / Path = 2–4 (or 2–N−1) /
   Summit = 5; everything else (Trail, seeds, callbacks, Bridge, artifact)
   follows this blueprint unchanged. Existing 5-chapter courses: «Честный сайт
-  с нуля» (`founder-guide`, `context/course-plan-building-in-public.md`) and
-  "Inside websites like this" (`inside-websites`,
+  с нуля» (`founder-guide`, `context/course-plan-building-in-public.md`),
+  «Трофология» (`trophology`, `context/course-plan-trophology.md` — a
+  reader-facing food-combining course after Daniel Reid, en+ru, complete
+  2026-07-05) and "Inside websites like this" (`inside-websites`,
   `context/course-plan-inside-websites.md` — also EN-only by owner decision,
   the one sanctioned deviation from "both locales ship together").
 - *On 1–2 h chapters:* attention research favors 25–45 min sessions; we keep

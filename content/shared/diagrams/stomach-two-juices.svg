@@ -1,0 +1,25 @@
+<svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs><marker id="arr-juice" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<rect x="24" y="20" width="228" height="52" rx="12" fill="var(--peach)"/>
+<text x="138" y="43" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">{{t1}}</text>
+<text x="138" y="61" text-anchor="middle" font-size="12" fill="var(--muted)">{{t2}}</text>
+<rect x="388" y="20" width="228" height="52" rx="12" fill="var(--mint)"/>
+<text x="502" y="43" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">{{t3}}</text>
+<text x="502" y="61" text-anchor="middle" font-size="12" fill="var(--muted)">{{t4}}</text>
+<line x1="138" y1="72" x2="138" y2="104" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-juice)"/>
+<line x1="502" y1="72" x2="502" y2="104" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-juice)"/>
+<rect x="24" y="110" width="228" height="48" rx="12" fill="var(--sand-2)" stroke="var(--clay)" stroke-width="1.5"/>
+<text x="138" y="130" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{t5}}</text>
+<text x="138" y="148" text-anchor="middle" font-size="12" fill="var(--muted)">{{t6}}</text>
+<rect x="388" y="110" width="228" height="48" rx="12" fill="var(--sand-2)" stroke="var(--sage)" stroke-width="1.5"/>
+<text x="502" y="130" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{t7}}</text>
+<text x="502" y="148" text-anchor="middle" font-size="12" fill="var(--muted)">{{t8}}</text>
+<path d="M138 158 C 138 190, 250 200, 300 206" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-juice)"/>
+<path d="M502 158 C 502 190, 390 200, 340 206" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-juice)"/>
+<rect x="196" y="196" width="248" height="46" rx="12" fill="var(--lilac)"/>
+<text x="320" y="216" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">{{t9}}</text>
+<text x="320" y="233" text-anchor="middle" font-size="12" fill="var(--muted)">{{t10}}</text>
+<line x1="320" y1="242" x2="320" y2="256" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-juice)"/>
+<rect x="196" y="260" width="248" height="34" rx="12" fill="var(--clay)"/>
+<text x="320" y="282" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--on-accent)">{{t11}}</text>
+</svg>

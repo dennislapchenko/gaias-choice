@@ -56,6 +56,7 @@ context/                 # authoring context (NOT bundled into the site)
   course-plan-herbalism.md   # «Домашний травник»: full 11-chapter outline, concepts, seeds (ch. 1–3 shipped)
   course-plan-building-in-public.md  # «Честный сайт с нуля»: the founder guides as a 5-chapter course (complete; sanctioned 5-chapter deviation)
   course-plan-inside-websites.md  # "Inside websites like this": 5-chapter engine-room course on this repo's stack (complete; EN-only)
+  course-plan-trophology.md   # «Трофология»: 5-chapter food-combining course (Daniel Reid), full outline + concept/seed map (complete, en+ru)
 public/
   images/*.webp, *.svg   # optimized photos + generated mandala art (see Images)
   favicon.svg
@@ -142,11 +143,13 @@ Compass page shows epics as thumbnails (tabs) and lists the selected epic's
 items, with the epic's `blurb` as a course intro. Epic metadata (title,
 thumbnail, blurb) is configured in
 `site.yaml` `epics:` (`GuideEpic` in `lib/types.ts`); the first configured epic
-is the default. Four epics exist: `founder-guide` («Честный сайт с нуля» /
+is the default. Five epics exist: `founder-guide` («Честный сайт с нуля» /
 "An honest site from zero" — the 5 founder guides as a complete 5-chapter
 course, retrofit 2026-07-05), two reader-facing 11-chapter courses in
 progress — `homeopathy` («Гомеопатия дома») and `herbalism` («Домашний
-травник»), chapters 1–3 each shipped 2026-07-05 — and `inside-websites`
+травник»), chapters 1–3 each shipped 2026-07-05 — `trophology` («Трофология» —
+a complete 5-chapter food-combining course after Daniel Reid, en+ru, shipped
+2026-07-05) — and `inside-websites`
 ("Inside websites like this" — a complete 5-chapter engine-room course on
 how this site's own stack works, **English-only by owner decision**, absent
 from `ru/site.yaml`, shipped 2026-07-05); all outlines live in
@@ -490,6 +493,15 @@ learning the affiliate-content business as they go:
   `herbalism` epics, chapters 1–3 of 11 each (both locales). Chapter 3's
   "next" link is deliberately text-only («готовится») until chapter 4 ships —
   keep that pattern for any course published mid-write.
+- The `trophology` epic («Трофология», 5 chapters, complete, both locales,
+  shipped 2026-07-05) is a reader-facing food-combining course built on Daniel
+  Reid's *The Tao of Health, Sex and Longevity* (Reid added to
+  `context/ideology-context.md` under Health). Truth-first stance mirrors
+  homeopathy: taught as a practice to **test in your own digestion journal**,
+  with an honest evidence note (mainstream physiology doesn't endorse strict
+  combining; Reid's dramatic claims are flagged, not repeated). Plan:
+  `context/course-plan-trophology.md`. Spine artifact = digestion journal +
+  a fridge "Table Map". Art via `task mandalas` (`guides` + `epics` sets).
 - The `inside-websites` epic ("Inside websites like this", 5 chapters,
   complete, shipped 2026-07-05) is the **engine-room course** — this repo's
   own architecture taught top-down for developers/designers/ops (and the

@@ -1,0 +1,21 @@
+<svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<text x="320" y="26" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">{{t1}}</text>
+<rect x="24" y="70" width="176" height="44" rx="10" fill="var(--mint)"/>
+<text x="112" y="88" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{t2}}</text>
+<text x="112" y="106" text-anchor="middle" font-size="11.5" fill="var(--muted)">{{t3}}</text>
+<text x="112" y="140" text-anchor="middle" font-size="11.5" font-style="italic" fill="var(--muted)">{{t4}}</text>
+<rect x="232" y="70" width="176" height="44" rx="10" fill="var(--peach)"/>
+<text x="320" y="88" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{t5}}</text>
+<text x="320" y="106" text-anchor="middle" font-size="11.5" fill="var(--muted)">{{t6}}</text>
+<text x="320" y="140" text-anchor="middle" font-size="11.5" font-style="italic" fill="var(--muted)">{{t7}}</text>
+<rect x="440" y="70" width="176" height="44" rx="10" fill="var(--lilac)"/>
+<text x="528" y="88" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{t8}}</text>
+<text x="528" y="106" text-anchor="middle" font-size="11.5" fill="var(--muted)">{{t9}}</text>
+<text x="528" y="140" text-anchor="middle" font-size="11.5" font-style="italic" fill="var(--muted)">{{t10}}</text>
+<line x1="24" y1="164" x2="616" y2="164" stroke="var(--line)" stroke-width="2"/>
+<polygon points="616,164 606,159 606,169" fill="var(--muted)"/>
+<circle cx="112" cy="164" r="4" fill="var(--sage)"/>
+<circle cx="320" cy="164" r="4" fill="var(--sage)"/>
+<circle cx="528" cy="164" r="4" fill="var(--sage)"/>
+<text x="600" y="186" text-anchor="end" font-size="11.5" font-style="italic" fill="var(--muted)">{{t11}}</text>
+</svg>

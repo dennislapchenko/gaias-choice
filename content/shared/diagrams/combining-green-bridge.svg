@@ -1,0 +1,16 @@
+<svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs><marker id="arr-bridge" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--sage)"/></marker></defs>
+<rect x="40" y="30" width="200" height="60" rx="12" fill="var(--peach)"/>
+<text x="140" y="56" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">{{t1}}</text>
+<text x="140" y="76" text-anchor="middle" font-size="12" fill="var(--muted)">{{t2}}</text>
+<rect x="400" y="30" width="200" height="60" rx="12" fill="var(--mint)"/>
+<text x="500" y="56" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">{{t3}}</text>
+<text x="500" y="76" text-anchor="middle" font-size="12" fill="var(--muted)">{{t4}}</text>
+<line x1="240" y1="60" x2="400" y2="60" stroke="var(--clay)" stroke-width="2" stroke-dasharray="6 6"/>
+<text x="320" y="52" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--clay)">{{t5}}</text>
+<line x1="140" y1="90" x2="180" y2="140" stroke="var(--sage)" stroke-width="2.5" marker-end="url(#arr-bridge)"/>
+<line x1="500" y1="90" x2="460" y2="140" stroke="var(--sage)" stroke-width="2.5" marker-end="url(#arr-bridge)"/>
+<rect x="120" y="148" width="400" height="60" rx="14" fill="var(--sage)"/>
+<text x="320" y="174" text-anchor="middle" font-size="14.5" font-weight="700" fill="var(--on-accent)">{{t6}}</text>
+<text x="320" y="194" text-anchor="middle" font-size="12.5" fill="var(--on-accent)">{{t7}}</text>
+</svg>
