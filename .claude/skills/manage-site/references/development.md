@@ -79,8 +79,10 @@ OrbStack: `open -a OrbStack`, wait ~15s, retry.
   (see SKILL.md "Committing & shipping"). When confirmed, commit on `main` with
   a Conventional-Commits message (`feat:`/`fix:`/`docs:`/`content:`/…) and
   `git push origin main`. **The push is a deploy:** `deploy-pages.yml` builds
-  and publishes to GitHub Pages on every push to `main`. Feature branches + PRs
-  are the planned future flow, not yet active.
+  and publishes to GitHub Pages on every push to `main`. Don't watch or verify
+  the Pages run afterward (trust it — local typecheck + build is the gate); only
+  inspect the workflow if the owner reports a problem or you edited the workflow
+  file. Feature branches + PRs are the planned future flow, not yet active.
 
 ## The dev roadmap (in priority order — from `/roadmap`)
 

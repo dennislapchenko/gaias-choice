@@ -97,8 +97,11 @@ Never commit automatically. Once a change is verified (typecheck + build green),
 2. **Current phase — direct to `main`:** commit on `main`, then
    `git push origin main`. **A push to `main` is a production deploy** — it
    triggers `.github/workflows/deploy-pages.yml`, which builds and publishes to
-   GitHub Pages. So only ever push work you've verified, and treat the push as
-   shipping, not saving.
+   GitHub Pages. So only ever push work you've verified locally, and treat the
+   push as shipping, not saving. **Do not watch/poll the Pages run or verify the
+   deploy afterward** (no `gh run watch`) — the owner trusts it; local
+   typecheck + build is the gate. Only look at the workflow if the owner reports
+   a problem or you changed the workflow file itself.
 3. **Future (not yet — do this only when the owner switches to it):** work on a
    `feature/<slug>` branch, push it, and open a GitHub PR instead of committing
    to `main` directly.
