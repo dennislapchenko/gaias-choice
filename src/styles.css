@@ -1039,6 +1039,88 @@ h1 {
   border-color: var(--sage);
 }
 
+/* ---------- Reviews page: grid + right "in the works" rail ---------- */
+/* Main column (filters + product grid) beside a right rail, mirroring the
+   guide detail article/TOC split. The page header stays full-width above. */
+.reviews-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(240px, 24vw, 300px);
+  align-items: start;
+  gap: 32px;
+}
+.reviews-main {
+  min-width: 0;
+}
+.reviews-layout .upcoming {
+  position: sticky;
+  top: 84px;
+  margin: 0;
+}
+@media (max-width: 900px) {
+  .reviews-layout {
+    display: flex;
+    flex-direction: column;
+  }
+  /* on mobile the rail rides above the grid, still right under the subtitle */
+  .reviews-layout .upcoming {
+    position: static;
+    order: -1;
+    margin: 0 0 24px;
+  }
+}
+
+/* ---------- Upcoming reviews (queued "in the works" list) ---------- */
+.upcoming {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 0 26px;
+}
+.upcoming-label {
+  color: var(--sage-dark);
+}
+.upcoming-note {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.upcoming-list {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.upcoming-item {
+  margin: 0;
+}
+.upcoming-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 16px;
+  /* faintly greyed vs the white review cards — these aren't live reviews yet */
+  background: rgba(47, 44, 39, 0.05);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.upcoming-link:hover {
+  background: rgba(47, 44, 39, 0.09);
+  border-color: var(--sage);
+}
+.upcoming-arrow {
+  flex: 0 0 auto;
+  color: var(--sage-dark);
+  opacity: 0.7;
+}
+
 /* ---------- Guide epics (themed collection thumbnails) ---------- */
 .epic-strip {
   display: flex;
@@ -1116,6 +1198,7 @@ h1 {
   grid-template-columns: minmax(0, 760px) 220px;
   grid-template-areas:
     'nav nav'
+    'header toc'
     'article toc';
   justify-content: center;
   align-items: start;
@@ -1123,6 +1206,13 @@ h1 {
 }
 .detail-nav {
   grid-area: nav;
+}
+.detail-header {
+  grid-area: header;
+}
+/* the row gap below the header already spaces it from the body */
+.detail-header .detail-image {
+  margin-bottom: 0;
 }
 .detail-layout .detail {
   grid-area: article;
@@ -1179,6 +1269,12 @@ h1 {
     flex-direction: column;
   }
   .detail-nav {
+    order: -3;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  /* mobile stack: nav, then title + image, then the TOC, then the body */
+  .detail-header {
     order: -2;
     max-width: 760px;
     margin: 0 auto;
@@ -1229,7 +1325,8 @@ h1 {
     max-height: none;
   }
 }
-.detail h1 {
+.detail h1,
+.detail-header h1 {
   margin: 10px 0 12px;
 }
 .detail-meta {

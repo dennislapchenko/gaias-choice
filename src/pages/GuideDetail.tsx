@@ -23,7 +23,7 @@ export default function GuideDetail() {
           <span className="tag">{t('guides.chapter', { n: guide.chapter })}</span>
         )}
       </div>
-      <article className="detail">
+      <header className="detail-header">
         <h1>{guide.title}</h1>
         <div className="detail-meta">
           <span className="muted">{guide.date}</span>
@@ -31,9 +31,11 @@ export default function GuideDetail() {
         {guide.image && (
           <img className="detail-image" src={withBase(guide.image)} alt={guide.title} />
         )}
+      </header>
+      <TableOfContents html={guide.html} />
+      <article className="detail">
         <Markdown html={guide.html} />
       </article>
-      <TableOfContents html={guide.html} />
     </div>
   )
 }

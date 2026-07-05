@@ -1,5 +1,5 @@
 name: Gaia's Choice
-tagline: Натуральное снаряжение для жизни в дороге с малышом
+tagline: Натуральные вещи для жизни в дороге с малышом
 description: >-
   Честные обзоры из реального опыта — натуральные товары без пластика и отдушек
   для путешествий с малышом на кемпере, машине или с ручной кладью. Мы
@@ -10,7 +10,7 @@ bio: >-
   с малышом и двумя басенджи.
 mission: >-
   Мы помогаем семьям путешествовать осознанно, комфортно и безопасно — используя
-  только натуральное, экологичное снаряжение без синтетики, отдушек и пластика.
+  только натуральные, экологичные вещи без синтетики, отдушек и пластика.
   Не потому что так модно, а потому что вещь рядом с малышом должна быть честной.
 
 # Текущий продакшн-адрес — сейчас это подпуть GitHub Pages, позже переедет на
@@ -22,7 +22,7 @@ heroImage: /images/hero.webp
 values:
   - title: Честность прежде всего
     icon: honesty
-    text: Каждый обзор — о снаряжении, которое мы действительно упаковали, использовали и с которым жили в дороге. Ничего из головы.
+    text: Каждый обзор — о вещах, которые мы действительно упаковали, использовали и с которыми жили в дороге. Ничего из головы.
   - title: Безопасно и натурально
     icon: natural
     text: Мы ищем органические, нетоксичные материалы — те, которым доверишь место рядом с новорождённым, без «но там наверное всё в порядке».
@@ -57,6 +57,23 @@ epics:
     title: Домашний травник
     image: /images/epic-herbalism.svg
     blurb: Курс из 11 глав — вырастить зелёную полку настоев, масел и настоек и узнать десять растений так, как знают людей.
+
+# Обзоры в очереди, ещё не написанные, — показываются полосой «в работе» под
+# подзаголовком страницы обзоров (src/components/UpcomingReviews.tsx). Это НЕ
+# обзоры: без оценки и партнёрских меток — только товар и его страница на Amazon,
+# чтобы очередь была видна. Удаляем запись, когда выходит настоящий обзор.
+# Названия брендов/товаров одинаковы во всех локалях (глоссарий do-not-translate).
+upcoming:
+  - name: Manduca XT Baby Carrier
+    url: 'https://www.amazon.de/-/en/dp/B0CB8N1ZZ8?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1&th=1'
+  - name: Dreamegg White Noise Machine
+    url: 'https://www.amazon.de/-/en/dp/B0B156917Z?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1&th=1'
+  - name: PandaEar Baby Chair Booster Seat
+    url: 'https://www.amazon.de/-/en/dp/B08BYWRCRH?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_3'
+  - name: Baby Nest for Newborns
+    url: 'https://www.amazon.de/-/en/dp/B0DCW69XXF?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_6'
+  - name: Bubba Bear™ Baby Set with Suction Cup Bowl
+    url: 'https://www.amazon.de/-/en/dp/B08XXBC81T?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1'
 
 nav:
   - { label: Главная, path: / }

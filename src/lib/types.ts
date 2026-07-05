@@ -15,6 +15,17 @@ export interface SidebarWidget {
 }
 
 /**
+ * A review that's queued but not written yet — rendered as a flat "in the works"
+ * strip under the Reviews page subtitle (UpcomingReviews.tsx). Not a review:
+ * no rating, no affiliate tag — just the product name + its Amazon listing so
+ * the queue is public. Remove an entry once its real review ships.
+ */
+export interface UpcomingItem {
+  name: string
+  url: string // product listing (Amazon, for now) — reference only, not an affiliate link
+}
+
+/**
  * A themed collection of guides ("epic"). Membership is derived from a guide's
  * FIRST tag matching `tag`; this config only supplies the display metadata
  * (thumbnail + title) and the order the collections appear in on /guides.
@@ -37,6 +48,7 @@ export interface SiteConfig {
   values: ValueItem[]
   sidebar?: SidebarWidget[] // left-rail composition + order; falls back to a default when absent
   epics?: GuideEpic[] // themed guide collections shown as thumbnails on /guides
+  upcoming?: UpcomingItem[] // reviews queued but not yet written, shown on /reviews
   nav: NavItem[]
   footerNav?: NavItem[]
   social: { label: string; url: string }[]

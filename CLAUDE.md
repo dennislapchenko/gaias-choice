@@ -39,7 +39,7 @@ content/                 # ALL editable content (no code)
   locales/
     README.md            # how the per-locale content layout works
     en/                   # English — source of truth, always complete
-      site.yaml           # site name, tagline, description, bio, mission, nav, values, heroImage, social, url
+      site.yaml           # site name, tagline, description, bio, mission, nav, values, heroImage, social, url, epics, upcoming
       products/*.md       # reviews  → /reviews/<filename-without-.md>
       guides/<epic>/*.md  # guides, grouped in per-epic subfolders → /guides/<filename-without-.md> (subfolder is organizational only, not part of the route)
       pages/*.md          # standalone pages (about, contact, roadmap, disclosure, privacy)
@@ -73,7 +73,8 @@ src/
     astro.ts             # in-browser ephemeris → celestial events (astronomy-engine)
     types.ts             # SiteConfig, Product, Guide, Page, Theme, AstroEvent
   components/            # Layout, Sidebar, AstroCalendar, ThemeSwitcher,
-                         # LanguageSwitcher, ProductCard, GuideCard, GuideRow, Markdown, Rating
+                         # LanguageSwitcher, ProductCard, GuideCard, GuideRow,
+                         # UpcomingReviews, Markdown, Rating
   pages/                 # Home, Reviews, ReviewDetail, Guides, GuideDetail,
                          # MarkdownPage (about/contact), NotFound
   styles.css             # single hand-written stylesheet (no CSS framework)
@@ -158,11 +159,15 @@ a page-local table of contents from the guide's `h2`/`h3` headings — a sticky
 column next to the article on desktop, a `<details open>` block on mobile
 (expanded by default, still collapsible by tapping the summary), only once a
 guide has 3+ headings (`components/TableOfContents.tsx`). `.detail-layout`
-(`styles.css`) uses `grid-template-areas` with three regions — `nav` (the
-"Back to the Compass" link + tags, its own `.detail-nav` wrapper), `article`, and
-`toc` — so the back-link can span full width above the two-column row on
-desktop while, on mobile (`display: flex` + `order`), it renders above the
-TOC, which renders above the article body.
+(`styles.css`) uses `grid-template-areas` with four regions — `nav` (the
+"Back to the Compass" link + tags, its own `.detail-nav` wrapper), `header`
+(`.detail-header`: title + date + hero image, split out of the article so the
+TOC can sit below it), `article` (the markdown body), and `toc` — laid out as
+`nav`/`nav`, `header`/`toc`, `article`/`toc` so the back-link spans full width,
+the TOC is a sticky right column beside header+body, and on mobile
+(`display: flex` + `order`) the stack is **nav → header (title + image) → TOC →
+body**. (Review detail pages keep the title/image inside `.detail`, since they
+have no TOC.)
 Heading anchor ids are stamped at markdown-render time by a custom `marked`
 renderer in `lib/content.ts` (`headingIdRenderer`), slugified with Cyrillic
 transliteration so Russian headings still get stable, readable anchors. See
@@ -479,6 +484,12 @@ learning the affiliate-content business as they go:
   checklist. Never add a real affiliate program while these exist. Their images
   are now mandala SVGs (2026-07-05, see Images), not AI photos — real product
   photos still replace them per the launch checklist.
+- The **real** review pipeline is tracked publicly by the `upcoming:` list in
+  `site.yaml` — products bought/queued for testing, shown as an "in the works"
+  rail on the right of `/reviews` (`components/UpcomingReviews.tsx`, in the
+  `.reviews-layout` grid; collapses above the grid on mobile). These are NOT
+  reviews (no rating, no affiliate tag — just the product + its Amazon
+  listing); delete an entry when its real review ships.
 - `/roadmap` (public, building-in-public) tracks phases; keep it updated when
   milestones land. `/disclosure` and `/privacy` are compliance groundwork for
   affiliate programs — required before joining any.
