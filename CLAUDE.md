@@ -53,7 +53,8 @@ content/                 # ALL editable content (no code)
       site.yaml           # name, tagline, description, bio, mission, nav, values,
                           # respected, heroImage, social, url, epics, upcoming,
                           # upcomingJournal, sidebar, support
-                          # (support: is non-localized — en/ only, inherited via getSite)
+                          # (locale-identical fields live in en/ ONLY, inherited via
+                          # getSite's shallow merge — the list is in locales/README.md)
       products/*.md       # reviews  → /reviews/<filename-without-.md>
       compass/<epic>/*.md # Compass course chapters, per-epic subfolders → /compass/<slug>
                           # (subfolder is organizational only, not part of the route)

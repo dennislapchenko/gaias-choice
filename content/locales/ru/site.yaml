@@ -1,4 +1,6 @@
-name: Gaia's Choice
+# Locale-identical config (name, url, heroImage, sidebar, upcoming, social,
+# contactEmail, support) is authored once in en/site.yaml and inherited here
+# via getSite's fall-back-to-en merge — don't copy it back.
 tagline: Натуральные вещи для жизни в дороге с малышом. Рил ба.
 description: >-
   Честные обзоры из реального опыта — натуральные товары без пластика и отдушек
@@ -12,12 +14,6 @@ mission: >-
   Мы помогаем семьям путешествовать осознанно, комфортно и безопасно — используя
   только натуральные, экологичные вещи без синтетики, отдушек и пластика.
   Не потому что так модно, а потому что вещь рядом с малышом должна быть честной.
-
-# Текущий продакшн-адрес — сейчас это подпуть GitHub Pages, позже переедет на
-# корень собственного домена (см. комментарий в en/site.yaml).
-url: https://dennislapchenko.github.io/gaias-choice
-
-heroImage: /images/hero.webp
 
 values:
   - title: Честность прежде всего
@@ -75,16 +71,6 @@ respected:
     why: Ребёнку нужно чувствовать, что его чувствуют, — настройка на ребёнка, а не управление им, и есть сердце родительства.
     url: "https://tealswan.com"
 
-# Left-rail widgets, in render order. Each `type` maps to a collapsible panel in
-# src/components/Sidebar.tsx (about | missionValues | respected | almanac).
-# Reorder, drop, or repeat entries here; adding a brand-new type needs a
-# component in that file.
-sidebar:
-  - type: about
-  - type: missionValues
-  - type: respected
-  - type: almanac
-
 # Themed Compass collections shown as thumbnails at the top of /compass. A
 # chapter belongs to the epic whose `tag` equals its FIRST tag. The first epic
 # here is the default selection. Add an epic + tag chapters with it to grow this.
@@ -105,23 +91,6 @@ epics:
     title: Трофология
     image: /images/epic-trophology.svg
     blurb: Курс из 5 глав — о сочетании продуктов — собрать карту на холодильник и дневник пищеварения и проверить, от каких привычек за столом вам правда легче, — судя по своему телу, а не по догме.
-
-# Обзоры в очереди, ещё не написанные, — показываются полосой «в работе» под
-# подзаголовком страницы обзоров (src/components/UpcomingReviews.tsx). Это НЕ
-# обзоры: без оценки и партнёрских меток — только товар и его страница на Amazon,
-# чтобы очередь была видна. Удаляем запись, когда выходит настоящий обзор.
-# Названия брендов/товаров одинаковы во всех локалях (глоссарий do-not-translate).
-upcoming:
-  - name: Manduca XT Baby Carrier
-    url: "https://www.amazon.de/-/en/dp/B0CB8N1ZZ8?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1&th=1"
-  - name: Dreamegg White Noise Machine
-    url: "https://www.amazon.de/-/en/dp/B0B156917Z?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1&th=1"
-  - name: PandaEar Baby Chair Booster Seat
-    url: "https://www.amazon.de/-/en/dp/B08BYWRCRH?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_3"
-  - name: Baby Nest for Newborns
-    url: "https://www.amazon.de/-/en/dp/B0DCW69XXF?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_6"
-  - name: Bubba Bear™ Baby Set with Suction Cup Bowl
-    url: "https://www.amazon.de/-/en/dp/B08XXBC81T?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1"
 
 # Заметки в планах, ещё не написанные, — та же полоса «в работе», что и у
 # обзоров, на /journal. Без `url`: это идеи, а не товары. Заголовки локализуются
@@ -145,9 +114,3 @@ footerNav:
   - { label: Раскрытие о партнёрстве, path: /disclosure }
   - { label: Конфиденциальность, path: /privacy }
   - { label: Roadmap, path: /roadmap }
-
-social:
-  - { label: Pinterest, url: "https://pinterest.com" }
-  - { label: Instagram, url: "https://instagram.com" }
-
-contactEmail: prosto-mimo-prohodila@gaias-choice.com

@@ -110,11 +110,12 @@ epics:
     image: /images/epic-inside-websites.svg
     blurb: A 5-chapter guide for developers, designers and ops people — how a modern frontend site works under the hood, taught on this site's own code, from the URL bar down to the lockfile.
 
-# Reviews queued but not written yet — rendered as an "in the works" strip under
-# the Reviews page subtitle (src/components/UpcomingReviews.tsx). These are NOT
-# reviews: no rating, no affiliate tag — just the product + its Amazon listing so
-# the queue is public. Delete an entry when its real review ships. Brand/product
-# names stay identical across locales (do-not-translate glossary).
+# Reviews queued but not written yet — rendered as an "in the works" rail on
+# /reviews (src/components/Upcoming.tsx). These are NOT reviews: no rating, no
+# affiliate tag — just the product + its Amazon listing so the queue is public.
+# Delete an entry when its real review ships. Brand/product names stay identical
+# across locales (do-not-translate glossary), so the list lives here only and
+# other locales inherit it — don't copy it into ru/site.yaml.
 upcoming:
   - name: Manduca XT Baby Carrier
     url: "https://www.amazon.de/-/en/dp/B0CB8N1ZZ8?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1&th=1"

@@ -7,19 +7,26 @@ locales/
   en/                  # English — the source of truth, always complete
     site.yaml
     products/*.md
-    guides/*.md
+    compass/<epic>/*.md
+    journal/*.md
     pages/*.md
   ru/                  # Russian — currently complete
-    site.yaml
-    products/*.md
-    guides/*.md
-    pages/*.md
+    (same shape)
 ```
 
 `en/` must always be complete — it's the fallback for anything missing elsewhere.
 A locale directory does not need every file: `src/lib/content.ts` falls back to
 `en/` per-collection and per-slug when a locale is missing a file, so the site
 never breaks while a translation is in progress.
+
+**`site.yaml` inherits field-by-field from English.** `getSite` shallow-merges
+the locale file over `en/site.yaml` (`{ ...en, ...localized }`), so any
+top-level field that's identical across locales is authored **once, in en/**,
+and simply omitted elsewhere. Currently inherited by `ru/`: `name`, `url`,
+`heroImage`, `sidebar`, `upcoming` (brand names + Amazon URLs — do-not-translate),
+`social`, `contactEmail`, `support`. Don't copy these back into a locale file;
+add a field there only to override it. The merge is shallow — a locale that
+overrides a list (e.g. `epics:`) must state that list in full.
 
 To translate a section: add the matching file under the target locale (same
 filename/slug), then translate its frontmatter and body. `content/themes.yaml`
