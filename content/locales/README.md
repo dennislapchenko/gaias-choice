@@ -55,3 +55,13 @@ Judgment call, not a blocklist: when a term has a genuinely common Russian
 loanword that keeps the original recognizable (e.g. `плейбук` for *playbook*),
 that's fine — the thing to avoid is a full native calque that erases the
 English term. When unsure, keep the English term.
+
+## Voice — Russian content speaks in the author's register
+
+RU prose (site.yaml copy, About/Contact, guides, product reviews) is written in
+the voice described in `context/persona-context.md` — not a neutral translation
+of the English. Register scales by content type (About gets the most, legal
+pages get almost none); see the calibration table in that file before adding or
+rephrasing any RU text. `context/plan-rephrase-ru-voice.md` records the
+completed pass over the old content (2026-07-05) as a reference for scope and
+per-tier decisions.

@@ -1,7 +1,8 @@
 # Plan: rephrase all Russian content in the author's voice
 
-**Status:** ready to execute (prepared 2026-07-05, waiting for the owner to
-kick it off).
+**Status:** done (executed 2026-07-05). Tier 1–3 files rephrased in voice;
+Tier 4 (privacy/disclosure) left untouched — already plain and human, no
+corporate-translation smell to fix. `task typecheck && task build` green.
 **Goal:** the current RU content is a competent but soulless translation of the
 EN source. Rephrase every Russian text so a living person — the author
 described in [persona-context.md](persona-context.md) — is speaking, without
@@ -99,8 +100,10 @@ most one warm human sentence where one already exists. Compliance wording
 
 ## Definition of done
 
-- [ ] Every Tier 1–2 file rereads as *her* (passes the 5-question test).
-- [ ] Tier 3 handled and the choice for products stated to the owner.
-- [ ] No fact, number, link, term-of-art, or frontmatter datum changed.
-- [ ] typecheck + build green; RU pages spot-checked in a served build.
-- [ ] Owner asked about commit; docs updated.
+- [x] Every Tier 1–2 file rereads as *her* (passes the 5-question test).
+- [x] Tier 3 handled — roadmap prose touched (checkboxes untouched); products
+      given a light voice pass (verdict/flaw lines), stated to the owner below.
+- [x] No fact, number, link, term-of-art, or frontmatter datum changed.
+- [x] typecheck + build green; RU pages spot-checked in a served build.
+- [ ] Owner asked about commit; docs updated (this file + README note done —
+      commit still pending owner confirmation).
