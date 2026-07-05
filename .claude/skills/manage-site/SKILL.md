@@ -82,3 +82,25 @@ task typecheck && task build   # vite build alone does NOT type-check
 If Docker is down: `open -a OrbStack` and wait ~15s. For visual checks, serve
 `dist/` statically (`task dev` needs a TTY and fails under preview harnesses) —
 full recipe in `references/development.md`.
+
+## Committing & shipping
+
+Never commit automatically. Once a change is verified (typecheck + build green),
+**ask the owner whether to commit** — a plain yes/no. Only when they confirm:
+
+1. **Commit message = Conventional Commits:** `<type>: <short imperative
+   summary>`, `<type>` being the semantically correct one — `feat`, `fix`,
+   `docs`, `content`, `refactor`, `style`, `chore`. One logical change per
+   commit. Examples: `feat: default site language to Russian`,
+   `docs: add do-not-translate glossary for translations`. End the message with
+   the `Co-Authored-By: Claude ...` trailer.
+2. **Current phase — direct to `main`:** commit on `main`, then
+   `git push origin main`. **A push to `main` is a production deploy** — it
+   triggers `.github/workflows/deploy-pages.yml`, which builds and publishes to
+   GitHub Pages. So only ever push work you've verified, and treat the push as
+   shipping, not saving.
+3. **Future (not yet — do this only when the owner switches to it):** work on a
+   `feature/<slug>` branch, push it, and open a GitHub PR instead of committing
+   to `main` directly.
+
+Details and the exact command sequence live in `references/development.md`.

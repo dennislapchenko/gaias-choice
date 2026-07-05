@@ -18,7 +18,11 @@ structural changes.
 | `task lock` | regenerate lockfile (no scripts) |
 | `task verify` | audit + typecheck + image build |
 | `task run` | production image on :8080 |
-| `task deploy` | `gcloud run deploy --source .` (override `REGION=`/`SERVICE=`) |
+| `task deploy` | `gcloud run deploy --source .` (Cloud Run — not the current live path) |
+
+**Live deploy is GitHub Pages, triggered by pushing `main`** (`.github/workflows/deploy-pages.yml`),
+not `task deploy`. Treat a push to `main` as shipping to production. `task deploy`
+(Cloud Run) remains available but isn't the current default.
 
 Docker daemon down (`Cannot connect to the Docker daemon`)? This machine uses
 OrbStack: `open -a OrbStack`, wait ~15s, retry.
@@ -71,8 +75,12 @@ OrbStack: `open -a OrbStack`, wait ~15s, retry.
   URLs in code.
 - A host `node_modules/` is an empty mount stub — safe to delete, don't
   populate it.
-- Git repo state is deliberately staged-but-uncommitted at times; never
-  commit/push unless the owner asks.
+- **Committing/shipping:** never commit automatically — ask the owner first
+  (see SKILL.md "Committing & shipping"). When confirmed, commit on `main` with
+  a Conventional-Commits message (`feat:`/`fix:`/`docs:`/`content:`/…) and
+  `git push origin main`. **The push is a deploy:** `deploy-pages.yml` builds
+  and publishes to GitHub Pages on every push to `main`. Feature branches + PRs
+  are the planned future flow, not yet active.
 
 ## The dev roadmap (in priority order — from `/roadmap`)
 

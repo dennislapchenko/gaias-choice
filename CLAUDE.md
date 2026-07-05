@@ -1,5 +1,10 @@
 # CLAUDE.md
 
+1. Don’t assume. Don’t hide confusion. Surface tradeoffs.
+2. Minimum code that solves the problem. Nothing speculative.
+3. Touch only what you must. Clean up only your own mess.
+4. Define success criteria. Loop until verified.
+
 Guidance for working in this repo. Read this first; it captures decisions that
 aren't obvious from the code.
 
@@ -48,7 +53,7 @@ src/
   App.tsx                # route table
   locales/                # UI chrome strings (nav, buttons, labels) — NOT page content
     en.ts                 # source of truth for UI strings
-    ru.ts                 # currently a placeholder copy of en.ts (see TRANSLATION_STATUS.md)
+    ru.ts                 # Russian UI strings (fully translated)
   lib/
     content.ts           # loads + parses all locale content at build time (the core)
     i18n.tsx             # locale state, persistence, t() translate function
@@ -216,11 +221,15 @@ via `useI18n()`.
 - **Adding a locale:** add its code to `SUPPORTED_LOCALES` + `LOCALE_LABELS`,
   add `src/locales/<lng>.ts` with every key from `en.ts`, and start dropping
   files into `content/locales/<lng>/`.
-- **Translating Russian:** `TRANSLATION_STATUS.md` at the repo root is the
-  checklist — `ru` currently has no content and a placeholder copy of the
-  English UI strings, by deliberate scaffolding choice (translation was
-  deferred to save tokens for a later session). Work through the checklist
-  section by section and delete the file once every box is checked.
+- **Russian (`ru`) is fully translated** — UI strings (`src/locales/ru.ts`) and
+  all content (`content/locales/ru/`: site.yaml, products, guides, pages). The
+  `TRANSLATION_STATUS.md` tracker was deleted once complete, as its own header
+  instructed.
+- **Do NOT calque proper nouns / terms-of-art when translating.** Keep brand,
+  platform, palette, and product/tech terms in English (e.g. **Roadmap** stays
+  `Roadmap`, not `Дорожная карта`). The full do-not-translate glossary and the
+  reasoning live in `content/locales/README.md` — read it before adding a locale
+  or translating new content.
 
 ## Sidebar & celestial almanac
 
@@ -347,5 +356,10 @@ learning the affiliate-content business as they go:
 
 ## Status
 
-Git repo initialized on `main`. Historically left staged-but-uncommitted — the
-owner decides when to commit. Do not commit or push unless asked.
+Git repo on `main`, remote `origin` (GitHub). **Ask the owner before
+committing** — never commit automatically. When confirmed: commit on `main`
+with a Conventional-Commits message (`feat:`/`fix:`/`docs:`/`content:`/…, plus
+the `Co-Authored-By: Claude ...` trailer) and `git push origin main`. **Pushing
+`main` is a production deploy** — `.github/workflows/deploy-pages.yml` builds and
+publishes to GitHub Pages on every push. Feature branches + PRs are the planned
+future flow, not yet active.
