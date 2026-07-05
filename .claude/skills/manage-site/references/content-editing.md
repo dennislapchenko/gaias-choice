@@ -221,7 +221,26 @@ Pages are the one content type needing code wiring:
    `footerNav:` in `site.yaml` (rendered as internal `<Link>`s in the footer).
    Keep the primary nav short — legal/meta pages belong in the footer.
 
-Existing pages: `about`, `contact`, `roadmap`, `disclosure`, `privacy`.
+Existing pages: `about`, `contact`, `roadmap`, `disclosure`, `privacy`. Most are
+plain `MarkdownPage` routes.
+
+The `support` page is the exception — a donation page (nav item, last in the
+primary `nav:`) rendered by a **dedicated component** `src/pages/Support.tsx`,
+not `MarkdownPage`. Only its **intro paragraph** is authored in
+`pages/support.md` (per locale). The payment methods are **config-driven**: edit
+the `support:` block in `content/locales/en/site.yaml` (Stripe URL, `paypal`
+handle, `crypto:` list of `{coin, network, address}`) — that block is
+non-localized, so it lives in `en/` only and `ru/` inherits it. The visible
+labels/buttons are `support.*` UI strings in `src/locales/en.ts` + `ru.ts`. To
+change what a supporter sees, the value goes in exactly one place: an address →
+`en/site.yaml`; a label → both `*.ts`; the pitch → `pages/support.md`. PayPal
+handle + wallet addresses are `PASTE-YOUR-…` placeholders — grep `PASTE-YOUR`
+before shipping; never invent addresses. **YAML gotcha: always quote crypto
+addresses and the PayPal handle.** An unquoted Ethereum `0x…` address is parsed
+as a hex integer and silently corrupted (renders as `6.3e+47`); any all-digit
+value becomes a number too. Quotes force a string — same family of bug as the
+"quote any `title:` with a colon" rule. See the "Support / donation page" row
+in `references/development.md` for the full wiring.
 
 ## The roadmap (`content/locales/en/pages/roadmap.md`)
 

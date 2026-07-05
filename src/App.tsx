@@ -6,6 +6,7 @@ import ReviewDetail from './pages/ReviewDetail'
 import Guides from './pages/Guides'
 import GuideDetail from './pages/GuideDetail'
 import MarkdownPage from './pages/MarkdownPage'
+import Support from './pages/Support'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/roadmap" element={<MarkdownPage slug="roadmap" />} />
         <Route path="/disclosure" element={<MarkdownPage slug="disclosure" />} />
         <Route path="/privacy" element={<MarkdownPage slug="privacy" />} />
+        <Route path="/support" element={<Support />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>

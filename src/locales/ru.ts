@@ -71,6 +71,24 @@ const ru: Record<keyof typeof en, string> = {
   "sidebar.missionValuesLabel": "Миссия и ценности",
   "sidebar.aboutLabel": "О нас",
   "sidebar.aboutMore": "Наша история →",
+
+  "copy.copy": "Копировать",
+  "copy.copied": "Скопировано",
+
+  "support.cardTitle": "Карта · Apple Pay · Google Pay",
+  "support.cardText":
+    "Оплата в одно касание через Apple Pay и Google Pay на базе Stripe уже в пути. Загляните чуть позже.",
+  "support.cardCta": "Поддержать картой",
+  "support.comingSoon": "Скоро",
+  "support.paypalTitle": "PayPal",
+  "support.paypalText": "Самый простой способ на сегодня — оплата в пару кликов, в вашей валюте.",
+  "support.paypalCta": "Поддержать через PayPal",
+  "support.cryptoTitle": "Криптовалюта",
+  "support.cryptoIntro": "Удобнее криптой? Отправьте на один из кошельков ниже.",
+  "support.cryptoWarn":
+    "Проверьте сеть перед отправкой — монеты, отправленные в неверной сети, вернуть нельзя.",
+  "support.thanks":
+    "Спасибо — правда. Даже просто поделиться обзором с другом, которому он нужен, помогает больше, чем кажется.",
 };
 
 export default ru;

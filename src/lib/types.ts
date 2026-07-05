@@ -37,6 +37,24 @@ export interface GuideEpic {
   blurb?: string // one-line course intro shown under the strip when this epic is active
 }
 
+/** One cryptocurrency wallet shown on the Support page. All three fields are
+ *  the same in every language (tickers/chains/addresses are do-not-translate),
+ *  so this lives only in en/site.yaml and ru inherits it (see getSite). */
+export interface CryptoWallet {
+  coin: string // ticker shown bold, e.g. "BTC"
+  network: string // chain / token standard, e.g. "Tron · TRC-20" — pick the wallet's network carefully
+  address: string // wallet address; a PASTE-YOUR-… placeholder until the owner fills it
+}
+
+/** Payment methods for the Support/donations page (src/pages/Support.tsx).
+ *  Non-localized config — authored once in en/site.yaml, inherited by every
+ *  locale. Visible copy is localized separately (UI strings + pages/support.md). */
+export interface SupportConfig {
+  stripe?: string // a Stripe Checkout / Payment Link URL; absent → the card button shows "coming soon"
+  paypal?: string // paypal.me handle (the part after paypal.me/); absent → the PayPal card is hidden
+  crypto?: CryptoWallet[] // wallets listed in order; absent/empty → the crypto card is hidden
+}
+
 export interface SiteConfig {
   name: string
   tagline: string
@@ -49,6 +67,7 @@ export interface SiteConfig {
   sidebar?: SidebarWidget[] // left-rail composition + order; falls back to a default when absent
   epics?: GuideEpic[] // themed guide collections shown as thumbnails on /guides
   upcoming?: UpcomingItem[] // reviews queued but not yet written, shown on /reviews
+  support?: SupportConfig // payment methods for /support; non-localized, so authored in en/ only and inherited by other locales (see getSite)
   nav: NavItem[]
   footerNav?: NavItem[]
   social: { label: string; url: string }[]

@@ -39,10 +39,10 @@ content/                 # ALL editable content (no code)
   locales/
     README.md            # how the per-locale content layout works
     en/                   # English — source of truth, always complete
-      site.yaml           # site name, tagline, description, bio, mission, nav, values, heroImage, social, url, epics, upcoming
+      site.yaml           # site name, tagline, description, bio, mission, nav, values, heroImage, social, url, epics, upcoming, support (support: is non-localized — authored in en/ only, inherited by other locales via getSite)
       products/*.md       # reviews  → /reviews/<filename-without-.md>
       guides/<epic>/*.md  # guides, grouped in per-epic subfolders → /guides/<filename-without-.md> (subfolder is organizational only, not part of the route)
-      pages/*.md          # standalone pages (about, contact, roadmap, disclosure, privacy)
+      pages/*.md          # standalone pages (about, contact, roadmap, disclosure, privacy, support)
     ru/                   # Russian — filled in section by section, falls back to en/
   shared/
     diagrams/*.svg       # guide diagram templates ({{slot}} tokens) — geometry authored once, reused by every locale (see Adding a guide)
@@ -76,9 +76,10 @@ src/
     types.ts             # SiteConfig, Product, Guide, Page, Theme, AstroEvent
   components/            # Layout, Sidebar, AstroCalendar, ThemeSwitcher,
                          # LanguageSwitcher, ProductCard, GuideCard, GuideRow,
-                         # UpcomingReviews, Markdown, Rating
+                         # UpcomingReviews, Markdown, Rating, CopyButton (reusable copy-to-clipboard)
   pages/                 # Home, Reviews, ReviewDetail, Guides, GuideDetail,
-                         # MarkdownPage (about/contact), NotFound
+                         # MarkdownPage (about/contact/etc), Support (config-driven
+                         # donation page), NotFound
   styles.css             # single hand-written stylesheet (no CSS framework)
 Dockerfile               # multi-stage: node build -> nginx runtime
 nginx/default.conf.template  # $PORT + SPA fallback (envsubst at container boot)
@@ -323,7 +324,10 @@ via `useI18n()`.
   Each getter (`getSite`, `getProducts`, `getProduct`, etc.) takes the current
   `Locale` and **falls back to `en`** — first per-collection (if `ru/` has no
   products at all yet), then per-slug (if only some `ru` products exist). The
-  site never breaks or shows blank content mid-translation.
+  site never breaks or shows blank content mid-translation. `getSite`
+  additionally **shallow-merges `en` as a base** (`{ ...en, ...localized }`), so
+  a locale can omit any non-localized field (e.g. the `support:` payment block)
+  and inherit it from English — author such config once, in `en/site.yaml`.
 - `components/LanguageSwitcher.tsx` (in the header, next to `ThemeSwitcher`)
   is **not** a dropdown: it's a single flag-emoji button that **cycles to the
   next locale on click** (no menu), showing the current locale's flag
@@ -369,7 +373,9 @@ hero), and a link to the full `/about` page. The whole panel body is one click
 target (`.side-about` + `.side-about-link::after`, the same stretched-link
 trick as `.card-link` on product/guide cards) — not just the "Our story" text.
 Add a new panel by registering a `{ label, Body, desktopOpen }` entry and
-referencing its `type` from `site.yaml`.
+referencing its `type` from `site.yaml`. `SidebarMobile` also auto-opens the
+`about` tab when the route is `/support` (family photo above the donation ask);
+keyed on `pathname` only, so it opens once and stays closeable.
 
 The first widget is `AstroCalendar.tsx`: a month grid where days with celestial
 events are marked with astrological glyphs. Hovering/focusing/clicking a marked day

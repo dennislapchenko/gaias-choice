@@ -215,7 +215,15 @@ const pagesByLocale = loadCollection<Page>(pageModules, 'pages')
 sortByDate(productsByLocale)
 sortByDate(guidesByLocale)
 
-export const getSite = (locale: Locale): SiteConfig => siteByLocale[locale] ?? siteByLocale.en!
+// Shallow-merge English as the base under the requested locale: a locale's own
+// fields win, but anything it omits (e.g. non-localized `support:` payment
+// details) falls back to English. This keeps do-not-translate config DRY —
+// author it once in en/site.yaml and every locale inherits it.
+export const getSite = (locale: Locale): SiteConfig => {
+  const en = siteByLocale.en!
+  const localized = siteByLocale[locale]
+  return localized && localized !== en ? { ...en, ...localized } : en
+}
 
 export const getProducts = (locale: Locale): Product[] => collectionFor(productsByLocale, locale)
 export const getGuides = (locale: Locale): Guide[] => collectionFor(guidesByLocale, locale)

@@ -85,6 +85,7 @@ nav:
   - { label: Путь, path: /guides }
   - { label: Roadmap, path: /roadmap }
   - { label: Контакты, path: /contact }
+  - { label: Поддержать, path: /support }
 
 # Secondary links rendered in the footer (internal paths).
 footerNav:

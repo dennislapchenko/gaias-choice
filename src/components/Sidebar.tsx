@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import AstroCalendar from './AstroCalendar'
 import { useI18n, type Locale } from '../lib/i18n'
 import { getPage, getSite } from '../lib/content'
@@ -184,6 +184,18 @@ function SidebarMobile({
   locale: Locale
 }) {
   const [openType, setOpenType] = useState<string | null>(null)
+  const { pathname } = useLocation()
+
+  // On the Support page, greet mobile visitors with the About panel already
+  // open — its family photo makes the ask to support feel personal (desktop
+  // shows About by default anyway). Keyed on pathname only: navigating here
+  // opens it once, but the visitor can still close it while they read.
+  useEffect(() => {
+    if (pathname === '/support' && widgets.some((w) => w.type === 'about')) {
+      setOpenType('about')
+    }
+  }, [pathname]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const active = openType ? PANELS[openType] : undefined
   const ActiveBody = active?.Body
 

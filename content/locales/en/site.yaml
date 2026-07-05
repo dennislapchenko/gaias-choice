@@ -84,12 +84,30 @@ upcoming:
   - name: Bubba Bear™ Baby Set with Suction Cup Bowl
     url: "https://www.amazon.de/-/en/dp/B08XXBC81T?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1"
 
+# Payment methods for the /support page (src/pages/Support.tsx). These values are
+# the SAME in every language, so they live here in en/ only — ru/site.yaml omits
+# the block and inherits it via getSite's fall-back-to-en merge (keeps wallet
+# addresses single-source, no double-edit). Visible labels/prose are localized
+# elsewhere (UI strings in src/locales, intro copy in pages/support.md).
+# Fill the PASTE-YOUR-… values before shipping — grep PASTE-YOUR.
+# GOTCHA: ALWAYS QUOTE addresses/handles. An unquoted Ethereum "0x…" address is
+# parsed by YAML as a hex integer and silently corrupted (renders as 6.3e+47);
+# an all-digit value becomes a number too. Quotes force a string — no exceptions.
+support:
+  # stripe: "https://…"                 # a Stripe Payment Link URL; leave unset → card button reads "coming soon"
+  paypal: "acidennis" # paypal.me handle (the part after paypal.me/)
+  crypto:
+    - { coin: BTC, network: Bitcoin, address: "bc1qqv3gtf7nx288leety4p4hpw06z3fytmhw4fy3a" }
+    - { coin: USDT, network: "Tron · TRC-20", address: "TLmJWR3DzGkXZkxzNYraAKJv2WXs9X8jnu" }
+    - { coin: USDC, network: "Ethereum · ERC-20", address: "0x6e75C52793f6daf64e2F6c7071546E9D75565a6D" }
+
 nav:
   - { label: Home, path: / }
   - { label: Reviews, path: /reviews }
   - { label: Compass, path: /guides }
   - { label: Roadmap, path: /roadmap }
   - { label: Contact, path: /contact }
+  - { label: Support, path: /support }
 
 # Secondary links rendered in the footer (internal paths).
 footerNav:

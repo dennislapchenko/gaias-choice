@@ -70,6 +70,24 @@ const en = {
   "sidebar.missionValuesLabel": "Mission & Values",
   "sidebar.aboutLabel": "About us",
   "sidebar.aboutMore": "Our story →",
+
+  "copy.copy": "Copy",
+  "copy.copied": "Copied",
+
+  "support.cardTitle": "Card · Apple Pay · Google Pay",
+  "support.cardText":
+    "One-tap checkout with Apple Pay and Google Pay, powered by Stripe, is on its way. Check back soon.",
+  "support.cardCta": "Support with card",
+  "support.comingSoon": "Coming soon",
+  "support.paypalTitle": "PayPal",
+  "support.paypalText": "The simplest option today — pay in a few clicks, in your own currency.",
+  "support.paypalCta": "Support via PayPal",
+  "support.cryptoTitle": "Crypto",
+  "support.cryptoIntro": "Prefer crypto? Send to one of the wallets below.",
+  "support.cryptoWarn":
+    "Double-check the network before sending — coins sent on the wrong network can't be recovered.",
+  "support.thanks":
+    "Thank you — truly. Even just sharing a review with a friend who needs it helps more than you'd think.",
 } satisfies Record<string, string>;
 
 export default en;

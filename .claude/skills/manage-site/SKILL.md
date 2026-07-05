@@ -60,6 +60,24 @@ for architecture; this skill is the operating manual on top of it.
    a pop "sun-sign horoscope" API or dumb it down; extend the derivations
    instead.
 
+## Coding principles
+
+- **DRY by default.** Every value — content, config, markup, copy — should have
+  a single source of truth. Don't duplicate a wallet address, URL, label, or
+  block of markup across files/locales; lift it to one place (config, a UI
+  string, a shared component/template) and reference it. Non-localized data
+  (payment details, brand/tech constants) is authored once in `en/site.yaml`
+  and inherited by other locales via `getSite`'s fall-back-to-en merge — don't
+  copy it into `ru/site.yaml`. Existing DRY machinery to reuse before you
+  duplicate: shared diagram templates (`content/shared/diagrams/`), `t()` UI
+  strings, `epics:`/`upcoming:`/`support:` config lists, and content-as-data
+  generally.
+- **Readability can outrank DRY** *after* a decision is settled. If collapsing a
+  duplication makes the code/content meaningfully harder to follow (an
+  over-clever abstraction, indirection for a value that will never change
+  together), keep the small repetition and leave a one-line note on why. DRY is
+  the default, not a mandate to abstract prematurely.
+
 ## Project phase awareness
 
 The site is in **bootstrap mode** (see `/roadmap` and the "Current content
