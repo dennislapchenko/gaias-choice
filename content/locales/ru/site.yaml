@@ -13,13 +13,25 @@ heroImage: /images/hero.webp
 
 values:
   - title: Честность прежде всего
+    icon: honesty
     text: Каждый обзор — о снаряжении, которое мы действительно упаковали, использовали и с которым жили в дороге.
   - title: Безопасно и натурально
+    icon: natural
     text: Мы ищем органические, нетоксичные материалы — те, которым доверишь место рядом с новорождённым.
   - title: Меньше, но лучше
+    icon: less
     text: В кемпере — да и в ручной клади — нет места для лишнего. Мы выбираем прочные, многофункциональные вещи.
   - title: Осознанность по умолчанию
+    icon: mindful
     text: Меньше вещей, но лучше — это меньше отходов, более лёгкая дорога и меньший след.
+
+# Left-rail widgets, in render order. Each `type` maps to a component in
+# src/components/Sidebar.tsx (mission | values | almanac). Reorder, drop, or
+# repeat entries here; adding a brand-new type needs a component in that file.
+sidebar:
+  - type: mission
+  - type: values
+  - type: almanac
 
 nav:
   - { label: Главная, path: / }

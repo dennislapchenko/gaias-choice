@@ -5,6 +5,7 @@
  */
 const en = {
   'nav.primaryAriaLabel': 'Primary',
+  'nav.menuAriaLabel': 'Menu',
 
   'footer.email': 'Email',
   'footer.disclosure':
@@ -60,6 +61,8 @@ const en = {
 
   'sidebar.title': 'Celestial Almanac',
   'sidebar.intro': 'Kak budto iz ust samogo Daragana',
+  'sidebar.missionLabel': 'Our mission',
+  'sidebar.valuesLabel': 'What we value',
 } satisfies Record<string, string>
 
 export default en

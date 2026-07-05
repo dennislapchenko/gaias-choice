@@ -125,6 +125,95 @@ h1 {
   flex-wrap: wrap;
   justify-content: flex-end;
 }
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+/* Hamburger — hidden on desktop, shown when the nav collapses (see ≤820px). */
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--line);
+  background: var(--white);
+  border-radius: 12px;
+  cursor: pointer;
+}
+.nav-toggle-bars {
+  position: relative;
+  width: 18px;
+  height: 14px;
+}
+.nav-toggle-bars span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ink);
+  transition:
+    top 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+.nav-toggle-bars span:nth-child(1) {
+  top: 0;
+}
+.nav-toggle-bars span:nth-child(2) {
+  top: 6px;
+}
+.nav-toggle-bars span:nth-child(3) {
+  top: 12px;
+}
+.nav-toggle[aria-expanded='true'] .nav-toggle-bars span:nth-child(1) {
+  top: 6px;
+  transform: rotate(45deg);
+}
+.nav-toggle[aria-expanded='true'] .nav-toggle-bars span:nth-child(2) {
+  opacity: 0;
+}
+.nav-toggle[aria-expanded='true'] .nav-toggle-bars span:nth-child(3) {
+  top: 6px;
+  transform: rotate(-45deg);
+}
+
+/* Collapse the primary nav into the hamburger dropdown on small screens. */
+@media (max-width: 820px) {
+  .header-inner {
+    position: relative;
+  }
+  .nav-toggle {
+    display: inline-flex;
+  }
+  .site-nav {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 2px;
+    flex-wrap: nowrap;
+    padding: 8px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow);
+    z-index: 20;
+  }
+  .site-nav.open {
+    display: flex;
+  }
+  .site-nav a {
+    padding: 11px 12px;
+    border-radius: 12px;
+    font-size: 1rem;
+  }
+}
 
 /* ---------- Palette switcher ---------- */
 .theme-switcher {
@@ -339,6 +428,92 @@ h1 {
   border-radius: var(--radius);
   padding: 18px;
 }
+/* small uppercase eyebrow shared by the mission + values blocks */
+.side-label {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+/* ---------- Mission badge (flat, accent-filled, slightly taller) ---------- */
+.side-mission {
+  background: var(--sage);
+  color: var(--on-accent);
+  border-color: transparent;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.side-mission .side-label {
+  opacity: 0.8;
+}
+.side-mission-text {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+/* ---------- Values: a growing stack of flat pastel rectangles ---------- */
+.side-values {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.side-values .side-label {
+  color: var(--sage-dark);
+  padding-left: 2px;
+}
+.value-badge-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.value-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 14px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+}
+/* cycle the three pastel tones down the stack (matches home value cards) */
+.value-badge:nth-child(3n + 1) {
+  background: var(--mint);
+}
+.value-badge:nth-child(3n + 2) {
+  background: var(--peach);
+}
+.value-badge:nth-child(3n) {
+  background: var(--lilac);
+}
+.value-badge-icon {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--sage-dark);
+}
+.value-badge-icon svg {
+  width: 19px;
+  height: 19px;
+}
+.value-badge-body h3 {
+  margin: 0 0 3px;
+  font-size: 0.9rem;
+}
+.value-badge-body p {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
 .side-intro {
   background: linear-gradient(135deg, var(--peach), var(--lilac));
   border-color: transparent;
@@ -569,43 +744,6 @@ h1 {
 }
 .btn-ghost:hover {
   background: var(--sand-2);
-}
-
-/* ---------- Mission + values ---------- */
-.mission-band {
-  margin-top: 28px;
-  background: var(--sage);
-  color: var(--on-accent);
-  border-radius: var(--radius);
-  padding: 24px 28px;
-  font-size: 1.12rem;
-}
-.mission-band p {
-  margin: 0;
-}
-.values {
-  margin-top: 28px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 18px;
-}
-.value {
-  border: 1px solid transparent;
-  border-radius: var(--radius);
-  padding: 20px;
-}
-/* cycle the three pastel tones across the value cards */
-.value:nth-child(3n + 1) {
-  background: var(--mint);
-}
-.value:nth-child(3n + 2) {
-  background: var(--peach);
-}
-.value:nth-child(3n) {
-  background: var(--lilac);
-}
-.value h3 {
-  margin: 0 0 6px;
 }
 
 /* ---------- Grid + cards ---------- */

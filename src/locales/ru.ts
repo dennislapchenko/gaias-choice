@@ -6,6 +6,7 @@ import en from './en'
  */
 const ru: Record<keyof typeof en, string> = {
   'nav.primaryAriaLabel': 'Главное меню',
+  'nav.menuAriaLabel': 'Меню',
 
   'footer.email': 'Эл. почта',
   'footer.disclosure':
@@ -61,6 +62,8 @@ const ru: Record<keyof typeof en, string> = {
 
   'sidebar.title': 'Небесный альманах',
   'sidebar.intro': 'Как будто из уст самого Дарагана',
+  'sidebar.missionLabel': 'Наша миссия',
+  'sidebar.valuesLabel': 'Наши ценности',
 }
 
 export default ru

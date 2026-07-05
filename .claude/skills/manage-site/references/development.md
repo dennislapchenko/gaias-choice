@@ -55,10 +55,15 @@ OrbStack: `open -a OrbStack`, wait ~15s, retry.
   in `styles.css` (first-paint frame). Check `onAccent` contrast per palette.
 - **New route/page:** route in `src/App.tsx`; nav from `site.yaml` `nav:` /
   `footerNav:` (never hardcode links in `Layout.tsx`).
-- **New sidebar widget:** add a `<section className="side-card">` in
-  `src/components/Sidebar.tsx`. The almanac (`AstroCalendar` + `lib/astro.ts`)
-  is real ephemeris math — extend its event generators, never swap in a
-  horoscope API.
+- **Sidebar composition is content-driven:** the left-rail widgets + their
+  order come from `site.yaml`'s `sidebar:` list (per locale), each entry a
+  `type` mapped to a component in `src/components/Sidebar.tsx`'s `WIDGETS`
+  registry (`mission`, `values`, `almanac`). Reorder/drop/repeat = edit
+  `site.yaml` only. **New widget type:** add a component + register it in
+  `WIDGETS`, then reference its `type` from `site.yaml` (add to both `en` and
+  `ru`). Unknown types are skipped; no `sidebar:` list falls back to
+  `DEFAULT_SIDEBAR`. The almanac (`AstroCalendar` + `lib/astro.ts`) is real
+  ephemeris math — extend its event generators, never swap in a horoscope API.
 - **New content field:** extend the type in `src/lib/types.ts`, render it in
   the component — `content.ts` spreads frontmatter automatically, no parser
   changes needed.

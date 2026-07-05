@@ -6,6 +6,12 @@ export interface NavItem {
 export interface ValueItem {
   title: string
   text: string
+  icon?: string // icon key rendered in the sidebar value badge (see Sidebar.tsx); falls back to a default glyph
+}
+
+/** One entry in the left-rail widget list — `type` maps to a component in Sidebar.tsx's registry. */
+export interface SidebarWidget {
+  type: string // mission | values | almanac | … (unknown types are skipped)
 }
 
 export interface SiteConfig {
@@ -15,6 +21,7 @@ export interface SiteConfig {
   mission: string
   heroImage?: string
   values: ValueItem[]
+  sidebar?: SidebarWidget[] // left-rail composition + order; falls back to a default when absent
   nav: NavItem[]
   footerNav?: NavItem[]
   social: { label: string; url: string }[]

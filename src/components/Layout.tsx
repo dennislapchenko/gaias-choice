@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { getSite } from '../lib/content'
 import { useI18n } from '../lib/i18n'
@@ -10,16 +10,37 @@ export default function Layout({ children }: { children: ReactNode }) {
   const { pathname } = useLocation()
   const { locale, t } = useI18n()
   const site = getSite(locale)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const headerRef = useRef<HTMLDivElement>(null)
 
-  // Scroll to top on client-side navigation.
+  // Scroll to top + close the mobile menu on client-side navigation.
   useEffect(() => {
     window.scrollTo(0, 0)
+    setMenuOpen(false)
   }, [pathname])
+
+  // While the mobile menu is open, close it on Escape or an outside click
+  // (mirrors the switcher dropdowns' dismissal behaviour).
+  useEffect(() => {
+    if (!menuOpen) return
+    const onDown = (e: MouseEvent) => {
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) setMenuOpen(false)
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false)
+    }
+    document.addEventListener('mousedown', onDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [menuOpen])
 
   return (
     <div className="app">
       <header className="site-header">
-        <div className="container header-inner">
+        <div className="container header-inner" ref={headerRef}>
           <Link to="/" className="brand">
             <span className="brand-mark" aria-hidden="true">
               🌿
@@ -27,7 +48,11 @@ export default function Layout({ children }: { children: ReactNode }) {
             <span className="brand-name">{site.name}</span>
           </Link>
           <div className="header-right">
-            <nav className="site-nav" aria-label={t('nav.primaryAriaLabel')}>
+            <nav
+              id="site-nav"
+              className={`site-nav${menuOpen ? ' open' : ''}`}
+              aria-label={t('nav.primaryAriaLabel')}
+            >
               {site.nav.map((item) => (
                 <NavLink
                   key={item.path}
@@ -39,8 +64,24 @@ export default function Layout({ children }: { children: ReactNode }) {
                 </NavLink>
               ))}
             </nav>
-            <LanguageSwitcher />
-            <ThemeSwitcher />
+            <div className="header-controls">
+              <LanguageSwitcher />
+              <ThemeSwitcher />
+              <button
+                type="button"
+                className="nav-toggle"
+                aria-expanded={menuOpen}
+                aria-controls="site-nav"
+                aria-label={t('nav.menuAriaLabel')}
+                onClick={() => setMenuOpen((open) => !open)}
+              >
+                <span className="nav-toggle-bars" aria-hidden="true">
+                  <span />
+                  <span />
+                  <span />
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </header>

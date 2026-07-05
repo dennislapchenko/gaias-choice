@@ -34,19 +34,6 @@ export default function Home() {
         )}
       </section>
 
-      <section className="mission-band">
-        <p>{site.mission}</p>
-      </section>
-
-      <section className="values">
-        {site.values.map((v) => (
-          <div key={v.title} className="value">
-            <h3>{v.title}</h3>
-            <p className="muted">{v.text}</p>
-          </div>
-        ))}
-      </section>
-
       <section className="section">
         <div className="section-head">
           <h2>{t('home.featuredReviews')}</h2>

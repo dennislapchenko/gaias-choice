@@ -12,13 +12,25 @@ heroImage: /images/hero.webp
 
 values:
   - title: Honesty first
+    icon: honesty
     text: Every review comes from gear we actually packed, used, and lived with on the road.
   - title: Safe & natural
+    icon: natural
     text: We look for organic, non-toxic materials — the stuff you'd trust next to a newborn.
   - title: Less, but better
+    icon: less
     text: A camper — or a carry-on — has no room for clutter. We favor durable, multi-use picks.
   - title: Mindful by default
+    icon: mindful
     text: Fewer, better things means less waste, lighter travel, and a smaller footprint.
+
+# Left-rail widgets, in render order. Each `type` maps to a component in
+# src/components/Sidebar.tsx (mission | values | almanac). Reorder, drop, or
+# repeat entries here; adding a brand-new type needs a component in that file.
+sidebar:
+  - type: mission
+  - type: values
+  - type: almanac
 
 nav:
   - { label: Home, path: / }
