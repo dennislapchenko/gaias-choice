@@ -18,7 +18,7 @@ pick controls list position. Markdown is GFM (task-list checkboxes render).
 - **Plain, warm, unhyped.** No "game-changer", no exclamation-mark stacking.
   The brand is "buy less, buy better".
 
-## Add a product review → `content/products/<slug>.md`
+## Add a product review → `content/locales/en/products/<slug>.md`
 
 ```markdown
 ---
@@ -48,7 +48,7 @@ tags: [organic, cotton]    # optional
 Ask for real testing notes if the user didn't provide them. Structure sections
 may flex, but verdict-first + a flaws section are fixed.
 
-## Add a guide → `content/guides/<slug>.md`
+## Add a guide → `content/locales/en/guides/<slug>.md`
 
 Frontmatter: `title`, `excerpt`, `date`, optional `image`, `tags`.
 
@@ -65,20 +65,20 @@ Reader-facing guides (post-bootstrap) drop that note and follow the voice
 rules above. Don't "fix" founder guides into consumer content — replacing them
 is a deliberate roadmap milestone.
 
-## Add a standalone page → `content/pages/<slug>.md` (+ wiring)
+## Add a standalone page → `content/locales/en/pages/<slug>.md` (+ wiring)
 
 Pages are the one content type needing code wiring:
 
-1. Create `content/pages/<slug>.md` with frontmatter `title: …`.
+1. Create `content/locales/en/pages/<slug>.md` with frontmatter `title: …`.
 2. Add a route in `src/App.tsx`:
    `<Route path="/<slug>" element={<MarkdownPage slug="<slug>" />} />`
-3. Link it: primary nav → `nav:` in `content/site.yaml`; secondary/legal →
+3. Link it: primary nav → `nav:` in `content/locales/en/site.yaml`; secondary/legal →
    `footerNav:` in `site.yaml` (rendered as internal `<Link>`s in the footer).
    Keep the primary nav short — legal/meta pages belong in the footer.
 
 Existing pages: `about`, `contact`, `roadmap`, `disclosure`, `privacy`.
 
-## The roadmap (`content/pages/roadmap.md`)
+## The roadmap (`content/locales/en/pages/roadmap.md`)
 
 Public, building-in-public, phased with `- [ ]` checkboxes. Maintenance rules:
 
@@ -106,9 +106,9 @@ frame) replace them per the launch checklist.
 
 - Footer already carries a short affiliate notice linking to `/disclosure`.
 - Amazon Associates' required sentence sits commented-out in
-  `content/pages/disclosure.md` — uncomment when (and only when) enrolled.
+  `content/locales/en/pages/disclosure.md` — uncomment when (and only when) enrolled.
 - A review with an `affiliateUrl` should state the affiliate relationship
   before the first link (the site-wide footer covers the minimum, but
   per-review is the house standard).
-- `content/pages/privacy.md` promises it gets updated *before* analytics or a
+- `content/locales/en/pages/privacy.md` promises it gets updated *before* analytics or a
   newsletter ship — honor that ordering.

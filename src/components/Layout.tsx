@@ -1,11 +1,15 @@
 import { useEffect, type ReactNode } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { site } from '../lib/content'
+import { getSite } from '../lib/content'
+import { useI18n } from '../lib/i18n'
 import ThemeSwitcher from './ThemeSwitcher'
+import LanguageSwitcher from './LanguageSwitcher'
 import Sidebar from './Sidebar'
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { pathname } = useLocation()
+  const { locale, t } = useI18n()
+  const site = getSite(locale)
 
   // Scroll to top on client-side navigation.
   useEffect(() => {
@@ -23,7 +27,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             <span className="brand-name">{site.name}</span>
           </Link>
           <div className="header-right">
-            <nav className="site-nav" aria-label="Primary">
+            <nav className="site-nav" aria-label={t('nav.primaryAriaLabel')}>
               {site.nav.map((item) => (
                 <NavLink
                   key={item.path}
@@ -35,6 +39,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                 </NavLink>
               ))}
             </nav>
+            <LanguageSwitcher />
             <ThemeSwitcher />
           </div>
         </div>
@@ -64,16 +69,15 @@ export default function Layout({ children }: { children: ReactNode }) {
                 {s.label}
               </a>
             ))}
-            <a href={`mailto:${site.contactEmail}`}>Email</a>
+            <a href={`mailto:${site.contactEmail}`}>{t('footer.email')}</a>
           </div>
         </div>
         <div className="container disclosure muted">
           <p>
-            Some links are affiliate links. If you buy through them we may earn a small
-            commission at no extra cost to you. We only recommend gear we have actually
-            used. <Link to="/disclosure">Full disclosure</Link>.
+            {t('footer.disclosure')}{' '}
+            <Link to="/disclosure">{t('footer.disclosureLinkText')}</Link>.
           </p>
-          <p>© {new Date().getFullYear()} {site.name}.</p>
+          <p>{t('footer.copyright', { year: new Date().getFullYear(), name: site.name })}</p>
         </div>
       </footer>
     </div>

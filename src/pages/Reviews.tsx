@@ -1,27 +1,29 @@
 import { useMemo, useState } from 'react'
-import { products } from '../lib/content'
+import { getProducts } from '../lib/content'
+import { useI18n } from '../lib/i18n'
 import ProductCard from '../components/ProductCard'
 
-export default function Reviews() {
-  const categories = useMemo(
-    () => ['All', ...Array.from(new Set(products.map((p) => p.category))).sort()],
-    [],
-  )
-  const [active, setActive] = useState('All')
+const ALL = 'All'
 
-  const visible = active === 'All' ? products : products.filter((p) => p.category === active)
+export default function Reviews() {
+  const { locale, t } = useI18n()
+  const products = getProducts(locale)
+  const categories = useMemo(
+    () => [ALL, ...Array.from(new Set(products.map((p) => p.category))).sort()],
+    [products],
+  )
+  const [active, setActive] = useState(ALL)
+
+  const visible = active === ALL ? products : products.filter((p) => p.category === active)
 
   return (
     <>
       <header className="page-head">
-        <h1>Reviews</h1>
-        <p className="lead">
-          Every item here has ridden with us for real miles — tested for materials, safety, and
-          how it holds up to life on the road with a baby.
-        </p>
+        <h1>{t('reviews.title')}</h1>
+        <p className="lead">{t('reviews.lead')}</p>
       </header>
 
-      <div className="filters" role="tablist" aria-label="Filter by category">
+      <div className="filters" role="tablist" aria-label={t('reviews.filterAriaLabel')}>
         {categories.map((c) => (
           <button
             key={c}
@@ -30,7 +32,7 @@ export default function Reviews() {
             className={`chip ${active === c ? 'chip-active' : ''}`}
             onClick={() => setActive(c)}
           >
-            {c}
+            {c === ALL ? t('reviews.allCategory') : c}
           </button>
         ))}
       </div>

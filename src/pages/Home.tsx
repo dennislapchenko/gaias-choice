@@ -1,26 +1,29 @@
 import { Link } from 'react-router-dom'
-import { guides, products, site } from '../lib/content'
+import { getGuides, getProducts, getSite } from '../lib/content'
+import { useI18n } from '../lib/i18n'
 import { withBase } from '../lib/asset'
 import ProductCard from '../components/ProductCard'
 import GuideCard from '../components/GuideCard'
 
 export default function Home() {
-  const featuredProducts = products.slice(0, 3)
-  const latestGuides = guides.slice(0, 2)
+  const { locale, t } = useI18n()
+  const site = getSite(locale)
+  const featuredProducts = getProducts(locale).slice(0, 3)
+  const latestGuides = getGuides(locale).slice(0, 2)
 
   return (
     <>
       <section className={`hero ${site.heroImage ? 'hero-split' : ''}`}>
         <div className="hero-text">
-          <p className="eyebrow">Natural · Plastic-free · Fragrance-free</p>
+          <p className="eyebrow">{t('home.eyebrow')}</p>
           <h1>{site.tagline}</h1>
           <p className="lead">{site.description}</p>
           <div className="hero-actions">
             <Link to="/reviews" className="btn btn-primary">
-              Browse reviews
+              {t('home.browseReviews')}
             </Link>
             <Link to="/guides" className="btn btn-ghost">
-              Read the guides
+              {t('home.readGuides')}
             </Link>
           </div>
         </div>
@@ -46,9 +49,9 @@ export default function Home() {
 
       <section className="section">
         <div className="section-head">
-          <h2>Featured reviews</h2>
+          <h2>{t('home.featuredReviews')}</h2>
           <Link to="/reviews" className="link-more">
-            All reviews →
+            {t('home.allReviews')}
           </Link>
         </div>
         <div className="grid grid-3">
@@ -60,9 +63,9 @@ export default function Home() {
 
       <section className="section">
         <div className="section-head">
-          <h2>Latest guides</h2>
+          <h2>{t('home.latestGuides')}</h2>
           <Link to="/guides" className="link-more">
-            All guides →
+            {t('home.allGuides')}
           </Link>
         </div>
         <div className="grid grid-2">

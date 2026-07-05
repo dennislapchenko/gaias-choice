@@ -1,9 +1,11 @@
 import { getPage } from '../lib/content'
+import { useI18n } from '../lib/i18n'
 import Markdown from '../components/Markdown'
 import NotFound from './NotFound'
 
 export default function MarkdownPage({ slug }: { slug: string }) {
-  const page = getPage(slug)
+  const { locale } = useI18n()
+  const page = getPage(locale, slug)
   if (!page) return <NotFound />
 
   return (

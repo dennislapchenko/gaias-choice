@@ -31,38 +31,49 @@ SSR/SSG site.
 
 ```
 content/                 # ALL editable content (no code)
-  site.yaml              # site name, tagline, mission, nav, values, heroImage, social
-  themes.yaml            # color palettes (tag + label + default + colors)
-  products/*.md          # reviews  → /reviews/<filename-without-.md>
-  guides/*.md            # guides   → /guides/<filename-without-.md>
-  pages/*.md             # standalone pages (about, contact, roadmap, disclosure, privacy)
+  locales/
+    README.md            # how the per-locale content layout works
+    en/                   # English — source of truth, always complete
+      site.yaml           # site name, tagline, mission, nav, values, heroImage, social
+      products/*.md       # reviews  → /reviews/<filename-without-.md>
+      guides/*.md         # guides   → /guides/<filename-without-.md>
+      pages/*.md          # standalone pages (about, contact, roadmap, disclosure, privacy)
+    ru/                   # Russian — filled in section by section, falls back to en/
+  themes.yaml            # color palettes (tag + label + default + colors) — shared, not localized
 public/
   images/*.webp          # optimized images referenced by content (see Images)
   favicon.svg
 src/
-  main.tsx               # React root + BrowserRouter
+  main.tsx               # React root + BrowserRouter + I18nProvider
   App.tsx                # route table
+  locales/                # UI chrome strings (nav, buttons, labels) — NOT page content
+    en.ts                 # source of truth for UI strings
+    ru.ts                 # currently a placeholder copy of en.ts (see TRANSLATION_STATUS.md)
   lib/
-    content.ts           # loads + parses all content at build time (the core)
+    content.ts           # loads + parses all locale content at build time (the core)
+    i18n.tsx             # locale state, persistence, t() translate function
     theme.ts             # applies/persists color palettes (CSS var overrides)
     astro.ts             # in-browser ephemeris → celestial events (astronomy-engine)
     types.ts             # SiteConfig, Product, Guide, Page, Theme, AstroEvent
   components/            # Layout, Sidebar, AstroCalendar, ThemeSwitcher,
-                         # ProductCard, GuideCard, Markdown, Rating
+                         # LanguageSwitcher, ProductCard, GuideCard, Markdown, Rating
   pages/                 # Home, Reviews, ReviewDetail, Guides, GuideDetail,
                          # MarkdownPage (about/contact), NotFound
   styles.css             # single hand-written stylesheet (no CSS framework)
 Dockerfile               # multi-stage: node build -> nginx runtime
 nginx/default.conf.template  # $PORT + SPA fallback (envsubst at container boot)
 Taskfile.yml             # all common commands
+TRANSLATION_STATUS.md    # Russian translation checklist — delete once fully translated
 ```
 
 ## How content loading works (`src/lib/content.ts`)
 
 This is the heart of the site. At **build time**:
 
-- `import.meta.glob('../../content/<kind>/*.md', { query: '?raw', eager: true })`
-  pulls every markdown file in as a raw string. Nothing is fetched at runtime.
+- `import.meta.glob('../../content/locales/*/<kind>/*.md', { query: '?raw', eager: true })`
+  pulls every markdown file, in every locale, in as a raw string. Nothing is
+  fetched at runtime. See "Language switching / i18n" below for how the locale
+  segment is resolved and falls back to English.
 - `parseFrontmatter()` splits the leading `---` YAML block from the body using a
   regex, and parses the YAML with the `yaml` package (browser-safe — this is why
   we do NOT use `gray-matter`, which needs Node's `Buffer`).
@@ -76,7 +87,8 @@ This is the heart of the site. At **build time**:
 
 ### Adding a review
 
-Create `content/products/<slug>.md`:
+Create `content/locales/en/products/<slug>.md` (add a matching file under
+`ru/` too, once translated — see "Language switching / i18n" below):
 
 ```markdown
 ---
@@ -96,12 +108,12 @@ Markdown body…
 
 ### Adding a guide
 
-`content/guides/<slug>.md` — same idea, fields: `title`, `excerpt`, `image?`,
-`date`, `tags?`.
+`content/locales/en/guides/<slug>.md` — same idea, fields: `title`, `excerpt`,
+`image?`, `date`, `tags?`.
 
 ### Adding a standalone page
 
-`content/pages/<slug>.md` with just `title`. Then wire a route in `App.tsx`
+`content/locales/en/pages/<slug>.md` with just `title`. Then wire a route in `App.tsx`
 (`<Route path="/x" element={<MarkdownPage slug="x" />} />`) — pages are the one
 content type that needs a route because their URLs are bespoke.
 
@@ -168,6 +180,47 @@ muddy — nudge the accent hue darker if you need strict AA-small there.
   the others). The current default is **periwinkle**. The `:root` values in
   `styles.css` are the pre-JS fallback — keep them in sync with whichever palette
   is `default` if you care about the first-paint frame.
+
+### Language switching / i18n
+
+Two kinds of translatable text, kept in separate places so it's always obvious
+where a given string lives:
+
+- **Page content** (reviews, guides, pages, `site.yaml`) — data, under
+  `content/locales/<lng>/`. See `content/locales/README.md`.
+- **UI chrome strings** (nav labels, buttons, aria-labels — anything hardcoded
+  in `src/` rather than authored content) — code, under `src/locales/<lng>.ts`,
+  a flat `Record<string, string>` keyed like `'reviews.title'`. Looked up
+  through `t()` from `useI18n()`.
+
+`SUPPORTED_LOCALES` in `src/lib/i18n.tsx` is `['ru', 'en']` — Russian listed
+first (the order the switcher shows), but `DEFAULT_LOCALE` is still `'en'`.
+The choice persists to `localStorage['gc-lang']`; `initI18n()` runs in
+`main.tsx` before React renders to set `<html lang>` early, mirroring
+`initTheme()`. `I18nProvider` wraps the app and exposes `{ locale, setLocale, t }`
+via `useI18n()`.
+
+- `src/lib/content.ts` loads every locale's content via a wildcarded
+  `import.meta.glob('../../content/locales/*/...')` and groups it by locale.
+  Each getter (`getSite`, `getProducts`, `getProduct`, etc.) takes the current
+  `Locale` and **falls back to `en`** — first per-collection (if `ru/` has no
+  products at all yet), then per-slug (if only some `ru` products exist). The
+  site never breaks or shows blank content mid-translation.
+- `components/LanguageSwitcher.tsx` (in the header, next to `ThemeSwitcher`)
+  is styled as its own `.lang-*` CSS block that mirrors `.theme-*` in
+  `styles.css` — same shape, same interaction pattern (dropdown, outside
+  click/Escape to close).
+- `components/AstroCalendar.tsx` gets month/weekday names from
+  `Intl.DateTimeFormat(locale, ...)` instead of the string dictionary — new
+  locales get correct calendar names for free, no translation entry needed.
+- **Adding a locale:** add its code to `SUPPORTED_LOCALES` + `LOCALE_LABELS`,
+  add `src/locales/<lng>.ts` with every key from `en.ts`, and start dropping
+  files into `content/locales/<lng>/`.
+- **Translating Russian:** `TRANSLATION_STATUS.md` at the repo root is the
+  checklist — `ru` currently has no content and a placeholder copy of the
+  English UI strings, by deliberate scaffolding choice (translation was
+  deferred to save tokens for a later session). Work through the checklist
+  section by section and delete the file once every box is checked.
 
 ## Sidebar & celestial almanac
 
@@ -277,12 +330,12 @@ The owner wants the npm surface kept off the host and minimal.
 The site is in **bootstrap mode** — the owners are first-time site builders
 learning the affiliate-content business as they go:
 
-- `content/guides/*` are **founder guides**: internal how-to-build-this-site
+- `content/locales/en/guides/*` are **founder guides**: internal how-to-build-this-site
   playbooks (review process, monetization, traffic/SEO, launch checklist,
   master playbook), deliberately public. They will be replaced by
   reader-facing guides once the owners have real first-hand content. Don't
   "fix" them back into consumer content.
-- `content/products/*` are still **AI placeholder reviews** with fake
+- `content/locales/en/products/*` are still **AI placeholder reviews** with fake
   affiliate URLs (`EXAMPLE…`) and AI images — flagged for deletion/replacement
   in the launch checklist. Never add a real affiliate program while these exist.
 - `/roadmap` (public, building-in-public) tracks phases; keep it updated when

@@ -1,22 +1,36 @@
 import { useMemo, useState } from 'react'
 import { eventsForMonth } from '../lib/astro'
+import { useI18n } from '../lib/i18n'
 import type { AstroEvent } from '../lib/types'
 
-const WEEKDAYS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-const MONTHS = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-]
+// Localized via Intl (not the UI dictionary) so new locales get correct
+// month/weekday names automatically, with zero translation work.
+const REFERENCE_SUNDAY = new Date(2000, 0, 2) // 2000-01-02 is a Sunday
+
+function monthNames(locale: string): string[] {
+  const fmt = new Intl.DateTimeFormat(locale, { month: 'long' })
+  return Array.from({ length: 12 }, (_, m) => fmt.format(new Date(2000, m, 1)))
+}
+
+function weekdayNames(locale: string): string[] {
+  const fmt = new Intl.DateTimeFormat(locale, { weekday: 'narrow' })
+  return Array.from({ length: 7 }, (_, i) =>
+    fmt.format(new Date(REFERENCE_SUNDAY.getFullYear(), REFERENCE_SUNDAY.getMonth(), REFERENCE_SUNDAY.getDate() + i)),
+  )
+}
 
 const key = (y: number, m: number, d: number) =>
   `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
 
-const prettyDate = (iso: string) => {
-  const [y, m, d] = iso.split('-').map(Number)
-  return `${MONTHS[m - 1]} ${d}, ${y}`
-}
-
 export default function AstroCalendar() {
+  const { locale, t } = useI18n()
+  const months = useMemo(() => monthNames(locale), [locale])
+  const weekdays = useMemo(() => weekdayNames(locale), [locale])
+  const prettyDate = (iso: string) => {
+    const [y, m, d] = iso.split('-').map(Number)
+    return `${months[m - 1]} ${d}, ${y}`
+  }
+
   const today = new Date()
   const todayKey = key(today.getFullYear(), today.getMonth(), today.getDate())
 
@@ -60,19 +74,19 @@ export default function AstroCalendar() {
   return (
     <div className="astro-cal">
       <div className="astro-cal-head">
-        <button type="button" onClick={() => move(-1)} aria-label="Previous month">
+        <button type="button" onClick={() => move(-1)} aria-label={t('astro.prevMonth')}>
           ‹
         </button>
         <strong>
-          {MONTHS[view.m]} {view.y}
+          {months[view.m]} {view.y}
         </strong>
-        <button type="button" onClick={() => move(1)} aria-label="Next month">
+        <button type="button" onClick={() => move(1)} aria-label={t('astro.nextMonth')}>
           ›
         </button>
       </div>
 
       <div className="astro-grid astro-weekdays" aria-hidden="true">
-        {WEEKDAYS.map((w, i) => (
+        {weekdays.map((w, i) => (
           <span key={i}>{w}</span>
         ))}
       </div>
@@ -99,7 +113,9 @@ export default function AstroCalendar() {
               onMouseEnter={() => evs && setActiveKey(k)}
               onFocus={() => evs && setActiveKey(k)}
               onClick={() => evs && setActiveKey(k)}
-              aria-label={evs ? `${d}: ${evs.map((e) => e.title).join(', ')}` : String(d)}
+              aria-label={
+                evs ? t('astro.cellAriaLabel', { day: d, events: evs.map((e) => e.title).join(', ') }) : String(d)
+              }
             >
               <span className="astro-daynum">{d}</span>
               {evs && (
@@ -134,10 +150,10 @@ export default function AstroCalendar() {
           ))}
         </div>
       ) : (
-        <p className="astro-empty muted">No marked events this month.</p>
+        <p className="astro-empty muted">{t('astro.noEvents')}</p>
       )}
 
-      <p className="astro-note muted">Computed from live ephemeris · shown in your local time</p>
+      <p className="astro-note muted">{t('astro.note')}</p>
     </div>
   )
 }

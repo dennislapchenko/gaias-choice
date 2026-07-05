@@ -1,20 +1,22 @@
 import { Link, useParams } from 'react-router-dom'
 import { getGuide } from '../lib/content'
+import { useI18n } from '../lib/i18n'
 import { withBase } from '../lib/asset'
 import Markdown from '../components/Markdown'
 import NotFound from './NotFound'
 
 export default function GuideDetail() {
   const { slug } = useParams()
-  const guide = slug ? getGuide(slug) : undefined
+  const { locale, t } = useI18n()
+  const guide = slug ? getGuide(locale, slug) : undefined
   if (!guide) return <NotFound />
 
   return (
     <article className="detail">
       <Link to="/guides" className="back-link">
-        ← All guides
+        {t('guideDetail.backLink')}
       </Link>
-      <span className="tag">Guide</span>
+      <span className="tag">{t('guides.tag')}</span>
       <h1>{guide.title}</h1>
       <div className="detail-meta">
         <span className="muted">{guide.date}</span>

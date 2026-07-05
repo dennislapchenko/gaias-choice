@@ -68,7 +68,7 @@ reviews are still AI placeholders slated for deletion, and About/Contact carry
 a fictional persona pending the owners' real story. Before editing content,
 check the roadmap so your change moves the current phase forward instead of
 polishing something scheduled for deletion. When a change completes a roadmap
-item, tick its checkbox in `content/pages/roadmap.md` and refresh the "Last
+item, tick its checkbox in `content/locales/en/pages/roadmap.md` and refresh the "Last
 updated" line — the roadmap is public and staleness is a credibility cost.
 
 ## Verify before declaring done

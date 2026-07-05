@@ -87,4 +87,4 @@ OrbStack: `open -a OrbStack`, wait ~15s, retry.
 5. `/go/<slug>` affiliate redirect service with click counting — check each
    program's cloaking policy (Amazon forbids it; raw links there).
 
-When you complete one of these, tick it on `content/pages/roadmap.md`.
+When you complete one of these, tick it on `content/locales/en/pages/roadmap.md`.

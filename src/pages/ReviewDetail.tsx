@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { getProduct } from '../lib/content'
+import { useI18n } from '../lib/i18n'
 import { withBase } from '../lib/asset'
 import Markdown from '../components/Markdown'
 import Rating from '../components/Rating'
@@ -7,13 +8,14 @@ import NotFound from './NotFound'
 
 export default function ReviewDetail() {
   const { slug } = useParams()
-  const product = slug ? getProduct(slug) : undefined
+  const { locale, t } = useI18n()
+  const product = slug ? getProduct(locale, slug) : undefined
   if (!product) return <NotFound />
 
   return (
     <article className="detail">
       <Link to="/reviews" className="back-link">
-        ← All reviews
+        {t('reviewDetail.backLink')}
       </Link>
       <span className="tag">{product.category}</span>
       <h1>{product.title}</h1>
@@ -37,7 +39,7 @@ export default function ReviewDetail() {
             target="_blank"
             rel="noopener noreferrer sponsored"
           >
-            Check current price →
+            {t('reviewDetail.checkPrice')}
           </a>
         </p>
       )}

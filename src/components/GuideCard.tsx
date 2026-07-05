@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'
 import type { Guide } from '../lib/types'
 import { withBase } from '../lib/asset'
+import { useI18n } from '../lib/i18n'
 
 export default function GuideCard({ guide }: { guide: Guide }) {
+  const { t } = useI18n()
   return (
     <article className="card">
       <Link to={`/guides/${guide.slug}`} className="card-media">
@@ -15,7 +17,7 @@ export default function GuideCard({ guide }: { guide: Guide }) {
         )}
       </Link>
       <div className="card-body">
-        <span className="tag">Guide</span>
+        <span className="tag">{t('guides.tag')}</span>
         <h3>
           <Link to={`/guides/${guide.slug}`}>{guide.title}</Link>
         </h3>

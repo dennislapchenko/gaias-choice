@@ -214,6 +214,89 @@ h1 {
   }
 }
 
+/* ---------- Language switcher (same shape as the palette switcher above) ---------- */
+.lang-switcher {
+  position: relative;
+}
+.lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 13px;
+  border: 1px solid var(--line);
+  background: var(--white);
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+.lang-toggle:hover {
+  background: var(--sand-2);
+}
+.lang-toggle-code {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--sage-dark);
+}
+.lang-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  width: 160px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  z-index: 20;
+}
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  background: transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+}
+.lang-option:hover,
+.lang-option.is-active {
+  background: var(--sand-2);
+}
+.lang-option-code {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--sage-dark);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  width: 22px;
+}
+.lang-option-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  flex: 1;
+}
+.lang-label {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--ink);
+}
+.lang-check {
+  color: var(--sage-dark);
+  font-weight: 700;
+}
+@media (max-width: 480px) {
+  .lang-toggle-label {
+    display: none;
+  }
+}
+
 /* ---------- Layout ---------- */
 .site-main {
   padding: 32px 0 64px;

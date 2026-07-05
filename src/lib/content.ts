@@ -1,14 +1,13 @@
 import { parse as parseYaml } from 'yaml'
 import { marked } from 'marked'
 import { withBaseHtml } from './asset'
-import siteRaw from '../../content/site.yaml?raw'
 import themesRaw from '../../content/themes.yaml?raw'
-import type { Guide, Page, Product, SiteConfig, Theme } from './types'
+import type { Entry, Guide, Page, Product, SiteConfig, Theme } from './types'
+import type { Locale } from './i18n'
 
 marked.setOptions({ gfm: true, breaks: false })
 
-export const site = parseYaml(siteRaw) as SiteConfig
-
+// Palettes are shared across locales — not translated.
 export const themes = parseYaml(themesRaw) as Theme[]
 export const defaultTheme = themes.find((t) => t.default) ?? themes[0]
 
@@ -19,47 +18,95 @@ function parseFrontmatter(raw: string): { data: Record<string, unknown>; body: s
   return { data: (parseYaml(match[1]) as Record<string, unknown>) ?? {}, body: match[2] }
 }
 
-function slugFromPath(path: string): string {
-  return path.split('/').pop()!.replace(/\.md$/, '')
+/** Pulls the `<locale>` and slug out of a `.../content/locales/<locale>/<kind>/<slug>.md` path. */
+function localeAndSlugFromPath(path: string, kind: string): { locale: string; slug: string } {
+  const match = new RegExp(`content/locales/([^/]+)/${kind}/([^/]+)\\.md$`).exec(path)
+  return { locale: match?.[1] ?? 'en', slug: match?.[2] ?? path }
 }
 
-function loadCollection<T>(modules: Record<string, string>): T[] {
-  return Object.entries(modules).map(([path, raw]) => {
+function loadCollection<T extends Entry>(
+  modules: Record<string, string>,
+  kind: string,
+): Partial<Record<Locale, T[]>> {
+  const grouped: Partial<Record<Locale, T[]>> = {}
+  for (const [path, raw] of Object.entries(modules)) {
+    const { locale, slug } = localeAndSlugFromPath(path, kind)
     const { data, body } = parseFrontmatter(raw)
-    return {
-      slug: slugFromPath(path),
-      ...data,
-      html: withBaseHtml(marked.parse(body) as string),
-    } as T
-  })
+    const entry = { slug, ...data, html: withBaseHtml(marked.parse(body) as string) } as T
+    ;(grouped[locale as Locale] ??= []).push(entry)
+  }
+  return grouped
 }
 
 const byDateDesc = (a: { date?: string }, b: { date?: string }) =>
   (b.date ?? '').localeCompare(a.date ?? '')
 
+function sortByDate(grouped: Partial<Record<Locale, { date?: string }[]>>): void {
+  for (const list of Object.values(grouped)) list?.sort(byDateDesc)
+}
+
+/** Falls back to the English list when a locale has no entries at all yet. */
+function collectionFor<T>(grouped: Partial<Record<Locale, T[]>>, locale: Locale): T[] {
+  const list = grouped[locale]
+  return list && list.length > 0 ? list : (grouped.en ?? [])
+}
+
+/** Falls back to the English entry when a locale is missing this one slug. */
+function entryFor<T extends Entry>(
+  grouped: Partial<Record<Locale, T[]>>,
+  locale: Locale,
+  slug: string,
+): T | undefined {
+  return (
+    (grouped[locale] ?? []).find((e) => e.slug === slug) ??
+    (grouped.en ?? []).find((e) => e.slug === slug)
+  )
+}
+
 // Eager glob = content is bundled at build time; no runtime fetch, no server needed.
-const productModules = import.meta.glob('../../content/products/*.md', {
+// The locale segment is a wildcard so adding content/locales/<lng>/... needs no code change.
+const siteModules = import.meta.glob('../../content/locales/*/site.yaml', {
   query: '?raw',
   import: 'default',
   eager: true,
 }) as Record<string, string>
 
-const guideModules = import.meta.glob('../../content/guides/*.md', {
+const productModules = import.meta.glob('../../content/locales/*/products/*.md', {
   query: '?raw',
   import: 'default',
   eager: true,
 }) as Record<string, string>
 
-const pageModules = import.meta.glob('../../content/pages/*.md', {
+const guideModules = import.meta.glob('../../content/locales/*/guides/*.md', {
   query: '?raw',
   import: 'default',
   eager: true,
 }) as Record<string, string>
 
-export const products = loadCollection<Product>(productModules).sort(byDateDesc)
-export const guides = loadCollection<Guide>(guideModules).sort(byDateDesc)
-export const pages = loadCollection<Page>(pageModules)
+const pageModules = import.meta.glob('../../content/locales/*/pages/*.md', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>
 
-export const getProduct = (slug: string) => products.find((p) => p.slug === slug)
-export const getGuide = (slug: string) => guides.find((g) => g.slug === slug)
-export const getPage = (slug: string) => pages.find((p) => p.slug === slug)
+const siteByLocale: Partial<Record<Locale, SiteConfig>> = {}
+for (const [path, raw] of Object.entries(siteModules)) {
+  const match = /content\/locales\/([^/]+)\/site\.yaml$/.exec(path)
+  siteByLocale[(match?.[1] ?? 'en') as Locale] = parseYaml(raw) as SiteConfig
+}
+
+const productsByLocale = loadCollection<Product>(productModules, 'products')
+const guidesByLocale = loadCollection<Guide>(guideModules, 'guides')
+const pagesByLocale = loadCollection<Page>(pageModules, 'pages')
+sortByDate(productsByLocale)
+sortByDate(guidesByLocale)
+
+export const getSite = (locale: Locale): SiteConfig => siteByLocale[locale] ?? siteByLocale.en!
+
+export const getProducts = (locale: Locale): Product[] => collectionFor(productsByLocale, locale)
+export const getGuides = (locale: Locale): Guide[] => collectionFor(guidesByLocale, locale)
+export const getPages = (locale: Locale): Page[] => collectionFor(pagesByLocale, locale)
+
+export const getProduct = (locale: Locale, slug: string) => entryFor(productsByLocale, locale, slug)
+export const getGuide = (locale: Locale, slug: string) => entryFor(guidesByLocale, locale, slug)
+export const getPage = (locale: Locale, slug: string) => entryFor(pagesByLocale, locale, slug)

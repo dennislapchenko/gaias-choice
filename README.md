@@ -10,18 +10,24 @@ gear for RV travel with a baby.
 
 ## Content model
 
-Everything editable lives in `content/` — no code changes needed to publish:
+Everything editable lives in `content/` — no code changes needed to publish.
+Content is split by language under `content/locales/<lng>/` (English is the
+source of truth; see [`content/locales/README.md`](content/locales/README.md)
+and [`TRANSLATION_STATUS.md`](TRANSLATION_STATUS.md) for the in-progress
+Russian translation):
 
-| Path                     | What it is                                    |
-| ------------------------ | --------------------------------------------- |
-| `content/site.yaml`      | Site name, tagline, mission, nav, values      |
-| `content/products/*.md`  | Product reviews (yaml frontmatter + body)     |
-| `content/guides/*.md`    | Guides / checklists                           |
-| `content/pages/*.md`     | Standalone pages (About, Contact)             |
+| Path                              | What it is                                    |
+| ---------------------------------- | --------------------------------------------- |
+| `content/locales/en/site.yaml`     | Site name, tagline, mission, nav, values      |
+| `content/locales/en/products/*.md` | Product reviews (yaml frontmatter + body)     |
+| `content/locales/en/guides/*.md`   | Guides / checklists                           |
+| `content/locales/en/pages/*.md`    | Standalone pages (About, Contact)             |
+| `content/themes.yaml`              | Color palettes — shared across all locales    |
 
-Add a review by dropping a new `.md` file in `content/products/`. The filename
-becomes the URL slug (`beeswax-food-wraps.md` → `/reviews/beeswax-food-wraps`).
-Frontmatter fields are documented by example in the existing files.
+Add a review by dropping a new `.md` file in `content/locales/en/products/`.
+The filename becomes the URL slug (`beeswax-food-wraps.md` →
+`/reviews/beeswax-food-wraps`). Frontmatter fields are documented by example in
+the existing files.
 
 ## Task runner
 
