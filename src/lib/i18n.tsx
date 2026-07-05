@@ -2,8 +2,8 @@ import { createContext, useContext, useMemo, useState, type ReactNode } from 're
 import en from '../locales/en'
 import ru from '../locales/ru'
 
-// Russian listed first — the owner's requested order for the switcher menu.
-// The default *active* locale is still English (see DEFAULT_LOCALE below).
+// Russian listed first — the owner's requested order for the switcher menu,
+// and the default *active* locale (see DEFAULT_LOCALE below).
 export const SUPPORTED_LOCALES = ['ru', 'en'] as const
 export type Locale = (typeof SUPPORTED_LOCALES)[number]
 
@@ -12,7 +12,7 @@ export const LOCALE_LABELS: Record<Locale, string> = {
   en: 'English',
 }
 
-export const DEFAULT_LOCALE: Locale = 'en'
+export const DEFAULT_LOCALE: Locale = 'ru'
 
 const STORAGE_KEY = 'gc-lang'
 
