@@ -31,7 +31,9 @@ practices worth passing on). It is a
 
 - **Stack:** Vite + React 18 + TypeScript, `react-router-dom` (BrowserRouter).
 - **Content:** authored as Markdown + YAML in `content/`, bundled at build time.
-  No backend, no database, no CMS, no runtime data fetching.
+  No CMS, no runtime data fetching for content. An **optional** Go API sidecar
+  (`backend/`, off by default) adds progressive-enhancement features; the
+  static site works identically without it (see "Backend" below).
 - **Serving:** static build served by nginx in a container. Live deploy is
   GitHub Pages (push to `main`); Cloud Run remains a supported target.
 
@@ -105,16 +107,24 @@ src/
     astro.ts             # in-browser ephemeris → celestial events (astronomy-engine)
     astroText.ts         # all almanac wording, one Vocab per locale
     asset.ts             # withBase/withBaseHtml for BASE_PATH-aware asset URLs
-    types.ts             # SiteConfig, Product, Guide, Page, Theme, AstroEvent
+    api.ts               # the whole FE↔BE contract: fetch wrappers, useApi, content types
+    editMode.tsx         # edit-mode gate (#edit + token, validated via /api/content/ping)
+    contentEditor.tsx    # git-backed editor popup (field edits + draft files)
+    types.ts             # SiteConfig, Product, Guide, Page, Theme, AstroEvent, EditRef
   components/            # Layout, Sidebar, AstroCalendar, ThemeSwitcher,
                          # LanguageSwitcher, ProductCard, CompassCard, CompassRow,
                          # JournalRow, Upcoming, Markdown, Rating,
-                         # TableOfContents, CopyButton
+                         # TableOfContents, CopyButton, EditButton, BackendBadge
   pages/                 # Home, Reviews, ReviewDetail, Compass, Journal,
                          # EntryDetail (shared Compass+Journal detail w/ TOC),
                          # MarkdownPage (about/contact/etc), Support, NotFound
   styles.css             # single hand-written stylesheet (no CSS framework)
-Dockerfile               # multi-stage: node build -> nginx runtime
+backend/                 # optional Go/gin API sidecar (see "Backend" below)
+  main.go, store.go, cors.go, content.go, migrations/*.sql, Dockerfile, go.mod
+compose.dev.yaml         # `task dev` stack: web (Vite HMR) + api (air hot reload)
+deploy/                  # dormant VM deploy stack: compose.yaml (api+Caddy), Caddyfile, README
+.doco-cd.yml             # doco-cd (GitOps) config for the VM — reconciles deploy/
+Dockerfile               # multi-stage: node build -> nginx runtime (static site)
 nginx/default.conf.template  # $PORT + SPA fallback (envsubst at container boot)
 Taskfile.yml             # all common commands
 ```
@@ -397,7 +407,9 @@ rise/set/houses/planetary-hours. All wording is in `lib/astroText.ts`;
 
 | Command | What |
 | --- | --- |
-| `task dev` | Vite dev server on :5173 (needs a TTY — see development.md) |
+| `task dev` | FE + BE together (Vite HMR :5173 + backend air hot-reload :8787) via `compose.dev.yaml` (needs a TTY — see development.md) |
+| `task be:dev` | backend only, `go run .` on :8787 |
+| `task be:test` / `be:tidy` / `be:image` / `be:run` / `be:verify` / `be:tunnel` | backend: vet+test / tidy+verify / build image / run prod image / test+image gate / `ngrok http 8787` |
 | `task typecheck` | strict `tsc --noEmit` (Vite build does NOT type-check) |
 | `task build` | build SPA to `dist/` |
 | `task images` | optimize `public/images` to WebP |
@@ -428,6 +440,70 @@ rise/set/houses/planetary-hours. All wording is in `lib/astroText.ts`;
   Vite base). Cloud Run (`task deploy`) remains available but is not the
   current default. Commit/push rules: SKILL.md "Committing & shipping".
 
+## Backend (optional Go/gin API sidecar)
+
+`backend/` is a **static-first progressive enhancement**: a Go + gin JSON API,
+**API-only**, that adds features (a future admin/writer portal) without the
+static site ever depending on it. **Invariant: the static site works
+identically with the backend absent** — which is most of the time (it's a
+laptop behind ngrok, then a small VM). BE-powered UI renders only when the API
+answers; the live Pages build ships without it and stays silent.
+
+- **Shape:** port **8787**, routes under `/api`. `main.go` (env config —
+  `PORT`, `DATA_DIR`, `CORS_ORIGINS`, `GIN_MODE`, plus the content-seam vars
+  below), `cors.go` (hand-written origin-allowlist middleware, no wildcard),
+  `store.go` (SQLite via `modernc.org/sqlite`, pure-Go so `CGO_ENABLED=0`
+  stays static; WAL mode; a ~40-line embedded-`.sql` migration runner, no
+  framework), `migrations/*.sql`, `content.go` (the live-edit content seam,
+  next bullet). Scaffold endpoints: `/api/healthz` and `/api/hello` (a hits
+  counter proving a DB round-trip). Real schema (users/sessions/pages) belongs
+  to the future portal plan, not here.
+- **Content seam (live-edit):** `/api/content/{ping,file,save}` in
+  `backend/content.go` proxy the **GitHub Contents API** so the in-browser
+  editor writes the same `content/` files that are the site — **every save is
+  a git commit and git stays the only source of truth** (no DB overlay, no
+  second store; a save publishes via the normal Pages deploy, ~2 min). The BE
+  stays dumb and stateless: bearer auth (`ADMIN_TOKEN`, constant-time
+  compare), `content/`-only path allowlist (traversal ⇒ 400), 256 KB size
+  cap, then one HTTPS call authenticated by `GITHUB_TOKEN` (a fine-grained
+  PAT, Contents RW on this repo only; `GITHUB_REPO`/`GITHUB_BRANCH`/
+  `GITHUB_API` have defaults). **Either token unset ⇒ the content routes
+  answer 503 "editing not configured" — the write path is dead unless
+  deliberately armed**; don't run the ngrok tunnel with tokens set unless
+  editing is wanted right then. GitHub's blob-sha check gives conflict safety
+  (mismatch ⇒ 409; the FE re-fetches, re-applies, retries once). The BE never
+  parses YAML — that happens on the FE. This `ADMIN_TOKEN` gate is the
+  interim; portal sessions/roles (D6) replace it.
+- **Edit mode (FE side):** `src/lib/editMode.tsx` — visiting any page with
+  `#edit` prompts for the token (empty input signs out), stores it in
+  `localStorage['gc-edit-token']`, validates against `/api/content/ping`;
+  wrong token or BE down ⇒ mode off, silently — **readers ship zero editing
+  chrome**. `src/lib/contentEditor.tsx` is the editor popup: field edits do
+  **CST-level, byte-preserving YAML surgery** with the existing `yaml` dep
+  (only the edited scalar's line changes — the Document API would re-fold
+  long block scalars, so the CST route is load-bearing, not a style choice),
+  and the draft composer creates new content files (save without sha).
+  Zone addresses (`EditRef`) come only from provenance getters in
+  `src/lib/content.ts` (locale fallback means RU pages often edit the EN
+  file — components never guess paths).
+- **Storage (D9):** SQLite at `${DATA_DIR}/gaia.db`. Local: `backend/data/`,
+  git-ignored, nuke to reset. Server: a **host bind mount**
+  `/srv/gaias-choice/data` so backups are a host concern (`sqlite3 … .backup`,
+  never `cp` on a live WAL db; Litestream is the upgrade path).
+- **FE seam:** `src/lib/api.ts` is the whole contract — `apiGet`/`apiPost`, an
+  `ApiError`, a `useApi<T>()` hook, and request/response types. Base URL =
+  `VITE_API_URL` if set (dev/ngrok; the compose loop sets it) else same-origin
+  `/api`. It fails quietly (consumers render null on error) and guards against
+  the SPA-fallback trap (HTML-200 for `/api/*` on Pages ⇒ "unavailable").
+- **Toolchain:** containerized like npm — `golang:1.23-alpine`, module+build
+  cache in the `gaias-choice-go-cache` volume, `be:*` tasks. Nothing on the
+  host. `task dev` runs FE+BE together (see Commands); `air` gives BE hot
+  reload in dev (run-not-imported, pinned in `compose.dev.yaml`).
+- **Deploy (D8, dormant):** `deploy/` holds the future VM stack (api behind
+  Caddy for TLS) reconciled by **doco-cd** (GitOps); `.doco-cd.yml` points it
+  at `deploy/`. Files are valid now, activated when the VM exists — see
+  `deploy/README.md`. The static site never moves off Pages by this.
+
 ## Supply chain (the reason for the container dance)
 
 The owner wants the npm surface kept off the host and minimal.
@@ -442,6 +518,14 @@ The owner wants the npm surface kept off the host and minimal.
   `astronomy-engine`. `marked`, `yaml`, and `astronomy-engine` are all
   browser-safe with zero/low transitive deps (`astronomy-engine`: zero deps,
   no install script).
+- **Backend (Go) follows the same stance:** toolchain containerized
+  (`golang:1.23-alpine`, cache in the `gaias-choice-go-cache` volume, never on
+  the host); `go.sum` pins the full tree, verified by `go mod verify` in
+  `be:tidy`/`be:test`. **Two direct deps only:** `github.com/gin-gonic/gin`
+  and `modernc.org/sqlite` (pure Go, keeps the binary static, no cgo). CORS and
+  the migration runner are hand-written rather than pulled in. `air` (dev hot
+  reload) is **run-not-imported** — pinned in `compose.dev.yaml`, never in
+  `go.mod` or the prod image.
 
 ## Dev gotchas
 

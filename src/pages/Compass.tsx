@@ -65,13 +65,15 @@ export default function Compass() {
                   className={`epic-row${e.tag === activeTag ? ' is-active' : ''}`}
                   onClick={() => setActiveTag(e.tag)}
                 >
-                  {e.image ? (
-                    <img className="epic-row-img" src={withBase(e.image)} alt="" loading="lazy" />
-                  ) : (
-                    <span className="epic-row-img placeholder" aria-hidden="true">
-                      📚
-                    </span>
-                  )}
+                  <span className="epic-row-thumb">
+                    {e.image ? (
+                      <img className="epic-row-img" src={withBase(e.image)} alt="" loading="lazy" />
+                    ) : (
+                      <span className="epic-row-img placeholder" aria-hidden="true">
+                        📚
+                      </span>
+                    )}
+                  </span>
                   <span className="epic-row-title">{e.title}</span>
                 </button>
               ))}

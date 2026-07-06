@@ -1,0 +1,8 @@
+# doco-cd deploy config (dormant — activated when the VM exists).
+# The VM's doco-cd polls this repo (or receives a GitHub webhook) and reconciles
+# the deploy/ stack on push to main. Values below are not secrets; the real
+# API domain, CORS origins, and image tag are set in the env file at activation.
+name: gaias-choice
+working_dir: deploy
+env_files:
+  - deploy.env

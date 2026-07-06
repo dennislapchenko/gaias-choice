@@ -104,6 +104,20 @@ const ru: Record<keyof typeof en, string> = {
   "support.cryptoIntro": "Удобнее криптой? Отправьте на один из кошельков ниже.",
   "support.cryptoWarn": "Проверьте сеть перед отправкой — монеты, отправленные в неверной сети, вернуть нельзя.",
   "support.thanks": "Спасибо — правда. Даже просто поделиться обзором с другом, которому он нужен, помогает больше, чем кажется.",
+
+  "backend.connected": "Бэкенд подключён · {{hits}} обращений",
+
+  "editor.save": "✓ Сохранить",
+  "editor.saving": "Сохраняем…",
+  "editor.loading": "Получаем текущую версию…",
+  "editor.published": "Опубликовано — на сайте через ~2 мин",
+  "editor.error": "Не сохранилось:",
+  "editor.conflict": "Файл изменился, пока вы редактировали — откройте заново и повторите.",
+  "editor.exists": "{{path}} уже существует — отредактируйте его.",
+  "editor.close": "Закрыть",
+  "editor.copyAria": "Скопировать черновик",
+  "editor.editNameAria": "Изменить «{{name}}»",
+  "editor.draftAria": "Начать черновик «{{name}}»",
 };
 
 export default ru;

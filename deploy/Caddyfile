@@ -1,0 +1,6 @@
+# Caddy reads env placeholders natively. Automatic Let's Encrypt TLS for the
+# subdomain the owner points at the VM — independent of the site's future
+# custom domain (the SEO plan stays decoupled).
+{$API_DOMAIN} {
+	reverse_proxy api:8787
+}

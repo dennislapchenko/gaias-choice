@@ -114,6 +114,12 @@ classify-and-do as usual.
   together), keep the small repetition and leave a one-line note on why. DRY is
   the default, not a mandate to abstract prematurely.
 
+## When  project's mission, vision, positioning, product
+  strategy, business model, editorial direction, community, branding,
+  philosophy, prioritization, roadmap, growth, decision-making, or any major
+  trade-offs is discussed then:
+Consider the gaia-mentor skill
+
 ## Project phase awareness
 
 The site is in **bootstrap mode** (see `/roadmap` and the "Current content

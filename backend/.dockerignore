@@ -1,0 +1,6 @@
+data/
+tmp/
+.air.toml
+Dockerfile
+.dockerignore
+.gitignore

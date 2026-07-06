@@ -63,6 +63,7 @@ export default function Reviews() {
           note={t('reviews.upcomingNote')}
           items={upcoming}
           contribute={{ value: getReviewTemplate(locale), label: t('reviews.templateBtn') }}
+          editKind="upcoming"
         />
       </div>
     </>

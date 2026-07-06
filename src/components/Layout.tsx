@@ -5,6 +5,7 @@ import { useI18n } from '../lib/i18n'
 import ThemeSwitcher from './ThemeSwitcher'
 import LanguageSwitcher from './LanguageSwitcher'
 import Sidebar from './Sidebar'
+import BackendBadge from './BackendBadge'
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { pathname } = useLocation()
@@ -119,6 +120,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             <Link to="/disclosure">{t('footer.disclosureLinkText')}</Link>.
           </p>
           <p>{t('footer.copyright', { year: new Date().getFullYear(), name: site.name })}</p>
+          <BackendBadge />
         </div>
       </footer>
     </div>

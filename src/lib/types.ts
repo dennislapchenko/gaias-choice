@@ -85,6 +85,18 @@ export interface SiteConfig {
   contactEmail: string
 }
 
+/**
+ * Address of one editable value for the live-edit seam: the source file that
+ * actually supplied it (locale fallback means a RU page often renders EN
+ * values — only the content layer knows which file won) + the YAML path to
+ * the value inside that file. Handed out by provenance getters in content.ts
+ * (e.g. getUpcomingEditRef); components never construct these themselves.
+ */
+export interface EditRef {
+  file: string // repo-relative, e.g. 'content/locales/en/site.yaml'
+  path: (string | number)[] // yaml Document path, e.g. ['upcoming', 2, 'name']
+}
+
 /** Common fields every markdown entry carries. */
 export interface Entry {
   slug: string

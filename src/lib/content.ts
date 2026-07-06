@@ -2,7 +2,7 @@ import { parse as parseYaml } from 'yaml'
 import { marked, Renderer } from 'marked'
 import { withBaseHtml } from './asset'
 import themesRaw from '../../content/themes.yaml?raw'
-import type { CompassEntry, Entry, JournalEntry, Page, Product, SiteConfig, Theme } from './types'
+import type { CompassEntry, EditRef, Entry, JournalEntry, Page, Product, SiteConfig, Theme } from './types'
 import type { Locale } from './i18n'
 
 marked.setOptions({ gfm: true, breaks: false })
@@ -16,8 +16,9 @@ const CYRILLIC_MAP: Record<string, string> = {
   ь: '', э: 'e', ю: 'yu', я: 'ya',
 }
 
-/** Plain-text heading -> a stable, URL-safe, lowercase slug (dashes, ASCII). */
-function slugify(text: string): string {
+/** Plain-text heading -> a stable, URL-safe, lowercase slug (dashes, ASCII).
+ *  Exported for the live-edit draft flow (file names from Upcoming item names). */
+export function slugify(text: string): string {
   const transliterated = text
     .toLowerCase()
     .split('')
@@ -264,6 +265,24 @@ export const getProduct = (locale: Locale, slug: string) => entryFor(productsByL
 export const getCompassEntry = (locale: Locale, slug: string) => entryFor(compassByLocale, locale, slug)
 export const getJournalEntry = (locale: Locale, slug: string) => entryFor(journalByLocale, locale, slug)
 export const getPage = (locale: Locale, slug: string) => entryFor(pagesByLocale, locale, slug)
+
+/**
+ * Provenance for the live-edit seam (C1): which site.yaml actually supplied
+ * the rendered `upcoming:`/`upcomingJournal:` list, and the YAML path to one
+ * item's name inside it. getSite's shallow merge means a locale inherits any
+ * list it omits from en/ — so the file to edit is the en file unless the
+ * active locale's own site.yaml defines the list itself. Components must use
+ * this instead of guessing paths; new zones get their own getters here.
+ */
+export function getUpcomingEditRef(
+  locale: Locale,
+  kind: 'upcoming' | 'upcomingJournal',
+  index: number,
+): EditRef {
+  const localized = siteByLocale[locale]
+  const srcLocale = localized && localized[kind] !== undefined ? locale : 'en'
+  return { file: `content/locales/${srcLocale}/site.yaml`, path: [kind, index, 'name'] }
+}
 
 /** The blank Journal-entry template for the /journal "Contribute!" button (en fallback). */
 export const getJournalTemplate = (locale: Locale): string => templateFor('journal', locale)

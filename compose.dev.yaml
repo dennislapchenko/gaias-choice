@@ -1,0 +1,41 @@
+# Local dev stack: FE (Vite HMR) + BE (air hot reload), one `task dev`.
+# Both toolchains stay containerized; deps live in the existing named volumes
+# so `task deps` caching still applies. Ctrl-C tears both down.
+services:
+  web:
+    image: node:22-alpine
+    working_dir: /app
+    command: npm run dev -- --host 0.0.0.0 --port 5173
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    environment:
+      # The browser (not this container) calls the API, so localhost is correct.
+      VITE_API_URL: http://localhost:8787/api
+    ports:
+      - "5173:5173"
+
+  api:
+    image: golang:1.23-alpine
+    working_dir: /app/backend
+    # air rebuilds+restarts on save. Pinned exact version; run-not-imported, so
+    # it never enters go.mod. GOFLAGS -buildvcs=false: workdir isn't the git root.
+    # v1.61.7 is the last air release whose go.mod is `go 1.23` — later tags
+    # require Go >= 1.24/1.25, which the pinned golang:1.23-alpine can't run.
+    command: go run github.com/air-verse/air@v1.61.7
+    volumes:
+      - .:/app
+      - go_cache:/go
+    environment:
+      GOFLAGS: -buildvcs=false
+    ports:
+      - "8787:8787"
+
+volumes:
+  # Declared external so they are the same volumes `task deps` / the Go cache use.
+  node_modules:
+    external: true
+    name: gaias-choice-node-modules
+  go_cache:
+    external: true
+    name: gaias-choice-go-cache

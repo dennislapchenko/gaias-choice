@@ -1,0 +1,24 @@
+# Production stack for the VM (reconciled by doco-cd). Dormant until the VM
+# exists; the files are valid now. Only Caddy publishes ports; the api service
+# stays internal to the compose network. See deploy/README.md for activation.
+services:
+  api:
+    image: ghcr.io/dennislapchenko/gaias-choice-be:${BE_TAG:-latest}
+    restart: unless-stopped
+    environment:
+      DATA_DIR: /data
+      CORS_ORIGINS: ${CORS_ORIGINS}
+    volumes:
+      - /srv/gaias-choice/data:/data # host bind mount, per D9 (boring backups)
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      API_DOMAIN: ${API_DOMAIN} # api.<owner's owned domain>
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - /srv/gaias-choice/caddy:/data # cert storage survives redeploys

@@ -75,6 +75,7 @@ export default function Journal() {
           note={t('journal.upcomingNote')}
           items={upcoming}
           contribute={{ value: getJournalTemplate(locale), label: t('journal.templateBtn') }}
+          editKind="upcomingJournal"
         />
       </div>
     </>

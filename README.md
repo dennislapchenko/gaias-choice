@@ -6,9 +6,10 @@ Compass), and a handwritten travel Journal. Everything lived first; built in
 public by a real camper family.
 
 - **Stack:** Vite + React 18 + TypeScript SPA. All content is Markdown + YAML
-  in [`content/`](content), bundled at build time — no CMS, no backend, no
-  database. Adding a review is dropping a `.md` file; the filename becomes the
-  URL slug.
+  in [`content/`](content), bundled at build time — no CMS. Adding a review is
+  dropping a `.md` file; the filename becomes the URL slug. An **optional** Go
+  API sidecar ([`backend/`](backend)) adds progressive-enhancement features;
+  the static site works identically without it.
 - **Tooling:** [Task](https://taskfile.dev) wraps everything (`task` lists all
   commands). All npm work runs inside a `node:22-alpine` container with
   `node_modules` in a Docker volume — nothing touches the host, and
@@ -19,10 +20,11 @@ public by a real camper family.
   alternate target.
 
 ```bash
-task dev        # dev server on :5173
+task dev        # FE (Vite :5173) + optional Go backend (:8787) together
 task typecheck  # strict tsc (vite build alone does NOT type-check)
 task build      # build the SPA to dist/
 task run        # production nginx image on :8080
+task be:verify  # backend gate: vet + test + distroless image build
 ```
 
 Architecture, content model, i18n, theming, and all working conventions are

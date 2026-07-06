@@ -17,6 +17,11 @@ true. One phase at a time.
 **Goal: nothing on the site is fake.**
 
 - [x] Site scaffolding: content-driven SPA, containerized, deployable
+- [x] Backend foundation: a small Go API with its own database, part of the
+      dev loop, deploy prep written — it runs only on our own machine for now,
+      and the site works exactly the same without it *(groundwork for a future
+      user portal; nothing reader-facing yet, and we're not promising features
+      before they exist)*
 - [x] Founder course written (playbook, reviews, traffic, money, launch)
 - [x] Disclosure & privacy pages
 - [x] True About page — real facts only (turns out the camper story was ours all along)

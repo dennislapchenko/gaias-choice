@@ -104,6 +104,20 @@ const en = {
   "support.cryptoIntro": "Prefer crypto? Send to one of the wallets below.",
   "support.cryptoWarn": "Double-check the network before sending — coins sent on the wrong network can't be recovered.",
   "support.thanks": "Thank you — truly. Even just sharing a review with a friend who needs it helps more than you'd think.",
+
+  "backend.connected": "Backend connected · {{hits}} hits",
+
+  "editor.save": "✓ Save",
+  "editor.saving": "Saving…",
+  "editor.loading": "Fetching current version…",
+  "editor.published": "Published — live in ~2 min",
+  "editor.error": "Save failed:",
+  "editor.conflict": "Changed elsewhere while you were editing — reopen to retry.",
+  "editor.exists": "{{path}} already exists — edit it instead.",
+  "editor.close": "Close",
+  "editor.copyAria": "Copy draft",
+  "editor.editNameAria": "Edit \"{{name}}\"",
+  "editor.draftAria": "Start a draft for \"{{name}}\"",
 } satisfies Record<string, string>;
 
 export default en;

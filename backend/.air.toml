@@ -1,0 +1,15 @@
+# air config for the dev container (github.com/air-verse/air).
+# Runs only inside the compose `api` service; never imported into go.mod.
+root = "."
+tmp_dir = "tmp"
+
+[build]
+  cmd = "go build -o ./tmp/server ."
+  bin = "./tmp/server"
+  include_ext = ["go", "sql"]
+  exclude_dir = ["data", "tmp"]
+  delay = 300
+  stop_on_error = true
+
+[misc]
+  clean_on_exit = true

@@ -15,10 +15,21 @@ vars:
   REGION: europe-west1
   SERVICE: gaias-choice
   VOLUME: gaias-choice-node-modules
+  # Backend (Go) settings — same containerized-toolchain stance as the FE.
+  GO_IMAGE: golang:1.23-alpine
+  BE_PORT: '8787'
+  BE_IMAGE: gaias-choice-be
+  GO_VOLUME: gaias-choice-go-cache
   # Reusable "npm in a container" prefix: source mounted read-write, deps in a volume.
   NODE_RUN: >-
     docker run --rm -v {{.ROOT_DIR}}:/app -w /app
     -v {{.VOLUME}}:/app/node_modules {{.NODE_IMAGE}}
+  # Reusable "go in a container" prefix: repo mounted, workdir backend/, module
+  # + build cache in a named volume (mirrors NODE_RUN). -buildvcs=false because
+  # the container workdir isn't the git root.
+  GO_RUN: >-
+    docker run --rm -v {{.ROOT_DIR}}:/app -w /app/backend
+    -v {{.GO_VOLUME}}:/go -e GOFLAGS=-buildvcs=false {{.GO_IMAGE}}
 
 tasks:
   default:
@@ -40,13 +51,55 @@ tasks:
       - mkdir -p .task && touch .task/deps.done
 
   dev:
-    desc: Run the Vite dev server (http://localhost:5173)
+    desc: Run FE (Vite HMR :5173) and BE (air hot reload :8787) together
     deps: [deps]
     cmds:
+      # compose.dev.yaml uses the deps volume (from `deps` above) and the Go
+      # cache volume as external — create the Go one if it doesn't exist yet.
+      - docker volume create {{.GO_VOLUME}} >/dev/null
+      - docker compose -f compose.dev.yaml up
+
+  be:dev:
+    desc: Run the backend from source on :8787 (BE-only; combined FE+BE dev is `task dev`)
+    cmds:
       - >-
-        docker run --rm -it -v {{.ROOT_DIR}}:/app -w /app
-        -v {{.VOLUME}}:/app/node_modules -p {{.DEV_PORT}}:{{.DEV_PORT}}
-        {{.NODE_IMAGE}} npm run dev -- --host 0.0.0.0 --port {{.DEV_PORT}}
+        docker run --rm -it -v {{.ROOT_DIR}}:/app -w /app/backend
+        -v {{.GO_VOLUME}}:/go -e GOFLAGS=-buildvcs=false
+        -p {{.BE_PORT}}:{{.BE_PORT}} {{.GO_IMAGE}} go run .
+
+  be:test:
+    desc: Vet and test the backend in a container
+    cmds:
+      - '{{.GO_RUN}} sh -c "go vet ./... && go test ./..."'
+
+  be:tidy:
+    desc: Sync go.mod/go.sum and verify the module cache (containerized)
+    cmds:
+      - '{{.GO_RUN}} sh -c "go mod tidy && go mod verify"'
+
+  be:image:
+    desc: Build the production backend Docker image (distroless)
+    cmds:
+      - docker build -t {{.BE_IMAGE}} backend/
+
+  be:run:
+    desc: Build and run the prod backend image locally on :8787 with a data volume
+    deps: [be:image]
+    cmds:
+      - >-
+        docker run --rm -p {{.BE_PORT}}:{{.BE_PORT}}
+        -v {{.BE_IMAGE}}-data:/data {{.BE_IMAGE}}
+
+  be:tunnel:
+    desc: Expose the local backend over ngrok (host tool, as with FE dev)
+    cmds:
+      - ngrok http {{.BE_PORT}}
+
+  be:verify:
+    desc: Backend gate — vet + test + production image build
+    cmds:
+      - task: be:test
+      - task: be:image
 
   typecheck:
     desc: Strict TypeScript type-check
@@ -125,4 +178,6 @@ tasks:
     cmds:
       - rm -rf dist .task
       - docker volume rm {{.VOLUME}} 2>/dev/null || true
+      - docker volume rm {{.GO_VOLUME}} 2>/dev/null || true
       - docker image rm {{.IMAGE}} 2>/dev/null || true
+      - docker image rm {{.BE_IMAGE}} 2>/dev/null || true

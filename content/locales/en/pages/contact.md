@@ -10,6 +10,6 @@ collaboration? We'd love to hear from you.
 - **Readers** — tell us what you're struggling to find. Your questions shape what
   we test next.
 
-Email us at **hello@gaias-choice.example** and we'll get back to you.
+Email us at **prosto-mimo-prohodila@gaias-choice.com** and we'll get back to you.
 
 _We disclose all affiliate and sponsored relationships clearly, every time._
