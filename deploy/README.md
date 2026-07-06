@@ -1,10 +1,12 @@
-# Deploy stack (VM + doco-cd) — dormant until activation
+# Deploy stack (VM + doco-cd)
 
-This directory is the **production stack** for the Go backend sidecar, meant
-for a rented VM (likely Hetzner / AlmaLinux) reconciled by
-[doco-cd](https://github.com/kimdre/doco-cd), a small GitOps daemon that
-watches this repo and runs `docker compose up` on change. The files are valid
-now and exercised later — **nothing here deploys until the VM exists**.
+This directory is the **production stack** for the Go backend sidecar. It is
+**live**: the `api` + `caddy` compose stack runs on a Hetzner / AlmaLinux VM,
+brought up **manually** with `docker compose` (see `infra-log.md` for the actual
+provisioning + redeploy steps). The **doco-cd GitOps** layer — a small daemon
+([doco-cd](https://github.com/kimdre/doco-cd)) that watches this repo and runs
+`docker compose up` on change — is **prepared but deferred**; the "Activation
+checklist" below is its remaining setup, not the whole deploy.
 
 The static site stays on GitHub Pages and never depends on this stack. This is
 the backend's home only.
@@ -54,6 +56,11 @@ Kept off the repo on purpose — it's server bootstrap, not app config:
   `compose.yaml`, no app changes.
 
 ## Activation checklist
+
+> Steps 1–4 are **already satisfied** by the live manual deploy (DNS, GHCR
+> image, `deploy.env`, and `VITE_API_URL` are all in place — see `infra-log.md`).
+> What remains for full GitOps is **step 5 (bootstrap doco-cd)**. The list is
+> kept whole so it also serves a from-scratch rebuild.
 
 1. **DNS** — create an A/AAAA record for a subdomain of a domain the owner
    already owns (e.g. `api.<owned-domain>`) pointing at the VM's IP. This is

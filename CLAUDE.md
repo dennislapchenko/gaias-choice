@@ -122,8 +122,9 @@ src/
 backend/                 # optional Go/gin API sidecar (see "Backend" below)
   main.go, store.go, cors.go, content.go, migrations/*.sql, Dockerfile, go.mod
 compose.dev.yaml         # `task dev` stack: web (Vite HMR) + api (air hot reload)
-deploy/                  # dormant VM deploy stack: compose.yaml (api+Caddy), Caddyfile, README
-.doco-cd.yml             # doco-cd (GitOps) config for the VM — reconciles deploy/
+deploy/                  # live VM deploy stack: compose.yaml (api+Caddy), Caddyfile,
+                         # README (target), infra-log.md (provisioning record)
+.doco-cd.yml             # doco-cd (GitOps) config for the VM — deferred, reconciles deploy/
 Dockerfile               # multi-stage: node build -> nginx runtime (static site)
 nginx/default.conf.template  # $PORT + SPA fallback (envsubst at container boot)
 Taskfile.yml             # all common commands
@@ -445,9 +446,11 @@ rise/set/houses/planetary-hours. All wording is in `lib/astroText.ts`;
 `backend/` is a **static-first progressive enhancement**: a Go + gin JSON API,
 **API-only**, that adds features (a future admin/writer portal) without the
 static site ever depending on it. **Invariant: the static site works
-identically with the backend absent** — which is most of the time (it's a
-laptop behind ngrok, then a small VM). BE-powered UI renders only when the API
-answers; the live Pages build ships without it and stays silent.
+identically with the backend absent.** The BE now runs on a small Hetzner VM
+(AlmaLinux, Helsinki) with Caddy-terminated TLS at
+`gaias-choice.gardenofatlantis.com`, and the live Pages build is wired to it via
+`VITE_API_URL`. BE-powered UI still renders only when the API answers, so if the
+VM is down the live site silently degrades to the static baseline.
 
 - **Shape:** port **8787**, routes under `/api`. `main.go` (env config —
   `PORT`, `DATA_DIR`, `CORS_ORIGINS`, `GIN_MODE`, plus the content-seam vars
@@ -492,17 +495,22 @@ answers; the live Pages build ships without it and stays silent.
   never `cp` on a live WAL db; Litestream is the upgrade path).
 - **FE seam:** `src/lib/api.ts` is the whole contract — `apiGet`/`apiPost`, an
   `ApiError`, a `useApi<T>()` hook, and request/response types. Base URL =
-  `VITE_API_URL` if set (dev/ngrok; the compose loop sets it) else same-origin
-  `/api`. It fails quietly (consumers render null on error) and guards against
+  `VITE_API_URL` if set (the compose dev loop and the Pages build both set it —
+  the latter to the VM API) else same-origin `/api`. It fails quietly (consumers
+  render null on error) and guards against
   the SPA-fallback trap (HTML-200 for `/api/*` on Pages ⇒ "unavailable").
 - **Toolchain:** containerized like npm — `golang:1.23-alpine`, module+build
   cache in the `gaias-choice-go-cache` volume, `be:*` tasks. Nothing on the
   host. `task dev` runs FE+BE together (see Commands); `air` gives BE hot
   reload in dev (run-not-imported, pinned in `compose.dev.yaml`).
-- **Deploy (D8, dormant):** `deploy/` holds the future VM stack (api behind
-  Caddy for TLS) reconciled by **doco-cd** (GitOps); `.doco-cd.yml` points it
-  at `deploy/`. Files are valid now, activated when the VM exists — see
-  `deploy/README.md`. The static site never moves off Pages by this.
+- **Deploy (D8, live — manual):** the backend runs on the Hetzner VM as the
+  `deploy/` compose stack (`api` + a `caddy` service terminating TLS for
+  `gaias-choice.gardenofatlantis.com`), brought up by hand with
+  `docker compose`. The image is built + pushed to GHCR by
+  `.github/workflows/build-backend.yml` and pinned in `BE_TAG`. **doco-cd
+  GitOps auto-redeploy is prepared but deferred** (`.doco-cd.yml` +
+  `deploy/compose.yaml`). Provisioning record + redeploy/backup steps:
+  `deploy/infra-log.md`. The static site never moves off Pages by this.
 
 ## Supply chain (the reason for the container dance)
 
