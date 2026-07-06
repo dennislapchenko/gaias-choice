@@ -45,7 +45,9 @@ true. One phase at a time.
 
 - [ ] Per-page `<title>` + meta description
 - [ ] Build-time prerendering of every route to static HTML *(keystone task —
-      unlocks SEO, Open Graph previews, Pinterest Rich Pins)*
+      unlocks SEO, Open Graph previews, Pinterest Rich Pins; plan chosen, but
+      waiting on our own domain first — search history should accrue to the
+      permanent address, not the temporary one)*
 - [ ] `sitemap.xml` generated from `content/` at build time
 - [ ] Search Console verified, sitemap submitted
 - [ ] Privacy-friendly analytics — cookieless, no consent banner; update
