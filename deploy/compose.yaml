@@ -8,6 +8,12 @@ services:
     environment:
       DATA_DIR: /data
       CORS_ORIGINS: ${CORS_ORIGINS}
+      # Live-editing seam. Both must be set for /api/content/* to arm; either
+      # empty ⇒ those routes answer 503 (CLAUDE.md "Backend"). Values come from
+      # deploy.env on the VM, never committed. The `:-` keeps compose config
+      # renderable when they're absent.
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
     volumes:
       - /srv/gaias-choice/data:/data # host bind mount, per D9 (boring backups)
 

@@ -1,0 +1,50 @@
+name: Build backend image
+
+# Builds backend/Dockerfile and pushes it to GHCR so the VM (and, later,
+# doco-cd) can pull a prebuilt image instead of building on the box. Tags each
+# push with the commit sha (pin this in deploy.env's BE_TAG) plus a moving
+# `latest`. The GHCR package must be public for the VM to pull unauthenticated
+# — set once after the first push (Package settings → Change visibility).
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - ".github/workflows/build-backend.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.0
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/dennislapchenko/gaias-choice-be
+          tags: |
+            type=sha,format=long
+            type=raw,value=latest
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: backend
+          file: backend/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

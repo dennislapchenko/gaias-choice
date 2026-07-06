@@ -9,6 +9,13 @@ now and exercised later — **nothing here deploys until the VM exists**.
 The static site stays on GitHub Pages and never depends on this stack. This is
 the backend's home only.
 
+> **The actual provisioning record lives in `infra-log.md`** (chronological
+> changelog of what was done on the VM). This README describes the *target*
+> stack; the log is the *history*. Image delivery is decided: **registry via CI**
+> (`.github/workflows/build-backend.yml` builds `backend/Dockerfile` → GHCR).
+> First deploy is **manual** (`docker compose up`); doco-cd GitOps is a deferred
+> follow-up.
+
 ## What's in this repo
 
 - `deploy/compose.yaml` — the `api` service (backend image, host bind mount for
@@ -52,15 +59,13 @@ Kept off the repo on purpose — it's server bootstrap, not app config:
    already owns (e.g. `api.<owned-domain>`) pointing at the VM's IP. This is
    what Caddy uses for automatic TLS; it does **not** depend on the site's
    future custom domain, so the SEO plan stays independent.
-2. **Image delivery** — decide, against then-current doco-cd docs:
-   - **Registry route (safer default):** add a GitHub Actions workflow that
-     builds `backend/Dockerfile` and pushes
-     `ghcr.io/dennislapchenko/gaias-choice-be:<sha>`; pin the sha in
-     `BE_TAG` (avoids stale-`latest` surprises).
-   - **Build-from-repo:** if the current doco-cd can build from
-     `backend/Dockerfile` in-repo, drop the registry entirely.
-   No CI workflow is committed yet — it belongs here, once this question is
-   answered.
+2. **Image delivery — decided: registry route.**
+   `.github/workflows/build-backend.yml` builds `backend/Dockerfile` on push
+   (paths `backend/**`) and pushes `ghcr.io/dennislapchenko/gaias-choice-be`
+   tagged `sha-<long>` + `latest`. Pin the sha in `BE_TAG` (avoids
+   stale-`latest` surprises). **One-time:** the GHCR package must be made
+   **public** after the first push so the VM pulls unauthenticated
+   (Package settings → Change visibility → Public).
 3. **`deploy.env`** on the VM — set `API_DOMAIN=api.<owned-domain>`,
    `CORS_ORIGINS=https://dennislapchenko.github.io` (add the deployed API
    origin if the FE ever calls cross-origin from elsewhere), and `BE_TAG` to
