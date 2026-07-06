@@ -19,10 +19,13 @@ lines *and* delete anything that has become history rather than state.
 
 ## What this is
 
-**Gaia's Choice** — a content site for honest reviews of natural, plastic-free,
-fragrance-free gear for **family travel with a baby** (framed generally: camper,
-car, or carry-on — not RV/van-specific). It is a **client-rendered SPA**, not an
-SSR/SSG site.
+**Gaia's Choice** — a content site about **natural, conscious living on the
+road with a baby** (framed generally: camper, car, or carry-on — not
+RV/van-specific). Three pillars, one contract (everything is lived first):
+honest **reviews** of natural, plastic-free, fragrance-free gear; the
+**Compass** (free courses on the natural-living skills the owners practice);
+and the **Journal** (the handwritten record of the road). It is a
+**client-rendered SPA**, not an SSR/SSG site.
 
 - **Stack:** Vite + React 18 + TypeScript, `react-router-dom` (BrowserRouter).
 - **Content:** authored as Markdown + YAML in `content/`, bundled at build time.

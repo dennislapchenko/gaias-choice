@@ -19,9 +19,10 @@ description: >-
 
 # Managing Gaia's Choice
 
-A content/affiliate review site (natural, plastic-free gear for family travel
-with a baby) built as a Vite + React SPA where **all content is Markdown/YAML
-in `content/`** and all tooling runs in containers. Read the repo's `CLAUDE.md`
+A content/affiliate site about natural living on the road with a baby — honest
+gear reviews, free courses (the Compass), a handwritten Journal — built as a
+Vite + React SPA where **all content is Markdown/YAML in `content/`** and all
+tooling runs in containers. Read the repo's `CLAUDE.md`
 for architecture; this skill is the operating manual on top of it.
 
 ## First, classify the task

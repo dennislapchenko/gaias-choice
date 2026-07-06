@@ -1,7 +1,8 @@
 # Gaia's Choice
 
-Honest reviews of natural, plastic-free, fragrance-free gear for family travel
-with a baby — plus free courses (the Compass) and a travel journal. Built in
+Natural, conscious living on the road with a baby — honest reviews of
+plastic-free, fragrance-free gear, free courses on the skills we practice (the
+Compass), and a handwritten travel Journal. Everything lived first; built in
 public by a real camper family.
 
 - **Stack:** Vite + React 18 + TypeScript SPA. All content is Markdown + YAML

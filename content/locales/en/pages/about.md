@@ -21,9 +21,11 @@ makes every kind of trip easier — camper, car, plane, or a night at a friend's
 
 ![Life on the road](/images/about.webp)
 
-**Gaia's Choice** is where we share what we learn. We're at the beginning and
-say so plainly — reviews appear here only as we actually buy, pack, and live
-with things.
+**Gaia's Choice** is where we share what we learn: honest reviews of gear that
+survives this life, free courses on the natural living we practice (the
+[Compass](/compass)), and a handwritten [Journal](/journal) from the road.
+We're at the beginning and say so plainly — everything appears here only as we
+actually buy it, pack it, practice it, and live it.
 
 The road itself is a search: for a place to anchor, build an off-grid home,
 grow food forests, and be part of a kind, sustainable community. "Buy less,

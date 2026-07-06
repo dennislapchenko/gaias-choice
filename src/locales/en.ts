@@ -13,7 +13,7 @@ const en = {
   "footer.disclosureLinkText": "Full disclosure",
   "footer.copyright": "© {{year}} {{name}}.",
 
-  "home.eyebrow": "Natural · Plastic-free · Fragrance-free",
+  "home.eyebrow": "Natural · Honest · Lived first",
   "home.browseReviews": "Browse reviews",
   "home.readGuides": "Explore the Compass",
   "home.readJournal": "Read the Journal",

@@ -14,7 +14,7 @@ const ru: Record<keyof typeof en, string> = {
   "footer.disclosureLinkText": "Полное раскрытие информации",
   "footer.copyright": "© {{year}} {{name}}.",
 
-  "home.eyebrow": "Натурально · Без пластика · Без отдушек",
+  "home.eyebrow": "Натурально · Честно · Сначала прожито",
   "home.browseReviews": "Смотреть обзоры",
   "home.readGuides": "В путь!",
   "home.readJournal": "Читать заметки",

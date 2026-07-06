@@ -1,15 +1,18 @@
 name: Gaia's Choice
-tagline: Natural gear for life on the road with a baby
+tagline: Natural living on the road with a baby
 description: >-
-  Honest, real-world reviews of natural, plastic-free, fragrance-free products
-  for traveling with a little one — by camper, car, or carry-on. We review only
-  gear we own and use — no synthetics, no perfumes, no guessing.
+  Honest reviews of natural, plastic-free, fragrance-free gear for traveling
+  with a little one — by camper, car, or carry-on — plus free courses on the
+  natural living we practice, and a handwritten journal from the road. Everything
+  here is lived first: we review only what we own and use, teach only what we
+  practice, and tell it as it happened.
 bio: >-
   We spent two years building our campervan from scratch — now we live on the
   road with our baby and two Basenji dogs.
 mission: >-
-  We help families travel consciously, comfortably, and safely — using only
-  natural, eco-friendly gear, free of synthetics, fragrance, and plastic.
+  We help families live and travel consciously, comfortably, and safely — with
+  natural, eco-friendly gear free of synthetics, fragrance, and plastic, and
+  with knowledge we test on ourselves before we share it.
 
 # Current production URL. This is a GitHub Pages project-page subpath for
 # now; it'll move to the root of a custom domain later, at which point this
@@ -21,7 +24,7 @@ heroImage: /images/hero.webp
 values:
   - title: Honesty first
     icon: honesty
-    text: Every review comes from gear we actually packed, used, and lived with on the road.
+    text: Every review, course, and journal entry comes from what we actually packed, practiced, and lived on the road.
   - title: Safe & natural
     icon: natural
     text: We look for organic, non-toxic materials — the stuff you'd trust next to a newborn.
