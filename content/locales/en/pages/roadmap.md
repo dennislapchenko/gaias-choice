@@ -38,8 +38,9 @@ true. One phase at a time.
 - [ ] Weekly publishing rhythm held for 8 consecutive weeks
 - [ ] All placeholder reviews and AI images deleted or replaced
 - [ ] 10 reviews + 2–3 guides drawn from lived travel experience
-- [ ] Compass courses finished (homeopathy & herbalism, chapters 4–11, both
-      languages) — real content that isn't reviews
+- [x] Herbalism Compass course finished (all 11 chapters, both languages) —
+      real content that isn't reviews
+- [ ] Homeopathy Compass course finished (chapters 4–11, both languages)
 
 **Dev track (makes the content findable):**
 

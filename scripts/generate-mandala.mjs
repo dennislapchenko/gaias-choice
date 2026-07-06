@@ -213,6 +213,131 @@ const SETS = {
 <path d="M78,-56 L78,58" stroke="#f0d8bc" stroke-width="7" stroke-linecap="round"/>
 <path d="M78,-56 C92,-48 92,-22 78,-16 Z" fill="#f0d8bc" opacity="0.85"/>`,
       },
+
+      // «Домашний травник» / "The home herbalist" (herbalism), chapters 4–11.
+      // Shared deep-green family (the herbalism epic thumbnail uses
+      // ['#0f3d2a','#1a6b48','#04140d'] / stroke '#8ff2c9') — one hue/lightness
+      // step per chapter, like trophology does with amber. Chapters 1–3 keep
+      // their original hand-authored one-off SVGs (not listed here).
+      {
+        // ch. 4 — the kitchen ten: ten labeled jars in two rows.
+        slug: 'herbalism-04-the-kitchen-ten',
+        petalCount: 10,
+        bg: ['#0f3d2a', '#1a6b48', '#04140d'],
+        stroke: '#8ff2c9',
+        centerIcon: `
+<g fill="#d8f5e6" opacity="0.92">
+  <rect x="-84" y="-52" width="28" height="40" rx="6"/><rect x="-48" y="-52" width="28" height="40" rx="6"/>
+  <rect x="-12" y="-52" width="28" height="40" rx="6"/><rect x="24" y="-52" width="28" height="40" rx="6"/>
+  <rect x="60" y="-52" width="28" height="40" rx="6"/>
+  <rect x="-84" y="8" width="28" height="40" rx="6"/><rect x="-48" y="8" width="28" height="40" rx="6"/>
+  <rect x="-12" y="8" width="28" height="40" rx="6"/><rect x="24" y="8" width="28" height="40" rx="6"/>
+  <rect x="60" y="8" width="28" height="40" rx="6"/>
+</g>
+<g stroke="#1a6b48" stroke-width="4" stroke-linecap="round">
+  <path d="M-82,-56 L-58,-56 M-46,-56 L-22,-56 M-10,-56 L14,-56 M26,-56 L50,-56 M62,-56 L86,-56"/>
+  <path d="M-82,4 L-58,4 M-46,4 L-22,4 M-10,4 L14,4 M26,4 L50,4 M62,4 L86,4"/>
+</g>`,
+      },
+      {
+        // ch. 5 — alcohol, vinegar, honey: three vessels side by side.
+        slug: 'herbalism-05-tinctures-and-oxymels',
+        petalCount: 12,
+        bg: ['#123a20', '#237a4a', '#05130a'],
+        stroke: '#93f0be',
+        centerIcon: `
+<path d="M-72,60 L-72,-10 Q-72,-26 -60,-30 L-60,-46 L-40,-46 L-40,-30 Q-28,-26 -28,-10 L-28,60 Z" fill="#d8f5e6" opacity="0.92"/>
+<rect x="-62" y="-58" width="24" height="12" rx="4" fill="#3fae7a"/>
+<path d="M-22,60 L-22,-2 Q-22,-14 -12,-18 L-12,-52 Q-12,-62 -2,-62 Q8,-62 8,-52 L8,-18 Q18,-14 18,-2 L18,60 Z" fill="#a8e8c8" opacity="0.88"/>
+<path d="M28,60 L28,6 Q28,-8 40,-12 L40,-24 L64,-24 L64,-12 Q76,-8 76,6 L76,60 Z" fill="#f0d890" opacity="0.9"/>
+<path d="M36,-32 L68,-32" stroke="#f0d890" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+<path d="M-72,30 L-28,30 M-22,34 L18,34 M28,36 L76,36" stroke="#1a6b48" stroke-width="4" opacity="0.7"/>`,
+      },
+      {
+        // ch. 6 — skin and touch: an open palm with a falling drop.
+        slug: 'herbalism-06-skin-and-touch',
+        petalCount: 14,
+        bg: ['#0d3d33', '#1a6b5c', '#04120f'],
+        stroke: '#8ff2d9',
+        centerIcon: `
+<path d="M0,-72 C14,-46 24,-32 24,-18 A24,24 0 1 1 -24,-18 C-24,-32 -14,-46 0,-72 Z" fill="#9fe8d0" opacity="0.92"/>
+<path d="M-78,38 Q-78,18 -62,18 L54,18 Q74,18 74,38 Q74,62 44,70 L-40,70 Q-78,62 -78,38 Z" fill="#d8f5ec" opacity="0.9"/>
+<path d="M-62,18 L-62,-8 M-38,18 L-38,-16 M-14,18 L-14,-20 M10,18 L10,-16" stroke="#d8f5ec" stroke-width="16" stroke-linecap="round" opacity="0.9"/>
+<path d="M54,22 Q84,6 78,-14" fill="none" stroke="#d8f5ec" stroke-width="14" stroke-linecap="round" opacity="0.9"/>`,
+      },
+      {
+        // ch. 7 — household protocols: a shield with a leaf at its heart.
+        slug: 'herbalism-07-household-protocols',
+        petalCount: 8,
+        bg: ['#16381c', '#2d6e33', '#071106'],
+        stroke: '#a5f0a0',
+        centerIcon: `
+<path d="M0,-78 C26,-62 52,-56 68,-56 C68,4 52,54 0,80 C-52,54 -68,4 -68,-56 C-52,-56 -26,-62 0,-78 Z" fill="#d8f5dc" opacity="0.92"/>
+<path d="M0,-78 C26,-62 52,-56 68,-56 C68,4 52,54 0,80 C-52,54 -68,4 -68,-56 C-52,-56 -26,-62 0,-78 Z" fill="none" stroke="#2d6e33" stroke-width="4"/>
+<path d="M0,46 L0,-30" stroke="#2d6e33" stroke-width="5" stroke-linecap="round"/>
+<path d="M0,-30 C-28,-34 -38,-58 -24,-74 C-10,-58 -6,-40 0,-30 Z" fill="#57cf74" opacity="0.95"/>
+<path d="M0,-14 C28,-18 38,-42 24,-58 C10,-42 6,-24 0,-14 Z" fill="#3fae5a" opacity="0.95"/>
+<path d="M-22,14 Q0,34 22,14" fill="none" stroke="#2d6e33" stroke-width="4" stroke-linecap="round" opacity="0.7"/>`,
+      },
+      {
+        // ch. 8 — the harvest year: a four-spoke year wheel with a sprig.
+        slug: 'herbalism-08-the-harvest-year',
+        petalCount: 16,
+        bg: ['#1b3d14', '#3c7a24', '#081204'],
+        stroke: '#b8f08f',
+        centerIcon: `
+<circle cx="0" cy="0" r="70" fill="#e2f5d4" opacity="0.92" stroke="#3c7a24" stroke-width="4"/>
+<circle cx="0" cy="0" r="46" fill="none" stroke="#3c7a24" stroke-width="3" opacity="0.7"/>
+<path d="M0,-70 L0,70 M-70,0 L70,0" stroke="#3c7a24" stroke-width="4"/>
+<circle cx="0" cy="0" r="16" fill="#3c7a24"/>
+<path d="M0,-16 C-14,-22 -20,-36 -12,-46 C-2,-38 2,-26 0,-16 Z" fill="#b8f08f"/>`,
+      },
+      {
+        // ch. 9 — the living apothecary: a shelf with three jars on it.
+        slug: 'herbalism-09-the-living-apothecary',
+        petalCount: 12,
+        bg: ['#123527', '#20705a', '#051009'],
+        stroke: '#8fe8cc',
+        centerIcon: `
+<path d="M-84,44 L84,44" stroke="#caa877" stroke-width="8" stroke-linecap="round"/>
+<path d="M-72,44 L-72,68 M72,44 L72,68" stroke="#caa877" stroke-width="6" stroke-linecap="round"/>
+<rect x="-70" y="-16" width="40" height="60" rx="8" fill="#d8f5ec" opacity="0.92"/>
+<path d="M-66,-20 L-34,-20" stroke="#20705a" stroke-width="5" stroke-linecap="round"/>
+<rect x="-62" y="2" width="24" height="18" rx="3" fill="#20705a" opacity="0.55"/>
+<rect x="-18" y="-40" width="40" height="84" rx="8" fill="#c2f0dc" opacity="0.92"/>
+<path d="M-14,-44 L18,-44" stroke="#20705a" stroke-width="5" stroke-linecap="round"/>
+<rect x="-10" y="-14" width="24" height="20" rx="3" fill="#20705a" opacity="0.55"/>
+<rect x="34" y="-8" width="38" height="52" rx="8" fill="#9fe0c6" opacity="0.92"/>
+<path d="M38,-12 L68,-12" stroke="#20705a" stroke-width="5" stroke-linecap="round"/>
+<rect x="42" y="8" width="22" height="16" rx="3" fill="#20705a" opacity="0.55"/>`,
+      },
+      {
+        // ch. 10 — the art of the blend: three small circles pouring into one jar.
+        slug: 'herbalism-10-formulation',
+        petalCount: 10,
+        bg: ['#0e3a1e', '#1d7a3f', '#04120a'],
+        stroke: '#8ff2a8',
+        centerIcon: `
+<circle cx="-52" cy="-58" r="20" fill="#57cf94" opacity="0.95"/>
+<circle cx="0" cy="-72" r="24" fill="#8ff2a8" opacity="0.95"/>
+<circle cx="52" cy="-58" r="20" fill="#3fae7a" opacity="0.95"/>
+<path d="M-46,-38 C-36,-22 -18,-12 -8,-8 M0,-46 L0,-10 M46,-38 C36,-22 18,-12 8,-8" fill="none" stroke="#8ff2a8" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+<path d="M-40,0 L-40,14 Q-40,20 -34,22 L-34,64 Q-34,76 -22,76 L22,76 Q34,76 34,64 L34,22 Q40,20 40,14 L40,0 Z" fill="#d8f5e6" opacity="0.92"/>
+<path d="M-26,40 L26,40" stroke="#1d7a3f" stroke-width="4" opacity="0.7"/>
+<rect x="-14" y="48" width="28" height="18" rx="3" fill="#1d7a3f" opacity="0.55"/>`,
+      },
+      {
+        // ch. 11 — your own path: a winding trail rising to a leaf on the horizon.
+        slug: 'herbalism-11-your-own-path',
+        petalCount: 14,
+        bg: ['#143d2e', '#2a8a64', '#051410'],
+        stroke: '#9df5d2',
+        centerIcon: `
+<path d="M-70,78 C-20,66 40,58 70,42 C30,44 -10,48 -34,40 C6,34 44,24 60,10 C28,14 -4,18 -22,10 C6,2 28,-8 36,-22" fill="none" stroke="#d8f5e6" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+<path d="M36,-22 L36,-50" stroke="#9df5d2" stroke-width="4" stroke-linecap="round"/>
+<path d="M36,-50 C12,-54 4,-76 18,-90 C32,-78 36,-62 36,-50 Z" fill="#57cf94" opacity="0.95"/>
+<path d="M36,-40 C60,-44 68,-64 56,-78 C44,-66 38,-52 36,-40 Z" fill="#8ff2c9" opacity="0.95"/>`,
+      },
     ],
   },
 

@@ -1,8 +1,7 @@
 # Course plan — «Домашний травник» / "The home herbalist"
 
 Authoring plan per [epic-writing-context.md](epic-writing-context.md) §7.
-**Status: chapters 1–3 written 2026-07-05 (en+ru); chapters 4–11 pending
-owner feedback.**
+**Status: complete — all 11 chapters written (en+ru).**
 
 ## Course meta
 
@@ -86,8 +85,7 @@ EN: `## A familiar scene` → `## The promise` → `## The core` (`###` per conc
 → `## Worked example` → `## Practice` → `## Now you can` → `## Check yourself`
 → `## Next`
 
-Trail block opens every chapter; ch. 3's forward link is text-only
-(«готовится») until ch. 4 exists.
+Trail block opens every chapter.
 
 ## Ideology integration
 

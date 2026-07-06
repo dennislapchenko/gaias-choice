@@ -7,7 +7,7 @@ chapter: 3
 tags: [herbalism]
 ---
 
-> **Chapter 3 of 11 · The Path** — [← Chapter 2: Meeting a plant](/compass/herbalism-02-meeting-a-plant) · Chapter 4: The kitchen ten — *in preparation*
+> **Chapter 3 of 11 · The Path** — [← Chapter 2: Meeting a plant](/compass/herbalism-02-meeting-a-plant) · [Chapter 4: The kitchen ten →](/compass/herbalism-04-the-kitchen-ten)
 > *You already can:* place a plant on the energetic compass by taste, and run an honest plant hour.
 > *This chapter adds:* the two water methods and their ratios — four different medicines from the same jar — plus the daily-cup habit and the shelf's infusion station.
 
@@ -134,4 +134,6 @@ From memory:
 
 ## Next
 
-Your station works, your compass is calibrated, and the shelf holds exactly two plants properly met — chamomile and mint — plus a ginger root and a jar of nettle on their way in. Time to fill the shelf for real: the **kitchen ten**, portrait by portrait — the nettle you've now tasted, the calendula that will become chapter 6's oil, the thyme that out-works its soup reputation, the elder, the yarrow, the plantain growing in the yard you've walked past a thousand times. Ten jars, ten acquaintances, the shelf's whole working cast. *Chapter 4 is in preparation — the Trail will link it here the moment it ships.*
+Your station works, your compass is calibrated, and the shelf holds exactly two plants properly met — chamomile and mint — plus a ginger root and a jar of nettle on their way in. Time to fill the shelf for real: the **kitchen ten**, portrait by portrait — the nettle you've now tasted, the calendula that will become chapter 6's oil, the thyme that out-works its soup reputation, the elder, the yarrow, the plantain growing in the yard you've walked past a thousand times. Ten jars, ten acquaintances, the shelf's whole working cast.
+
+**[Chapter 4: The kitchen ten →](/compass/herbalism-04-the-kitchen-ten)**

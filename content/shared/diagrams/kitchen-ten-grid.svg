@@ -1,0 +1,32 @@
+<svg viewBox="0 0 640 162" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<rect x="8" y="10" width="120" height="64" rx="12" fill="var(--mint)"/>
+<text x="68" y="37" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{h1}}</text>
+<text x="68" y="57" text-anchor="middle" font-size="11" fill="var(--muted)">{{r1}}</text>
+<rect x="134" y="10" width="120" height="64" rx="12" fill="var(--peach)"/>
+<text x="194" y="37" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{h2}}</text>
+<text x="194" y="57" text-anchor="middle" font-size="11" fill="var(--muted)">{{r2}}</text>
+<rect x="260" y="10" width="120" height="64" rx="12" fill="var(--lilac)"/>
+<text x="320" y="37" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{h3}}</text>
+<text x="320" y="57" text-anchor="middle" font-size="11" fill="var(--muted)">{{r3}}</text>
+<rect x="386" y="10" width="120" height="64" rx="12" fill="var(--mint)"/>
+<text x="446" y="37" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{h4}}</text>
+<text x="446" y="57" text-anchor="middle" font-size="11" fill="var(--muted)">{{r4}}</text>
+<rect x="512" y="10" width="120" height="64" rx="12" fill="var(--peach)"/>
+<text x="572" y="37" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{h5}}</text>
+<text x="572" y="57" text-anchor="middle" font-size="11" fill="var(--muted)">{{r5}}</text>
+<rect x="8" y="88" width="120" height="64" rx="12" fill="var(--lilac)"/>
+<text x="68" y="115" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{h6}}</text>
+<text x="68" y="135" text-anchor="middle" font-size="11" fill="var(--muted)">{{r6}}</text>
+<rect x="134" y="88" width="120" height="64" rx="12" fill="var(--mint)"/>
+<text x="194" y="115" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{h7}}</text>
+<text x="194" y="135" text-anchor="middle" font-size="11" fill="var(--muted)">{{r7}}</text>
+<rect x="260" y="88" width="120" height="64" rx="12" fill="var(--peach)"/>
+<text x="320" y="115" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{h8}}</text>
+<text x="320" y="135" text-anchor="middle" font-size="11" fill="var(--muted)">{{r8}}</text>
+<rect x="386" y="88" width="120" height="64" rx="12" fill="var(--lilac)"/>
+<text x="446" y="115" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{h9}}</text>
+<text x="446" y="135" text-anchor="middle" font-size="11" fill="var(--muted)">{{r9}}</text>
+<rect x="512" y="88" width="120" height="64" rx="12" fill="var(--mint)"/>
+<text x="572" y="115" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{h10}}</text>
+<text x="572" y="135" text-anchor="middle" font-size="11" fill="var(--muted)">{{r10}}</text>
+</svg>

@@ -10,8 +10,9 @@ aren't obvious from the code.
 
 **Doc layout — one fact, one home.** This file holds *architecture and
 invariants*. Process rules (truth-first, provenance contract, committing) live
-in `.claude/skills/manage-site/SKILL.md`; change-X-edit-Y mechanics in
-`references/development.md`; authoring procedures in
+in `.claude/skills/manage-site/SKILL.md`; the course-batch production
+workflow in `.claude/skills/write-epic-course/SKILL.md`; change-X-edit-Y
+mechanics in `references/development.md`; authoring procedures in
 `references/content-editing.md`; voice/worldview source material in `context/`.
 Docs describe **current state only** — no dates, no "renamed from", no
 changelog framing (git history answers those). When you update docs, fix stale
@@ -169,10 +170,10 @@ computer-assisted** section, disclosed by the `compass.provenance` banner
 - Courses are **5 or 11 chapters** (owner rule). Optional `chapter: N`
   frontmatter orders chapters ascending within an epic (un-chaptered entries
   keep date-desc). Existing epics: `founder-guide` (5, complete — the founder
-  playbooks as the course «Честный сайт с нуля»), `homeopathy` and `herbalism`
-  (11 each, chapters 1–3 live, rest pending — a mid-write course's last "next"
-  link stays text-only until the next chapter ships), `trophology` (5,
-  complete, en+ru), `inside-websites` (5, complete, **English-only by owner
+  playbooks as the course «Честный сайт с нуля»), `herbalism` (11, complete,
+  en+ru), `homeopathy` (11, chapters 1–3 live, rest pending — a mid-write
+  course's last "next" link stays text-only until the next chapter ships),
+  `trophology` (5, complete, en+ru), `inside-websites` (5, complete, **English-only by owner
   decision** — absent from `ru/site.yaml`, its diagrams are expected EN-only
   parity-check asymmetries). Outlines live in `context/course-plan-*.md`; the
   authoring blueprint is `context/epic-writing-context.md`.
@@ -459,8 +460,8 @@ The owners are first-time site builders learning the affiliate-content business
 in public. Where things stand (keep this section current *and short* — it
 describes the phase, not the history):
 
-- **Compass courses:** founder course, `trophology`, and `inside-websites`
-  complete; `homeopathy` and `herbalism` at chapters 1–3 of 11. The founder
+- **Compass courses:** founder course, `trophology`, `inside-websites`, and
+  `herbalism` complete; `homeopathy` at chapters 1–3 of 11. The founder
   guides are internal playbooks deliberately published as a course — don't
   "fix" them into consumer content; retelling them from lived experience is a
   roadmap milestone. The launch checklist carries an open item to label each

@@ -1,0 +1,29 @@
+<svg viewBox="0 0 640 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs><marker id="arr-cof" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<rect x="12" y="104" width="136" height="52" rx="12" fill="var(--mint)"/>
+<text x="80" y="135" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{start}}</text>
+<line x1="150" y1="130" x2="164" y2="130" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-cof)"/>
+<rect x="168" y="104" width="140" height="52" rx="12" fill="var(--peach)"/>
+<text x="238" y="135" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{jar}}</text>
+<path d="M308 116 C 320 92, 326 72, 333 58" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-cof)"/>
+<path d="M308 144 C 320 168, 326 196, 333 220" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-cof)"/>
+<rect x="338" y="26" width="148" height="56" rx="12" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<text x="412" y="49" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink)">{{routeslow}}</text>
+<text x="412" y="67" text-anchor="middle" font-size="11" fill="var(--muted)">{{routeslow2}}</text>
+<rect x="338" y="196" width="148" height="56" rx="12" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<text x="412" y="219" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink)">{{routefast}}</text>
+<text x="412" y="237" text-anchor="middle" font-size="11" fill="var(--muted)">{{routefast2}}</text>
+<path d="M486 54 C 496 76, 500 98, 505 118" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-cof)"/>
+<path d="M486 224 C 496 202, 500 170, 505 146" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-cof)"/>
+<rect x="508" y="104" width="120" height="52" rx="12" fill="var(--lilac)"/>
+<text x="568" y="135" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{strain}}</text>
+<line x1="568" y1="158" x2="568" y2="244" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-cof)"/>
+<rect x="508" y="250" width="120" height="52" rx="12" fill="var(--mint)"/>
+<text x="568" y="281" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{oil}}</text>
+<line x1="506" y1="276" x2="488" y2="276" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-cof)"/>
+<rect x="330" y="250" width="152" height="52" rx="12" fill="var(--peach)"/>
+<text x="406" y="281" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{wax}}</text>
+<line x1="328" y1="276" x2="310" y2="276" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-cof)"/>
+<rect x="150" y="250" width="154" height="52" rx="12" fill="var(--sage)"/>
+<text x="227" y="281" text-anchor="middle" font-size="13" font-weight="700" fill="var(--on-accent)">{{salve}}</text>
+</svg>

@@ -1,0 +1,33 @@
+<svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="46%" r="72%">
+      <stop offset="0%" stop-color="#143d2e"/>
+      <stop offset="55%" stop-color="#2a8a64"/>
+      <stop offset="100%" stop-color="#051410"/>
+    </radialGradient>
+    <path id="petal" d="M400,220 Q448,145.0 400,70 Q352,145.0 400,220 Z" fill="none" stroke="#9df5d2" stroke-width="1.6" opacity="0.4"/>
+  </defs>
+  <rect width="800" height="800" fill="url(#bg)"/>
+  <circle cx="400" cy="400" r="350" fill="none" stroke="#9df5d2" stroke-width="1" opacity="0.28"/>
+  <circle cx="400" cy="400" r="270" fill="none" stroke="#9df5d2" stroke-width="1" opacity="0.28"/>
+  <use href="#petal" transform="rotate(0 400 400)"/>
+  <use href="#petal" transform="rotate(25.714285714285715 400 400)"/>
+  <use href="#petal" transform="rotate(51.42857142857143 400 400)"/>
+  <use href="#petal" transform="rotate(77.14285714285714 400 400)"/>
+  <use href="#petal" transform="rotate(102.85714285714286 400 400)"/>
+  <use href="#petal" transform="rotate(128.57142857142858 400 400)"/>
+  <use href="#petal" transform="rotate(154.28571428571428 400 400)"/>
+  <use href="#petal" transform="rotate(180 400 400)"/>
+  <use href="#petal" transform="rotate(205.71428571428572 400 400)"/>
+  <use href="#petal" transform="rotate(231.42857142857144 400 400)"/>
+  <use href="#petal" transform="rotate(257.14285714285717 400 400)"/>
+  <use href="#petal" transform="rotate(282.8571428571429 400 400)"/>
+  <use href="#petal" transform="rotate(308.57142857142856 400 400)"/>
+  <use href="#petal" transform="rotate(334.2857142857143 400 400)"/>
+  <g transform="translate(400,400)">
+<path d="M-70,78 C-20,66 40,58 70,42 C30,44 -10,48 -34,40 C6,34 44,24 60,10 C28,14 -4,18 -22,10 C6,2 28,-8 36,-22" fill="none" stroke="#d8f5e6" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+<path d="M36,-22 L36,-50" stroke="#9df5d2" stroke-width="4" stroke-linecap="round"/>
+<path d="M36,-50 C12,-54 4,-76 18,-90 C32,-78 36,-62 36,-50 Z" fill="#57cf94" opacity="0.95"/>
+<path d="M36,-40 C60,-44 68,-64 56,-78 C44,-66 38,-52 36,-40 Z" fill="#8ff2c9" opacity="0.95"/>
+  </g>
+</svg>

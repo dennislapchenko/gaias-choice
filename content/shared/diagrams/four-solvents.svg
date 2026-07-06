@@ -1,0 +1,22 @@
+<svg viewBox="0 0 640 140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<rect x="6" y="12" width="148" height="116" rx="12" fill="var(--mint)"/>
+<text x="80" y="40" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">{{s1t}}</text>
+<text x="80" y="63" text-anchor="middle" font-size="11.5" fill="var(--ink)">{{s1a}}</text>
+<text x="80" y="79" text-anchor="middle" font-size="11.5" fill="var(--ink)">{{s1b}}</text>
+<text x="80" y="104" text-anchor="middle" font-size="11" font-style="italic" fill="var(--muted)">{{s1n}}</text>
+<rect x="166" y="12" width="148" height="116" rx="12" fill="var(--peach)"/>
+<text x="240" y="40" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">{{s2t}}</text>
+<text x="240" y="63" text-anchor="middle" font-size="11.5" fill="var(--ink)">{{s2a}}</text>
+<text x="240" y="79" text-anchor="middle" font-size="11.5" fill="var(--ink)">{{s2b}}</text>
+<text x="240" y="104" text-anchor="middle" font-size="11" font-style="italic" fill="var(--muted)">{{s2n}}</text>
+<rect x="326" y="12" width="148" height="116" rx="12" fill="var(--lilac)"/>
+<text x="400" y="40" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">{{s3t}}</text>
+<text x="400" y="63" text-anchor="middle" font-size="11.5" fill="var(--ink)">{{s3a}}</text>
+<text x="400" y="79" text-anchor="middle" font-size="11.5" fill="var(--ink)">{{s3b}}</text>
+<text x="400" y="104" text-anchor="middle" font-size="11" font-style="italic" fill="var(--muted)">{{s3n}}</text>
+<rect x="486" y="12" width="148" height="116" rx="12" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<text x="560" y="40" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">{{s4t}}</text>
+<text x="560" y="63" text-anchor="middle" font-size="11.5" fill="var(--ink)">{{s4a}}</text>
+<text x="560" y="79" text-anchor="middle" font-size="11.5" fill="var(--ink)">{{s4b}}</text>
+<text x="560" y="104" text-anchor="middle" font-size="11" font-style="italic" fill="var(--muted)">{{s4n}}</text>
+</svg>

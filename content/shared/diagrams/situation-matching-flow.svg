@@ -1,0 +1,25 @@
+<svg viewBox="0 0 640 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs><marker id="arr-smf" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<rect x="165" y="12" width="210" height="44" rx="12" fill="var(--mint)"/>
+<text x="270" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{q1}}</text>
+<line x1="270" y1="58" x2="270" y2="76" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-smf)"/>
+<rect x="165" y="82" width="210" height="44" rx="12" fill="var(--peach)"/>
+<text x="270" y="109" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{flags}}</text>
+<line x1="377" y1="104" x2="428" y2="104" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-smf)"/>
+<text x="402" y="95" text-anchor="middle" font-size="11.5" font-style="italic" fill="var(--muted)">{{yes}}</text>
+<rect x="434" y="78" width="192" height="52" rx="12" fill="var(--clay)"/>
+<text x="530" y="109" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--on-accent)">{{doctor}}</text>
+<line x1="270" y1="128" x2="270" y2="146" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-smf)"/>
+<text x="282" y="142" font-size="11.5" font-style="italic" fill="var(--muted)">{{no}}</text>
+<rect x="165" y="152" width="210" height="44" rx="12" fill="var(--lilac)"/>
+<text x="270" y="179" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{step}}</text>
+<line x1="270" y1="198" x2="270" y2="216" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-smf)"/>
+<rect x="165" y="222" width="210" height="44" rx="12" fill="var(--mint)"/>
+<text x="270" y="249" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{state}}</text>
+<line x1="270" y1="268" x2="270" y2="286" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-smf)"/>
+<rect x="165" y="292" width="210" height="44" rx="12" fill="var(--peach)"/>
+<text x="270" y="319" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{herb}}</text>
+<line x1="270" y1="338" x2="270" y2="356" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-smf)"/>
+<rect x="145" y="362" width="250" height="52" rx="12" fill="var(--sage)"/>
+<text x="270" y="393" text-anchor="middle" font-size="13" font-weight="700" fill="var(--on-accent)">{{prep}}</text>
+</svg>
