@@ -1,5 +1,6 @@
 import { useSearchParams } from 'react-router-dom'
 import { getJournal, getJournalTemplate, getSite } from '../lib/content'
+import { usePageHead } from '../lib/head'
 import { useI18n } from '../lib/i18n'
 import JournalRow from '../components/JournalRow'
 import Upcoming from '../components/Upcoming'
@@ -10,6 +11,7 @@ const yearOf = (date?: string) => (date ?? '').slice(0, 4)
 // (years here, categories there) and the "in the works" rail on the right.
 export default function Journal() {
   const { locale, t } = useI18n()
+  usePageHead(t('journal.title'), t('journal.lead'))
   const entries = getJournal(locale) // already date-descending (content.ts)
   const upcoming = getSite(locale).upcomingJournal ?? []
 

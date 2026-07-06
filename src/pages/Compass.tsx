@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { getCompass, getSite } from '../lib/content'
+import { usePageHead } from '../lib/head'
 import { useI18n } from '../lib/i18n'
 import { withBase } from '../lib/asset'
 import CompassRow from '../components/CompassRow'
 
 export default function Compass() {
   const { locale, t } = useI18n()
+  usePageHead(t('compass.title'), t('compass.lead'))
   const entries = getCompass(locale)
   const site = getSite(locale)
 

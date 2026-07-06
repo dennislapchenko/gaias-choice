@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { getProduct } from '../lib/content'
+import { PageHead } from '../lib/head'
 import { useI18n } from '../lib/i18n'
 import { withBase } from '../lib/asset'
 import Markdown from '../components/Markdown'
@@ -14,6 +15,7 @@ export default function ReviewDetail() {
 
   return (
     <article className="detail">
+      <PageHead title={product.title} description={product.excerpt} />
       <Link to="/reviews" className="back-link">
         {t('reviewDetail.backLink')}
       </Link>

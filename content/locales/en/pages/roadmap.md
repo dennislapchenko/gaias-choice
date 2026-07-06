@@ -43,7 +43,8 @@ true. One phase at a time.
 
 **Dev track (makes the content findable):**
 
-- [ ] Per-page `<title>` + meta description
+- [x] Per-page `<title>` + meta description *(client-side for now — the
+      prerendering below will bake them into the HTML crawlers see)*
 - [ ] Build-time prerendering of every route to static HTML *(keystone task —
       unlocks SEO, Open Graph previews, Pinterest Rich Pins; plan chosen, but
       waiting on our own domain first — search history should accrue to the

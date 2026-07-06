@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getProducts, getReviewTemplate, getSite } from '../lib/content'
+import { usePageHead } from '../lib/head'
 import { useI18n } from '../lib/i18n'
 import ProductCard from '../components/ProductCard'
 import Upcoming from '../components/Upcoming'
@@ -9,6 +10,7 @@ const ALL = 'All'
 
 export default function Reviews() {
   const { locale, t } = useI18n()
+  usePageHead(t('reviews.title'), t('reviews.lead'))
   const products = getProducts(locale)
   const upcoming = getSite(locale).upcoming ?? []
   const categories = useMemo(

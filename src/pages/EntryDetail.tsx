@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { getCompassEntry, getJournalEntry } from '../lib/content'
 import type { CompassEntry } from '../lib/types'
+import { PageHead } from '../lib/head'
 import { useI18n } from '../lib/i18n'
 import { withBase } from '../lib/asset'
 import Markdown from '../components/Markdown'
@@ -30,6 +31,7 @@ export default function EntryDetail({ kind }: { kind: 'compass' | 'journal' }) {
 
   return (
     <div className="detail-layout">
+      <PageHead title={entry.title} description={entry.excerpt} />
       <div className="detail-nav">
         <Link to={backTo} className="back-link">
           {backLabel}

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { getCompass, getJournal, getProducts, getSite } from '../lib/content'
+import { usePageHead } from '../lib/head'
 import { useI18n } from '../lib/i18n'
 import { withBase } from '../lib/asset'
 import ProductCard from '../components/ProductCard'
@@ -9,6 +10,7 @@ import JournalRow from '../components/JournalRow'
 export default function Home() {
   const { locale, t } = useI18n()
   const site = getSite(locale)
+  usePageHead()
   const featuredProducts = getProducts(locale).slice(0, 3)
   const latestGuides = getCompass(locale).slice(0, 2)
   const latestEntries = getJournal(locale).slice(0, 3)

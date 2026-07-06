@@ -1,4 +1,5 @@
 import { getPage, getSite } from '../lib/content'
+import { PageHead } from '../lib/head'
 import { useI18n } from '../lib/i18n'
 import Markdown from '../components/Markdown'
 import CopyButton from '../components/CopyButton'
@@ -17,6 +18,7 @@ export default function Support() {
 
   return (
     <article className="detail">
+      <PageHead title={page.title} />
       <h1>{page.title}</h1>
       <Markdown html={page.html} />
 

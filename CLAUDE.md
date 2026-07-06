@@ -98,6 +98,8 @@ src/
     content.ts           # loads + parses all locale content at build time (the core)
     i18n.tsx             # locale state, persistence, t() translate function
     theme.ts             # applies/persists color palettes (CSS var overrides)
+    head.tsx             # per-route <title> + meta description (client-side interim
+                         # until prerendering; usePageHead hook + PageHead component)
     astro.ts             # in-browser ephemeris → celestial events (astronomy-engine)
     astroText.ts         # all almanac wording, one Vocab per locale
     asset.ts             # withBase/withBaseHtml for BASE_PATH-aware asset URLs
