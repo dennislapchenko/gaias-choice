@@ -42,6 +42,10 @@ jobs:
           # Project page lives under /gaias-choice/. vite.config.ts reads this;
           # local/Cloud Run builds leave it unset and serve from "/".
           BASE_PATH: /gaias-choice/
+          # Point the SPA at the backend on the VM (Caddy-terminated TLS). Not a
+          # secret — just the public API base. api.ts falls back to same-origin
+          # /api when unset; remove this line to unwire the live site from the BE.
+          VITE_API_URL: https://gaias-choice.gardenofatlantis.com/api
       - name: SPA fallback
         # GitHub Pages has no server-side rewrite, so deep links (e.g.
         # /gaias-choice/reviews/foo) hit 404.html. Serving a copy of index.html

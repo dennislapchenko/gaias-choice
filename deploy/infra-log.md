@@ -59,5 +59,62 @@
   `ghcr.io/dennislapchenko/gaias-choice-be` tagged `sha-<commit>` + `latest`.
 - Passed the live-editing tokens through in `deploy/compose.yaml` (api service
   `ADMIN_TOKEN`/`GITHUB_TOKEN`, sourced from `deploy.env`).
-- **One-time after first CI push:** make the GHCR package **public** so the VM
-  pulls unauthenticated.
+- **GHCR visibility:** turned out the package was **already pullable
+  unauthenticated** from the VM after the first CI push (repo is public) — no
+  manual visibility flip was needed. If a future private-repo move breaks the
+  pull, either make the package public or `docker login ghcr.io` on the VM with
+  a `read:packages` token.
+
+### 5. First deploy (manual compose, doco-cd deferred)
+- `git` is **not** installed on the VM (minimal image). For a manual deploy only
+  `compose.yaml` + `Caddyfile` + `deploy.env` are needed, so they were `scp`'d
+  to `/opt/gaias-choice/deploy/` rather than installing git / cloning. (doco-cd,
+  when activated, clones inside its own container — host git still not required.)
+- `deploy.env` on the VM (`chmod 600`, never committed) holds:
+  ```
+  API_DOMAIN=gaias-choice.gardenofatlantis.com
+  CORS_ORIGINS=https://dennislapchenko.github.io
+  BE_TAG=sha-<commit>          # pinned to the CI-built image, not `latest`
+  ADMIN_TOKEN=<secret>         # edit-mode bearer
+  GITHUB_TOKEN=<fine-grained PAT, Contents RW on this repo>
+  ```
+- Brought up:
+  ```sh
+  cd /opt/gaias-choice/deploy
+  docker compose --env-file deploy.env -f compose.yaml up -d
+  ```
+- Caddy obtained a Let's Encrypt cert for `gaias-choice.gardenofatlantis.com`
+  automatically (ports 80/443 reachable, DNS in place). Cert + ACME account
+  persist in the `/srv/gaias-choice/caddy` bind mount across redeploys.
+- **Verified externally** (from off the VM):
+  - `GET /api/healthz` → 200 `{"status":"ok"}`
+  - `GET /api/hello` → 200, DB round-trip OK (SQLite at `/srv/gaias-choice/data`)
+  - `GET /api/content/ping` → **401** without auth, **200** with the bearer
+    ⇒ live-editing is **armed** (not 503)
+  - CORS preflight from `https://dennislapchenko.github.io` → 204 with the
+    correct `Access-Control-Allow-Origin`
+- The `api` container's `8787` is **not** host-published; only Caddy's 80/443
+  are. (Bot scans of `/.env*` seen in api logs are proxied through Caddy and
+  correctly 404 — nothing is directly exposed.)
+
+### 6. Wire the live site to the backend
+- Added `VITE_API_URL=https://gaias-choice.gardenofatlantis.com/api` to the
+  Pages build env (`.github/workflows/deploy-pages.yml`) so the deployed SPA
+  calls the VM API. Remove that line to unwire (api.ts then falls back to
+  same-origin `/api`, i.e. no backend).
+
+## Redeploy / operate (quick reference)
+
+- **New backend image:** push to `main` touching `backend/**` → CI builds
+  `sha-<commit>`. On the VM, bump `BE_TAG` in `deploy.env` and
+  `docker compose --env-file deploy.env -f compose.yaml up -d` (pulls + recreates).
+- **Restart:** same `up -d`; **logs:** `docker compose … logs -f api`.
+- **DB backup (host cron, never `cp` a live WAL db):**
+  `docker exec deploy-api-1 …` isn't needed — the db is a host file:
+  `sqlite3 /srv/gaias-choice/data/gaia.db ".backup '/srv/gaias-choice/backups/gaia-$(date +%F).db'"`.
+
+## Deferred (not done yet, by design)
+- **doco-cd GitOps** auto-redeploy (its server compose + webhook/poll + token
+  files) — first deploy was intentionally manual to prove the stack.
+- **DB backup cron** — dirs exist (`/srv/gaias-choice/backups`); the host cron
+  itself is not yet installed.
