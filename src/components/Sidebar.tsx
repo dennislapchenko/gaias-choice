@@ -191,16 +191,25 @@ function useIsNarrow() {
 }
 
 // A flat rectangular toggle over collapsible content (desktop left rail).
+// `forceClosed` lets a panel be collapsed while its own full page is open
+// (About's panel vs. `/about`) — it reopens to its normal state once the
+// reader navigates away. Panels that don't pass it behave exactly as before.
 function CollapsiblePanel({
   label,
   defaultOpen,
+  forceClosed,
   children,
 }: {
   label: string
   defaultOpen: boolean
+  forceClosed?: boolean
   children: ReactNode
 }) {
-  const [open, setOpen] = useState(defaultOpen)
+  const [open, setOpen] = useState(defaultOpen && !forceClosed)
+  useEffect(() => {
+    if (forceClosed === undefined) return
+    setOpen(!forceClosed && defaultOpen)
+  }, [forceClosed]) // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <section className={`side-panel${open ? ' is-open' : ''}`}>
       <button
@@ -238,8 +247,12 @@ function SidebarMobile({
   // open — its family photo makes the ask to support feel personal (desktop
   // shows About by default anyway). Keyed on pathname only: navigating here
   // opens it once, but the visitor can still close it while they read.
+  // On the About page itself, collapse the About tab if it happens to be
+  // open — its own full page is already showing the same content.
   useEffect(() => {
-    if (pathname === '/support' && widgets.some((w) => w.type === 'about')) {
+    if (pathname === '/about') {
+      setOpenType((current) => (current === 'about' ? null : current))
+    } else if (pathname === '/support' && widgets.some((w) => w.type === 'about')) {
       setOpenType('about')
     }
   }, [pathname]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -279,6 +292,7 @@ function SidebarMobile({
 // (content-as-data); this file only supplies the panel implementations.
 export default function Sidebar() {
   const { t, locale } = useI18n()
+  const { pathname } = useLocation()
   const site = getSite(locale)
   const narrow = useIsNarrow()
   const widgets = (site.sidebar?.length ? site.sidebar : DEFAULT_SIDEBAR).filter(
@@ -294,7 +308,12 @@ export default function Sidebar() {
         // their own hook scope instead of leaking hooks into Sidebar's.
         const Panel = PANELS[w.type]
         return (
-          <CollapsiblePanel key={`${w.type}-${i}`} label={Panel.label(t)} defaultOpen={Panel.desktopOpen}>
+          <CollapsiblePanel
+            key={`${w.type}-${i}`}
+            label={Panel.label(t)}
+            defaultOpen={Panel.desktopOpen}
+            forceClosed={w.type === 'about' ? pathname === '/about' : undefined}
+          >
             <Panel.Body site={site} t={t} locale={locale} />
           </CollapsiblePanel>
         )
