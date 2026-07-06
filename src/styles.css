@@ -349,15 +349,15 @@ h1 {
     align-self: start;
 }
 /* When a second rail is present beside the site-wide left Sidebar — the
-   entry-detail TOC or the Reviews/Journal "in the works" rail — dim both
-   rails until the reader interacts with one, so the central column (article
-   or card grid) reads as the focus. */
-.layout-grid:has(.toc, .upcoming) :is(.sidebar, .toc, .upcoming) {
+   entry-detail TOC, the Reviews/Journal "in the works" rail, or the Compass
+   epic picker — dim both rails until the reader interacts with one, so the
+   central column (article or card grid) reads as the focus. */
+.layout-grid:has(.toc, .upcoming, .epic-rail) :is(.sidebar, .toc, .upcoming, .epic-rail) {
     opacity: 0.6;
     transition: opacity 0.4s ease;
 }
-.layout-grid:has(.toc, .upcoming) :is(.sidebar, .toc, .upcoming):hover,
-.layout-grid:has(.toc, .upcoming) :is(.sidebar, .toc, .upcoming):focus-within {
+.layout-grid:has(.toc, .upcoming, .epic-rail) :is(.sidebar, .toc, .upcoming, .epic-rail):hover,
+.layout-grid:has(.toc, .upcoming, .epic-rail) :is(.sidebar, .toc, .upcoming, .epic-rail):focus-within {
     opacity: 1;
 }
 @media (max-width: 900px) {
@@ -1142,7 +1142,7 @@ a.respected-card:hover {
 .reviews-main {
     min-width: 0;
 }
-.reviews-layout .upcoming {
+.reviews-layout :is(.upcoming, .epic-rail) {
     position: sticky;
     top: 84px;
     margin: 0;
@@ -1153,7 +1153,7 @@ a.respected-card:hover {
         flex-direction: column;
     }
     /* on mobile the rail rides above the grid, still right under the subtitle */
-    .reviews-layout .upcoming {
+    .reviews-layout :is(.upcoming, .epic-rail) {
         position: static;
         order: -1;
         margin: 0 0 24px;
@@ -1161,13 +1161,16 @@ a.respected-card:hover {
 }
 
 /* ---------- Upcoming (queued "in the works" rail — /reviews + /journal) ---------- */
-.upcoming {
+/* .epic-rail (Compass epic picker, below) shares this rail's base layout. */
+.upcoming,
+.epic-rail {
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin: 0 0 26px;
 }
-.upcoming-label {
+.upcoming-label,
+.epic-rail-label {
     color: var(--sage-dark);
 }
 .upcoming-note {
@@ -1218,76 +1221,60 @@ a.upcoming-link:hover {
     opacity: 0.6;
 }
 
-/* ---------- Guide epics (themed collection thumbnails) ---------- */
-/* A single-line carousel: thumbs never wrap; the strip scrolls horizontally
-   with snap. Padding + negative margins leave room for the hover lift and the
-   active 2px ring, which overflow-x would otherwise clip. */
-.epic-strip {
+/* ---------- Guide epics (Compass course picker, right rail) ---------- */
+/* Positioned and dimmed like .upcoming (see the rules above); rows carry a
+   small square thumbnail instead of .upcoming's plain text link. */
+.epic-rail-list {
     display: flex;
-    flex-wrap: nowrap;
-    gap: 14px;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: var(--line) transparent;
-    padding: 6px 4px 14px;
-    margin: -6px -4px 14px;
+    flex-direction: column;
+    gap: 8px;
 }
-.epic-thumb {
-    flex: 0 0 auto;
-    scroll-snap-align: start;
-    width: 200px;
-    padding: 0;
+.epic-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 8px 14px 8px 8px;
+    background: rgba(47, 44, 39, 0.05);
     border: 1px solid var(--line);
-    background: var(--white);
-    border-radius: var(--radius);
-    overflow: hidden;
-    cursor: pointer;
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 0.9rem;
     text-align: left;
+    cursor: pointer;
     transition:
-        transform 0.15s ease,
-        box-shadow 0.15s ease,
+        background 0.15s ease,
         border-color 0.15s ease;
 }
-.epic-thumb:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow);
-}
-.epic-thumb.is-active {
+.epic-row:hover {
+    background: rgba(47, 44, 39, 0.09);
     border-color: var(--sage);
-    box-shadow: 0 0 0 2px var(--sage);
 }
-.epic-thumb-img {
-    display: block;
-    width: 100%;
-    aspect-ratio: 16 / 10;
+.epic-row.is-active {
+    background: var(--sage);
+    border-color: var(--sage);
+    color: var(--on-accent);
+}
+.epic-row-img {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
     object-fit: cover;
     background: var(--sand-2);
 }
-.epic-thumb-img.placeholder {
+.epic-row-img.placeholder {
     display: grid;
     place-items: center;
-    font-size: 2rem;
-}
-.epic-thumb-title {
-    display: block;
-    padding: 11px 14px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: var(--ink);
+    font-size: 1.3rem;
 }
 .epic-blurb {
-    margin: -8px 0 24px;
+    margin: 0 0 20px;
     max-width: 60ch;
     color: var(--muted);
     font-size: 1.02rem;
     line-height: 1.55;
-}
-@media (max-width: 560px) {
-    .epic-thumb {
-        width: 164px;
-    }
 }
 
 /* ---------- Page + detail ---------- */
@@ -1437,13 +1424,13 @@ a.upcoming-link:hover {
         max-height: none;
     }
 }
-/* On wide screens, pages with a second rail (entry-detail TOC or the
-   Reviews/Journal "in the works" rail) stayed capped at the 1180px container
-   width — widen it, and the entry-detail reading column with it, now that
-   there's real room. .reviews-layout's main column is already `1fr` so it
-   grows for free once the container does. */
+/* On wide screens, pages with a second rail (entry-detail TOC, the
+   Reviews/Journal "in the works" rail, or the Compass epic picker) stayed
+   capped at the 1180px container width — widen it, and the entry-detail
+   reading column with it, now that there's real room. .reviews-layout's main
+   column is already `1fr` so it grows for free once the container does. */
 @media (min-width: 1300px) {
-    .layout-grid:has(.toc, .upcoming) {
+    .layout-grid:has(.toc, .upcoming, .epic-rail) {
         max-width: 1600px;
     }
     .detail-layout:has(.toc) {

@@ -41,36 +41,43 @@ export default function Compass() {
       {/* Provenance: Compass is the one openly computer-assisted section. */}
       <p className="compass-provenance">{t('compass.provenance')}</p>
 
-      {epics.length > 0 && (
-        <div className="epic-strip" role="tablist" aria-label={t('compass.epicsAriaLabel')}>
-          {epics.map((e) => (
-            <button
-              key={e.tag}
-              type="button"
-              role="tab"
-              aria-selected={e.tag === activeTag}
-              className={`epic-thumb${e.tag === activeTag ? ' is-active' : ''}`}
-              onClick={() => setActiveTag(e.tag)}
-            >
-              {e.image ? (
-                <img className="epic-thumb-img" src={withBase(e.image)} alt="" loading="lazy" />
-              ) : (
-                <span className="epic-thumb-img placeholder" aria-hidden="true">
-                  📚
-                </span>
-              )}
-              <span className="epic-thumb-title">{e.title}</span>
-            </button>
-          ))}
+      <div className="reviews-layout">
+        <div className="reviews-main">
+          {activeEpic?.blurb && <p className="epic-blurb">{activeEpic.blurb}</p>}
+
+          <div className="guide-row-list">
+            {visible.map((g) => (
+              <CompassRow key={g.slug} entry={g} />
+            ))}
+          </div>
         </div>
-      )}
 
-      {activeEpic?.blurb && <p className="epic-blurb">{activeEpic.blurb}</p>}
-
-      <div className="guide-row-list">
-        {visible.map((g) => (
-          <CompassRow key={g.slug} entry={g} />
-        ))}
+        {epics.length > 0 && (
+          <section className="epic-rail">
+            <p className="side-label epic-rail-label">{t('compass.epicsAriaLabel')}</p>
+            <div className="epic-rail-list" role="tablist" aria-label={t('compass.epicsAriaLabel')}>
+              {epics.map((e) => (
+                <button
+                  key={e.tag}
+                  type="button"
+                  role="tab"
+                  aria-selected={e.tag === activeTag}
+                  className={`epic-row${e.tag === activeTag ? ' is-active' : ''}`}
+                  onClick={() => setActiveTag(e.tag)}
+                >
+                  {e.image ? (
+                    <img className="epic-row-img" src={withBase(e.image)} alt="" loading="lazy" />
+                  ) : (
+                    <span className="epic-row-img placeholder" aria-hidden="true">
+                      📚
+                    </span>
+                  )}
+                  <span className="epic-row-title">{e.title}</span>
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </>
   )
