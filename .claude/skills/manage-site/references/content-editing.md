@@ -115,9 +115,12 @@ runtime for every page).
 
 The **Journal** (user-facing "Journal" / «Заметки») is the site's
 **human-written, date-ordered blog** — the honest counterpart to the
-computer-assisted Compass. **Truth-first is the whole point here:** real notes
-from the road only, no invented trips, durations, or scenes (the standing rules
-above apply in full). Frontmatter: `title`, `excerpt`, `date`, optional `tags`,
+computer-assisted Compass. Two shapes of entry fit: **trip notes** (what
+actually happened on the road) and **practice write-ups** (something
+beneficial the family actually does, told from lived experience — doesn't
+need to be road-specific). **Truth-first is the whole point either way:** no
+invented trips, durations, scenes, or results (the standing rules above apply
+in full). Frontmatter: `title`, `excerpt`, `date`, optional `tags`,
 optional `image`. Flat folder (no epic subfolders), no code/route wiring — the
 file appears on `/journal` (newest first, filed under its year in the filter
 chips) and opens through the same table-of-contents detail layout as a Compass

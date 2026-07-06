@@ -1198,11 +1198,14 @@ a.respected-card:hover {
     border-radius: var(--radius-sm);
     color: var(--ink);
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.8rem;
     text-decoration: none;
     transition:
         background 0.15s ease,
         border-color 0.15s ease;
+}
+.upcoming-name {
+    font-family: "Courier New", Courier, monospace;
 }
 /* hover feedback only on real links — journal ideas render as plain spans */
 a.upcoming-link:hover {

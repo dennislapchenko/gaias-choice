@@ -25,7 +25,8 @@ road with a baby** (framed generally: camper, car, or carry-on — not
 RV/van-specific). Three pillars, one contract (everything is lived first):
 honest **reviews** of natural, plastic-free, fragrance-free gear; the
 **Compass** (free courses on the natural-living skills the owners practice);
-and the **Journal** (the handwritten record of the road). It is a
+and the **Journal** (the handwritten record of the road, and of the
+practices worth passing on). It is a
 **client-rendered SPA**, not an SSR/SSG site.
 
 - **Stack:** Vite + React 18 + TypeScript, `react-router-dom` (BrowserRouter).

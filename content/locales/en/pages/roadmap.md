@@ -42,6 +42,19 @@ true. One phase at a time.
       real content that isn't reviews
 - [ ] Homeopathy Compass course finished (chapters 4–11, both languages)
 
+**Voice track (the Compass is the only section drafted with an AI — every
+other place gets our own words; About is tracked separately in Phase 0):**
+
+- [ ] Reviews in our own words — real testing notes, not AI-drafted
+- [ ] Journal entries in our own words — by hand, not AI-drafted
+- [ ] Contact page in our own words
+- [ ] Disclosure page in our own words
+- [ ] Privacy page in our own words
+- [ ] Support page intro in our own words
+- [ ] This Roadmap page in our own words
+- [ ] Site-wide copy in our own words — tagline, description, bio, mission,
+      values, "who we respect" blurbs
+
 **Dev track (makes the content findable):**
 
 - [x] Per-page `<title>` + meta description *(client-side for now — the

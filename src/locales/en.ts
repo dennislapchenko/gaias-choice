@@ -42,7 +42,7 @@ const en = {
 
   "journal.title": "Journal",
   "journal.lead":
-    "Notes from the road, written by hand — what actually happened, what we’d do differently, the small things that turned out to matter. No course, no polish. Newest first.",
+    "Notes from the road, written by hand — what actually happened, what we’d do differently, the small things that turned out to matter, and the odd write-up on something good we do or have done. No course, no polish. Newest first.",
   "journal.tag": "Journal",
   "journal.allYears": "All",
   "journal.yearsAriaLabel": "Filter by year",
