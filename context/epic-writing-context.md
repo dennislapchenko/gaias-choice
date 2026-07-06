@@ -53,7 +53,10 @@ results** in chapters 1–9, then uses chapters 10–11 to make the remaining 80
 | **10–11** | **The Summit** | Advanced. **No new fundamentals** — only synthesis: harder, real-world-messy applications that force every Path concept to work together. Written so an apt student finishes able to teach *themselves* the remaining 80%: where the depth lives, which sources are worth it, and how to test claims against their own experience (Ralston's epistemology, made practical). A struggling student can stop after ch. 9 with a complete, working foundation — say so explicitly at the end of ch. 9. |
 
 **Sizing:** each chapter = 1–2 hours of engaged time (reading + doing),
-roughly 2,500–4,500 words plus the practice task. **3–5 new concepts per
+roughly **1,800–3,500 words per locale** plus the practice task (shipped
+chapters run ~1,700–3,300; RU lands ~10–15% more compact than EN at identical
+substance). Never pad toward a floor — especially closing chapters, where
+padding reads as hype. **3–5 new concepts per
 chapter, never more** (cognitive load is the budget; depth over coverage).
 
 ## 3. The roadmap weave — «Нить» (the Thread)
@@ -70,6 +73,9 @@ The first thing under the title, three short lines:
 > **Глава 4 из 11 · Путь** — [← Глава 3: <title>](/guides/<slug>) · [Глава 5: <title> →](/guides/<slug>)
 > *Вы уже умеете:* one sentence naming what the reader can already DO (not "has read").
 > *Эта глава добавит:* one sentence, one capability.
+
+Trail links use the chapter's **short title** (the course-plan table's title);
+the chapter's frontmatter `title:` may carry a colon-subtitle beyond it.
 
 Chapter 1 has no back-link; chapter 11's forward link points to the course's
 closing page section ("what's next beyond this course"). The stage name (Gate
@@ -155,7 +161,12 @@ compasses, charts. Diagram **geometry is authored once as a shared template**
 each locale's markdown via a `` ```diagram <name> `` fenced block whose YAML
 supplies the per-locale text — so geometry is never mirrored by hand. The Gate
 chapter's map-of-the-course promise is delivered as an actual course-map
-diagram. Full authoring pattern (template + fenced-block syntax, CSS-var colors,
+diagram. **Re-embedding an earlier chapter's template with new slot text is a
+first-class technique**, not a shortcut: a later chapter re-running the Gate's
+staircase in its formal version, or the Summit replaying the artifact timeline
+in past tense, is spaced retrieval for visuals — the reader recognizes the
+shape and re-derives the concept. Prefer a re-embed over a near-duplicate new
+template whenever the geometry already says the right thing. Full authoring pattern (template + fenced-block syntax, CSS-var colors,
 overflow audit, parity checks):
 `.claude/skills/manage-site/references/content-editing.md`, "Visuals inside
 guides". Visuals obey truth-first: charts draw the qualitative shape of claims
@@ -200,8 +211,17 @@ Meat-free framing follows the precedence rule in ideology-context §How-to-use.
 
 ## 7. Shipping checklist (per course)
 
+> Producing many chapters in one run (finishing a course, or a whole new one):
+> the multi-agent production workflow — brief, diagram-spec-first sequencing,
+> parallel writers, verification battery — lives in
+> `.claude/skills/write-epic-course/SKILL.md`. This file stays the authoring
+> blueprint; that skill is how the factory runs.
+
 - [ ] Course outline first: 11 chapter one-liners + the spine artifact + the
       concept-reuse map (which chapter reuses what) — **before** writing ch. 1.
+      Include the seed list **both ways**: by origin (which chapter plants
+      what) *and* as an incoming index (which seeds each chapter must answer) —
+      a writer picking up chapter N needs its debts listed, not derivable.
       Store it as `context/course-plan-<course-slug>.md` (existing examples:
       `course-plan-homeopathy.md`, `course-plan-herbalism.md`) and keep its
       "Status" line current as chapters ship.

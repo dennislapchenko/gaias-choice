@@ -30,6 +30,7 @@ for architecture; this skill is the operating manual on top of it.
 | Task smells like… | Do this |
 | --- | --- |
 | Reviews, Compass courses, Journal entries, pages, site copy, images, roadmap, voice/tone | Read `references/content-editing.md` |
+| Writing/finishing Compass course chapters (any batch size) | Also invoke the `write-epic-course` skill — the production workflow |
 | Build, verify, preview, deploy, routes, themes, components, CSS | Read `references/development.md` |
 | Both (e.g. "add a page" = content + route) | Read both — page wiring spans them |
 
