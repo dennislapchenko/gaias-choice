@@ -77,6 +77,8 @@ context/                 # authoring context (NOT bundled into the site)
   epic-writing-context.md  # blueprint for Compass epic courses (curriculum, Thread
                            # weave, chapter anatomy)
   course-plan-*.md       # one outline per course (chapters, concepts, seeds, reuse maps)
+  <topic>/               # active big-task plan dirs (e.g. seo/) — options doc +
+                         # action plan, per SKILL.md "Big tasks"; archived when done
   archive/               # completed plans, kept for reference only — not live context
 public/
   images/*.webp, *.svg   # optimized photos + generated mandala art (see Images)

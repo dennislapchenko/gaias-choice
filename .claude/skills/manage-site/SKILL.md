@@ -32,6 +32,30 @@ for architecture; this skill is the operating manual on top of it.
 | Build, verify, preview, deploy, routes, themes, components, CSS | Read `references/development.md` |
 | Both (e.g. "add a page" = content + route) | Read both — page wiring spans them |
 
+## Big tasks: options doc → action plan → execute
+
+For any big task — architectural changes, anything touching build/deploy or
+the content model, or work that will span sessions — don't jump to code.
+The owner's chosen process:
+
+1. **Options doc first.** Write `context/<topic>/<topic>-paths.md`: the
+   current state as *verified in the repo* (read the actual files — no
+   assumptions), 2–4 candidate paths with tradeoffs, cross-cutting decisions,
+   and a recommendation. Paths must respect the house constraints (repo
+   simplicity, minimal deps, content-as-data, browser speed).
+2. **Owner picks or alters a path.** Don't proceed on the recommendation
+   alone.
+3. **Action plan second.** Write `context/<topic>/action-plan.md` for the
+   picked path: numbered steps, each with the files it touches and a
+   verifiable success criterion; call out risks and their mitigations.
+4. **Execute only after the owner agrees to the action plan**, following it
+   step by step and updating it if reality diverges.
+5. **When done**, move the `context/<topic>/` dir to `context/archive/` and
+   fold any durable facts into the proper docs (per "One fact, one home").
+
+Small tasks (copy edits, single components, content entries) skip this —
+classify-and-do as usual.
+
 ## Non-negotiables (violating any of these is the failure mode)
 
 1. **Truth-first content.** The site's only asset is trust. Never write a
