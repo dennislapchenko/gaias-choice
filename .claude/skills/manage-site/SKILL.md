@@ -202,8 +202,13 @@ Never commit automatically. Once a change is verified (typecheck + build green),
    "Deploy to Pages" run's **conclusion once** (`gh run list`). GitHub Pages
    fails transiently on its own side ("Deployment failed, try again later" at
    the deploy step while the build is green) — on that failure the agent
-   retries with `gh run rerun <id>` (up to 2 reruns, re-checking each), then
-   reports the final status either way. **A push to `main` is a production
+   recovers with `gh workflow run "Deploy to Pages" --ref main` (after
+   confirming remote `main` HEAD is still the pushed commit), up to 2 fresh
+   runs, re-checking each, then reports the final status either way. **Never
+   `gh run rerun`** — build+deploy are one job, so a rerun re-uploads the
+   `github-pages` artifact into the same run and deterministically fails with
+   "Multiple artifacts named github-pages" (documented in
+   `.github/workflows/deploy-pages.yml`; workflow_dispatch starts clean). **A push to `main` is a production
    deploy** — only ship work verified locally (typecheck + build is the gate).
    No babysitting beyond the conclusion check: no `gh run watch`, no curling
    the live site unless the owner asks. Every deploy publishes the full
