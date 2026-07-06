@@ -145,14 +145,14 @@ OrbStack: `open -a OrbStack`, wait ~15s, retry.
   URLs in code.
 - A host `node_modules/` is an empty mount stub — safe to delete, don't
   populate it.
-- **Committing/shipping:** never commit automatically — ask the owner first
-  (see SKILL.md "Committing & shipping"). When confirmed, commit on `main` with
-  a Conventional-Commits message (`feat:`/`fix:`/`docs:`/`content:`/…) and
-  `git push origin main`. **The push is a deploy:** `deploy-pages.yml` builds
-  and publishes to GitHub Pages on every push to `main`. Don't watch or verify
-  the Pages run afterward (trust it — local typecheck + build is the gate); only
-  inspect the workflow if the owner reports a problem or you edited the workflow
-  file. Feature branches + PRs are the planned future flow, not yet active.
+- **Committing/shipping:** never commit automatically — ask the owner first.
+  When confirmed, ship via a **background agent** (commit on `main` with a
+  Conventional-Commits message, `git push origin main`, then a single
+  deploy-conclusion check with a rerun on transient Pages failure) — the full
+  procedure lives in SKILL.md "Committing & shipping". **The push is a
+  deploy:** `deploy-pages.yml` builds and publishes to GitHub Pages on every
+  push to `main`. Feature branches + PRs are the planned future flow, not yet
+  active.
 
 ## The dev roadmap (in priority order — from `/roadmap`)
 

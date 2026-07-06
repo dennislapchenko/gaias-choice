@@ -194,14 +194,21 @@ Never commit automatically. Once a change is verified (typecheck + build green),
    commit. Examples: `feat: default site language to Russian`,
    `docs: add do-not-translate glossary for translations`. End the message with
    the `Co-Authored-By: Claude ...` trailer.
-2. **Current phase — direct to `main`:** commit on `main`, then
-   `git push origin main`. **A push to `main` is a production deploy** — it
-   triggers `.github/workflows/deploy-pages.yml`, which builds and publishes to
-   GitHub Pages. So only ever push work you've verified locally, and treat the
-   push as shipping, not saving. **Do not watch/poll the Pages run or verify the
-   deploy afterward** (no `gh run watch`) — the owner trusts it; local
-   typecheck + build is the gate. Only look at the workflow if the owner reports
-   a problem or you changed the workflow file itself.
+2. **Current phase — direct to `main`, shipped by a background agent.** Once
+   the owner confirms, compose the commit message in the main session, then
+   hand the whole ship to a **background agent** (Agent tool,
+   `run_in_background: true`) so the owner's flow never blocks. The agent:
+   commits on `main`, runs `git push origin main`, waits ~60s, and checks the
+   "Deploy to Pages" run's **conclusion once** (`gh run list`). GitHub Pages
+   fails transiently on its own side ("Deployment failed, try again later" at
+   the deploy step while the build is green) — on that failure the agent
+   retries with `gh run rerun <id>` (up to 2 reruns, re-checking each), then
+   reports the final status either way. **A push to `main` is a production
+   deploy** — only ship work verified locally (typecheck + build is the gate).
+   No babysitting beyond the conclusion check: no `gh run watch`, no curling
+   the live site unless the owner asks. Every deploy publishes the full
+   current build, so a failed run is fully recovered by the next successful
+   one.
 3. **Future (not yet — do this only when the owner switches to it):** work on a
    `feature/<slug>` branch, push it, and open a GitHub PR instead of committing
    to `main` directly.
