@@ -3,15 +3,16 @@
   Standalone preview harness for the /account page (src/pages/Account.tsx +
   src/components/AccountFields.tsx). That page only renders its content once
   `me` is set, which needs a real signed-in session against the backend — this
-  lets you iterate on the campfire scene, the header cube toggle, and the
-  account-fields panel without a backend, and flip through every
-  content/themes.yaml palette instantly.
+  lets you iterate on the campfire scene, the right-rail/mobile-toggle
+  account-fields panel, and every content/themes.yaml palette instantly.
+  Resize the window (or use devtools' device toolbar) past 900px to check
+  both the desktop right-rail and the mobile title-line toggle.
 
   Serve from the REPO ROOT (paths below are root-relative) and open this file:
     cd gaias-choice && python3 -m http.server 4175
     open http://localhost:4175/scripts/campfire-preview.html
 
-  The Campfire SVG markup, the cube-toggle gear icon, and the account-fields
+  The Campfire SVG markup, the toggle's pencil icon, and the account-fields
   form markup are copied from those files (JSX, not importable into plain
   HTML/JS) — if you change them there, update them here too so this stays a
   faithful preview.
@@ -34,26 +35,30 @@
 <section class="account-page">
   <div class="account-header">
     <h1>Around the campfire</h1>
-    <button type="button" class="cube-toggle" id="fields-toggle" aria-expanded="false" aria-label="Your details">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
-        <circle cx="12" cy="12" r="3.2"/>
-        <path d="M12 3.5v2.2M12 18.3v2.2M20.5 12h-2.2M5.7 12H3.5M17.6 6.4l-1.5 1.5M7.9 16.1l-1.5 1.5M17.6 17.6l-1.5-1.5M7.9 7.9L6.4 6.4" stroke-linecap="round"/>
+    <button type="button" class="user-toggle account-fields-toggle" id="fields-toggle" aria-expanded="false" aria-label="Your details">
+      <svg class="user-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 16.7V20h3.3L18 9.3a1 1 0 0 0 0-1.4l-1.9-1.9a1 1 0 0 0-1.4 0L4 16.7z"/>
+        <path d="M13.8 6.9l3.3 3.3"/>
       </svg>
     </button>
   </div>
   <p class="muted">Everyone who has joined the site so far — one circle, one fire.</p>
-  <section class="account-fields" id="fields-panel" aria-label="Your details" style="display:none">
-    <p class="side-label">Your details</p>
-    <form id="fields-form">
-      <label class="field"><span class="field-label">Name</span><input id="f-name" value="Denis"></label>
-      <label class="field"><span class="field-label">Avatar</span><input id="f-avatar" type="url" placeholder="Image URL"></label>
-      <label class="field"><span class="field-label">Role</span><input value="admin" disabled></label>
-      <label class="field"><span class="field-label">Email</span><input id="f-email" type="email" value="denis@example.com"></label>
-      <label class="field"><span class="field-label">Password</span><input id="f-password" type="password" placeholder="Leave blank to keep current"></label>
-      <button type="submit" class="btn btn-primary" id="save-btn" style="display:none">Save</button>
-    </form>
-  </section>
-  <div class="campfire-scene" role="list" id="scene"></div>
+  <div class="reviews-layout">
+    <div class="reviews-main">
+      <div class="campfire-scene" role="list" id="scene"></div>
+    </div>
+    <section class="account-fields" id="fields-panel" aria-label="Your details">
+      <p class="side-label">Your details</p>
+      <form id="fields-form">
+        <label class="field"><span class="field-label">Name</span><input id="f-name" value="Denis"></label>
+        <label class="field"><span class="field-label">Avatar</span><input id="f-avatar" type="url" placeholder="Image URL"></label>
+        <label class="field"><span class="field-label">Role</span><input value="admin" disabled></label>
+        <label class="field"><span class="field-label">Email</span><input id="f-email" type="email" value="denis@example.com"></label>
+        <label class="field"><span class="field-label">Password</span><input id="f-password" type="password" placeholder="Leave blank to keep current"></label>
+        <button type="submit" class="btn btn-primary" id="save-btn" style="display:none">Save</button>
+      </form>
+    </section>
+  </div>
 </section>
 <script>
 // Copied from content/themes.yaml — keep in sync if a palette changes.
@@ -123,12 +128,13 @@ members.forEach((name, i) => {
   scene.innerHTML += `<div class="camper" style="left:${left}%;top:${top}%"><span class="camper-avatar">${avatar}</span><span class="camper-name">${name}</span></div>`
 })
 
-// ---- cube toggle, mirrors Account.tsx's fieldsOpen state ----
+// ---- mobile toggle, mirrors Account.tsx's fieldsOpen state (CSS does the
+// showing/hiding via .is-open — see .account-fields in styles.css) ----
 const fieldsToggle = document.getElementById('fields-toggle')
 const fieldsPanel = document.getElementById('fields-panel')
 fieldsToggle.addEventListener('click', () => {
-  const open = fieldsPanel.style.display === 'none'
-  fieldsPanel.style.display = open ? '' : 'none'
+  const open = !fieldsPanel.classList.contains('is-open')
+  fieldsPanel.classList.toggle('is-open', open)
   fieldsToggle.setAttribute('aria-expanded', String(open))
   fieldsToggle.classList.toggle('is-open', open)
 })

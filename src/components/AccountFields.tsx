@@ -3,10 +3,13 @@ import { apiPut, type MeResponse } from '../lib/api'
 import { useI18n } from '../lib/i18n'
 import { useSession } from '../lib/session'
 
-// The account page's field-edit panel, revealed by the cube toggle next to
-// the page title (Account.tsx). Save only appears once a field actually
-// differs from the last-saved values.
-export default function AccountFields() {
+// The account page's field-edit panel: a right-rail fixture on desktop
+// (always visible), or revealed by the `.account-header` title-line toggle on
+// mobile — `open` just adds the CSS hook that breakpoint needs (see
+// .account-fields in styles.css); the component itself renders identically
+// either way. Save only appears once a field actually differs from the
+// last-saved values.
+export default function AccountFields({ open }: { open: boolean }) {
   const { t } = useI18n()
   const { me, token, updateMe } = useSession()
   const [name, setName] = useState(me?.displayName ?? '')
@@ -50,7 +53,7 @@ export default function AccountFields() {
   }
 
   return (
-    <section className="account-fields" aria-label={t('account.fields.title')}>
+    <section className={`account-fields${open ? ' is-open' : ''}`} aria-label={t('account.fields.title')}>
       <p className="side-label">{t('account.fields.title')}</p>
       <form onSubmit={onSubmit}>
         <label className="field">

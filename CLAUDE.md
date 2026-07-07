@@ -530,12 +530,15 @@ VM is down the live site silently degrades to the static baseline.
   (`pages/Account.tsx`): the **campfire** — every registered user seated in a
   circle around an animated fire (display name + initial-letter or avatar
   image, cropped/zoomed the same way as Compass's epic thumbnails — see
-  `.avatar-img` in `styles.css`; `you` marked). The page title sits in a
-  header row (`.account-header`) beside a square "cube" toggle
-  (`.cube-toggle`) that reveals a self-service form
-  (`components/AccountFields.tsx`) for name, avatar URL, email, and password
-  (Save appears only once a field is dirty; role is shown but not
-  editable — that's an admin concern), plus a sign-out button below the
+  `.avatar-img` in `styles.css`; `you` marked). Beside the scene,
+  `components/AccountFields.tsx` is a self-service form — name, avatar URL,
+  email, password (Save appears only once a field is dirty; role is shown but
+  not editable — that's an admin concern) — that lives in the standard right
+  rail (`.reviews-layout`, same as Reviews/Journal/Compass) on desktop,
+  always visible; below 900px it's hidden and reachable instead via a
+  `.user-toggle` pencil button next to the title (`.account-header`), pure
+  CSS-driven (no JS breakpoint branch — see `.account-fields`/
+  `.account-fields-toggle` in `styles.css`). A sign-out button sits below the
   scene. BE down ⇒ none of this exists — **readers ship zero account/editing
   chrome**.
   Passwords are the stopgap; magic-link (needs SMTP) and WebAuthn are the

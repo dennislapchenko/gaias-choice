@@ -1402,13 +1402,16 @@ a.respected-card:hover {
 /* ---------- Right-rail layout: content + a flat-bar side rail ---------- */
 /* THE main + right-rail grid — reused wholesale wherever a page needs a
    second rail beside its content (Reviews' own "in the works" rail, Journal
-   via the same shell, Compass' epic picker). To add a new one: drop a
-   flat-bar rail component (see .upcoming/.epic-rail below for the shape) as
-   the second child of this grid, then list its class alongside the others in
-   the sticky/mobile/wide-screen rules below so it behaves like the rest of
-   the family. The page header stays full-width above the grid. Account's
-   field-edit panel used to live here too; it's now a header-toggled panel
-   instead (see .account-header/.cube-toggle and .account-fields below). */
+   via the same shell, Compass' epic picker, Account's field-edit panel). To
+   add a new one: drop a flat-bar rail component (see .upcoming/.epic-rail/
+   .account-fields below for the shape) as the second child of this grid,
+   then list its class alongside the others in the sticky/mobile/wide-screen
+   rules below so it behaves like the rest of the family. The page header
+   stays full-width above the grid.
+   Account's rail (`.account-fields`) additionally hides itself below 900px
+   (see its own rule further down) unless toggled open via `.account-header`'s
+   `.account-fields-toggle` — everything else about its position here (order,
+   margin) is shared with `.upcoming`/`.epic-rail` as usual. */
 .reviews-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) clamp(240px, 24vw, 300px);
@@ -1418,7 +1421,7 @@ a.respected-card:hover {
 .reviews-main {
     min-width: 0;
 }
-.reviews-layout :is(.upcoming, .epic-rail) {
+.reviews-layout :is(.upcoming, .epic-rail, .account-fields) {
     position: sticky;
     top: 84px;
     margin: 0;
@@ -1427,9 +1430,16 @@ a.respected-card:hover {
     .reviews-layout {
         display: flex;
         flex-direction: column;
+        /* .align-items:start (set above, for the desktop grid) makes a flex
+           column shrink each item to its own content width instead of the
+           full column — invisible for text-heavy rails (their content is
+           wide enough to reach the available width anyway) but collapses
+           .campfire-scene to 0 (every child inside it is position:absolute,
+           so it has no in-flow content to size from). Stretch instead. */
+        align-items: stretch;
     }
     /* on mobile the rail rides above the grid, still right under the subtitle */
-    .reviews-layout :is(.upcoming, .epic-rail) {
+    .reviews-layout :is(.upcoming, .epic-rail, .account-fields) {
         position: static;
         order: -1;
         margin: 0 0 24px;
@@ -1564,48 +1574,49 @@ a.respected-card:hover {
     line-height: 1.55;
 }
 
-/* ---------- Account header row + fields toggle (/account) ---------- */
-/* The page title sits on one line with a square ("cube", not pill — it's a
-   control, not another nav link) toggle that reveals AccountFields below. */
+/* ---------- Account header row + mobile fields toggle (/account) ---------- */
+/* The page title always sits in a flex row so the toggle button has a home;
+   the button itself (`.account-fields-toggle`) is the same pill-shaped
+   `.user-toggle` used by the language/account header buttons — consistent
+   header chrome, not a one-off control — but only takes effect below 900px:
+   above that, .account-fields is always visible as the right rail (see the
+   .reviews-layout rules above), so the toggle has nothing to do and hides. */
 .account-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
 }
-.cube-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 44px;
-    height: 44px;
-    border: 1px solid var(--line);
-    background: var(--white);
-    border-radius: var(--radius-sm);
-    color: var(--ink);
-    cursor: pointer;
-}
-.cube-toggle svg {
-    width: 22px;
-    height: 22px;
-}
-.cube-toggle:hover {
-    background: var(--sand-2);
-}
-.cube-toggle.is-open {
+.user-toggle.is-open {
     background: var(--sage);
     border-color: var(--sage);
     color: var(--on-accent);
 }
+.account-fields-toggle {
+    display: none;
+}
 
-/* Revealed by .cube-toggle above — a form, not a rail, so it just flows
-   inline between the lead paragraph and the campfire scene. */
+/* Right rail on desktop (a `.reviews-layout` sticky child, like
+   .upcoming/.epic-rail — always visible). Below 900px it hides by default
+   and only shows once `.account-header`'s toggle adds `.is-open` (the
+   `open` prop on <AccountFields>) — this is what keeps the campfire scene in
+   its normal spot on mobile instead of a persistent rail shoving it down. */
 .account-fields {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin: 18px 0 26px;
+    margin: 0 0 26px;
+}
+@media (max-width: 900px) {
+    .account-fields-toggle {
+        display: inline-flex;
+    }
+    .account-fields {
+        display: none;
+    }
+    .account-fields.is-open {
+        display: flex;
+    }
 }
 .account-fields form {
     display: flex;
@@ -1801,7 +1812,7 @@ a.respected-card:hover {
    reading column with it, now that there's real room. .reviews-layout's main
    column is already `1fr` so it grows for free once the container does. */
 @media (min-width: 1300px) {
-    .layout-grid:has(.toc, .upcoming, .epic-rail) {
+    .layout-grid:has(.toc, .upcoming, .epic-rail, .account-fields) {
         max-width: 1600px;
     }
     .detail-layout:has(.toc) {

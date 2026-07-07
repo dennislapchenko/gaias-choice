@@ -41,73 +41,80 @@ export default function Account() {
     )
   }
 
+  // AccountFields is always mounted — the right rail on desktop (like
+  // Reviews/Journal/Compass), reachable only via the .account-header title-
+  // line toggle on mobile (see the .account-fields-toggle CSS: hidden above
+  // 900px, and .account-fields itself is display:none below 900px unless
+  // `fieldsOpen` adds `.is-open`). One tree, breakpoint entirely in CSS.
   return (
     <section className="account-page">
       <div className="account-header">
         <h1>{t('account.title')}</h1>
         <button
           type="button"
-          className={`cube-toggle${fieldsOpen ? ' is-open' : ''}`}
+          className={`user-toggle account-fields-toggle${fieldsOpen ? ' is-open' : ''}`}
           aria-expanded={fieldsOpen}
           aria-label={t('account.fields.title')}
           onClick={() => setFieldsOpen((o) => !o)}
         >
-          <GearIcon />
+          <EditIcon />
         </button>
       </div>
       <p className="muted">{t('account.lead')}</p>
-      {fieldsOpen && <AccountFields />}
 
-      <div className="campfire-scene" role="list">
-        <Campfire />
-        {(members ?? []).map((m, i, all) => {
-          // Seats spread evenly around the fire, first seat at the top.
-          const angle = (i / all.length) * 2 * Math.PI - Math.PI / 2
-          const left = 50 + 41 * Math.cos(angle)
-          const top = 50 + 41 * Math.sin(angle)
-          return (
-            <div
-              key={`${m.displayName}-${i}`}
-              role="listitem"
-              className={`camper${m.you ? ' is-you' : ''}`}
-              style={{ left: `${left}%`, top: `${top}%` }}
-            >
-              <span className="camper-avatar" aria-hidden="true">
-                {m.avatarUrl ? (
-                  <img className="avatar-img" src={m.avatarUrl} alt="" />
-                ) : (
-                  initialOf(m.displayName)
-                )}
-              </span>
-              <span className="camper-name">
-                {m.displayName}
-                {m.you && <em> · {t('account.you')}</em>}
-              </span>
-            </div>
-          )
-        })}
-      </div>
+      <div className="reviews-layout">
+        <div className="reviews-main">
+          <div className="campfire-scene" role="list">
+            <Campfire />
+            {(members ?? []).map((m, i, all) => {
+              // Seats spread evenly around the fire, first seat at the top.
+              const angle = (i / all.length) * 2 * Math.PI - Math.PI / 2
+              const left = 50 + 41 * Math.cos(angle)
+              const top = 50 + 41 * Math.sin(angle)
+              return (
+                <div
+                  key={`${m.displayName}-${i}`}
+                  role="listitem"
+                  className={`camper${m.you ? ' is-you' : ''}`}
+                  style={{ left: `${left}%`, top: `${top}%` }}
+                >
+                  <span className="camper-avatar" aria-hidden="true">
+                    {m.avatarUrl ? (
+                      <img className="avatar-img" src={m.avatarUrl} alt="" />
+                    ) : (
+                      initialOf(m.displayName)
+                    )}
+                  </span>
+                  <span className="camper-name">
+                    {m.displayName}
+                    {m.you && <em> · {t('account.you')}</em>}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
 
-      <div className="account-actions">
-        <button type="button" className="btn btn-ghost" onClick={signOut}>
-          {t('account.signOut')}
-        </button>
+          <div className="account-actions">
+            <button type="button" className="btn btn-ghost" onClick={signOut}>
+              {t('account.signOut')}
+            </button>
+          </div>
+        </div>
+
+        <AccountFields open={fieldsOpen} />
       </div>
     </section>
   )
 }
 
-// The header-row toggle that reveals AccountFields — a settings cog, square
-// ("cube") rather than the pill shape used elsewhere, so it reads as a
-// control next to the title rather than another nav pill.
-function GearIcon() {
+// The mobile title-line toggle that reveals AccountFields — a pencil, since
+// it opens the edit-your-details form (a settings-cog glyph read too much
+// like a sun at this size).
+function EditIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
-      <circle cx="12" cy="12" r="3.2" />
-      <path
-        d="M12 3.5v2.2M12 18.3v2.2M20.5 12h-2.2M5.7 12H3.5M17.6 6.4l-1.5 1.5M7.9 16.1l-1.5 1.5M17.6 17.6l-1.5-1.5M7.9 7.9L6.4 6.4"
-        strokeLinecap="round"
-      />
+    <svg className="user-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 16.7V20h3.3L18 9.3a1 1 0 0 0 0-1.4l-1.9-1.9a1 1 0 0 0-1.4 0L4 16.7z" />
+      <path d="M13.8 6.9l3.3 3.3" />
     </svg>
   )
 }
