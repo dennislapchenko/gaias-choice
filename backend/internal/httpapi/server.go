@@ -44,7 +44,7 @@ func NewRouter(d Deps) *gin.Engine {
 	// Only the compose-network reverse proxy (Caddy) may set X-Forwarded-For;
 	// otherwise a client could spoof its IP past the login rate limit.
 	_ = r.SetTrustedProxies([]string{"10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"})
-	r.Use(gin.Logger(), gin.Recovery(), corsMiddleware(d.CORSOrigins))
+	r.Use(requestLogger(), gin.Recovery(), corsMiddleware(d.CORSOrigins))
 	// One global body cap (content cap + JSON envelope headroom) — nothing
 	// this API accepts is legitimately bigger.
 	r.Use(func(c *gin.Context) {
