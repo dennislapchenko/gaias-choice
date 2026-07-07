@@ -1,6 +1,6 @@
 ---
 title: "Getting Traffic: SEO, Pinterest, and Patience"
-excerpt: How people will actually find this site — keyword research for beginners, why Pinterest fits this niche, and the technical SEO work our stack needs.
+excerpt: How people will actually find this site — keyword research for beginners, why Pinterest fits this niche, and the technical SEO work the stack needs.
 image: /images/guide-packing-light.svg
 date: 2026-07-02
 chapter: 3
@@ -11,10 +11,7 @@ tags: [founder-guide, seo, traffic]
 > *You already can:* test a product to the minimum bar and write a verdict-first review that names its flaws.
 > *This chapter adds:* keyword research without paid tools, Pinterest as a search engine, and the patience math of the flat months.
 
-> **Founder guide.** Written for ourselves while we bootstrap this site —
-> honest notes, published as a course.
-
-Traffic for a site like ours comes from three places, in this order of
+Traffic for a site like this comes from three places, in this order of
 importance: **Google search**, **Pinterest**, and everything else. Instagram
 and TikTok are optional; search and Pinterest are the business.
 
@@ -23,18 +20,18 @@ and TikTok are optional; search and Pinterest are the business.
 People type questions with buying intent — *"best glass baby bottles for
 travel"*, *"are beeswax wraps safe for baby food"*, *"merino sleep sack worth
 it"* — and Google tries to surface pages written by someone who genuinely
-knows. Two things matter for us:
+knows. Two things matter for you:
 
 1. **First-hand experience, provably.** Google's review-system updates
    explicitly reward evidence of real use: original photos, measurements,
    drawbacks, comparisons. This is where chapter 2's fourth rule — *photos are
-   ours* — pays out: the
+   yours* — pays out: the
    [review process](/compass/writing-reviews-that-earn-trust) produces exactly
    this evidence, not as an SEO trick, but because the incentives align
    perfectly.
 2. **Topical focus.** Thirty pieces about one narrow topic (natural gear for
-   traveling with a baby) outrank three hundred scattered ones. We stay narrow
-   until we've won the niche.
+   traveling with a baby) outrank three hundred scattered ones. Stay narrow
+   until you've won the niche.
 
 One honest wrinkle in "narrow": the Compass. The courses (chapter 1 tells
 how they took the site over) mostly aren't gear pages at all — yet they
@@ -54,18 +51,18 @@ For each planned piece, spend fifteen minutes:
   literal demand data.
 - Check the **"People also ask"** boxes — each question is a section heading or
   its own future piece.
-- Look at who currently ranks. Big magazine with no real photos? We can win
+- Look at who currently ranks. Big magazine with no real photos? You can win
   with genuine experience. Established niche site with great first-hand
   content? Pick a longer-tail angle instead (*"…for carry-on only"*, *"…that
   survive machine washing"*).
-- Prefer **long, specific phrases**. We cannot rank for "baby bottles" this
-  decade. We can rank for "glass baby bottles that fit in a carry-on" this year.
+- Prefer **long, specific phrases**. You cannot rank for "baby bottles" this
+  decade. You can rank for "glass baby bottles that fit in a carry-on" this year.
 
-| The phrase | Can we rank? | Why |
+| The phrase | Can you rank? | Why |
 |---|---|---|
 | "baby bottles" | not this decade | the whole internet competes for it |
 | "best glass baby bottles for travel" | someday, with mass | narrower, still crowded |
-| "glass baby bottles that fit in a carry-on" | this year | specific, answerable, and genuinely ours |
+| "glass baby bottles that fit in a carry-on" | this year | specific, answerable, and genuinely yours |
 
 Keep a running list of these phrases — that list *is* the editorial calendar.
 
@@ -75,16 +72,16 @@ Eco-parenting checklists, packing lists, and "natural swaps" content is core
 Pinterest material, and Pinterest behaves like a search engine, not a social
 feed — a good pin drives traffic for **years**, not hours.
 
-- Create a **business account** with a board structure mirroring our categories
+- Create a **business account** with a board structure mirroring your categories
   (sleep, feeding, packing lists…).
 - Every guide gets a **tall pin image** (2:3 ratio, text overlay stating the
   benefit). Every review gets at least one.
 - Pin consistently (a few per week) rather than in bursts. Link every pin to
   the specific page, not the homepage.
 - Checklists and "X swaps for Y" formats massively outperform prose on
-  Pinterest — good news, since that's half our content plan anyway.
+  Pinterest — good news, since that's half your content plan anyway.
 
-## The technical SEO gap in our stack (dev tasks)
+## The technical SEO gap in the stack (dev tasks)
 
 The site is a **client-rendered SPA**: every URL serves an empty HTML shell and
 the content appears via JavaScript. Google *can* render this, but for a site
@@ -104,7 +101,7 @@ and social previews don't run JS at all. Concretely missing today:
   prerendering these are invisible to crawlers, which is another reason
   prerendering is the keystone task.
 - **Search Console + Bing Webmaster Tools** from day one, even with no
-  traffic: the query data (what we *almost* rank for) is next quarter's
+  traffic: the query data (what you *almost* rank for) is next quarter's
   content list.
 
 ## The publishing rhythm and the flat months
@@ -115,7 +112,7 @@ and social previews don't run JS at all. Concretely missing today:
   taken seriously by search engines.
 - Expect **months of near-zero search traffic.** This is the phase where most
   sites quit. Pinterest usually shows signs of life first (weeks, not months) —
-  which is exactly why we bother with it.
+  which is exactly why you bother with it.
 - Every month, **update one old piece** — freshness plus depth on existing
   URLs often beats a new URL.
 

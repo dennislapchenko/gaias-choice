@@ -8,6 +8,15 @@ The thinking behind each phase lives in our free founder course,
 [An honest site from zero](/compass), starting with
 [chapter 1: The Kickstart Playbook](/compass/kickstart-playbook).
 
+Where we actually are: seven months on the road with our son, we're no longer
+just travelling — we're **looking for the place to land**. We spent weeks on
+permaculture farms in Portugal, saw off-grid homesteads across France and
+beyond, and right now we're in Bulgaria, looking for a forest school,
+like-minded people, and land of our own to grow a food forest on. That search
+is the spine of everything here — and it may take a while, which is the honest
+reason the reviews keep coming: we're still on the road, still testing gear,
+until the road ends at a gate we plant ourselves.
+
 Two reading rules: **months count from the first real review**, not from
 today — and a phase opens only when the previous one's "done when" line is
 true. One phase at a time.
@@ -34,8 +43,10 @@ belonging is harder to copy than content.
 - [x] Disclosure & privacy pages
 - [x] True About page — real facts only (turns out the camper story was ours all along)
 - [ ] Retell About in our own words — the facts are true, the voice isn't ours yet
-- [ ] Decide the public identity once, early: names? faces? how much of the
-      homestead dream?
+- [ ] Decide the public identity once, early: names? faces? *(how much of the
+      homestead dream — settled: it's the throughline, foregrounded not hidden;
+      the search for land, food forests, and people to share them with is the
+      story the whole site is told through)*
 - [ ] The front page leads with our story — the camper, the two years of
       building, why the road — before any product. Story before methodology
 - [ ] Real contact email and social accounts in `site.yaml` — or remove the
@@ -145,13 +156,23 @@ toward.
 
 **Goal: the site becomes what it documents.** This phase doesn't open — it
 pulls. Every phase above is a step toward it, and it's the reason none of
-them are allowed to cheat.
+them are allowed to cheat. It's also the search that's already live: the land
+we're looking for right now is the first line of this phase, not a someday.
 
-- [ ] The circle meets off-screen — a real gathering, however small
-- [ ] The homestead found: land, food forests, animals, the kind sustainable
-      community the whole journey is searching for
-- [ ] Gaia's Choice retold from the land — an operating system for family
-      life, written by a family that lives it
+- [ ] **The land found** — a place in the right community (a forest school
+      within reach, like-minded neighbors), where roots can actually go down.
+      The search that's happening now — Bulgaria, and wherever it leads — ends
+      here.
+- [ ] **The circle meets off-screen** — the campfire becomes a real gathering,
+      however small; the people we found online, found in person.
+- [ ] **The food forest planted** — agroforests, animals, natural building. The
+      site starts documenting soil and trees, not only gear.
+- [ ] **A forest school and shared learning on the land** — the natural-living
+      skills we teach in the Compass, practiced with other families, with kids
+      in the woods.
+- [ ] **Gaia's Choice retold from the land** — an operating system for family
+      life, written by a family that lives it, and genuinely useful to other
+      families trying to do the same.
 
 **Done when:** the roadmap stops being about the site.
 

@@ -1,6 +1,6 @@
 ---
 title: "The Launch Checklist"
-excerpt: Everything that must be true before we call this site launched — identity, content, legal pages, measurement, and distribution.
+excerpt: Everything that must be true before this site is launched — identity, content, legal pages, measurement, and distribution.
 image: /images/guide-toddler-checklist.svg
 date: 2026-07-01
 chapter: 5
@@ -11,11 +11,8 @@ tags: [founder-guide, launch, checklist]
 > *You already can:* build trust one review at a time, bring the right readers to it, and do the money math without romance.
 > *This chapter adds:* no new fundamentals — the Summit makes everything from chapters 1–4 true at the same time, on one page.
 
-> **Founder guide.** Written for ourselves while we bootstrap this site —
-> honest notes, published as a course.
-
 "Launched" doesn't mean deployed — the site already deploys. Launched means a
-stranger can land here, believe us, and nothing embarrasses us or violates a
+stranger can land here, believe you, and nothing embarrasses you or violates a
 program's terms. This checklist is the whole course compressed: section 1 is
 chapter 1's literal-truth rule made checkable, section 2 is chapter 2's craft,
 sections 5–6 serve chapter 3's channels, and section 4 guards chapter 4's
@@ -37,9 +34,9 @@ caption: "Six sections, one exam. A page that fails the stranger test gets fixed
 
 ## 1. Identity & truth
 
-- [ ] Retell **About** in our own words — the facts there are real now (the
+- [ ] Retell **About** in your own words — the facts there are real now (the
       camper, the baby, the dogs), but the telling is still a drafted skeleton.
-      Our voice, our details, nothing we haven't lived.
+      Your voice, your details, nothing you haven't lived.
 - [ ] Decide the public identity: names? faces? a family pseudonym? (Real
       names and faces convert trust better; decide once, early.)
 - [ ] Update `site.yaml`: real `contactEmail`, real social URLs (or remove the
@@ -49,19 +46,19 @@ caption: "Six sections, one exam. A page that fails the stranger test gets fixed
 ## 2. Content
 
 - [ ] **10 real reviews** written per the
-      [review process](/compass/writing-reviews-that-earn-trust) — products we
-      own, our photos, honest flaws.
+      [review process](/compass/writing-reviews-that-earn-trust) — products you
+      own, your photos, honest flaws.
 - [ ] **Every placeholder review deleted.** No fake `affiliateUrl` anywhere
       (grep for `EXAMPLE`).
-- [ ] **Replace all AI placeholder images** with our own photos (`task images`
+- [ ] **Replace all AI placeholder images** with your own photos (`task images`
       optimizes them; update frontmatter paths).
 - [ ] 2–3 reader-facing guides rewritten from real experience (the current
       founder guides get replaced gradually — that's fine, they're honest
       about what they are).
-- [ ] Every Compass course says what it is right at the top — founder notes
-      like this course, or a curriculum openly drafted with an LLM from our
-      context and influences. Chapter 1's provenance rule, made checkable:
-      unlabeled is the only dishonest option.
+- [ ] Every Compass course says what it is right at the top — a curriculum
+      openly drafted with an LLM from your context and influences, like this
+      one, or written from lived notes. Chapter 1's provenance rule, made
+      checkable: unlabeled is the only dishonest option.
 
 ## 3. Domain & plumbing
 
@@ -74,7 +71,7 @@ caption: "Six sections, one exam. A page that fails the stranger test gets fixed
 - [ ] [Disclosure page](/disclosure) live and linked in the footer *(done —
       review wording when joining each program, e.g. Amazon's required
       sentence)*.
-- [ ] [Privacy page](/privacy) live and accurate about what we collect
+- [ ] [Privacy page](/privacy) live and accurate about what you collect
       *(done — update it when analytics or a newsletter appears)*.
 - [ ] Per-review disclosure line appears before the first affiliate link.
 
@@ -83,27 +80,27 @@ caption: "Six sections, one exam. A page that fails the stranger test gets fixed
 - [ ] **Google Search Console** verified, sitemap submitted (sitemap is a dev
       task on the [roadmap](/roadmap)).
 - [ ] Privacy-friendly analytics — a cookieless option (Plausible, GoatCounter,
-      or self-hosted umami) fits our privacy page and needs no consent banner.
+      or self-hosted umami) fits the privacy page and needs no consent banner.
 - [ ] Decide where numbers get reviewed (a monthly 30-minute "what's working"
       sit-down beats daily dashboard-staring).
 
 ## 6. Distribution
 
-- [ ] Pinterest **business** account, boards matching our categories, first
+- [ ] Pinterest **business** account, boards matching your categories, first
       pins for every published piece.
 - [ ] Email capture decision: hosted (Kit/MailerLite free tier) vs self-hosted
       (Listmonk / tiny custom service). Even a "coming soon" signup beats
-      nothing — the list is the only audience we'll ever own.
-- [ ] Tell people we actually know. The first ten readers should be friends
+      nothing — the list is the only audience you'll ever own.
+- [ ] Tell people you actually know. The first ten readers should be friends
       who'll say what's confusing.
 
 ## 7. The soft-launch test
 
 This is the course's final exam — chapter 1 promised a site built on nothing
 but the literal truth, and this walk-through grades it. Before announcing
-anywhere public, both of us click through the entire site on a phone and ask,
+anywhere public, both of you click through the entire site on a phone and ask,
 for every page: *"Would I trust this if a stranger made it?"* Anything that
-fails gets fixed or deleted. Then we launch — quietly, and let the weekly
+fails gets fixed or deleted. Then you launch — quietly, and let the weekly
 rhythm from [chapter 1](/compass/kickstart-playbook) take over.
 
 ## Now you can

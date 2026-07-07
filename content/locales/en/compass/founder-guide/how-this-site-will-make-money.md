@@ -11,33 +11,30 @@ tags: [founder-guide, monetization, affiliate]
 > *You already can:* write a review that earns trust and give it an honest chance of being found.
 > *This chapter adds:* how affiliate income actually works, the math with no romance in it, and the traps that get new sites banned.
 
-> **Founder guide.** Written for ourselves while we bootstrap this site —
-> honest notes, published as a course.
-
 Monetization is the *last* step in the chain, not the first — chapter 1's
 order of operations put it at the very end on purpose. Nothing here works
-without chapter 2's content and chapter 3's traffic. But we should understand
-the destination before we start walking.
+without chapter 2's content and chapter 3's traffic. But understand the
+destination before you start walking.
 
 ## Layer 1: Affiliate links (months 3–12)
 
 An affiliate link carries a tracking tag; if a reader clicks it and buys, the
-shop pays us a percentage. The reader pays nothing extra.
+shop pays you a percentage. The reader pays nothing extra.
 
 ### Amazon Associates — the default starting point
 
-Almost everything we review is on Amazon, approval is easy, and one link
-monetizes an entire cart (if a reader clicks our swaddle link and also buys a
+Almost everything you review is on Amazon, approval is easy, and one link
+monetizes an entire cart (if a reader clicks your swaddle link and also buys a
 stroller, both count).
 
 The rules that actually bite:
 
 - **Three qualifying sales in the first 180 days** or the account is closed
-  (we can reapply — but better to join only when there's traffic to convert).
+  (you can reapply — but better to join only when there's traffic to convert).
   This is exactly the trap chapter 3 warned about: joining early doesn't just
   earn nothing, it burns the account.
 - **Mandatory wording:** "As an Amazon Associate we earn from qualifying
-  purchases" — visible on the site. Goes on our [disclosure page](/disclosure)
+  purchases" — visible on the site. Goes on your [disclosure page](/disclosure)
   and footer.
 - **No link cloaking or URL shorteners**, no links in emails or PDFs, no
   quoting prices as if static (they change). The program bans first and asks
@@ -51,7 +48,7 @@ The rules that actually bite:
 ### Beyond Amazon — where the eco niche actually pays
 
 Small natural-goods brands often pay **8–15%** through affiliate networks,
-because they can't outspend Amazon on anything except commission. Once we have
+because they can't outspend Amazon on anything except commission. Once you have
 ~10 real reviews and some traffic:
 
 - **Networks to check:** Awin (absorbed ShareASale), impact.com, AvantLink
@@ -60,7 +57,7 @@ because they can't outspend Amazon on anything except commission. Once we have
 - **Brand-direct programs:** many eco baby brands (organic textiles, castile
   soap makers, stainless bottle brands) run their own programs — look for an
   "Affiliates" link in their site footer, or just email them. A small brand
-  will happily do 10% + a discount code for our readers.
+  will happily do 10% + a discount code for your readers.
 - **Rule of thumb:** review the product first, join its program second. Never
   the reverse — that ordering is what keeps the reviews honest.
 
@@ -110,15 +107,15 @@ caption: "The honest expectation curve — the empty first months are the plan w
 
 Not now — but the roadmap should point here:
 
-- **Digital products.** Our checklists and packing lists as beautiful printable
+- **Digital products.** Your checklists and packing lists as beautiful printable
   PDFs — $5–9, no inventory, 100% margin, and this niche *loves* printables.
   A free one-pager doubles as the email-list magnet.
-- **Email list.** The only audience we own. Start collecting early — even a simple
+- **Email list.** The only audience you own. Start collecting early — even a simple
   "new reviews, monthly" newsletter. Every future revenue layer multiplies
   through it. And the strongest magnet is already on the site: the free
   Compass courses — a multi-chapter course beats any one-page freebie as a
-  reason to leave an email address. (Dev note: we can self-host — Listmonk, or a tiny custom
-  service — instead of paying ConvertKit; a backend is our cheap superpower.)
+  reason to leave an email address. (Dev note: you can self-host — Listmonk, or a tiny custom
+  service — instead of paying ConvertKit; a backend is your cheap superpower.)
 - **Display ads — later, maybe never.** Premium networks gate hard (Mediavine
   historically ~50k sessions/month; Raptive ~100k pageviews). AdSense before
   that earns pennies and uglifies the site. Ads also sit oddly with a
@@ -130,13 +127,13 @@ Not now — but the roadmap should point here:
 ## The traps (each of these has killed real sites)
 
 - **Applying to programs with placeholder content** → rejection or ban that
-  follows the domain. All fake `affiliateUrl`s must be gone before we apply.
+  follows the domain. All fake `affiliateUrl`s must be gone before you apply.
 - **Skipping disclosure** → FTC problem *and* program ban. The
   [disclosure page](/disclosure) plus per-page notice handles it.
 - **Letting commissions choose the products** → readers smell it, trust dies,
   and with it the whole model.
 - **Measuring nothing.** (Dev note: a tiny self-hosted redirect service —
-  `/go/<product>` → 302 with click counting — gives us click-through data no
+  `/go/<product>` → 302 with click counting — gives you click-through data no
   matter the program, and keeps affiliate URLs editable site-wide in one place.
   Check each program's cloaking policy first; Amazon requires the raw link.)
 

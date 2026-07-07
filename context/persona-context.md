@@ -82,6 +82,14 @@ remain banned unless the owners actually report them.
 - The journey is a **search for a place to anchor**: an off-grid home, food
   forests, animals, a kind sustainable community — their own homestead where
   people share knowledge and live in harmony with nature.
+- **Where the search stands (as the site launches):** ~**seven months on the
+  road** with their son. They stayed **weeks at permaculture farms in Portugal**
+  — learned hands-on, got inspired — and saw many others tending their land and
+  their off-grid havens in **France and elsewhere**. They are now in
+  **Bulgaria**, looking there for a **forest school**, **like-minded people**,
+  and **land of their own** to grow **agroforests** and live that life. The
+  search is active and **may take a while** — so they are still travelling, still
+  looking for land and people, and still reviewing gear along the way.
 - Interests: natural building, woodworking, gardening, animal care,
   **intuitive parenting**, self-sustainability; Denis is deep into
   **permaculture design** and works part of the week remotely; Lidia is
@@ -91,9 +99,11 @@ remain banned unless the owners actually report them.
   nature-first stance runs through the whole family, not just the ideology file.
 
 **Using these facts:** the About page, site.yaml `bio`, and any "who we are"
-copy draw from this list. Don't extrapolate beyond it — e.g. don't invent how
-many months they've been driving, which countries, or what gear they've tested.
-When a new fact is needed, ask the owners and add it here.
+copy draw from this list. Don't extrapolate beyond it — the months on the road
+(~7), the countries (Portugal, France, now Bulgaria), and the search for land
+are now known and usable, but don't invent *specifics* on top of them (named
+farms, exact routes, dates, durations of stays beyond "weeks", or what gear
+they've tested). When a new fact is needed, ask the owners and add it here.
 
 ---
 
@@ -128,6 +138,11 @@ one is drawn from his own garden, not invented:
    the Moon — "She moved far!!"), so AGI and Mars rovers alike may be *Earth's own
    plan* unfolding through us. He holds this while clear-eyed that the plan can be
    throttled by human hands (a government blocking a newly released model overnight).
+   He reads the living world **felt, not only reasoned** — Buhner's *"Dream and
+   Feel"* (from *Plant Intelligence*) is tattooed on his clavicles, the only words
+   he wears. Certain fields and places announce themselves to him as a **"harmonic
+   expanding feeling inside"** — how he expects to know the homestead land when he
+   stands on it, the heart as an organ of perception.
 
 3. **Lost civilizations knew things we've forgotten.** The site's parent worldview
    sits comfortably here. He writes, in passing and in earnest, that "previous
@@ -435,6 +450,13 @@ untouched source. **Denis's answers below; Lida's under the `#LIDA` marker.**
 > "And what does raising a child mean if, as your yoga tells you, there are
 > certain things only God can do?" - Its about exactly that innit? trusting that
 > the world will always hold you.
+
+**Q6 — What tells you a piece of land is *the one* — and do you fear talking yourself out of trusting it?**
+
+> harmonic expanding feeling inside. Some fields and places evoke this kind of
+> feeling. (maybe its what Buhner is about with his Dream and Feel (Plant
+> Intelligence). I even have these 2 words tattooes on my clavicles. the only
+> words I have tattoed.
 
 ### #LIDA — (awaiting answers)
 

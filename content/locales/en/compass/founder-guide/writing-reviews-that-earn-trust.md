@@ -1,6 +1,6 @@
 ---
-title: "Writing Reviews That Earn Trust (Our Process)"
-excerpt: The testing process, the review structure, and the exact template we use — so every review is one we could defend to a reader's face.
+title: "Writing Reviews That Earn Trust (The Process)"
+excerpt: The testing process, the review structure, and the exact template to use — so every review is one you could defend to a reader's face.
 image: /images/guide-natural-vs.svg
 date: 2026-07-04
 chapter: 2
@@ -11,13 +11,10 @@ tags: [founder-guide, reviews, process]
 > *You already can:* name the two assets and the order of operations they dictate.
 > *This chapter adds:* the testing bar, the review structure, and the template that turn honesty into a repeatable craft.
 
-> **Founder guide.** Written for ourselves while we bootstrap this site —
-> honest notes, published as a course.
-
-A review site lives or dies on one question: *does the reader believe we
+A review site lives or dies on one question: *does the reader believe you
 actually used this thing?* This is the trust half of chapter 1's two assets —
 the one that has to come first — turned into a repeatable process. Everything
-in this guide exists to make the honest answer "yes" — and to make that
+in this chapter exists to make the honest answer "yes" — and to make that
 obvious on the page.
 
 One boundary before the rules, because chapter 1 drew it and this chapter
@@ -29,15 +26,15 @@ one rule 1 leaves open: named as "we haven't tried this", never rated.
 
 ## The rules
 
-1. **We never review a product we haven't used.** No exceptions, not even
-   "roundup" listicles. An unused product can appear in a guide as "we haven't
-   tried this" — clearly labeled — but never with a rating.
-2. **We buy with our own money where possible.** If a brand sends a free unit,
+1. **Never review a product you haven't used.** No exceptions, not even
+   "roundup" listicles. An unused product can appear in a guide labeled "we
+   haven't tried this" — clearly marked — but never with a rating.
+2. **Buy with your own money where possible.** If a brand sends a free unit,
    the review says so in the first section, and the brand gets no copy approval.
 3. **Every review names a flaw.** A 5-star review with no "what we'd change"
-   section reads as an ad. If we truly can't find a flaw, the flaw is the price
+   section reads as an ad. If you truly can't find a flaw, the flaw is the price
    or who it's *not* for.
-4. **Photos are ours.** Phone camera is fine. Our hands, our floor, our baby's
+4. **Photos are yours.** Phone camera is fine. Your hands, your floor, your baby's
    crib in the background. Original photos are the single strongest signal — to
    readers and to Google — that the experience is real. Why Google in
    particular rewards them so heavily is chapter 3's story.
@@ -52,7 +49,7 @@ Before a product earns a review:
 - **Check the claims.** "Organic cotton" — is there a GOTS or OEKO-TEX label,
   and does the certificate number check out on the certifier's site? "Plastic-free" —
   including the lid gasket, the coating, the shipping packaging?
-- **Note actual numbers.** Weight on our kitchen scale, measured dimensions,
+- **Note actual numbers.** Weight on your kitchen scale, measured dimensions,
   how many milliliters it really holds. Concrete numbers nobody else bothered
   to measure are what make a review quotable and rankable.
 
@@ -63,7 +60,7 @@ The bar at a glance:
 | **Use** | 2 weeks; a month for sleep & feeding gear | how it behaves in a real family day |
 | **Washing** | 3 real washes | shrinking, pilling, retained smells |
 | **Claims** | certificate number verified with the certifier | "organic" and "plastic-free" that aren't |
-| **Numbers** | weighed and measured by us | the figures nobody else publishes |
+| **Numbers** | weighed and measured by you | the figures nobody else publishes |
 
 Keep raw notes per product in a plain text file from day one. The review is the
 notes, cleaned up.
@@ -79,7 +76,7 @@ Readers skim. Put the answer first and the story later:
    washes without pilling" beats "very durable."
 4. **What we'd change** — the honest flaws section. This is the trust engine.
 5. **Who it's for / alternatives** — including cheaper or simpler options, even
-   when they earn us nothing. *Especially* then.
+   when they earn you nothing. *Especially* then.
 
 ```diagram review-anatomy
 aria: "Anatomy of a review page, top to bottom: verdict first, how we tested, what's genuinely good, what we'd change, who it's for and alternatives"
@@ -110,7 +107,7 @@ rating: 4                  # 0–5; a 5 must survive the "no flaws?" test
 price: "€28"
 # affiliateUrl: add ONLY after joining the program — never a placeholder
 excerpt: One honest sentence a friend would text you about it.
-image: /images/<slug>.webp # our own photo, optimized via `task images`
+image: /images/<slug>.webp # your own photo, optimized via `task images`
 date: 2026-07-05
 tags: [organic, cotton]
 ---
