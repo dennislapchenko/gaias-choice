@@ -1,6 +1,6 @@
 ---
 title: "Brambas Creta Barefoot Shoes"
-state: upcoming            # queued "in the works" — delete this line (or set active) when the review is finished
+state: active            # queued "in the works" — delete this line (or set active) when the review is finished
 category: Sleep            # Sleep | Feeding | Care | Kitchen | Travel — the filter chip on /reviews
 scores: [4, 4, 4]          # Gaia Score — one 0–5 number per criterion in en/site.yaml `ratingCriteria`, IN THAT ORDER. A 5 must survive the "no flaws at all?" test
 price: "€00"               # what you actually paid; always quote it
