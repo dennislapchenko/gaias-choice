@@ -12,6 +12,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -273,11 +274,16 @@ func (s *Service) ConfirmTelegram(code, senderUsername string, tgID int64, sende
 	if err != nil {
 		return err
 	}
+	// ponytail: temporary login-failure observability — the reply text can't say
+	// which branch fired, so log it here (code prefix only, never the full token).
 	if !found {
+		log.Printf("telegram: confirm miss — code %s… unknown or expired", codePrefix(code))
 		return ErrBadCredentials
 	}
 	claimed, err := normalizeUsername(senderUsername)
 	if err != nil || claimed != tl.Username {
+		log.Printf("telegram: confirm miss — code %s… sender @%q ≠ claimed @%q (err=%v)",
+			codePrefix(code), senderUsername, tl.Username, err)
 		return ErrBadCredentials
 	}
 	name := strings.Join(strings.Fields(senderName), " ")
@@ -289,9 +295,19 @@ func (s *Service) ConfirmTelegram(code, senderUsername string, tgID int64, sende
 		return err
 	}
 	if !ok {
+		log.Printf("telegram: confirm miss — code %s… raced (expired or already confirmed)", codePrefix(code))
 		return ErrBadCredentials // expired between fetch and update, or already confirmed
 	}
 	return nil
+}
+
+// codePrefix returns a short, non-sensitive handle for a login code — enough to
+// correlate a failure with a request in the logs without printing the secret.
+func codePrefix(code string) string {
+	if len(code) > 8 {
+		return code[:8]
+	}
+	return code
 }
 
 // PollTelegram is the FE's poll: (Session, true) once the bot has confirmed
