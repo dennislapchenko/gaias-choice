@@ -1,13 +1,18 @@
-package main
+// Package store owns the SQLite database: opening it, migrating it, and
+// every SQL statement in the backend. Other packages call typed methods —
+// no SQL leaks past this package boundary.
+package store
 
 import (
 	"database/sql"
 	"embed"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 
 	_ "modernc.org/sqlite"
 )
@@ -15,15 +20,14 @@ import (
 //go:embed migrations/*.sql
 var migrationsFS embed.FS
 
-// Store wraps the SQLite connection. The schema is trivial today (a single
-// hits counter); real tables (users/sessions/pages) belong to the portal plan.
+// Store wraps the SQLite connection.
 type Store struct {
 	db *sql.DB
 }
 
-// openStore opens (creating the dir if needed) ${dataDir}/gaia.db in WAL mode
-// and applies any pending embedded migrations.
-func openStore(dataDir string) (*Store, error) {
+// Open opens (creating the dir if needed) ${dataDir}/gaia.db in WAL mode and
+// applies any pending embedded migrations.
+func Open(dataDir string) (*Store, error) {
 	if err := os.MkdirAll(dataDir, 0o755); err != nil {
 		return nil, fmt.Errorf("mkdir data dir: %w", err)
 	}
@@ -135,4 +139,78 @@ func (s *Store) Bump() (int, error) {
 		return 0, err
 	}
 	return n, nil
+}
+
+// --- users & sessions ---------------------------------------------------------
+
+type User struct {
+	ID           int64
+	Email        string
+	PasswordHash string
+	Role         string // "admin" | "editor" (enforced by a CHECK constraint)
+}
+
+func (s *Store) CountUsers() (int, error) {
+	var n int
+	err := s.db.QueryRow(`SELECT COUNT(*) FROM users`).Scan(&n)
+	return n, err
+}
+
+func (s *Store) CreateUser(email, passwordHash, role string) error {
+	_, err := s.db.Exec(
+		`INSERT INTO users (email, password_hash, role) VALUES (?, ?, ?)`,
+		email, passwordHash, role,
+	)
+	return err
+}
+
+// UserByEmail returns (User, true, nil) when found; (_, false, nil) when not.
+func (s *Store) UserByEmail(email string) (User, bool, error) {
+	var u User
+	err := s.db.QueryRow(
+		`SELECT id, email, password_hash, role FROM users WHERE email = ?`, email,
+	).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.Role)
+	if errors.Is(err, sql.ErrNoRows) {
+		return User{}, false, nil
+	}
+	return u, err == nil, err
+}
+
+func (s *Store) CreateSession(tokenHash string, userID int64, expiresAt time.Time) error {
+	_, err := s.db.Exec(
+		`INSERT INTO sessions (token_hash, user_id, expires_at) VALUES (?, ?, ?)`,
+		tokenHash, userID, expiresAt.UTC().Format(time.RFC3339),
+	)
+	return err
+}
+
+// UserBySession resolves an unexpired session to its user.
+func (s *Store) UserBySession(tokenHash string, now time.Time) (User, bool, error) {
+	var u User
+	err := s.db.QueryRow(
+		`SELECT u.id, u.email, u.password_hash, u.role
+		   FROM sessions s JOIN users u ON u.id = s.user_id
+		  WHERE s.token_hash = ? AND s.expires_at > ?`,
+		tokenHash, now.UTC().Format(time.RFC3339),
+	).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.Role)
+	if errors.Is(err, sql.ErrNoRows) {
+		return User{}, false, nil
+	}
+	return u, err == nil, err
+}
+
+func (s *Store) DeleteSession(tokenHash string) error {
+	_, err := s.db.Exec(`DELETE FROM sessions WHERE token_hash = ?`, tokenHash)
+	return err
+}
+
+// DeleteExpiredSessions is the lazy janitor — called on every login so the
+// table never accumulates dead rows (no background goroutine needed at this
+// scale).
+func (s *Store) DeleteExpiredSessions(now time.Time) error {
+	_, err := s.db.Exec(
+		`DELETE FROM sessions WHERE expires_at <= ?`,
+		now.UTC().Format(time.RFC3339),
+	)
+	return err
 }

@@ -107,7 +107,7 @@ src/
     astroText.ts         # all almanac wording, one Vocab per locale
     asset.ts             # withBase/withBaseHtml for BASE_PATH-aware asset URLs
     api.ts               # the whole FE↔BE contract: fetch wrappers, useApi, content types
-    editMode.tsx         # edit-mode gate (#edit + token, validated via /api/content/ping)
+    editMode.tsx         # edit-mode gate (#edit + login, session validated via /api/auth/me)
     contentEditor.tsx    # git-backed editor popup (field edits + draft files)
     types.ts             # SiteConfig, Product, Guide, Page, Theme, AstroEvent, EditRef
   components/            # Layout, Sidebar, AstroCalendar, ThemeSwitcher,
@@ -119,7 +119,8 @@ src/
                          # MarkdownPage (about/contact/etc), Support, NotFound
   styles.css             # single hand-written stylesheet (no CSS framework)
 backend/                 # optional Go/gin API sidecar (see "Backend" below)
-  main.go, store.go, cors.go, content.go, migrations/*.sql, Dockerfile, go.mod
+  openapi.yaml           # THE endpoint contract — endpoints are born here (task be:gen)
+  main.go, internal/{config,store,auth,content,httpapi}, Dockerfile, go.mod
 compose.dev.yaml         # `task dev` stack: web (Vite HMR) + api (air hot reload)
 deploy/                  # live VM deploy stack: compose.yaml (api+Caddy), Caddyfile,
                          # README (target), infra-log.md (provisioning record)
@@ -419,7 +420,7 @@ rise/set/houses/planetary-hours. All wording is in `lib/astroText.ts`;
 | --- | --- |
 | `task dev` | FE + BE together (Vite HMR :5173 + backend air hot-reload :8787) via `compose.dev.yaml` (needs a TTY — see development.md) |
 | `task be:dev` | backend only, `go run .` on :8787 |
-| `task be:test` / `be:tidy` / `be:image` / `be:run` / `be:verify` / `be:tunnel` | backend: vet+test / tidy+verify / build image / run prod image / test+image gate / `ngrok http 8787` |
+| `task be:test` / `be:tidy` / `be:gen` / `be:image` / `be:run` / `be:verify` / `be:tunnel` | backend: vet+test / tidy+verify / regen OpenAPI server code / build image / run prod image / spec-drift+test+image gate / `ngrok http 8787` |
 | `task typecheck` | strict `tsc --noEmit` (Vite build does NOT type-check) |
 | `task build` | build SPA to `dist/` |
 | `task images` | optimize `public/images` to WebP |
@@ -461,49 +462,66 @@ identically with the backend absent.** The BE now runs on a small Hetzner VM
 `VITE_API_URL`. BE-powered UI still renders only when the API answers, so if the
 VM is down the live site silently degrades to the static baseline.
 
-- **Shape:** port **8787**, routes under `/api`. `main.go` (env config —
-  `PORT`, `DATA_DIR`, `CORS_ORIGINS`, `GIN_MODE`, plus the content-seam vars
-  below), `cors.go` (hand-written origin-allowlist middleware, no wildcard),
-  `store.go` (SQLite via `modernc.org/sqlite`, pure-Go so `CGO_ENABLED=0`
-  stays static; WAL mode; a ~40-line embedded-`.sql` migration runner, no
-  framework), `migrations/*.sql`, `content.go` (the live-edit content seam,
-  next bullet). Scaffold endpoints: `/api/healthz` and `/api/hello` (a hits
-  counter proving a DB round-trip). Real schema (users/sessions/pages) belongs
-  to the future portal plan, not here.
-- **Content seam (live-edit):** `/api/content/{ping,file,save}` in
-  `backend/content.go` sit behind one `contentStore` interface with two
-  backends, chosen at boot (the BE logs which). **Prod — `githubStore`:**
-  proxies the **GitHub Contents API** so the in-browser editor writes the same
-  `content/` files that are the site — **every save is a git commit and git
-  stays the only source of truth** (no DB overlay; a save publishes via the
-  normal Pages deploy, ~2 min); needs `GITHUB_TOKEN` (fine-grained PAT,
-  Contents RW this repo only; `GITHUB_REPO`/`GITHUB_BRANCH`/`GITHUB_API` have
-  defaults). **Dev — `localStore`:** if `LOCAL_CONTENT_DIR` is set (the repo
-  root; `task dev` sets `/app`), saves write the **working tree directly** — no
-  commit, no deploy, no `GITHUB_TOKEN` — so local portal edits are sandboxed and
-  HMR reflects them; `LOCAL_CONTENT_DIR` **takes precedence** over any
-  `GITHUB_TOKEN`, so dev edits can't leak to the repo. Either way the BE is dumb
-  and stateless: bearer auth (`ADMIN_TOKEN`, constant-time compare),
-  `content/`-only path allowlist (traversal ⇒ 400), 256 KB size cap. **The seam
-  answers 503 "editing not configured" unless armed** — prod needs both
-  `ADMIN_TOKEN` and `GITHUB_TOKEN`; dev needs `ADMIN_TOKEN` + `LOCAL_CONTENT_DIR`
-  (the write path stays dead by default, and a repo-write PAT behind a public
-  tunnel must never be open). A sha handle gives conflict safety (mismatch ⇒
-  409; the FE re-fetches, re-applies, retries once) — GitHub's blob sha in prod,
-  a content hash locally. The BE never parses YAML — that happens on the FE.
-  This `ADMIN_TOKEN` gate is the interim; portal sessions/roles (D6) replace it.
+- **Shape — contract-first:** port **8787**, routes under `/api`, every
+  endpoint born in **`backend/openapi.yaml`** (the single source of truth).
+  `task be:gen` (pinned oapi-codegen, containerized, run-not-imported like
+  air) regenerates `internal/httpapi/gen.go` — committed, and `be:verify`
+  fails if regeneration produces a diff — whose `StrictServerInterface` the
+  handlers must implement, so an endpoint that isn't in the spec can't exist.
+  Layout: `main.go` is wiring only; `internal/config` (env), `internal/store`
+  (SQLite via `modernc.org/sqlite`, pure-Go so `CGO_ENABLED=0` stays static;
+  WAL; hand-rolled embedded-`.sql` migration runner; **all SQL lives here**),
+  `internal/auth` (users/sessions/roles), `internal/content` (the live-edit
+  seam), `internal/httpapi` (gin router, hand-written CORS allowlist,
+  middleware, handlers). Endpoints: `/api/healthz`, `/api/hello` (hits counter
+  proving a DB round-trip), `/api/auth/{login,logout,me}`,
+  `/api/content/{file,save}`.
+- **Auth (users/sessions/roles):** **no self-registration.** `users` rows
+  (argon2id password hashes) carry role `admin` or `editor` — both may edit
+  content today; admin-only surface arrives with the portal. `POST
+  /api/auth/login` (per-IP rate-limited) issues an opaque 30-day bearer
+  session token; only its sha256 lands in `sessions`, and logout revokes it.
+  Enforcement is **spec-driven**: operations marked `security: session` in
+  `openapi.yaml` are checked by the session middleware (keyed off the
+  generated `SessionScopes` marker), so protecting a new endpoint = declaring
+  it in the spec. The first admin is bootstrapped from env
+  (`BOOTSTRAP_ADMIN_EMAIL`/`BOOTSTRAP_ADMIN_PASSWORD`) **only while the users
+  table is empty**; `task dev` defaults these (`dev@local`/`dev-password`) so
+  local editing works with zero setup — nuke `backend/data/` to re-bootstrap.
+- **Content seam (live-edit):** `/api/content/{file,save}` (session-authed)
+  sit behind one `content.Store` interface with two backends, chosen at boot
+  (the BE logs which). **Prod — GitHub:** proxies the **GitHub Contents API**
+  so the in-browser editor writes the same `content/` files that are the
+  site — **every save is a git commit and git stays the only source of
+  truth** (no DB overlay; a save publishes via the normal Pages deploy,
+  ~2 min); needs `GITHUB_TOKEN` (fine-grained PAT, Contents RW this repo
+  only; `GITHUB_REPO`/`GITHUB_BRANCH`/`GITHUB_API` have defaults). **Dev —
+  local:** if `LOCAL_CONTENT_DIR` is set (the repo root; `task dev` sets
+  `/app`), saves write the **working tree directly** — no commit, no deploy,
+  no `GITHUB_TOKEN` — so local portal edits are sandboxed and HMR reflects
+  them; `LOCAL_CONTENT_DIR` **takes precedence** over any `GITHUB_TOKEN`, so
+  dev edits can't leak to the repo. **Neither configured ⇒ content routes
+  answer 503 "editing not configured"** and `/api/auth/me` reports
+  `editing: false`, so the FE keeps edit chrome off even for a logged-in
+  user. Validation stays dumb and stateless: `content/`-only path allowlist
+  (traversal ⇒ 400), 256 KB size cap, and a sha handle for conflict safety
+  (mismatch ⇒ 409; the FE re-fetches, re-applies, retries once) — GitHub's
+  blob sha in prod, a content hash locally. The BE never parses YAML — that
+  happens on the FE.
 - **Edit mode (FE side):** `src/lib/editMode.tsx` — visiting any page with
-  `#edit` prompts for the token (empty input signs out), stores it in
-  `localStorage['gc-edit-token']`, validates against `/api/content/ping`;
-  wrong token or BE down ⇒ mode off, silently — **readers ship zero editing
-  chrome**. `src/lib/contentEditor.tsx` is the editor popup: field edits do
-  **CST-level, byte-preserving YAML surgery** with the existing `yaml` dep
-  (only the edited scalar's line changes — the Document API would re-fold
-  long block scalars, so the CST route is load-bearing, not a style choice),
-  and the draft composer creates new content files (save without sha).
-  Zone addresses (`EditRef`) come only from provenance getters in
-  `src/lib/content.ts` (locale fallback means RU pages often edit the EN
-  file — components never guess paths).
+  `#edit` prompts for email + password (an empty email signs out and revokes
+  the session), logs in via `/api/auth/login`, stores the session token in
+  `localStorage['gc-session']`, and validates it against `/api/auth/me` on
+  every load (401 ⇒ silent drop; `editing: false` keeps mode off). A wrong
+  password alerts (the owner asked for edit mode explicitly); BE down ⇒ off
+  silently — **readers ship zero editing chrome**. `src/lib/contentEditor.tsx`
+  is the editor popup: field edits do **CST-level, byte-preserving YAML
+  surgery** with the existing `yaml` dep (only the edited scalar's line
+  changes — the Document API would re-fold long block scalars, so the CST
+  route is load-bearing, not a style choice), and the draft composer creates
+  new content files (save without sha). Zone addresses (`EditRef`) come only
+  from provenance getters in `src/lib/content.ts` (locale fallback means RU
+  pages often edit the EN file — components never guess paths).
 - **Storage (D9):** SQLite at `${DATA_DIR}/gaia.db`. Local: `backend/data/`,
   git-ignored, nuke to reset. Server: a **host bind mount**
   `/srv/gaias-choice/data` so backups are a host concern (`sqlite3 … .backup`,
@@ -514,7 +532,7 @@ VM is down the live site silently degrades to the static baseline.
   the latter to the VM API) else same-origin `/api`. It fails quietly (consumers
   render null on error) and guards against
   the SPA-fallback trap (HTML-200 for `/api/*` on Pages ⇒ "unavailable").
-- **Toolchain:** containerized like npm — `golang:1.23-alpine`, module+build
+- **Toolchain:** containerized like npm — `golang:1.25-alpine`, module+build
   cache in the `gaias-choice-go-cache` volume, `be:*` tasks. Nothing on the
   host. `task dev` runs FE+BE together (see Commands); `air` gives BE hot
   reload in dev (run-not-imported, pinned in `compose.dev.yaml`).
@@ -542,13 +560,16 @@ The owner wants the npm surface kept off the host and minimal.
   browser-safe with zero/low transitive deps (`astronomy-engine`: zero deps,
   no install script).
 - **Backend (Go) follows the same stance:** toolchain containerized
-  (`golang:1.23-alpine`, cache in the `gaias-choice-go-cache` volume, never on
+  (`golang:1.25-alpine`, cache in the `gaias-choice-go-cache` volume, never on
   the host); `go.sum` pins the full tree, verified by `go mod verify` in
-  `be:tidy`/`be:test`. **Two direct deps only:** `github.com/gin-gonic/gin`
-  and `modernc.org/sqlite` (pure Go, keeps the binary static, no cgo). CORS and
-  the migration runner are hand-written rather than pulled in. `air` (dev hot
-  reload) is **run-not-imported** — pinned in `compose.dev.yaml`, never in
-  `go.mod` or the prod image.
+  `be:tidy`/`be:test`. **Four direct deps:** `github.com/gin-gonic/gin`,
+  `modernc.org/sqlite` (pure Go, keeps the binary static, no cgo),
+  `github.com/oapi-codegen/runtime` (the small helper package the generated
+  server code needs), and `golang.org/x/crypto` (argon2id password hashing;
+  already in gin's tree). CORS, the migration runner, and the login rate
+  limiter are hand-written rather than pulled in. `air` (dev hot reload) and
+  the oapi-codegen CLI are **run-not-imported** — pinned in
+  `compose.dev.yaml` / the Taskfile, never in `go.mod` or the prod image.
 
 ## Dev gotchas
 

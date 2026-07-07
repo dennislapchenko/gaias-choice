@@ -1772,7 +1772,7 @@ a.respected-card:hover {
 
 /* In-place content editor (src/lib/contentEditor.tsx). Mounted once at the
    app root, above <Routes>, so it survives client-side navigation. Edit-mode
-   only (lib/editMode.tsx gates it behind the ADMIN_TOKEN bearer): Save writes
+   only (lib/editMode.tsx gates it behind a login session): Save writes
    the change back to the content/ file in git via the backend's
    /api/content/save seam — every save is a commit, published by the next
    Pages deploy (~2 min). Readers never see any of this. */

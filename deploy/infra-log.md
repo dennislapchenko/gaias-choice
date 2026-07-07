@@ -103,6 +103,22 @@
   calls the VM API. Remove that line to unwire (api.ts then falls back to
   same-origin `/api`, i.e. no backend).
 
+### 7. Auth model switch: ADMIN_TOKEN → login sessions (pending VM env update)
+
+- The backend replaced the static `ADMIN_TOKEN` bearer with real users/
+  sessions/roles (CLAUDE.md "Backend"): editing now requires logging in at
+  `#edit` with an email + password; the first admin is created from
+  `BOOTSTRAP_ADMIN_EMAIL`/`BOOTSTRAP_ADMIN_PASSWORD` on the first boot that
+  finds the users table empty.
+- **On the next redeploy:** in `deploy.env`, delete `ADMIN_TOKEN` and add the
+  two `BOOTSTRAP_ADMIN_*` values (choose a strong password — it's a real
+  account now), then bump `BE_TAG` and `up -d`. The existing
+  `/srv/gaias-choice/data/gaia.db` migrates itself (002_users_sessions) on
+  boot. Until that redeploy, the old image keeps running unchanged.
+- Post-deploy check: `POST /api/auth/login` with the bootstrap credentials →
+  200 with a token; `GET /api/auth/me` with it → 200, `"editing": true`.
+  `/api/content/ping` no longer exists (the FE probes `/api/auth/me`).
+
 ## Redeploy / operate (quick reference)
 
 - **New backend image:** push to `main` touching `backend/**` → CI builds

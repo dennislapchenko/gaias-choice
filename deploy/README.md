@@ -42,11 +42,12 @@ Kept off the repo on purpose — it's server bootstrap, not app config:
   --reload`).
 - **`deploy.env`** — the env file referenced by `.doco-cd.yml`, holding
   `API_DOMAIN`, `CORS_ORIGINS`, `BE_TAG` (not secret, but VM-specific), and —
-  only if live editing should be armed on the VM — the two content-seam
-  secrets: `ADMIN_TOKEN` (edit-mode bearer) and `GITHUB_TOKEN` (fine-grained
-  PAT, Contents RW on this repo only). Either missing ⇒ `/api/content/*`
-  answers 503 and the write path stays dead (CLAUDE.md "Backend"). Never
-  committed.
+  only if live editing should work on the VM — the content-seam secrets:
+  `GITHUB_TOKEN` (fine-grained PAT, Contents RW on this repo only; missing ⇒
+  `/api/content/*` answers 503 and the write path stays dead) plus
+  `BOOTSTRAP_ADMIN_EMAIL`/`BOOTSTRAP_ADMIN_PASSWORD` (creates the first admin
+  on the first boot with an empty users table; a no-op after — see CLAUDE.md
+  "Backend"). Never committed.
 - **The backup host-cron** — `sqlite3 /srv/gaias-choice/data/gaia.db ".backup
   '/srv/gaias-choice/backups/gaia-$(date +%F).db'"` plus an offsite copy
   (rsync/restic). Operational crons stay **host crons**, per doco-cd's own
@@ -76,9 +77,9 @@ Kept off the repo on purpose — it's server bootstrap, not app config:
 3. **`deploy.env`** on the VM — set `API_DOMAIN=api.<owned-domain>`,
    `CORS_ORIGINS=https://dennislapchenko.github.io` (add the deployed API
    origin if the FE ever calls cross-origin from elsewhere), and `BE_TAG` to
-   the pushed sha. Add `ADMIN_TOKEN` + `GITHUB_TOKEN` only when live editing
-   should work from the VM-hosted API (and pass them into the `api` service's
-   `environment:` in `compose.yaml` at that point).
+   the pushed sha. Add `GITHUB_TOKEN` + the `BOOTSTRAP_ADMIN_*` pair only when
+   live editing should work from the VM-hosted API (they are already passed
+   into the `api` service's `environment:` in `compose.yaml`).
 4. **Point the Pages build at the API** — set `VITE_API_URL=https://api.<domain>/api`
    in the Pages workflow build env when BE features should go live. Until then
    the live site ships without them (badge renders null).

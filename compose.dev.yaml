@@ -16,13 +16,11 @@ services:
       - "5173:5173"
 
   api:
-    image: golang:1.23-alpine
+    image: golang:1.25-alpine
     working_dir: /app/backend
     # air rebuilds+restarts on save. Pinned exact version; run-not-imported, so
     # it never enters go.mod. GOFLAGS -buildvcs=false: workdir isn't the git root.
-    # v1.61.7 is the last air release whose go.mod is `go 1.23` — later tags
-    # require Go >= 1.24/1.25, which the pinned golang:1.23-alpine can't run.
-    command: go run github.com/air-verse/air@v1.61.7
+    command: go run github.com/air-verse/air@v1.65.3
     volumes:
       - .:/app
       - go_cache:/go
@@ -33,9 +31,11 @@ services:
       # portal saves write content/ files in the mounted repo (Vite HMR reflects
       # them) — no commit, no deploy, no GITHUB_TOKEN. The repo is mounted at /app.
       LOCAL_CONTENT_DIR: /app
-      # ADMIN_TOKEN just gates #edit (the token the prompt asks for). Defaults to
-      # 'dev' so local editing works with zero setup; override via the root .env.
-      ADMIN_TOKEN: ${ADMIN_TOKEN:-dev}
+      # First-boot admin for the local DB (backend/data, git-ignored) so #edit
+      # login works with zero setup. Created only while the users table is
+      # empty — nuke backend/data to re-bootstrap. Override via the root .env.
+      BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:-dev@local}
+      BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:-dev-password}
     ports:
       - "8787:8787"
     links:

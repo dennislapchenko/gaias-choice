@@ -1,0 +1,9 @@
+# oapi-codegen config — `task be:gen` runs it (pinned version, containerized).
+# strict-server: handlers implement a typed interface per operation, so an
+# endpoint that isn't in openapi.yaml cannot exist in code.
+package: httpapi
+output: internal/httpapi/gen.go
+generate:
+  models: true
+  gin-server: true
+  strict-server: true

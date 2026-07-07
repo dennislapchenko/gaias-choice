@@ -1,5 +1,5 @@
 # Multi-stage: build a static Go binary, ship it on distroless.
-FROM golang:1.23-alpine AS build
+FROM golang:1.25-alpine AS build
 WORKDIR /src
 
 # Cache module downloads separately from the source.

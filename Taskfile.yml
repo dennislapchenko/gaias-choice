@@ -16,7 +16,7 @@ vars:
   SERVICE: gaias-choice
   VOLUME: gaias-choice-node-modules
   # Backend (Go) settings — same containerized-toolchain stance as the FE.
-  GO_IMAGE: golang:1.23-alpine
+  GO_IMAGE: golang:1.25-alpine
   BE_PORT: '8787'
   BE_IMAGE: gaias-choice-be
   GO_VOLUME: gaias-choice-go-cache
@@ -77,6 +77,13 @@ tasks:
     cmds:
       - '{{.GO_RUN}} sh -c "go mod tidy && go mod verify"'
 
+  be:gen:
+    desc: Regenerate the OpenAPI server code (backend/internal/httpapi/gen.go) from openapi.yaml
+    cmds:
+      # Pinned + run-not-imported (like air); only the generated file's small
+      # runtime helper package lives in go.mod.
+      - '{{.GO_RUN}} go run github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@v2.7.2 -config oapi-codegen.yaml openapi.yaml'
+
   be:image:
     desc: Build the production backend Docker image (distroless)
     cmds:
@@ -96,8 +103,12 @@ tasks:
       - ngrok http {{.BE_PORT}}
 
   be:verify:
-    desc: Backend gate — vet + test + production image build
+    desc: Backend gate — spec-code sync + vet + test + production image build
     cmds:
+      # Contract drift gate: regenerating must be a no-op, or someone edited
+      # gen.go by hand / changed the spec without running be:gen.
+      - task: be:gen
+      - git diff --exit-code -- backend/internal/httpapi/gen.go
       - task: be:test
       - task: be:image
 

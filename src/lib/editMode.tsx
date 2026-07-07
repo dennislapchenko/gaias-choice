@@ -1,21 +1,24 @@
-// Edit-mode state (live-edit seam, C2 interim gate). Invisible to readers:
-// mode turns on only when a stored token validates against the backend's
-// authed /api/content/ping — no token, wrong token, or BE down all mean the
-// site renders exactly as it does for everyone (zero editing chrome).
+// Edit-mode state (live-edit seam). Invisible to readers: mode turns on only
+// when a stored session validates against the backend's /api/auth/me AND the
+// backend reports a content storage backend is configured — no session, an
+// expired one, or BE down all mean the site renders exactly as it does for
+// everyone (zero editing chrome).
 //
-// Activation: visit any page with `#edit` in the URL → a token prompt appears
-// (entering an empty value signs out); the hash is stripped either way. The
-// token persists in localStorage['gc-edit-token'] until cleared the same way.
-// This is the ADMIN_TOKEN interim — real sessions/roles (backend D6) replace it.
+// Activation: visit any page with `#edit` in the URL → an email prompt
+// (entering an empty value signs out) then a password prompt; the hash is
+// stripped either way. A successful login stores the opaque session token in
+// localStorage['gc-session'] (revocable, 30-day TTL server-side). Accounts
+// are admin/editor users in the backend DB — there is no self-registration.
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
-import { apiGet, ApiError } from './api'
+import { apiGet, apiPost, ApiError, type LoginResponse, type MeResponse } from './api'
 
-const TOKEN_KEY = 'gc-edit-token'
+const SESSION_KEY = 'gc-session'
+const LEGACY_TOKEN_KEY = 'gc-edit-token' // pre-login static token; cleared on sight
 
 interface EditModeState {
   active: boolean
   token: string | null
-  /** Clear the stored token and leave edit mode. */
+  /** Revoke the session server-side, clear it locally, leave edit mode. */
   deactivate: () => void
 }
 
@@ -29,65 +32,94 @@ export const useEditMode = (): EditModeState => useContext(EditModeContext)
 
 function readStoredToken(): string | null {
   try {
-    return localStorage.getItem(TOKEN_KEY)
+    return localStorage.getItem(SESSION_KEY)
   } catch {
     return null
   }
 }
 
 export function EditModeProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(null)
+  const [token, setToken] = useState<string | null>(() => {
+    try {
+      localStorage.removeItem(LEGACY_TOKEN_KEY)
+    } catch {
+      /* ignore */
+    }
+    return readStoredToken()
+  })
   const [active, setActive] = useState(false)
+
+  const signOut = () => {
+    const stored = readStoredToken()
+    if (stored) {
+      // Best-effort revocation — locally we're signed out either way.
+      apiPost('/auth/logout', undefined, { token: stored }).catch(() => {})
+    }
+    try {
+      localStorage.removeItem(SESSION_KEY)
+    } catch {
+      /* ignore */
+    }
+    setToken(null)
+    setActive(false)
+  }
 
   // #edit in the URL is the (deliberately undiscoverable) activation switch.
   useEffect(() => {
     const maybePrompt = () => {
       if (window.location.hash !== '#edit') return
-      // Strip the hash first so the token never lingers in the URL bar flow.
+      // Strip the hash first so credentials never linger in the URL bar flow.
       history.replaceState(null, '', window.location.pathname + window.location.search)
-      const input = window.prompt('Edit token (leave empty to sign out):')
-      if (input === null) return // cancelled — no change
-      try {
-        if (input === '') localStorage.removeItem(TOKEN_KEY)
-        else localStorage.setItem(TOKEN_KEY, input)
-      } catch {
-        /* storage unavailable — mode simply won't persist */
+      const email = window.prompt('Email (leave empty to sign out):')
+      if (email === null) return // cancelled — no change
+      if (email === '') {
+        signOut()
+        return
       }
-      setActive(false)
-      setToken(input === '' ? null : input)
+      const password = window.prompt('Password:')
+      if (!password) return
+      apiPost<LoginResponse>('/auth/login', { email, password })
+        .then((res) => {
+          try {
+            localStorage.setItem(SESSION_KEY, res.token)
+          } catch {
+            /* storage unavailable — mode simply won't persist */
+          }
+          setToken(res.token)
+        })
+        .catch(() => {
+          // The owner asked for edit mode explicitly — failing silently here
+          // would just look broken. Readers never reach this path.
+          window.alert('Login failed.')
+        })
     }
     maybePrompt()
     window.addEventListener('hashchange', maybePrompt)
     return () => window.removeEventListener('hashchange', maybePrompt)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // On load (and after a prompt), pick up the stored token.
-  useEffect(() => {
-    if (token === null) {
-      const stored = readStoredToken()
-      if (stored) setToken(stored)
-    }
-  }, [token])
-
-  // Validate the token against the authed ping. 401 ⇒ the token is wrong —
-  // drop it. Anything else (BE down, 503 unconfigured, non-JSON) ⇒ keep the
-  // token but stay off, silently — the reader experience is untouched.
+  // Validate the session against /auth/me. 401 ⇒ expired/revoked — drop it.
+  // Anything else (BE down, non-JSON) ⇒ keep the token but stay off,
+  // silently — the reader experience is untouched. `editing:false` (no
+  // storage backend configured) also stays off: chrome without a working
+  // save path would only mislead.
   useEffect(() => {
     if (!token) {
       setActive(false)
       return
     }
     let alive = true
-    apiGet<{ status: string }>('/content/ping', { token })
-      .then(() => {
-        if (alive) setActive(true)
+    apiGet<MeResponse>('/auth/me', { token })
+      .then((me) => {
+        if (alive) setActive(me.editing)
       })
       .catch((err: unknown) => {
         if (!alive) return
         setActive(false)
         if (err instanceof ApiError && err.status === 401) {
           try {
-            localStorage.removeItem(TOKEN_KEY)
+            localStorage.removeItem(SESSION_KEY)
           } catch {
             /* ignore */
           }
@@ -99,18 +131,8 @@ export function EditModeProvider({ children }: { children: ReactNode }) {
     }
   }, [token])
 
-  const deactivate = () => {
-    try {
-      localStorage.removeItem(TOKEN_KEY)
-    } catch {
-      /* ignore */
-    }
-    setToken(null)
-    setActive(false)
-  }
-
   return (
-    <EditModeContext.Provider value={{ active, token, deactivate }}>
+    <EditModeContext.Provider value={{ active, token, deactivate: signOut }}>
       {children}
     </EditModeContext.Provider>
   )

@@ -1,120 +1,71 @@
+// The backend entrypoint: load config, open the store, wire the services,
+// serve. Everything else lives in internal/ — config, store (SQLite),
+// auth (users/sessions/roles), content (the live-edit seam), httpapi (the
+// OpenAPI-contract HTTP layer).
 package main
 
 import (
 	"log"
-	"net/http"
 	"os"
-	"strings"
 
 	"github.com/gin-gonic/gin"
+
+	"github.com/dennislapchenko/gaias-choice/backend/internal/auth"
+	"github.com/dennislapchenko/gaias-choice/backend/internal/config"
+	"github.com/dennislapchenko/gaias-choice/backend/internal/content"
+	"github.com/dennislapchenko/gaias-choice/backend/internal/httpapi"
+	"github.com/dennislapchenko/gaias-choice/backend/internal/store"
 )
 
-// config holds all runtime settings, sourced from the environment with
-// sensible local-dev defaults. adminToken/githubToken are secrets and have
-// no defaults on purpose — the content seam stays 503 until the owner
-// deliberately arms it (see content.go).
-type config struct {
-	port        string
-	dataDir     string
-	corsOrigins []string
-	// Content seam (content.go).
-	adminToken      string
-	githubToken     string
-	githubRepo      string
-	githubBranch    string
-	githubAPI       string
-	localContentDir string // set ⇒ saves write this dir (dev sandbox), not GitHub
-}
-
-func loadConfig() config {
-	return config{
-		port:    envOr("PORT", "8787"),
-		dataDir: envOr("DATA_DIR", "./data"),
-		corsOrigins: splitCSV(envOr(
-			"CORS_ORIGINS",
-			"http://localhost:5173,https://dennislapchenko.github.io",
-		)),
-		adminToken:      os.Getenv("ADMIN_TOKEN"),
-		githubToken:     os.Getenv("GITHUB_TOKEN"),
-		githubRepo:      envOr("GITHUB_REPO", "dennislapchenko/gaias-choice"),
-		githubBranch:    envOr("GITHUB_BRANCH", "main"),
-		githubAPI:       envOr("GITHUB_API", "https://api.github.com"),
-		localContentDir: os.Getenv("LOCAL_CONTENT_DIR"),
-	}
-}
-
-// logContentMode makes the edit-seam state obvious at boot — the usual "why
-// won't #edit turn on" answer is right here.
-func logContentMode(cfg config) {
-	switch {
-	case cfg.adminToken == "":
-		log.Print("content seam: DISABLED (no ADMIN_TOKEN) — /api/content/* → 503")
-	case cfg.localContentDir != "":
-		log.Printf("content seam: LOCAL filesystem at %s — saves write the working tree, no commit/deploy", cfg.localContentDir)
-	case cfg.githubToken != "":
-		log.Printf("content seam: GitHub %s@%s — saves commit and deploy", cfg.githubRepo, cfg.githubBranch)
-	default:
-		log.Print("content seam: DISABLED (no GITHUB_TOKEN or LOCAL_CONTENT_DIR) — /api/content/* → 503")
-	}
-}
-
-func envOr(key, fallback string) string {
-	if v := os.Getenv(key); v != "" {
-		return v
-	}
-	return fallback
-}
-
-func splitCSV(s string) []string {
-	parts := strings.Split(s, ",")
-	out := make([]string, 0, len(parts))
-	for _, p := range parts {
-		if p = strings.TrimSpace(p); p != "" {
-			out = append(out, p)
-		}
-	}
-	return out
-}
-
 func main() {
-	cfg := loadConfig()
+	cfg := config.Load()
 
 	if os.Getenv("GIN_MODE") != "debug" {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	store, err := openStore(cfg.dataDir)
+	st, err := store.Open(cfg.DataDir)
 	if err != nil {
 		log.Fatalf("store: %v", err)
 	}
-	defer store.Close()
+	defer st.Close()
 
-	r := gin.New()
-	r.Use(gin.Logger(), gin.Recovery())
-	r.Use(corsMiddleware(cfg.corsOrigins))
-
-	api := r.Group("/api")
-	{
-		api.GET("/healthz", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{"status": "ok"})
-		})
-		api.GET("/hello", func(c *gin.Context) {
-			n, err := store.Bump()
-			if err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "db"})
-				return
-			}
-			c.JSON(http.StatusOK, gin.H{
-				"message": "Hello from the Gaia's Choice backend.",
-				"hits":    n,
-			})
-		})
-		newContentAPI(cfg).register(api)
+	authSvc := auth.New(st)
+	created, err := authSvc.Bootstrap(cfg.BootstrapAdminEmail, cfg.BootstrapAdminPassword)
+	if err != nil {
+		log.Fatalf("auth: %v", err)
+	}
+	if created {
+		log.Printf("auth: bootstrap admin %q created", cfg.BootstrapAdminEmail)
 	}
 
-	logContentMode(cfg)
-	log.Printf("listening on :%s (data dir %s)", cfg.port, cfg.dataDir)
-	if err := r.Run(":" + cfg.port); err != nil {
+	r := httpapi.NewRouter(httpapi.Deps{
+		CORSOrigins: cfg.CORSOrigins,
+		Store:       st,
+		Auth:        authSvc,
+		Content:     contentStoreFor(cfg),
+	})
+
+	log.Printf("listening on :%s (data dir %s)", cfg.Port, cfg.DataDir)
+	if err := r.Run(":" + cfg.Port); err != nil {
 		log.Fatalf("run: %v", err)
+	}
+}
+
+// contentStoreFor picks the live-edit storage backend and logs the decision —
+// the usual "why won't editing turn on" answer is right here at boot. Local
+// mode wins when set, even if a GITHUB_TOKEN also happens to be present:
+// dev edits must never reach the real repo by accident.
+func contentStoreFor(cfg config.Config) content.Store {
+	switch {
+	case cfg.LocalContentDir != "":
+		log.Printf("content seam: LOCAL filesystem at %s — saves write the working tree, no commit/deploy", cfg.LocalContentDir)
+		return content.NewLocalStore(cfg.LocalContentDir)
+	case cfg.GitHubToken != "":
+		log.Printf("content seam: GitHub %s@%s — saves commit and deploy", cfg.GitHubRepo, cfg.GitHubBranch)
+		return content.NewGitHubStore(cfg.GitHubToken, cfg.GitHubRepo, cfg.GitHubBranch, cfg.GitHubAPI)
+	default:
+		log.Print("content seam: DISABLED (no GITHUB_TOKEN or LOCAL_CONTENT_DIR) — /api/content/* → 503")
+		return nil
 	}
 }

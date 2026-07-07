@@ -24,7 +24,7 @@ task dev        # FE (Vite :5173) + optional Go backend (:8787) together
 task typecheck  # strict tsc (vite build alone does NOT type-check)
 task build      # build the SPA to dist/
 task run        # production nginx image on :8080
-task be:verify  # backend gate: vet + test + distroless image build
+task be:verify  # backend gate: OpenAPI spec-drift check + vet + test + image build
 ```
 
 Architecture, content model, i18n, theming, and all working conventions are

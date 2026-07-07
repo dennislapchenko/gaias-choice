@@ -17,8 +17,8 @@ true. One phase at a time.
 **Goal: nothing on the site is fake.**
 
 - [x] Site scaffolding: content-driven SPA, containerized, deployable
-- [x] Backend foundation: a small Go API with its own database, part of the
-      dev loop, deploy prep written — it runs only on our own machine for now,
+- [x] Backend foundation: a small Go API with its own database and real
+      accounts (admin/editor logins), running on a little server of its own —
       and the site works exactly the same without it *(groundwork for a future
       user portal; nothing reader-facing yet, and we're not promising features
       before they exist)*

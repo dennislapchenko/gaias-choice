@@ -8,12 +8,15 @@ services:
     environment:
       DATA_DIR: /data
       CORS_ORIGINS: ${CORS_ORIGINS}
-      # Live-editing seam. Both must be set for /api/content/* to arm; either
-      # empty ⇒ those routes answer 503 (CLAUDE.md "Backend"). Values come from
-      # deploy.env on the VM, never committed. The `:-` keeps compose config
-      # renderable when they're absent.
-      ADMIN_TOKEN: ${ADMIN_TOKEN:-}
+      # Live-editing seam: without GITHUB_TOKEN, /api/content/* answers 503
+      # (CLAUDE.md "Backend"). Editing itself is gated by login — the first
+      # admin is created from BOOTSTRAP_ADMIN_* on the first boot with an empty
+      # users table (a no-op every boot after). Values come from deploy.env on
+      # the VM, never committed. The `:-` keeps compose config renderable when
+      # they're absent.
       GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:-}
+      BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:-}
     volumes:
       - /srv/gaias-choice/data:/data # host bind mount, per D9 (boring backups)
 

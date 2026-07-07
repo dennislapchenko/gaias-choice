@@ -1,0 +1,269 @@
+# The API contract — the single source of truth for every endpoint.
+#
+# Contract-first rule: an endpoint is born HERE. Edit this spec, run
+# `task be:gen` (regenerates internal/httpapi/gen.go — committed, drift-gated
+# by be:verify), then implement the new method the StrictServerInterface now
+# demands. Handlers that aren't in this file cannot exist.
+openapi: 3.0.3
+info:
+  title: Gaia's Choice API
+  version: 1.0.0
+  description: >-
+    Optional progressive-enhancement sidecar for the static site. Auth is an
+    opaque bearer session token issued by /auth/login; content endpoints
+    additionally require the storage backend to be configured (503 otherwise).
+
+servers:
+  - url: /api
+
+paths:
+  /healthz:
+    get:
+      operationId: getHealth
+      summary: Liveness probe
+      tags: [system]
+      responses:
+        '200':
+          description: Service is up.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status: { type: string }
+
+  /hello:
+    get:
+      operationId: getHello
+      summary: Scaffold endpoint proving a DB round-trip (feeds BackendBadge)
+      tags: [system]
+      responses:
+        '200':
+          description: Greeting plus the bumped hits counter.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [message, hits]
+                properties:
+                  message: { type: string }
+                  hits: { type: integer }
+        '500':
+          $ref: '#/components/responses/Internal'
+
+  /auth/login:
+    post:
+      operationId: login
+      summary: Exchange credentials for a session token
+      tags: [auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string }
+                password: { type: string }
+      responses:
+        '200':
+          description: Session created. Store the token; send it as a bearer.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [token, role, expiresAt]
+                properties:
+                  token: { type: string }
+                  role: { $ref: '#/components/schemas/Role' }
+                  expiresAt: { type: string, format: date-time }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          description: Too many attempts from this address — try again later.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /auth/logout:
+    post:
+      operationId: logout
+      summary: Revoke the current session
+      tags: [auth]
+      security:
+        - session: []
+      responses:
+        '204':
+          description: Session revoked (or was already gone).
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/me:
+    get:
+      operationId: getMe
+      summary: Who am I — the frontend's edit-mode probe
+      tags: [auth]
+      security:
+        - session: []
+      responses:
+        '200':
+          description: >-
+            The session's user. `editing` reports whether a content storage
+            backend is configured — the FE enables edit chrome only when true.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [email, role, editing]
+                properties:
+                  email: { type: string }
+                  role: { $ref: '#/components/schemas/Role' }
+                  editing: { type: boolean }
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /content/file:
+    get:
+      operationId: getContentFile
+      summary: Read one content/ file (text + opaque sha for concurrency)
+      tags: [content]
+      security:
+        - session: []
+      parameters:
+        - name: path
+          in: query
+          required: true
+          description: Repo-relative path; must live under content/.
+          schema: { type: string, maxLength: 512 }
+      responses:
+        '200':
+          description: Current file text plus its sha handle.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [path, sha, content]
+                properties:
+                  path: { type: string }
+                  sha: { type: string }
+                  content: { type: string }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: No such file.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '502':
+          $ref: '#/components/responses/Upstream'
+        '503':
+          $ref: '#/components/responses/NotConfigured'
+
+  /content/save:
+    post:
+      operationId: saveContent
+      summary: Write one content/ file (a git commit in prod, a working-tree write in dev)
+      tags: [content]
+      security:
+        - session: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [path, content]
+              properties:
+                path: { type: string, maxLength: 512 }
+                content:
+                  type: string
+                  description: Whole-file text; capped at 256 KiB server-side.
+                sha:
+                  type: string
+                  description: Handle from a prior read. Omit to create a new file.
+                message:
+                  type: string
+                  description: Commit message; defaulted when omitted.
+      responses:
+        '200':
+          description: Saved. `commit` is the git commit sha in prod, "local" in dev.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [path, sha, commit]
+                properties:
+                  path: { type: string }
+                  sha: { type: string }
+                  commit: { type: string }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: The file changed since it was read (stale sha) — re-fetch, re-apply, retry.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '413':
+          description: Content empty or over the size cap.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '502':
+          $ref: '#/components/responses/Upstream'
+        '503':
+          $ref: '#/components/responses/NotConfigured'
+
+components:
+  securitySchemes:
+    session:
+      type: http
+      scheme: bearer
+      description: >-
+        Opaque session token from POST /auth/login. Enforcement lives in the
+        auth middleware (internal/httpapi), keyed by operation — oapi-codegen
+        does not enforce security requirements itself.
+
+  schemas:
+    Role:
+      type: string
+      enum: [admin, editor]
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+
+  responses:
+    BadRequest:
+      description: Malformed request (bad body, invalid path, …).
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: Missing, invalid, or expired session token.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotConfigured:
+      description: No content storage backend is configured on this deployment.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Upstream:
+      description: The storage backend (GitHub) failed or was unreachable.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Internal:
+      description: Unexpected server error.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }

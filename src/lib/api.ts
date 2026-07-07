@@ -67,9 +67,26 @@ export async function apiPost<T>(
 }
 
 // Request/response types live here until there are enough to split out.
+// They mirror backend/openapi.yaml — the endpoint contract's single source
+// of truth.
 export interface HelloResponse {
   message: string
   hits: number
+}
+
+/** POST /api/auth/login — exchange credentials for an opaque session token. */
+export interface LoginResponse {
+  token: string
+  role: 'admin' | 'editor'
+  expiresAt: string
+}
+
+/** GET /api/auth/me — session probe; `editing` reports whether the backend
+ *  has a content storage backend configured (edit chrome stays off without). */
+export interface MeResponse {
+  email: string
+  role: 'admin' | 'editor'
+  editing: boolean
 }
 
 /** GET /api/content/file — current file text + blob sha (the save's

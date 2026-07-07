@@ -43,7 +43,7 @@ Keep this table current — when you add/rename/change a component, update the r
 | **Deploy stack (VM, live)** | `deploy/compose.yaml` (api behind Caddy) + `deploy/Caddyfile` + `deploy/infra-log.md` (provisioning record + redeploy steps) + `.github/workflows/build-backend.yml` (GHCR image build) + `.doco-cd.yml`/`deploy/README.md` (doco-cd GitOps, deferred) | The backend runs on a Hetzner VM (AlmaLinux, Helsinki), Caddy terminating TLS at `gaias-choice.gardenofatlantis.com`. First deploy is **manual `docker compose`** (image pinned via `BE_TAG`); doco-cd auto-redeploy is prepared but not yet activated. To redeploy or back up, follow `deploy/infra-log.md`. **Never deploys the static site** — that stays on Pages. |
 | **Per-route `<title>` + meta description** | `src/lib/head.tsx` (`usePageHead` hook + `PageHead` component); called by every page in `src/pages/` | Client-side interim until prerendering bakes real per-route heads (`context/seo/seo-paths.md`) — crawlers still see `index.html`'s static head; this covers tabs/bookmarks/history. Title = `"<page> — <site name>"`, home = `"<name> — <tagline>"`; description = page-specific (frontmatter `excerpt`, section lead string) or the site description as fallback. `PageHead` is the same hook as a null-rendering component, for pages that early-return `<NotFound />` (keeps hook order unconditional) — render it only in the found branch; `NotFound` sets its own head. **New page → call `usePageHead(title, desc?)`** (or render `<PageHead …/>` after an early return). |
 | **Copy-to-clipboard button** | `src/components/CopyButton.tsx` + `.copy-btn` in `styles.css` + `copy.*` UI strings | Reusable: `<CopyButton value={text} className? ariaLabel? />`. Shows a brief check + localized "Copied" state (sage). Tries the async Clipboard API, falls back to a hidden-textarea `execCommand` (covers insecure-context / permission-denied / sandboxed-iframe). Generic look in `.copy-btn`; the **caller positions it** (e.g. `.crypto-copy` parks it at the right edge of a wallet address and reveals it on `.crypto-addr-wrap:hover` / `:focus-visible`, staying visible on touch via `@media (hover: hover)`). Reach for this for any copyable field (wallet addresses today; emails, referral/affiliate links, etc. later). |
-| **Live-edit: edit mode + git-backed editor** | Gate: `src/lib/editMode.tsx` (`EditModeProvider`/`useEditMode`, outermost in `App.tsx`). Editor: `src/lib/contentEditor.tsx` (`ContentEditorProvider`/`useContentEditor` — `openField`/`openDraft`), mounted above `<Routes>`. Buttons: `src/components/EditButton.tsx` (`icon="pencil"` in-place edit, `icon="plus"` draft). Addresses: `EditRef` in `lib/types.ts`, minted only by provenance getters in `lib/content.ts` (none wired right now — the field flow is idle machinery for the future portal). BE side: `backend/content.go`. Styles: `.edit-btn`/`.content-editor*` in `styles.css`. `editor.*` UI strings (en+ru). | **Readers never see any of this** — buttons render only in edit mode (`#edit` + valid `ADMIN_TOKEN`; see the gotcha below). `openField({title, ref, onSaved})`: fetches the CURRENT file via `/api/content/file`, shows just the scalar, Save does **CST-level byte-preserving YAML surgery** (`Parser`/`Composer`/`CST.setScalarValue` from the existing `yaml` dep — the Document API re-folds long block scalars; don't switch back) and posts the whole file + sha to `/api/content/save`; 409 ⇒ re-fetch, re-apply, one retry; success shows "published, live in ~2 min" and calls `onSaved` (optimistic UI). `openDraft({title, path, initialValue, message})`: composes a new content file — a pre-flight GET refuses overwriting (404 = good case). Every save is a git commit (`content: … via portal`) → the normal Pages deploy publishes it (~2 min); git stays the only source of truth. **Wired today:** on the `Upcoming` rail — rows link to the post's real URL (WIP preview), and one ＋ button under the list queues a NEW upcoming post: `window.prompt` for the title, then `openDraft` saves `content/locales/<locale>/{products,journal}/<slug>.md` (Cyrillic-aware `slugify`) from the contribute template, which already carries `state: upcoming`. Flipping a post's state is a plain `.md` frontmatter edit (locally, or via the file seam), not a portal button. The anonymous copy-template button is unchanged. |
+| **Live-edit: edit mode + git-backed editor** | Gate: `src/lib/editMode.tsx` (`EditModeProvider`/`useEditMode`, outermost in `App.tsx`). Editor: `src/lib/contentEditor.tsx` (`ContentEditorProvider`/`useContentEditor` — `openField`/`openDraft`), mounted above `<Routes>`. Buttons: `src/components/EditButton.tsx` (`icon="pencil"` in-place edit, `icon="plus"` draft). Addresses: `EditRef` in `lib/types.ts`, minted only by provenance getters in `lib/content.ts` (none wired right now — the field flow is idle machinery for the future portal). BE side: `backend/internal/content` (storage seam) behind `backend/internal/httpapi` (session-authed routes). Styles: `.edit-btn`/`.content-editor*` in `styles.css`. `editor.*` UI strings (en+ru). | **Readers never see any of this** — buttons render only in edit mode (`#edit` + a valid login session; see the gotcha below). `openField({title, ref, onSaved})`: fetches the CURRENT file via `/api/content/file`, shows just the scalar, Save does **CST-level byte-preserving YAML surgery** (`Parser`/`Composer`/`CST.setScalarValue` from the existing `yaml` dep — the Document API re-folds long block scalars; don't switch back) and posts the whole file + sha to `/api/content/save`; 409 ⇒ re-fetch, re-apply, one retry; success shows "published, live in ~2 min" and calls `onSaved` (optimistic UI). `openDraft({title, path, initialValue, message})`: composes a new content file — a pre-flight GET refuses overwriting (404 = good case). Every save is a git commit (`content: … via portal`) → the normal Pages deploy publishes it (~2 min); git stays the only source of truth. **Wired today:** on the `Upcoming` rail — rows link to the post's real URL (WIP preview), and one ＋ button under the list queues a NEW upcoming post: `window.prompt` for the title, then `openDraft` saves `content/locales/<locale>/{products,journal}/<slug>.md` (Cyrillic-aware `slugify`) from the contribute template, which already carries `state: upcoming`. Flipping a post's state is a plain `.md` frontmatter edit (locally, or via the file seam), not a portal button. The anonymous copy-template button is unchanged. |
 | **Support / donation page** | `src/pages/Support.tsx` (dedicated page, **not** `MarkdownPage`) + `support:` block in `content/locales/en/site.yaml` + `support.*` UI strings in `src/locales/*.ts` + intro prose in `pages/support.md` + `.support-*`/`.crypto-*`/`.support-thanks` in `styles.css`; route in `App.tsx`; nav item in `site.yaml` | Donation page, last item in the primary `nav:`. **Config-driven (DRY):** the payment methods render from the `support:` block (`SupportConfig` in `types.ts`) — `stripe` (a Payment Link URL; absent → "coming soon" `.support-btn-soon`), `paypal` (paypal.me handle → `.support-btn-paypal`; absent → card hidden), and `crypto[]` (`{coin, network, address}` → `.crypto-*` rows; empty → card hidden). Payment values are **non-localized: authored once in `en/site.yaml`**, and `ru/site.yaml` has **no** `support:` block — it inherits via `getSite`'s en-base merge (single source for wallet addresses). Visible labels come from `support.*` UI strings (keep en/ru in sync); the intro paragraph stays in `pages/support.md` (content-as-data) and the closing line is `t('support.thanks')`. Each wallet address gets a reusable `<CopyButton>` (revealed on row hover; see the Copy-to-clipboard row). Wallet addresses + PayPal handle are `PASTE-YOUR-…` placeholders — grep `PASTE-YOUR` and fill before shipping, and **always quote address/handle values** in the YAML (an unquoted `0x…` ETH address is parsed as a hex number and corrupted). **Mobile sidebar tie-in:** on `/support`, `SidebarMobile` auto-opens the `about` tab (family photo → warmer ask) — see the Sidebar row. |
 | **Author voice, family bio & worldview (writing/rephrasing content)** | `context/persona-context.md` (how she sounds + the family's REAL biography — the camper family is not fictional) + `context/ideology-context.md` (what we believe: Health = Chek, Asprey; Worldview = Buhner, Daragan, Ralston; Children = Steiner, Swan — extensible; Health governs food/consumption claims) | Read both before authoring/rephrasing RU content, any "who we are" copy, Compass courses, or Journal entries. |
 
@@ -55,7 +55,7 @@ Keep this table current — when you add/rename/change a component, update the r
 | `task build` | build SPA to `dist/` |
 | `task dev` | **FE + BE together** via `compose.dev.yaml`: Vite HMR :5173 + backend with air hot-reload :8787 — **needs a TTY** (foreground compose); Ctrl-C stops both |
 | `task be:dev` | backend only, `go run .` on :8787 (`-it`) |
-| `task be:test` / `be:tidy` / `be:image` / `be:run` / `be:verify` | vet+test / `go mod tidy && verify` / build distroless image / run prod image :8787 / test+image gate — all containerized (`golang:1.23-alpine`, cache in `gaias-choice-go-cache` volume) |
+| `task be:test` / `be:tidy` / `be:gen` / `be:image` / `be:run` / `be:verify` | vet+test / `go mod tidy && verify` / regenerate `internal/httpapi/gen.go` from `openapi.yaml` / build distroless image / run prod image :8787 / spec-drift check + test + image gate — all containerized (`golang:1.25-alpine`, cache in `gaias-choice-go-cache` volume) |
 | `task be:tunnel` | `ngrok http 8787` (host ngrok, as with FE dev) |
 | `task images` | optimize `public/images` → WebP |
 | `task mandalas SET=<name>` | generate mandala SVG art for a config set (`guides`, `reviews`); optional `ONLY=slug1,slug2` |
@@ -178,34 +178,43 @@ OrbStack: `open -a OrbStack`, wait ~15s, retry.
   `gaias-choice-go-cache`) — they must exist before `up`. `task dev` creates
   the Go one and `deps` guarantees the node one; a bare `docker compose up`
   needs `docker volume create` first.
-- **air is pinned to `v1.61.7`** in `compose.dev.yaml` — the last release whose
-  `go.mod` is `go 1.23`; newer tags require Go ≥1.24/1.25 and won't run on the
-  pinned `golang:1.23-alpine`. air is run-not-imported (never in `go.mod`); bump
-  it only alongside the Go image.
+- **air is version-pinned** in `compose.dev.yaml` (run-not-imported — never in
+  `go.mod`); bump it only alongside the Go image (`golang:1.25-alpine`, set in
+  both `compose.dev.yaml` and the Taskfile's `GO_IMAGE`).
 - **Go toolchain is containerized too** — never `go` on the host; use the
   `be:*` tasks (deps cached in the `gaias-choice-go-cache` volume). First
   `modernc.org/sqlite` compile is slow; the cache makes it a one-time cost.
 - **Edit mode activates via `#edit`**, not any visible UI: open any page with
-  `#edit` in the URL → token prompt (empty input signs out; the hash is
-  stripped immediately). The token lives in `localStorage['gc-edit-token']`
-  and is validated against `/api/content/ping` on every load — a 401 clears
-  it, BE-down just leaves mode off. Nothing edit-related renders for readers.
-- **Content routes answer 503 until armed** — but there are two ways to arm,
-  and `content.go` picks the store at boot (it logs which one). **Dev
-  (sandboxed, the default for `task dev`):** `LOCAL_CONTENT_DIR=/app` routes
-  saves to the **local filesystem** — the portal writes `content/` files in the
-  mounted repo (HMR reflects them) with **no commit, no deploy, no
-  `GITHUB_TOKEN`**. Only `ADMIN_TOKEN` is needed (it gates `#edit`; defaults to
-  `dev` in `compose.dev.yaml`, so local editing works with zero setup — type
-  `dev` at the prompt). A local save can never reach production. **Prod (GitHub
-  proxy):** with no `LOCAL_CONTENT_DIR`, the seam needs BOTH `ADMIN_TOKEN` and
-  `GITHUB_TOKEN` (fine-grained PAT, Contents RW, this repo only) — either
-  missing ⇒ 503 "editing not configured" (deliberate: a repo-write PAT behind a
-  public tunnel must never be open); every save is a git commit → Pages deploy.
-  `LOCAL_CONTENT_DIR` **wins over** `GITHUB_TOKEN` if both are set, so dev edits
-  can't leak to the repo by accident. To exercise the real commit path from a
-  laptop, drop `LOCAL_CONTENT_DIR` and set the two tokens (e.g. via the
-  git-ignored root `.env`), then `task be:tunnel`.
+  `#edit` in the URL → email prompt (empty email signs out and revokes the
+  session; the hash is stripped immediately) then password prompt. Login
+  stores an opaque session token in `localStorage['gc-session']`, validated
+  against `/api/auth/me` on every load — a 401 clears it, `editing: false`
+  (no storage backend on the BE) keeps mode off, BE-down just leaves mode
+  off. A wrong password alerts. Nothing edit-related renders for readers.
+  Accounts live in the backend DB (roles `admin`/`editor`, no
+  self-registration); in `task dev` the bootstrap admin is
+  `dev@local` / `dev-password` (nuke `backend/data/` to re-bootstrap).
+- **Content routes answer 503 until a storage backend is configured** —
+  `main.go` picks the store at boot (it logs which one). **Dev (sandboxed,
+  the default for `task dev`):** `LOCAL_CONTENT_DIR=/app` routes saves to the
+  **local filesystem** — the portal writes `content/` files in the mounted
+  repo (HMR reflects them) with **no commit, no deploy, no `GITHUB_TOKEN`**.
+  A local save can never reach production. **Prod (GitHub proxy):** with no
+  `LOCAL_CONTENT_DIR`, the seam needs `GITHUB_TOKEN` (fine-grained PAT,
+  Contents RW, this repo only) — missing ⇒ 503 "editing not configured"
+  (deliberate: a repo-write PAT behind a public tunnel must never be open);
+  every save is a git commit → Pages deploy. `LOCAL_CONTENT_DIR` **wins
+  over** `GITHUB_TOKEN` if both are set, so dev edits can't leak to the repo
+  by accident. To exercise the real commit path from a laptop, drop
+  `LOCAL_CONTENT_DIR` and set `GITHUB_TOKEN` + the `BOOTSTRAP_ADMIN_*` pair
+  (e.g. via the git-ignored root `.env`), then `task be:tunnel`.
+- **Adding an API endpoint is spec-first:** declare it in `backend/openapi.yaml`
+  (mark it `security: session` if it needs login — enforcement is derived
+  from the spec), run `task be:gen`, then implement the new method the
+  `StrictServerInterface` in `internal/httpapi/gen.go` now demands (the
+  compile-time `var _ StrictServerInterface` assertion in `server.go` points
+  at what's missing). Commit `gen.go`; `task be:verify` fails if the spec and
+  the generated code drift.
 - **YAML edits must go through the CST route** (`applyScalarEdit` in
   `contentEditor.tsx`): `parseDocument(...).toString()` re-folds long block
   scalars and churns ~190 lines of site.yaml — `CST.setScalarValue` on the
