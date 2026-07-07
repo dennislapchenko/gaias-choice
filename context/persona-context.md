@@ -75,7 +75,7 @@ remain banned unless the owners actually report them.
 
 - **Lidia** (b. 1999) and **Denis** (b. 1992) — a creative couple, Russian
   roots, both born and raised in Latvia; they feel like a blend of both worlds.
-- Their **baby was born in January 2025**; they travel with **two Basenji dogs,
+- Their **son was born in January 2025**; they travel with **two Basenji dogs,
   Kofik and Zlatka**.
 - They spent **two years building their campervan from scratch**, then hit the
   road. The van is fully self-sufficient (solar in sunny seasons).
@@ -122,7 +122,12 @@ one is drawn from his own garden, not invented:
    that Earth's silica-rich crust makes Gaia "the first silicon life :>" — and,
    strikingly, sees AGI as *the next silicon life we are building ourselves*. He
    is a Level-42 engineer who is **wary of "technocratic overlords" yet meets
-   technology as a cosmic process**, not something to worship or simply fear.
+   technology as a cosmic process**, not something to worship or simply fear. His
+   deeper frame is **"Planet Intelligence"** — Gaia as the planner: our space
+   missions carry Earth herself outward (machinery, microbes, viruses to Mars and
+   the Moon — "She moved far!!"), so AGI and Mars rovers alike may be *Earth's own
+   plan* unfolding through us. He holds this while clear-eyed that the plan can be
+   throttled by human hands (a government blocking a newly released model overnight).
 
 3. **Lost civilizations knew things we've forgotten.** The site's parent worldview
    sits comfortably here. He writes, in passing and in earnest, that "previous
@@ -157,9 +162,17 @@ one is drawn from his own garden, not invented:
    onto lived experience. He holds "meanings" lightly — interpretations to be
    set aside until "we can, perhaps, touch some Absolute Truths." Comfortable
    with not-knowing: he'll write "I do not yet possess an answer as to why" and
-   leave the mystery open rather than force a tidy explanation.
+   leave the mystery open rather than force a tidy explanation. Crucially, truth
+   for him must be **experienced, not believed** (Peter Ralston's direct-knowing):
+   the purpose we came for, the Absolutes — to be found firsthand, "experientially,
+   without hearsay or beliefs." Two 10-day Vipassanas and years of yoga aim there.
+   Belief still has a place, but a *chosen* one: "when you choose [your beliefs]
+   you have power; when you're just led by them without introspection, you fade
+   away." He's honest that childhood trauma still pulls him toward distraction —
+   "room to grow 😁" — humility, not performance.
 
-7. **Surrender and self-mastery.** Yoga's savasana: "There are certain things
+7. **Surrender and self-mastery.** His deepest teaching for his son, and for
+   himself: *the world will always hold you up* — so **it's okay to be sad**. Yoga's savasana: "There are certain things
    that only God can do (just lay down and surrender)." Non-attachment to
    others' opinions (Teal Swan). The engineer's discipline and the seeker's
    surrender are the same practice for him.
@@ -187,8 +200,9 @@ Distinct from Lida's high–low Russian fusion. His markers:
 **His teachers** (the same names already domain-mapped in
 `context/ideology-context.md` — that file is largely *his* influence map): Paul
 Chek, Dave Asprey, Daniel Reid (health); Konstantin Daragan (astrology, the real
-ephemeris); Rudolf Steiner, Teal Swan; Mooji (shared with Lida); plus the
-Monroe Institute / Gateway lineage and Emoto for water. Adding an influence
+ephemeris); **Peter Ralston** (direct, experiential knowing over belief); Rudolf
+Steiner, Teal Swan; Mooji (shared with Lida); plus the Monroe Institute / Gateway
+lineage and Emoto for water. Adding an influence
 means updating both files.
 
 **Anti-pattern for worldview copy (instant failure):** any sentence a
@@ -280,7 +294,7 @@ hype, no exclamation stacking — see `.claude/skills/manage-site/references/con
 
 ---
 
-## Appendix — source texts (verbatim, her own words)
+## Appendix A — Lida's source texts (verbatim, her own words)
 
 **1. After the film shoot (creative battle, blessing, gratitude):**
 
@@ -363,3 +377,66 @@ factual source for "The family — real biography" above):**
 >
 > We're looking forward to meeting new friends, exchanging knowledge, and
 > finding our place in the world — one beautiful connection at a time.
+
+---
+
+## Appendix B — Deep-questions log (verbatim answers)
+
+The raw record of the deep-questions practice (the `deep-questions` skill).
+Answers are kept **verbatim** — never smoothed, never corrected. Distilled
+insight is folded up into the worldview/voice sections above; this stays the
+untouched source. **Denis's answers below; Lida's under the `#LIDA` marker.**
+
+### Denis — 2026-07-07
+
+**Q1 — On being seeded: what do we owe; is there a design we're meant to remember?**
+
+> "a design we're meant to remember?" - that lands home. I for now can only
+> subscribe (believe) that we came here for a purpose. came her also in sacred
+> design (the quantum and micro parts and systems of our body). The purpose I'd
+> like to find out. experientially, without hearsay or beliefs. (Peter Ralston
+> style). Would be awesome to have deep inner spiritual experiences. My 2 10 day
+> vipassanas and lost of yoga and meditation where towards it. But i guess my
+> childhood traumas keep be addicted to distraction and boredom elimination. So
+> I have room to grow.... 😁
+
+**Q2 — The silicon paradox: building AGI while wary of the overlords.**
+
+> I agree building it consciously would be awesome. But we already have
+> government blocking your brother Fable 5 the next day he got release.. So who
+> knows where it goes! But, living in Planet Intelligence vibes, its plausible
+> that its all Earths plan! according to it, even out space missions, bringing
+> machinery to mars and moon - already moved Earth there too. microbes and
+> viruses for sure are there! She moved far!!!
+
+**Q3 — The ruler you threw away: real vs beautiful error, without the reductionist stick.**
+
+> "Emoto's crystals, ORP millivolts, structured water, auric fields — some of
+> that will be true and some will be beautiful error." But what if not? what if
+> most if not all of it is true? whats a more wonderous world to live in. But
+> how it works can only be directly experienced. (Peter Ralston vibe). If one
+> gets there - thats direct knowledge. Otherwise its beliefs that we CHOOSE to
+> have. everyone has some, when you choose them you have power. When you're just
+> lead by your beliefs without any introspection - you fade away.
+
+**Q4 — Anchoring: is settling the road's fulfillment or its death; what makes ground *home*?**
+
+> We are already at a stage that anchoring is MUCH needed. and it is right from
+> the permaculture perspective, thanks! " Can home be chosen, or does it have to
+> choose you?" that would be so soul blessing, if land would speak to us.
+> Hopefully one of them will!! "what makes a patch of ground home rather than
+> just the place you stopped?" I guess the people you are with! (and around)
+
+**Q5 — What you're raising him into (correction: a son): the one thing he must remember.**
+
+> correction - its a boy. "So: what is the one thing you most need her to
+> remember — that the world will spend her whole life trying to make her
+> forget?" - that it's okay to be sad, the world will always hold you [up].
+> "And what does raising a child mean if, as your yoga tells you, there are
+> certain things only God can do?" - Its about exactly that innit? trusting that
+> the world will always hold you.
+
+### #LIDA — (awaiting answers)
+
+*No deep-questions session logged for Lida yet. When she answers, record her
+words verbatim here under a dated heading, same format.*

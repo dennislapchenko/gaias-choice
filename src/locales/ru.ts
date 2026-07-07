@@ -117,6 +117,10 @@ const ru: Record<keyof typeof en, string> = {
   "account.fields.save": "Сохранить",
   "account.fields.saveError": "Не удалось сохранить — попробуйте ещё раз.",
 
+  "imagePicker.title": "Выберите изображение",
+  "imagePicker.browse": "Обзор",
+  "imagePicker.close": "Закрыть",
+
   "astro.prevMonth": "Предыдущий месяц",
   "astro.nextMonth": "Следующий месяц",
   "astro.noEvents": "В этом месяце нет отмеченных событий.",

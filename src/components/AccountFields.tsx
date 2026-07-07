@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { apiPut, type MeResponse } from '../lib/api'
 import { useI18n } from '../lib/i18n'
 import { useSession } from '../lib/session'
+import ImagePicker from './ImagePicker'
 
 // The account page's field-edit panel: a right-rail fixture on desktop
 // (always visible), or revealed by the `.account-header` title-line toggle on
@@ -23,6 +24,7 @@ export default function AccountFields({ open }: { open: boolean }) {
   })
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(false)
+  const [picking, setPicking] = useState(false)
 
   if (!me) return null
 
@@ -60,15 +62,20 @@ export default function AccountFields({ open }: { open: boolean }) {
           <span className="field-label">{t('account.fields.name')}</span>
           <input value={name} onChange={(e) => setName(e.target.value)} />
         </label>
-        <label className="field">
+        <div className="field">
           <span className="field-label">{t('account.fields.avatar')}</span>
-          <input
-            type="url"
-            value={avatarUrl}
-            onChange={(e) => setAvatarUrl(e.target.value)}
-            placeholder={t('account.fields.avatarPlaceholder')}
-          />
-        </label>
+          <div className="field-split">
+            <input
+              type="url"
+              value={avatarUrl}
+              onChange={(e) => setAvatarUrl(e.target.value)}
+              placeholder={t('account.fields.avatarPlaceholder')}
+            />
+            <button type="button" className="btn btn-ghost" onClick={() => setPicking(true)}>
+              {t('imagePicker.browse')}
+            </button>
+          </div>
+        </div>
         <label className="field">
           <span className="field-label">{t('account.fields.role')}</span>
           <input value={me.role} disabled />
@@ -93,6 +100,9 @@ export default function AccountFields({ open }: { open: boolean }) {
           </button>
         )}
       </form>
+      {picking && (
+        <ImagePicker onPick={(path) => setAvatarUrl(path)} onClose={() => setPicking(false)} />
+      )}
     </section>
   )
 }

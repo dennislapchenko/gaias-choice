@@ -117,6 +117,10 @@ const en = {
   "account.fields.save": "Save",
   "account.fields.saveError": "Couldn't save — try again.",
 
+  "imagePicker.title": "Pick an image",
+  "imagePicker.browse": "Browse",
+  "imagePicker.close": "Close",
+
   "astro.prevMonth": "Previous month",
   "astro.nextMonth": "Next month",
   "astro.noEvents": "No marked events this month.",
