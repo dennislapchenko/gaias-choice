@@ -171,6 +171,17 @@ type UpdateMeJSONBody struct {
 	Password *string `json:"password,omitempty"`
 }
 
+// UpdateUserJSONBody defines parameters for UpdateUser.
+type UpdateUserJSONBody struct {
+	// AvatarUrl Image shown around the campfire — a URL or an inlined data: URI (browser-downscaled upload). Omit or empty to clear it.
+	AvatarUrl   *string `json:"avatarUrl,omitempty"`
+	DisplayName string  `json:"displayName"`
+
+	// Password At least 8 characters. Omit to keep the current password.
+	Password *string `json:"password,omitempty"`
+	Role     Role    `json:"role"`
+}
+
 // LoginJSONRequestBody defines body for Login for application/json ContentType.
 type LoginJSONRequestBody LoginJSONBody
 
@@ -194,6 +205,9 @@ type SaveContentJSONRequestBody SaveContentJSONBody
 
 // UpdateMeJSONRequestBody defines body for UpdateMe for application/json ContentType.
 type UpdateMeJSONRequestBody UpdateMeJSONBody
+
+// UpdateUserJSONRequestBody defines body for UpdateUser for application/json ContentType.
+type UpdateUserJSONRequestBody UpdateUserJSONBody
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -239,6 +253,9 @@ type ServerInterface interface {
 	// Update your own profile (display name, email, avatar, optionally password)
 	// (PUT /users/me)
 	UpdateMe(c *gin.Context)
+	// Admin — edit another user's name, avatar, role, and optionally password
+	// (PUT /users/{id})
+	UpdateUser(c *gin.Context, id int64)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -458,6 +475,33 @@ func (siw *ServerInterfaceWrapper) UpdateMe(c *gin.Context) {
 	siw.Handler.UpdateMe(c)
 }
 
+// UpdateUser operation middleware
+func (siw *ServerInterfaceWrapper) UpdateUser(c *gin.Context) {
+
+	var err error
+	_ = err
+
+	// ------------- Path parameter "id" -------------
+	var id int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", c.Param("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true, Type: "integer", Format: "int64"})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter id: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	c.Set(string(SessionScopes), []string{"admin"})
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.UpdateUser(c, id)
+}
+
 // GinServerOptions provides options for the Gin server.
 type GinServerOptions struct {
 	BaseURL      string
@@ -499,6 +543,7 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.GET(options.BaseURL+"/hello", wrapper.GetHello)
 	router.GET(options.BaseURL+"/users", wrapper.ListUsers)
 	router.PUT(options.BaseURL+"/users/me", wrapper.UpdateMe)
+	router.PUT(options.BaseURL+"/users/:id", wrapper.UpdateUser)
 }
 
 type BadRequestJSONResponse Error
@@ -1301,6 +1346,7 @@ type ListUsers200JSONResponse struct {
 	Users []struct {
 		AvatarUrl   *string `json:"avatarUrl,omitempty"`
 		DisplayName string  `json:"displayName"`
+		Id          int64   `json:"id"`
 
 		// JoinedAt The day the account was created (UTC).
 		JoinedAt openapi_types.Date `json:"joinedAt"`
@@ -1401,6 +1447,90 @@ func (response UpdateMe409JSONResponse) VisitUpdateMeResponse(w http.ResponseWri
 	return err
 }
 
+type UpdateUserRequestObject struct {
+	Id   int64 `json:"id"`
+	Body *UpdateUserJSONRequestBody
+}
+
+type UpdateUserResponseObject interface {
+	VisitUpdateUserResponse(w http.ResponseWriter) error
+}
+
+type UpdateUser200JSONResponse struct {
+	AvatarUrl   *string `json:"avatarUrl,omitempty"`
+	DisplayName string  `json:"displayName"`
+	Id          int64   `json:"id"`
+	Role        Role    `json:"role"`
+}
+
+func (response UpdateUser200JSONResponse) VisitUpdateUserResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type UpdateUser400JSONResponse struct{ BadRequestJSONResponse }
+
+func (response UpdateUser400JSONResponse) VisitUpdateUserResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type UpdateUser401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response UpdateUser401JSONResponse) VisitUpdateUserResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type UpdateUser403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response UpdateUser403JSONResponse) VisitUpdateUserResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type UpdateUser404JSONResponse Error
+
+func (response UpdateUser404JSONResponse) VisitUpdateUserResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
 // StrictServerInterface represents all server handlers.
 type StrictServerInterface interface {
 	// Exchange credentials for a session token
@@ -1445,6 +1575,9 @@ type StrictServerInterface interface {
 	// Update your own profile (display name, email, avatar, optionally password)
 	// (PUT /users/me)
 	UpdateMe(ctx context.Context, request UpdateMeRequestObject) (UpdateMeResponseObject, error)
+	// Admin — edit another user's name, avatar, role, and optionally password
+	// (PUT /users/{id})
+	UpdateUser(ctx context.Context, request UpdateUserRequestObject) (UpdateUserResponseObject, error)
 }
 
 type StrictHandlerFunc func(ctx *gin.Context, request any) (any, error)
@@ -1891,6 +2024,39 @@ func (sh *strictHandler) UpdateMe(ctx *gin.Context) {
 		sh.options.HandlerErrorFunc(ctx, err)
 	} else if validResponse, ok := response.(UpdateMeResponseObject); ok {
 		if err := validResponse.VisitUpdateMeResponse(ctx.Writer); err != nil {
+			sh.options.ResponseErrorHandlerFunc(ctx, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(ctx, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UpdateUser operation middleware
+func (sh *strictHandler) UpdateUser(ctx *gin.Context, id int64) {
+	var request UpdateUserRequestObject
+
+	request.Id = id
+
+	var body UpdateUserJSONRequestBody
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(ctx, err)
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx *gin.Context, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdateUser(ctx, request.(UpdateUserRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdateUser")
+	}
+
+	response, err := handler(ctx, request)
+
+	if err != nil {
+		sh.options.HandlerErrorFunc(ctx, err)
+	} else if validResponse, ok := response.(UpdateUserResponseObject); ok {
+		if err := validResponse.VisitUpdateUserResponse(ctx.Writer); err != nil {
 			sh.options.ResponseErrorHandlerFunc(ctx, err)
 		}
 	} else if response != nil {

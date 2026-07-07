@@ -247,6 +247,24 @@ func (s *Store) UpdateUser(id int64, displayName, email, avatarURL, passwordHash
 	return err
 }
 
+// AdminUpdateUser changes another user's display name, avatar, and role (and,
+// when passwordHash != "", their password). It deliberately never touches the
+// email column — an admin edits identity/role, not someone's login address.
+func (s *Store) AdminUpdateUser(id int64, displayName, avatarURL, role, passwordHash string) error {
+	if passwordHash == "" {
+		_, err := s.db.Exec(
+			`UPDATE users SET display_name = ?, avatar_url = ?, role = ? WHERE id = ?`,
+			displayName, avatarURL, role, id,
+		)
+		return err
+	}
+	_, err := s.db.Exec(
+		`UPDATE users SET display_name = ?, avatar_url = ?, role = ?, password_hash = ? WHERE id = ?`,
+		displayName, avatarURL, role, passwordHash, id,
+	)
+	return err
+}
+
 // ListMembers returns every user, oldest first — the campfire circle.
 func (s *Store) ListMembers() ([]Member, error) {
 	rows, err := s.db.Query(

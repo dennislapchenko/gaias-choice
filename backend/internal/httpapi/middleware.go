@@ -37,7 +37,12 @@ func sessionAuth(a *auth.Service) MiddlewareFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, Error{Error: "unauthorized"})
 			return
 		}
-		if scopes, _ := v.([]string); slices.Contains(scopes, "editor") && !user.CanEdit() {
+		scopes, _ := v.([]string)
+		if slices.Contains(scopes, "editor") && !user.CanEdit() {
+			c.AbortWithStatusJSON(http.StatusForbidden, Error{Error: "forbidden"})
+			return
+		}
+		if slices.Contains(scopes, "admin") && user.Role != "admin" {
 			c.AbortWithStatusJSON(http.StatusForbidden, Error{Error: "forbidden"})
 			return
 		}

@@ -1,5 +1,12 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from 'react'
-import { apiPut, type MeResponse } from '../lib/api'
+import {
+  apiPut,
+  type AdminUserSummary,
+  type AdminUserUpdate,
+  type MeResponse,
+  type Member,
+  type Role,
+} from '../lib/api'
 import { withBase } from '../lib/asset'
 import { useI18n } from '../lib/i18n'
 import { useSession } from '../lib/session'
@@ -30,23 +37,42 @@ function downscale(file: File, max: number): Promise<string> {
   })
 }
 
-// The account page's field-edit panel: a right-rail fixture on desktop
-// (always visible), or revealed by the `.account-header` title-line toggle on
-// mobile — `open` just adds the CSS hook that breakpoint needs (see
-// .account-fields in styles.css); the component itself renders identically
-// either way. Save only appears once a field actually differs from the
-// last-saved values.
-export default function AccountFields({ open }: { open: boolean }) {
+const ROLES: Role[] = ['admin', 'editor', 'viewer']
+
+// The account page's field-edit panel. Two modes, one component:
+//   - self (no `target`): edit your own profile — name, avatar, email,
+//     password — PUT /users/me. Role shown read-only.
+//   - admin target (`target` set): an admin editing another camper — name,
+//     avatar, role (editable), optional password reset — PUT /users/{id}.
+//     Never touches the target's email. Mount with key={target.id} so the
+//     initial state re-seeds per picked user. Shows a close (×) that calls
+//     `onClose`, and reports the fresh row via `onSaved`.
+// `open` just adds the CSS hook the mobile breakpoint needs (see
+// .account-fields in styles.css); on desktop the rail is always visible. Save
+// is always rendered but faded + disabled until a field actually differs.
+export default function AccountFields({
+  open,
+  target,
+  onClose,
+  onSaved,
+}: {
+  open: boolean
+  target?: Member
+  onClose?: () => void
+  onSaved?: (u: AdminUserSummary) => void
+}) {
   const { t } = useI18n()
   const { me, token, updateMe } = useSession()
-  const [name, setName] = useState(me?.displayName ?? '')
-  const [email, setEmail] = useState(me?.email ?? '')
-  const [avatarUrl, setAvatarUrl] = useState(me?.avatarUrl ?? '')
+  const [name, setName] = useState(target?.displayName ?? me?.displayName ?? '')
+  const [email, setEmail] = useState(me?.email ?? '') // self mode only
+  const [avatarUrl, setAvatarUrl] = useState(target?.avatarUrl ?? me?.avatarUrl ?? '')
+  const [role, setRole] = useState<Role>(target?.role ?? me?.role ?? 'viewer') // target mode only
   const [password, setPassword] = useState('')
   const [baseline, setBaseline] = useState({
-    name: me?.displayName ?? '',
+    name: target?.displayName ?? me?.displayName ?? '',
     email: me?.email ?? '',
-    avatarUrl: me?.avatarUrl ?? '',
+    avatarUrl: target?.avatarUrl ?? me?.avatarUrl ?? '',
+    role: target?.role ?? me?.role ?? ('viewer' as Role),
   })
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(false)
@@ -67,23 +93,33 @@ export default function AccountFields({ open }: { open: boolean }) {
 
   const dirty =
     name !== baseline.name ||
-    email !== baseline.email ||
     avatarUrl !== baseline.avatarUrl ||
-    password !== ''
+    password !== '' ||
+    (target ? role !== baseline.role : email !== baseline.email)
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setSaving(true)
     setError(false)
     try {
-      const updated = await apiPut<MeResponse>(
-        '/users/me',
-        { displayName: name, email, avatarUrl, ...(password ? { password } : {}) },
-        { token: token ?? undefined },
-      )
-      updateMe(updated)
-      setBaseline({ name, email, avatarUrl })
-      setPassword('')
+      if (target) {
+        const body: AdminUserUpdate = { displayName: name, avatarUrl, role }
+        if (password) body.password = password
+        const updated = await apiPut<AdminUserSummary>(`/users/${target.id}`, body, {
+          token: token ?? undefined,
+        })
+        onSaved?.(updated)
+        onClose?.()
+      } else {
+        const updated = await apiPut<MeResponse>(
+          '/users/me',
+          { displayName: name, email, avatarUrl, ...(password ? { password } : {}) },
+          { token: token ?? undefined },
+        )
+        updateMe(updated)
+        setBaseline({ ...baseline, name, email, avatarUrl })
+        setPassword('')
+      }
     } catch {
       setError(true)
     } finally {
@@ -91,9 +127,31 @@ export default function AccountFields({ open }: { open: boolean }) {
     }
   }
 
+  // A stored data: URI is an opaque wall of base64 — never show it raw. The
+  // preview thumb already proves it's set; the chip clears it (back to a URL
+  // field / re-upload).
+  const isData = avatarUrl.startsWith('data:')
+
   return (
-    <section className={`account-fields${open ? ' is-open' : ''}`} aria-label={t('account.fields.title')}>
-      <p className="side-label">{t('account.fields.title')}</p>
+    <section
+      className={`account-fields${target ? ' account-fields-target' : ''}${open ? ' is-open' : ''}`}
+      aria-label={target ? t('account.editUser', { name: target.displayName }) : t('account.fields.title')}
+    >
+      <div className="side-label-row">
+        <p className="side-label">
+          {target ? t('account.editUser', { name: target.displayName }) : t('account.fields.title')}
+        </p>
+        {target && (
+          <button
+            type="button"
+            className="rail-close"
+            aria-label={t('account.fields.close')}
+            onClick={onClose}
+          >
+            ×
+          </button>
+        )}
+      </div>
       <form onSubmit={onSubmit}>
         <label className="field">
           <span className="field-label">{t('account.fields.name')}</span>
@@ -103,12 +161,23 @@ export default function AccountFields({ open }: { open: boolean }) {
           <span className="field-label">{t('account.fields.avatar')}</span>
           <div className="field-split">
             {avatarUrl && <img className="avatar-preview" src={withBase(avatarUrl)} alt="" />}
-            <input
-              type="text"
-              value={avatarUrl}
-              onChange={(e) => setAvatarUrl(e.target.value)}
-              placeholder={t('account.fields.avatarPlaceholder')}
-            />
+            {isData ? (
+              <button
+                type="button"
+                className="avatar-datauri"
+                title={t('account.fields.uploaded')}
+                onClick={() => setAvatarUrl('')}
+              >
+                {t('account.fields.uploaded')}
+              </button>
+            ) : (
+              <input
+                type="text"
+                value={avatarUrl}
+                onChange={(e) => setAvatarUrl(e.target.value)}
+                placeholder={t('account.fields.avatarPlaceholder')}
+              />
+            )}
             <button type="button" className="btn btn-ghost" onClick={() => fileRef.current?.click()}>
               {t('account.fields.upload')}
             </button>
@@ -117,12 +186,24 @@ export default function AccountFields({ open }: { open: boolean }) {
         </div>
         <label className="field">
           <span className="field-label">{t('account.fields.role')}</span>
-          <input value={me.role} disabled />
+          {target ? (
+            <select className="field-select" value={role} onChange={(e) => setRole(e.target.value as Role)}>
+              {ROLES.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input value={me.role} disabled />
+          )}
         </label>
-        <label className="field">
-          <span className="field-label">{t('account.fields.email')}</span>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        </label>
+        {!target && (
+          <label className="field">
+            <span className="field-label">{t('account.fields.email')}</span>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          </label>
+        )}
         <label className="field">
           <span className="field-label">{t('account.fields.password')}</span>
           <input
@@ -133,11 +214,9 @@ export default function AccountFields({ open }: { open: boolean }) {
           />
         </label>
         {error && <p className="field-error">{t('account.fields.saveError')}</p>}
-        {dirty && (
-          <button type="submit" className="btn btn-primary" disabled={saving}>
-            {t('account.fields.save')}
-          </button>
-        )}
+        <button type="submit" className="btn btn-primary" disabled={!dirty || saving}>
+          {t('account.fields.save')}
+        </button>
       </form>
     </section>
   )

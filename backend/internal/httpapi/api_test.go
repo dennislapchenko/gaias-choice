@@ -286,6 +286,67 @@ func TestUsersList(t *testing.T) {
 	}
 }
 
+func TestAdminUpdateUser(t *testing.T) {
+	r, adminToken := testEnv(t, nil)
+	viewerToken := registerViewer(t, r, "promote-me@test.dev", "Trail Viewer")
+
+	// Find the viewer's id from the listing.
+	var list struct {
+		Users []struct {
+			Id                int64
+			DisplayName, Role string
+		}
+	}
+	json.Unmarshal(do(r, http.MethodGet, "/api/users", adminToken, "").Body.Bytes(), &list)
+	var viewerID int64
+	for _, u := range list.Users {
+		if u.DisplayName == "Trail Viewer" {
+			viewerID = u.Id
+		}
+	}
+	if viewerID == 0 {
+		t.Fatal("viewer id not found in listing")
+	}
+
+	target := fmt.Sprintf("/api/users/%d", viewerID)
+
+	// A viewer may not edit anyone — admin scope 403.
+	if w := do(r, http.MethodPut, target, viewerToken, `{"displayName":"Hax","role":"admin"}`); w.Code != http.StatusForbidden {
+		t.Errorf("viewer edit: got %d, want 403", w.Code)
+	}
+
+	// Admin promotes the viewer to editor and renames them.
+	w := do(r, http.MethodPut, target, adminToken, `{"displayName":"Promoted Editor","role":"editor"}`)
+	if w.Code != http.StatusOK {
+		t.Fatalf("admin update: got %d: %s", w.Code, w.Body.String())
+	}
+	var got struct {
+		Id          int64
+		DisplayName string
+		Role        string
+	}
+	json.Unmarshal(w.Body.Bytes(), &got)
+	if got.Id != viewerID || got.DisplayName != "Promoted Editor" || got.Role != "editor" {
+		t.Errorf("update result: %+v", got)
+	}
+
+	// The role change took — the target can now sign in and its /me shows editor.
+	// (email untouched: it can still log in with its original address/password.)
+	lw := do(r, http.MethodPost, "/api/auth/login", "",
+		`{"email":"promote-me@test.dev","password":"viewer-pass-123"}`)
+	if lw.Code != http.StatusOK {
+		t.Fatalf("target login after edit: got %d — email may have been clobbered", lw.Code)
+	}
+
+	// Bad role → 400; unknown id → 404.
+	if w := do(r, http.MethodPut, target, adminToken, `{"displayName":"X","role":"wizard"}`); w.Code != http.StatusBadRequest {
+		t.Errorf("bad role: got %d, want 400", w.Code)
+	}
+	if w := do(r, http.MethodPut, "/api/users/999999", adminToken, `{"displayName":"Ghost","role":"viewer"}`); w.Code != http.StatusNotFound {
+		t.Errorf("unknown id: got %d, want 404", w.Code)
+	}
+}
+
 func TestRegisterRateLimit(t *testing.T) {
 	r, _ := testEnv(t, nil)
 	last := 0

@@ -37,6 +37,9 @@ var ErrEmailTaken = errors.New("email already registered")
 // weak password, unusable display name) — the HTTP layer maps it to 400.
 var ErrInvalid = errors.New("invalid input")
 
+// ErrNotFound — the target user id does not exist (admin edit only).
+var ErrNotFound = errors.New("user not found")
+
 type Service struct {
 	store *store.Store
 	// dummyHash is verified against when the email is unknown, so a login
@@ -199,6 +202,51 @@ func (s *Service) UpdateProfile(userID int64, displayName, email, avatarURL, pas
 		return store.User{}, err
 	}
 	user, _, err := s.store.UserByID(userID)
+	return user, err
+}
+
+// AdminUpdateUser lets an admin edit another account's display name, avatar,
+// role, and (only if password is non-empty) password. It never touches the
+// target's email. Returns ErrNotFound for an unknown id, ErrInvalid for bad
+// input.
+// ponytail: this can demote the last admin — or the caller themselves —
+// deliberately un-guarded for a tiny, trusted admin team; the upgrade is a
+// "refuse to remove the last admin" check when the team grows.
+func (s *Service) AdminUpdateUser(id int64, displayName, avatarURL, role, password string) (store.User, error) {
+	if _, found, err := s.store.UserByID(id); err != nil {
+		return store.User{}, err
+	} else if !found {
+		return store.User{}, ErrNotFound
+	}
+	if role != "admin" && role != "editor" && role != "viewer" {
+		return store.User{}, fmt.Errorf("%w: bad role", ErrInvalid)
+	}
+	name := strings.Join(strings.Fields(displayName), " ") // trim + collapse whitespace
+	if name == "" || len(name) > 50 {
+		return store.User{}, fmt.Errorf("%w: display name must be 1–50 characters", ErrInvalid)
+	}
+	// Avatars may be a URL or an inlined data: URI (a browser-downscaled image);
+	// 200 KB comfortably holds a ~256px WebP thumbnail (same cap as UpdateProfile).
+	if len(avatarURL) > 200_000 {
+		return store.User{}, fmt.Errorf("%w: avatar image too large", ErrInvalid)
+	}
+
+	passwordHash := "" // "" ⇒ store.AdminUpdateUser leaves the password unchanged
+	if password != "" {
+		if err := checkPasswordPolicy(password); err != nil {
+			return store.User{}, fmt.Errorf("%w: %s", ErrInvalid, err)
+		}
+		hash, err := HashPassword(password)
+		if err != nil {
+			return store.User{}, err
+		}
+		passwordHash = hash
+	}
+
+	if err := s.store.AdminUpdateUser(id, name, avatarURL, role, passwordHash); err != nil {
+		return store.User{}, err
+	}
+	user, _, err := s.store.UserByID(id)
 	return user, err
 }
 

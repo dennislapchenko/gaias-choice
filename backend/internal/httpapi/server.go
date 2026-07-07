@@ -336,18 +336,56 @@ func (s *server) ListUsers(ctx context.Context, _ ListUsersRequestObject) (ListU
 		resp.Users = append(resp.Users, struct {
 			AvatarUrl   *string            `json:"avatarUrl,omitempty"`
 			DisplayName string             `json:"displayName"`
+			Id          int64              `json:"id"`
 			JoinedAt    openapi_types.Date `json:"joinedAt"`
 			Role        Role               `json:"role"`
 			You         bool               `json:"you"`
 		}{
 			AvatarUrl:   &m.AvatarURL,
 			DisplayName: name,
+			Id:          m.ID,
 			JoinedAt:    openapi_types.Date{Time: m.CreatedAt},
 			Role:        Role(m.Role),
 			You:         m.ID == caller.ID,
 		})
 	}
 	return resp, nil
+}
+
+// UpdateUser is the admin-only "edit another user" endpoint. The admin scope
+// is enforced in sessionAuth; the sessionUser guard here is belt-and-braces.
+// It edits display name, avatar, role, and (only when provided) password —
+// never the target's email.
+func (s *server) UpdateUser(ctx context.Context, req UpdateUserRequestObject) (UpdateUserResponseObject, error) {
+	if _, ok := sessionUser(ctx); !ok { // unreachable behind sessionAuth; belt and braces
+		return UpdateUser401JSONResponse{UnauthorizedJSONResponse{Error: "unauthorized"}}, nil
+	}
+	if req.Body == nil || req.Body.DisplayName == "" {
+		return UpdateUser400JSONResponse{BadRequestJSONResponse{Error: "display name and role required"}}, nil
+	}
+	avatarURL := ""
+	if req.Body.AvatarUrl != nil {
+		avatarURL = *req.Body.AvatarUrl
+	}
+	password := ""
+	if req.Body.Password != nil {
+		password = *req.Body.Password
+	}
+	u, err := s.auth.AdminUpdateUser(req.Id, req.Body.DisplayName, avatarURL, string(req.Body.Role), password)
+	switch {
+	case errors.Is(err, auth.ErrNotFound):
+		return UpdateUser404JSONResponse(Error{Error: "user not found"}), nil
+	case errors.Is(err, auth.ErrInvalid):
+		return UpdateUser400JSONResponse{BadRequestJSONResponse{Error: err.Error()}}, nil
+	case err != nil:
+		return nil, err
+	}
+	return UpdateUser200JSONResponse{
+		Id:          u.ID,
+		DisplayName: auth.DisplayName(u),
+		AvatarUrl:   &u.AvatarURL,
+		Role:        Role(u.Role),
+	}, nil
 }
 
 // --- content -------------------------------------------------------------------

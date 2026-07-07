@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { apiGet, type Member, type UsersResponse } from '../lib/api'
+import { apiGet, type AdminUserSummary, type Member, type UsersResponse } from '../lib/api'
 import { usePageHead } from '../lib/head'
 import { useI18n } from '../lib/i18n'
 import { useSession } from '../lib/session'
@@ -16,6 +16,23 @@ export default function Account() {
 
   const [members, setMembers] = useState<Member[] | null>(null)
   const [fieldsOpen, setFieldsOpen] = useState(false)
+  // Admin "edit another camper" mode: the picked user + its own mobile toggle.
+  const [selected, setSelected] = useState<Member | null>(null)
+  const [targetOpen, setTargetOpen] = useState(false)
+  const isAdmin = me?.role === 'admin'
+
+  // Fold an admin edit back into the circle without a refetch.
+  const onSaved = (u: AdminUserSummary) =>
+    setMembers((prev) =>
+      (prev ?? []).map((m) =>
+        m.id === u.id ? { ...m, displayName: u.displayName, avatarUrl: u.avatarUrl, role: u.role } : m,
+      ),
+    )
+  const closeTarget = () => {
+    setSelected(null)
+    setTargetOpen(false)
+  }
+
   useEffect(() => {
     if (!token || !me) return
     let alive = true
@@ -51,15 +68,30 @@ export default function Account() {
     <section className="account-page">
       <div className="page-head-row">
         <h1>{t('account.title')}</h1>
-        <button
-          type="button"
-          className={`user-toggle rail-toggle${fieldsOpen ? ' is-open' : ''}`}
-          aria-expanded={fieldsOpen}
-          aria-label={t('account.fields.title')}
-          onClick={() => setFieldsOpen((o) => !o)}
-        >
-          <EditIcon />
-        </button>
+        <div className="head-toggles">
+          {selected && (
+            <button
+              type="button"
+              className={`user-toggle rail-toggle${targetOpen ? ' is-open' : ''}`}
+              aria-expanded={targetOpen}
+              aria-label={t('account.editUser', { name: selected.displayName })}
+              onClick={() => setTargetOpen((o) => !o)}
+            >
+              <EditIcon />
+              <span className="rail-toggle-label">{selected.displayName}</span>
+            </button>
+          )}
+          <button
+            type="button"
+            className={`user-toggle rail-toggle${fieldsOpen ? ' is-open' : ''}`}
+            aria-expanded={fieldsOpen}
+            aria-label={t('account.fields.title')}
+            onClick={() => setFieldsOpen((o) => !o)}
+          >
+            <EditIcon />
+            <span className="rail-toggle-label">{t('account.fields.title')}</span>
+          </button>
+        </div>
       </div>
       <p className="muted">{t('account.lead')}</p>
 
@@ -72,13 +104,11 @@ export default function Account() {
               const angle = (i / all.length) * 2 * Math.PI - Math.PI / 2
               const left = 50 + 41 * Math.cos(angle)
               const top = 50 + 41 * Math.sin(angle)
-              return (
-                <div
-                  key={`${m.displayName}-${i}`}
-                  role="listitem"
-                  className={`camper${m.you ? ' is-you' : ''}`}
-                  style={{ left: `${left}%`, top: `${top}%` }}
-                >
+              // Admins can tap any other camper to open its edit panel; your
+              // own seat stays a plain marker (you edit yourself in the rail).
+              const editable = isAdmin && !m.you
+              const inner = (
+                <>
                   <span className="camper-avatar" aria-hidden="true">
                     {m.avatarUrl ? (
                       <img className="avatar-img" src={m.avatarUrl} alt="" />
@@ -90,6 +120,31 @@ export default function Account() {
                     {m.displayName}
                     {m.you && <em> · {t('account.you')}</em>}
                   </span>
+                </>
+              )
+              const style = { left: `${left}%`, top: `${top}%` }
+              return editable ? (
+                <button
+                  key={m.id}
+                  type="button"
+                  className={`camper camper-editable${selected?.id === m.id ? ' is-selected' : ''}`}
+                  style={style}
+                  aria-label={t('account.editUser', { name: m.displayName })}
+                  onClick={() => {
+                    setSelected(m)
+                    setTargetOpen(true)
+                  }}
+                >
+                  {inner}
+                </button>
+              ) : (
+                <div
+                  key={m.id}
+                  role="listitem"
+                  className={`camper${m.you ? ' is-you' : ''}`}
+                  style={style}
+                >
+                  {inner}
                 </div>
               )
             })}
@@ -103,6 +158,15 @@ export default function Account() {
         </div>
 
         <AccountFields open={fieldsOpen} />
+        {selected && (
+          <AccountFields
+            key={selected.id}
+            target={selected}
+            open={targetOpen}
+            onClose={closeTarget}
+            onSaved={onSaved}
+          />
+        )}
       </div>
     </section>
   )

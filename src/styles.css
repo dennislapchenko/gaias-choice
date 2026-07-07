@@ -332,6 +332,7 @@ h1 {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
     padding: 6px 10px;
     border: 1px solid var(--line);
     background: var(--white);
@@ -339,6 +340,20 @@ h1 {
     cursor: pointer;
     line-height: 1;
     color: var(--ink);
+}
+/* The label text next to a header toggle's pencil (the Account rail toggles). */
+.rail-toggle-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    max-width: 8rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.head-toggles {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 .user-toggle:hover {
     background: var(--sand-2);
@@ -613,6 +628,21 @@ h1 {
 .camper.is-you .camper-avatar {
     background: var(--sage);
     color: var(--on-accent);
+}
+/* An admin-tappable seat: same layout as .camper, but a real button. */
+.camper-editable {
+    appearance: none;
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+.camper-editable:hover .camper-avatar,
+.camper-editable.is-selected .camper-avatar {
+    outline: 3px solid var(--sage);
+    outline-offset: 2px;
 }
 .camper-name {
     font-size: 0.82rem;
@@ -1759,6 +1789,68 @@ a.respected-card:hover {
     border-radius: 50%;
     object-fit: cover;
     border: 1px solid var(--line);
+}
+/* A stored data: URI is unreadable base64 — show a friendly chip instead of
+   the raw string; clicking it clears the avatar (back to URL / re-upload). */
+.avatar-datauri {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+    appearance: none;
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: var(--muted);
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+/* Role picker in the admin "edit another user" panel — matches .field input. */
+.field-select {
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+    color: var(--ink);
+    text-transform: capitalize;
+    cursor: pointer;
+}
+.field-select:focus {
+    outline: none;
+}
+/* Save stays visible even when there's nothing to save — just heavily faded
+   (task: an always-present, obviously-inert affordance). */
+.account-fields form .btn-primary:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+/* The admin target editor is the third .reviews-layout child; keep it in the
+   right-rail column (under the self panel) instead of falling to column 1.
+   On mobile the grid becomes a flex column, so this is a no-op there and the
+   shared .account-fields mobile rules (hide unless .is-open) take over. */
+.account-fields-target {
+    grid-column: 2;
+}
+.side-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+.rail-close {
+    appearance: none;
+    background: none;
+    border: none;
+    padding: 0 4px;
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--muted);
+    cursor: pointer;
+}
+.rail-close:hover {
+    color: var(--ink);
 }
 
 /* ---------- Image picker (avatar / cover chooser) ---------- */

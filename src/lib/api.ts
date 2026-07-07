@@ -132,6 +132,7 @@ export interface UpdateMePayload {
 
 /** GET /api/users — everyone around the campfire (any signed-in user). */
 export interface Member {
+  id: number
   displayName: string
   avatarUrl?: string
   role: Role
@@ -141,6 +142,23 @@ export interface Member {
 
 export interface UsersResponse {
   users: Member[]
+}
+
+/** PUT /api/users/{id} — admin-only edit of another user's profile
+ *  (name, avatar, role, optional password reset). Never touches email. */
+export interface AdminUserUpdate {
+  displayName: string
+  avatarUrl?: string
+  role: Role
+  password?: string
+}
+
+/** 200 body of PUT /api/users/{id} — the updated user summary. */
+export interface AdminUserSummary {
+  id: number
+  displayName: string
+  avatarUrl?: string
+  role: Role
 }
 
 /** GET /api/content/file — current file text + blob sha (the save's

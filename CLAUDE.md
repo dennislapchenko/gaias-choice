@@ -496,9 +496,12 @@ VM is down the live site silently degrades to the static baseline.
   `/api/auth/telegram/poll` (the primary Telegram login), `/api/auth/magic` +
   `/api/auth/magic/verify` (the passwordless email login),
   `/api/auth/{login,register,logout,me}`,
-  `/api/users` (the campfire listing), `PUT /api/users/me` (self-service
-  profile edit — display name, email, avatar URL, optional password
-  change), `/api/content/{file,save}`.
+  `/api/users` (the campfire listing — each row carries an `id`),
+  `PUT /api/users/me` (self-service profile edit — display name, email,
+  avatar URL, optional password change), `PUT /api/users/{id}` (admin-only
+  edit of another user — display name, avatar, role, optional password reset;
+  `session: [admin]` scope, never touches their email),
+  `/api/content/{file,save}`.
 - **Auth (users/sessions/roles):** `users` rows (argon2id password hashes,
   public `display_name`) carry role `admin`, `editor`, or `viewer`. `email` is
   **nullable** (migration 006) — Telegram-only accounts have none, so they key
@@ -535,8 +538,9 @@ VM is down the live site silently degrades to the static baseline.
   operations marked `security: session` in `openapi.yaml` are checked by the
   session middleware (keyed off the generated `SessionScopes` marker), and
   the `editor` **scope** (`session: [editor]`, on both content ops) demands
-  an admin/editor role — viewers get 403. Protecting a new endpoint =
-  declaring it in the spec. The first admin is bootstrapped from env
+  an admin/editor role — viewers get 403; the `admin` **scope**
+  (`session: [admin]`, on `PUT /users/{id}`) demands the admin role
+  specifically. Protecting a new endpoint = declaring it in the spec. The first admin is bootstrapped from env
   (`BOOTSTRAP_ADMIN_EMAIL`/`BOOTSTRAP_ADMIN_PASSWORD`) **only while the users
   table is empty**; `task dev` defaults these (`dev@local`/`dev-password`) so
   local editing works with zero setup — nuke `backend/data/` to re-bootstrap.
@@ -586,20 +590,29 @@ VM is down the live site silently degrades to the static baseline.
   (`pages/Account.tsx`): the **campfire** — every registered user seated in a
   circle around an animated fire (display name + initial-letter or avatar
   image, cropped/zoomed the same way as Compass's epic thumbnails — see
-  `.avatar-img` in `styles.css`; `you` marked). Beside the scene,
-  `components/AccountFields.tsx` is a self-service form — name, avatar
-  (preview thumb + URL input + an "Upload" button: Upload opens the OS file
-  dialog and downscales the image in-browser to a ≤256px WebP `data:` URI
-  stored verbatim in `avatar_url` — self-contained, no upload endpoint/blob
-  store; a pasted remote URL stays a remote ref since canvas can't inline
-  cross-origin; backend caps `avatarUrl` at 200 KB),
-  email, password (Save appears only once a field is dirty; role is shown but
-  not editable — that's an admin concern) — that lives in the standard right
-  rail (`.reviews-layout`, same as Reviews/Journal/Compass) on desktop,
-  always visible; below 900px it's hidden and reachable instead via a
-  `.user-toggle` pencil button next to the title (`.page-head-row`), pure
-  CSS-driven (no JS breakpoint branch — see `.account-fields`/
-  `.rail-toggle` in `styles.css`). A sign-out button sits below the
+  `.avatar-img` in `styles.css`; `you` marked). An admin sees every *other*
+  camper as a tappable button (`.camper-editable`) that opens a second
+  `AccountFields` in **target mode** (see below). Beside the scene,
+  `components/AccountFields.tsx` is a dual-mode form — **self** (no `target`
+  prop): name, avatar, email, password, role read-only, `PUT /users/me`,
+  syncs back via `updateMe`; **admin target** (`target={member}`, mounted
+  `key={id}` so it re-seeds per user): name, avatar, **role (editable
+  `<select>`)**, optional password reset, `PUT /users/{id}`, folds the result
+  back into the circle via `onSaved` and closes (× / `onClose`) — **never
+  edits the target's email**. Shared avatar row: preview thumb + a URL text
+  input that flips to a "tap to clear" chip when the value is a `data:` URI
+  (base64 is unreadable) + an "Upload" button: Upload opens the OS file dialog
+  and downscales the image in-browser to a ≤256px WebP `data:` URI stored
+  verbatim in `avatar_url` — self-contained, no upload endpoint/blob store; a
+  pasted remote URL stays a remote ref since canvas can't inline cross-origin;
+  backend caps `avatarUrl` at 200 KB. Save is always rendered but faded +
+  disabled until a field is dirty. The self panel lives in the standard right
+  rail (`.reviews-layout`, same as Reviews/Journal/Compass) on desktop, always
+  visible, with the target panel stacked under it (`.account-fields-target`,
+  `grid-column: 2`); below 900px each panel is hidden and reached via its own
+  `.user-toggle` pencil button next to the title (`.page-head-row` /
+  `.head-toggles`), pure CSS-driven (no JS breakpoint branch — see
+  `.account-fields`/`.rail-toggle` in `styles.css`). A sign-out button sits below the
   scene. BE down ⇒ none of this exists — **readers ship zero account/editing
   chrome**; each sign-in transport degrades independently — no Telegram bot ⇒
   the Telegram step reports "try email instead", no email transport ⇒ the magic

@@ -375,8 +375,9 @@ paths:
                     type: array
                     items:
                       type: object
-                      required: [displayName, role, joinedAt, you]
+                      required: [id, displayName, role, joinedAt, you]
                       properties:
+                        id: { type: integer, format: int64 }
                         displayName: { type: string }
                         avatarUrl: { type: string }
                         role: { $ref: '#/components/schemas/Role' }
@@ -389,6 +390,60 @@ paths:
                           description: True for the row of the caller's own account.
         '401':
           $ref: '#/components/responses/Unauthorized'
+
+  /users/{id}:
+    put:
+      operationId: updateUser
+      summary: Admin — edit another user's name, avatar, role, and optionally password
+      tags: [auth]
+      security:
+        - session: [admin]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer, format: int64 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [displayName, role]
+              properties:
+                displayName: { type: string, maxLength: 50 }
+                avatarUrl:
+                  type: string
+                  maxLength: 200000
+                  description: "Image shown around the campfire — a URL or an inlined data: URI (browser-downscaled upload). Omit or empty to clear it."
+                role: { $ref: '#/components/schemas/Role' }
+                password:
+                  type: string
+                  description: At least 8 characters. Omit to keep the current password.
+      responses:
+        '200':
+          description: The updated user summary.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, displayName, role]
+                properties:
+                  id: { type: integer, format: int64 }
+                  displayName: { type: string }
+                  avatarUrl: { type: string }
+                  role: { $ref: '#/components/schemas/Role' }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: No such user.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
 
   /content/file:
     get:
