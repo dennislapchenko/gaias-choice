@@ -53,17 +53,26 @@ export async function apiGet<T>(path: string, opts?: { token?: string }): Promis
   return parseJson<T>(res)
 }
 
-export async function apiPost<T>(
+async function apiSend<T>(
+  method: 'POST' | 'PUT',
   path: string,
   body?: unknown,
   opts?: { token?: string },
 ): Promise<T> {
   const res = await fetch(apiUrl(path), {
-    method: 'POST',
+    method,
     headers: { ...headers(opts?.token), 'Content-Type': 'application/json' },
     body: body === undefined ? undefined : JSON.stringify(body),
   })
   return parseJson<T>(res)
+}
+
+export function apiPost<T>(path: string, body?: unknown, opts?: { token?: string }): Promise<T> {
+  return apiSend<T>('POST', path, body, opts)
+}
+
+export function apiPut<T>(path: string, body?: unknown, opts?: { token?: string }): Promise<T> {
+  return apiSend<T>('PUT', path, body, opts)
 }
 
 // Request/response types live here until there are enough to split out.
@@ -97,12 +106,24 @@ export interface MeResponse {
   email: string
   role: Role
   displayName: string
+  /** Missing on the provisional `me` login/register sets before the first
+   *  real /auth/me fetch lands; always present ('' ⇒ none) after that. */
+  avatarUrl?: string
   editing: boolean
+}
+
+/** PUT /api/users/me — update your own profile. Same shape as GET /auth/me. */
+export interface UpdateMePayload {
+  displayName: string
+  email: string
+  avatarUrl?: string
+  password?: string
 }
 
 /** GET /api/users — everyone around the campfire (any signed-in user). */
 export interface Member {
   displayName: string
+  avatarUrl?: string
   role: Role
   joinedAt: string // YYYY-MM-DD
   you: boolean

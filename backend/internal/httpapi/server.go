@@ -149,14 +149,48 @@ func (s *server) GetMe(ctx context.Context, _ GetMeRequestObject) (GetMeResponse
 	if !ok { // unreachable behind sessionAuth; belt and braces
 		return GetMe401JSONResponse{UnauthorizedJSONResponse{Error: "unauthorized"}}, nil
 	}
-	return GetMe200JSONResponse{
+	return GetMe200JSONResponse(meResponse(s, u)), nil
+}
+
+// meResponse is the shared GetMe/UpdateMe body.
+func meResponse(s *server, u store.User) MeResponse {
+	return MeResponse{
 		Email:       u.Email,
 		Role:        Role(u.Role),
 		DisplayName: auth.DisplayName(u),
+		AvatarUrl:   u.AvatarURL,
 		// Edit chrome needs both a configured storage backend and a role
 		// that the content endpoints will actually let through.
 		Editing: s.content != nil && u.CanEdit(),
-	}, nil
+	}
+}
+
+func (s *server) UpdateMe(ctx context.Context, req UpdateMeRequestObject) (UpdateMeResponseObject, error) {
+	caller, ok := sessionUser(ctx)
+	if !ok { // unreachable behind sessionAuth; belt and braces
+		return UpdateMe401JSONResponse{UnauthorizedJSONResponse{Error: "unauthorized"}}, nil
+	}
+	if req.Body == nil || req.Body.DisplayName == "" || req.Body.Email == "" {
+		return UpdateMe400JSONResponse{BadRequestJSONResponse{Error: "display name and email required"}}, nil
+	}
+	avatarURL := ""
+	if req.Body.AvatarUrl != nil {
+		avatarURL = *req.Body.AvatarUrl
+	}
+	password := ""
+	if req.Body.Password != nil {
+		password = *req.Body.Password
+	}
+	updated, err := s.auth.UpdateProfile(caller.ID, req.Body.DisplayName, req.Body.Email, avatarURL, password)
+	switch {
+	case errors.Is(err, auth.ErrEmailTaken):
+		return UpdateMe409JSONResponse(Error{Error: "email already registered"}), nil
+	case errors.Is(err, auth.ErrInvalid):
+		return UpdateMe400JSONResponse{BadRequestJSONResponse{Error: err.Error()}}, nil
+	case err != nil:
+		return nil, err
+	}
+	return UpdateMe200JSONResponse(meResponse(s, updated)), nil
 }
 
 func (s *server) ListUsers(ctx context.Context, _ ListUsersRequestObject) (ListUsersResponseObject, error) {
@@ -175,11 +209,13 @@ func (s *server) ListUsers(ctx context.Context, _ ListUsersRequestObject) (ListU
 			name = auth.DisplayName(store.User{Email: m.Email})
 		}
 		resp.Users = append(resp.Users, struct {
+			AvatarUrl   *string            `json:"avatarUrl,omitempty"`
 			DisplayName string             `json:"displayName"`
 			JoinedAt    openapi_types.Date `json:"joinedAt"`
 			Role        Role               `json:"role"`
 			You         bool               `json:"you"`
 		}{
+			AvatarUrl:   &m.AvatarURL,
 			DisplayName: name,
 			JoinedAt:    openapi_types.Date{Time: m.CreatedAt},
 			Role:        Role(m.Role),

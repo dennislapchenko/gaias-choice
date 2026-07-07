@@ -32,6 +32,8 @@ interface SessionState {
   register: (payload: RegisterPayload) => Promise<void>
   /** Revoke the session server-side (best effort) and clear it locally. */
   signOut: () => void
+  /** Sync `me` after a profile edit elsewhere (e.g. AccountFields' save). */
+  updateMe: (me: MeResponse) => void
   loginOpen: boolean
   openLogin: () => void
   closeLogin: () => void
@@ -44,6 +46,7 @@ const SessionContext = createContext<SessionState>({
   login: async () => {},
   register: async () => {},
   signOut: () => {},
+  updateMe: () => {},
   loginOpen: false,
   openLogin: () => {},
   closeLogin: () => {},
@@ -153,6 +156,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         login,
         register,
         signOut,
+        updateMe: setMe,
         loginOpen,
         openLogin: () => setLoginOpen(true),
         closeLogin: () => setLoginOpen(false),

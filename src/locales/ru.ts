@@ -100,6 +100,17 @@ const ru: Record<keyof typeof en, string> = {
   "account.signedOut": "Войдите, чтобы занять место у костра.",
   "account.offline": "Костёр сейчас недосягаем — загляните позже.",
 
+  "account.fields.title": "Ваши данные",
+  "account.fields.name": "Имя",
+  "account.fields.avatar": "Аватар",
+  "account.fields.avatarPlaceholder": "Ссылка на изображение",
+  "account.fields.role": "Роль",
+  "account.fields.email": "Email",
+  "account.fields.password": "Пароль",
+  "account.fields.passwordPlaceholder": "Оставьте пустым, чтобы не менять",
+  "account.fields.save": "Сохранить",
+  "account.fields.saveError": "Не удалось сохранить — попробуйте ещё раз.",
+
   "astro.prevMonth": "Предыдущий месяц",
   "astro.nextMonth": "Следующий месяц",
   "astro.noEvents": "В этом месяце нет отмеченных событий.",

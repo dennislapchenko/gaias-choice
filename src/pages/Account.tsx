@@ -4,6 +4,7 @@ import { usePageHead } from '../lib/head'
 import { useI18n } from '../lib/i18n'
 import { useSession } from '../lib/session'
 import { initialOf } from '../components/UserButton'
+import AccountFields from '../components/AccountFields'
 
 // The account page: a campfire with every registered user seated around it
 // in a circle — the community, visible from day one. Signed-out visitors get
@@ -14,6 +15,7 @@ export default function Account() {
   usePageHead(t('account.title'))
 
   const [members, setMembers] = useState<Member[] | null>(null)
+  const [fieldsOpen, setFieldsOpen] = useState(false)
   useEffect(() => {
     if (!token || !me) return
     let alive = true
@@ -41,8 +43,20 @@ export default function Account() {
 
   return (
     <section className="account-page">
-      <h1>{t('account.title')}</h1>
+      <div className="account-header">
+        <h1>{t('account.title')}</h1>
+        <button
+          type="button"
+          className={`cube-toggle${fieldsOpen ? ' is-open' : ''}`}
+          aria-expanded={fieldsOpen}
+          aria-label={t('account.fields.title')}
+          onClick={() => setFieldsOpen((o) => !o)}
+        >
+          <GearIcon />
+        </button>
+      </div>
       <p className="muted">{t('account.lead')}</p>
+      {fieldsOpen && <AccountFields />}
 
       <div className="campfire-scene" role="list">
         <Campfire />
@@ -59,7 +73,11 @@ export default function Account() {
               style={{ left: `${left}%`, top: `${top}%` }}
             >
               <span className="camper-avatar" aria-hidden="true">
-                {initialOf(m.displayName)}
+                {m.avatarUrl ? (
+                  <img className="avatar-img" src={m.avatarUrl} alt="" />
+                ) : (
+                  initialOf(m.displayName)
+                )}
               </span>
               <span className="camper-name">
                 {m.displayName}
@@ -76,6 +94,21 @@ export default function Account() {
         </button>
       </div>
     </section>
+  )
+}
+
+// The header-row toggle that reveals AccountFields — a settings cog, square
+// ("cube") rather than the pill shape used elsewhere, so it reads as a
+// control next to the title rather than another nav pill.
+function GearIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+      <circle cx="12" cy="12" r="3.2" />
+      <path
+        d="M12 3.5v2.2M12 18.3v2.2M20.5 12h-2.2M5.7 12H3.5M17.6 6.4l-1.5 1.5M7.9 16.1l-1.5 1.5M17.6 17.6l-1.5-1.5M7.9 7.9L6.4 6.4"
+        strokeLinecap="round"
+      />
+    </svg>
   )
 }
 

@@ -149,6 +149,46 @@ func (s *Service) Register(email, password, displayName string) (Session, error)
 	return s.issueSession(user)
 }
 
+// UpdateProfile changes a signed-in user's own display name, email, avatar
+// URL, and (if password is non-empty) password. Returns ErrInvalid for bad
+// input, ErrEmailTaken if the new email belongs to a different account.
+func (s *Service) UpdateProfile(userID int64, displayName, email, avatarURL, password string) (store.User, error) {
+	addr := normalizeEmail(email)
+	if err := checkEmail(addr); err != nil {
+		return store.User{}, err
+	}
+	name := strings.Join(strings.Fields(displayName), " ") // trim + collapse whitespace
+	if name == "" || len(name) > 50 {
+		return store.User{}, fmt.Errorf("%w: display name must be 1–50 characters", ErrInvalid)
+	}
+	if len(avatarURL) > 1024 {
+		return store.User{}, fmt.Errorf("%w: avatar URL too long", ErrInvalid)
+	}
+	if existing, exists, err := s.store.UserByEmail(addr); err != nil {
+		return store.User{}, err
+	} else if exists && existing.ID != userID {
+		return store.User{}, ErrEmailTaken
+	}
+
+	passwordHash := "" // "" ⇒ store.UpdateUser leaves the password unchanged
+	if password != "" {
+		if err := checkPasswordPolicy(password); err != nil {
+			return store.User{}, fmt.Errorf("%w: %s", ErrInvalid, err)
+		}
+		hash, err := HashPassword(password)
+		if err != nil {
+			return store.User{}, err
+		}
+		passwordHash = hash
+	}
+
+	if err := s.store.UpdateUser(userID, name, addr, avatarURL, passwordHash); err != nil {
+		return store.User{}, err
+	}
+	user, _, err := s.store.UserByID(userID)
+	return user, err
+}
+
 func (s *Service) issueSession(user store.User) (Session, error) {
 	token := randomToken()
 	expires := time.Now().Add(sessionTTL)

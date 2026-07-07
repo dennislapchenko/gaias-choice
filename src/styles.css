@@ -355,10 +355,23 @@ h1 {
     width: 1.25rem;
     height: 1.25rem;
     border-radius: 999px;
+    overflow: hidden;
     background: var(--sage);
     color: var(--on-accent);
     font-size: 0.78rem;
     font-weight: 700;
+}
+
+/* Shared by .camper-avatar and .user-initial when a user has set an avatar
+   URL — same crop-and-zoom approach as .epic-row-img (Compass epic thumbs):
+   object-fit:cover alone often leaves letterboxing on odd-aspect photos, so
+   scale it up further inside the clipped circle. */
+.avatar-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(2);
 }
 
 .login-overlay {
@@ -510,6 +523,7 @@ h1 {
     width: 52px;
     height: 52px;
     border-radius: 999px;
+    overflow: hidden;
     border: 2px solid var(--white);
     background: var(--mint);
     box-shadow: var(--shadow);
@@ -1385,9 +1399,16 @@ a.respected-card:hover {
     border-color: var(--sage);
 }
 
-/* ---------- Reviews page: grid + right "in the works" rail ---------- */
-/* Main column (filters + product grid) beside a right rail, mirroring the
-   guide detail article/TOC split. The page header stays full-width above. */
+/* ---------- Right-rail layout: content + a flat-bar side rail ---------- */
+/* THE main + right-rail grid — reused wholesale wherever a page needs a
+   second rail beside its content (Reviews' own "in the works" rail, Journal
+   via the same shell, Compass' epic picker). To add a new one: drop a
+   flat-bar rail component (see .upcoming/.epic-rail below for the shape) as
+   the second child of this grid, then list its class alongside the others in
+   the sticky/mobile/wide-screen rules below so it behaves like the rest of
+   the family. The page header stays full-width above the grid. Account's
+   field-edit panel used to live here too; it's now a header-toggled panel
+   instead (see .account-header/.cube-toggle and .account-fields below). */
 .reviews-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) clamp(240px, 24vw, 300px);
@@ -1541,6 +1562,90 @@ a.respected-card:hover {
     color: var(--muted);
     font-size: 1.02rem;
     line-height: 1.55;
+}
+
+/* ---------- Account header row + fields toggle (/account) ---------- */
+/* The page title sits on one line with a square ("cube", not pill — it's a
+   control, not another nav link) toggle that reveals AccountFields below. */
+.account-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+.cube-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    cursor: pointer;
+}
+.cube-toggle svg {
+    width: 22px;
+    height: 22px;
+}
+.cube-toggle:hover {
+    background: var(--sand-2);
+}
+.cube-toggle.is-open {
+    background: var(--sage);
+    border-color: var(--sage);
+    color: var(--on-accent);
+}
+
+/* Revealed by .cube-toggle above — a form, not a rail, so it just flows
+   inline between the lead paragraph and the campfire scene. */
+.account-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 18px 0 26px;
+}
+.account-fields form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 14px;
+    background: rgba(47, 44, 39, 0.05);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+}
+.field-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+.field input {
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+    color: var(--ink);
+}
+.field input:focus {
+    outline: none;
+}
+.field input:disabled {
+    color: var(--muted);
+    text-transform: capitalize;
+}
+.field-error {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--clay);
 }
 
 /* ---------- Page + detail ---------- */

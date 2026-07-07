@@ -166,3 +166,62 @@ func TestRegister(t *testing.T) {
 		t.Errorf("display-name fallback: %q", got)
 	}
 }
+
+func TestUpdateProfile(t *testing.T) {
+	s, _ := testService(t)
+	if _, err := s.Bootstrap("owner@test.dev", "correct-horse"); err != nil {
+		t.Fatal(err)
+	}
+	owner, err := s.Login("owner@test.dev", "correct-horse")
+	if err != nil {
+		t.Fatal(err)
+	}
+	other, err := s.Register("other@test.dev", "long-enough-pass", "Other")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Validation failures all wrap ErrInvalid; nothing is written.
+	for name, in := range map[string][2]string{
+		"bad email":      {"not-an-email", "Wanderer"},
+		"empty name":     {"new@test.dev", "  "},
+		"oversized name": {"new@test.dev", strings.Repeat("x", 51)},
+	} {
+		if _, err := s.UpdateProfile(owner.User.ID, in[1], in[0], "", ""); !errors.Is(err, ErrInvalid) {
+			t.Errorf("%s: got %v, want ErrInvalid", name, err)
+		}
+	}
+
+	// Can't take someone else's email.
+	if _, err := s.UpdateProfile(other.User.ID, "Other", "owner@test.dev", "", ""); !errors.Is(err, ErrEmailTaken) {
+		t.Fatalf("stolen email: got %v, want ErrEmailTaken", err)
+	}
+	// But keeping your own current email is fine (not a self-conflict).
+	if _, err := s.UpdateProfile(owner.User.ID, "Owner", "owner@test.dev", "https://example.com/a.jpg", ""); err != nil {
+		t.Fatalf("no-op email: %v", err)
+	}
+
+	// Weak new password rejected; old password still works.
+	if _, err := s.UpdateProfile(owner.User.ID, "Owner", "owner@test.dev", "", "short"); !errors.Is(err, ErrInvalid) {
+		t.Fatalf("weak new password: got %v, want ErrInvalid", err)
+	}
+	if _, err := s.Login("owner@test.dev", "correct-horse"); err != nil {
+		t.Fatalf("old password broken by rejected update: %v", err)
+	}
+
+	// Successful update: name, email, avatar, and password all land; empty
+	// password on this call means "unchanged" — it's re-set explicitly next.
+	updated, err := s.UpdateProfile(owner.User.ID, " The   Owner ", "Owner2@Test.dev", "https://example.com/b.jpg", "new-long-password")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if updated.DisplayName != "The Owner" || updated.Email != "owner2@test.dev" || updated.AvatarURL != "https://example.com/b.jpg" {
+		t.Fatalf("bad updated user: %+v", updated)
+	}
+	if _, err := s.Login("owner2@test.dev", "new-long-password"); err != nil {
+		t.Fatalf("login with new email+password: %v", err)
+	}
+	if _, err := s.Login("owner2@test.dev", "correct-horse"); err != ErrBadCredentials {
+		t.Fatalf("old password should be dead: %v", err)
+	}
+}

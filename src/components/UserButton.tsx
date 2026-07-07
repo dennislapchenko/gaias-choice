@@ -26,7 +26,11 @@ export default function UserButton() {
         title={me.displayName}
       >
         <span className="user-initial" aria-hidden="true">
-          {initialOf(me.displayName)}
+          {me.avatarUrl ? (
+            <img className="avatar-img" src={me.avatarUrl} alt="" />
+          ) : (
+            initialOf(me.displayName)
+          )}
         </span>
       </Link>
     )

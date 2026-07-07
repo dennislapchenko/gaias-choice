@@ -12,6 +12,12 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "4175"],
       "port": 4175
+    },
+    {
+      "name": "dev",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": ["compose", "-f", "compose.dev.yaml", "up"],
+      "port": 5173
     }
   ]
 }

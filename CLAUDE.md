@@ -478,7 +478,9 @@ VM is down the live site silently degrades to the static baseline.
   seam), `internal/httpapi` (gin router, hand-written CORS allowlist,
   middleware, handlers). Endpoints: `/api/healthz`, `/api/hello` (hits counter
   proving a DB round-trip), `/api/auth/{login,register,logout,me}`,
-  `/api/users` (the campfire listing), `/api/content/{file,save}`.
+  `/api/users` (the campfire listing), `PUT /api/users/me` (self-service
+  profile edit — display name, email, avatar URL, optional password
+  change), `/api/content/{file,save}`.
 - **Auth (users/sessions/roles):** `users` rows (argon2id password hashes,
   public `display_name`) carry role `admin`, `editor`, or `viewer`.
   **Self-registration is open** (`POST /api/auth/register`, per-IP
@@ -524,12 +526,20 @@ VM is down the live site silently degrades to the static baseline.
   `backendUp` (a `/healthz` probe when signed out): `components/UserButton.tsx`
   (header, left of the palette switcher, mobile included) renders **only when
   the API answers** — signed out it opens the dialog, signed in it shows the
-  user's initial and links to `/account` (`pages/Account.tsx`): the
-  **campfire** — every registered user seated in a circle around an animated
-  fire (display name + initial avatar; `you` marked; sign-out lives here).
-  BE down ⇒ none of this exists — **readers ship zero account/editing
-  chrome**. Passwords are the stopgap; magic-link (needs SMTP) and WebAuthn
-  are the plan.
+  user's initial (or avatar image, once set) and links to `/account`
+  (`pages/Account.tsx`): the **campfire** — every registered user seated in a
+  circle around an animated fire (display name + initial-letter or avatar
+  image, cropped/zoomed the same way as Compass's epic thumbnails — see
+  `.avatar-img` in `styles.css`; `you` marked). The page title sits in a
+  header row (`.account-header`) beside a square "cube" toggle
+  (`.cube-toggle`) that reveals a self-service form
+  (`components/AccountFields.tsx`) for name, avatar URL, email, and password
+  (Save appears only once a field is dirty; role is shown but not
+  editable — that's an admin concern), plus a sign-out button below the
+  scene. BE down ⇒ none of this exists — **readers ship zero account/editing
+  chrome**.
+  Passwords are the stopgap; magic-link (needs SMTP) and WebAuthn are the
+  plan.
 - **Edit mode (FE side):** `src/lib/editMode.tsx` is now a thin consumer of
   the session: `active` simply mirrors `/api/auth/me`'s role-aware
   `editing` flag. `#edit` in any URL stays as the deliberate shortcut —

@@ -149,6 +149,7 @@ type User struct {
 	PasswordHash string
 	Role         string // "admin" | "editor" | "viewer" (enforced by a CHECK constraint)
 	DisplayName  string // may be "" for pre-003 users; callers fall back to the email local-part
+	AvatarURL    string // "" ⇒ no avatar set; pre-004 users default to ""
 }
 
 // CanEdit reports whether this role may touch the content endpoints —
@@ -161,6 +162,7 @@ type Member struct {
 	ID          int64
 	Email       string // for the display-name fallback only; never serialized
 	DisplayName string
+	AvatarURL   string
 	Role        string
 	CreatedAt   time.Time
 }
@@ -183,18 +185,47 @@ func (s *Store) CreateUser(email, passwordHash, role, displayName string) error 
 func (s *Store) UserByEmail(email string) (User, bool, error) {
 	var u User
 	err := s.db.QueryRow(
-		`SELECT id, email, password_hash, role, display_name FROM users WHERE email = ?`, email,
-	).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.Role, &u.DisplayName)
+		`SELECT id, email, password_hash, role, display_name, avatar_url FROM users WHERE email = ?`, email,
+	).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.Role, &u.DisplayName, &u.AvatarURL)
 	if errors.Is(err, sql.ErrNoRows) {
 		return User{}, false, nil
 	}
 	return u, err == nil, err
 }
 
+// UserByID returns (User, true, nil) when found; (_, false, nil) when not.
+func (s *Store) UserByID(id int64) (User, bool, error) {
+	var u User
+	err := s.db.QueryRow(
+		`SELECT id, email, password_hash, role, display_name, avatar_url FROM users WHERE id = ?`, id,
+	).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.Role, &u.DisplayName, &u.AvatarURL)
+	if errors.Is(err, sql.ErrNoRows) {
+		return User{}, false, nil
+	}
+	return u, err == nil, err
+}
+
+// UpdateUser changes a user's own-editable profile fields. An empty
+// passwordHash leaves the stored password unchanged.
+func (s *Store) UpdateUser(id int64, displayName, email, avatarURL, passwordHash string) error {
+	if passwordHash == "" {
+		_, err := s.db.Exec(
+			`UPDATE users SET display_name = ?, email = ?, avatar_url = ? WHERE id = ?`,
+			displayName, email, avatarURL, id,
+		)
+		return err
+	}
+	_, err := s.db.Exec(
+		`UPDATE users SET display_name = ?, email = ?, avatar_url = ?, password_hash = ? WHERE id = ?`,
+		displayName, email, avatarURL, passwordHash, id,
+	)
+	return err
+}
+
 // ListMembers returns every user, oldest first — the campfire circle.
 func (s *Store) ListMembers() ([]Member, error) {
 	rows, err := s.db.Query(
-		`SELECT id, email, display_name, role, created_at FROM users ORDER BY created_at, id`,
+		`SELECT id, email, display_name, avatar_url, role, created_at FROM users ORDER BY created_at, id`,
 	)
 	if err != nil {
 		return nil, err
@@ -205,7 +236,7 @@ func (s *Store) ListMembers() ([]Member, error) {
 	for rows.Next() {
 		var m Member
 		var created string
-		if err := rows.Scan(&m.ID, &m.Email, &m.DisplayName, &m.Role, &created); err != nil {
+		if err := rows.Scan(&m.ID, &m.Email, &m.DisplayName, &m.AvatarURL, &m.Role, &created); err != nil {
 			return nil, err
 		}
 		// created_at is SQLite's datetime('now'): "2006-01-02 15:04:05" UTC.
@@ -227,11 +258,11 @@ func (s *Store) CreateSession(tokenHash string, userID int64, expiresAt time.Tim
 func (s *Store) UserBySession(tokenHash string, now time.Time) (User, bool, error) {
 	var u User
 	err := s.db.QueryRow(
-		`SELECT u.id, u.email, u.password_hash, u.role, u.display_name
+		`SELECT u.id, u.email, u.password_hash, u.role, u.display_name, u.avatar_url
 		   FROM sessions s JOIN users u ON u.id = s.user_id
 		  WHERE s.token_hash = ? AND s.expires_at > ?`,
 		tokenHash, now.UTC().Format(time.RFC3339),
-	).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.Role, &u.DisplayName)
+	).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.Role, &u.DisplayName, &u.AvatarURL)
 	if errors.Is(err, sql.ErrNoRows) {
 		return User{}, false, nil
 	}

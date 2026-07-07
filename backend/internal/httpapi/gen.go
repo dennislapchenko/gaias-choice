@@ -46,6 +46,15 @@ type Error struct {
 	Error string `json:"error"`
 }
 
+// MeResponse defines model for MeResponse.
+type MeResponse struct {
+	AvatarUrl   string `json:"avatarUrl"`
+	DisplayName string `json:"displayName"`
+	Editing     bool   `json:"editing"`
+	Email       string `json:"email"`
+	Role        Role   `json:"role"`
+}
+
 // Role defines model for Role.
 type Role string
 
@@ -116,6 +125,17 @@ type SaveContentJSONBody struct {
 	Sha *string `json:"sha,omitempty"`
 }
 
+// UpdateMeJSONBody defines parameters for UpdateMe.
+type UpdateMeJSONBody struct {
+	// AvatarUrl Image URL shown around the campfire; omit or empty to clear it.
+	AvatarUrl   *string `json:"avatarUrl,omitempty"`
+	DisplayName string  `json:"displayName"`
+	Email       string  `json:"email"`
+
+	// Password At least 8 characters. Omit to keep the current password.
+	Password *string `json:"password,omitempty"`
+}
+
 // LoginJSONRequestBody defines body for Login for application/json ContentType.
 type LoginJSONRequestBody LoginJSONBody
 
@@ -124,6 +144,9 @@ type RegisterJSONRequestBody RegisterJSONBody
 
 // SaveContentJSONRequestBody defines body for SaveContent for application/json ContentType.
 type SaveContentJSONRequestBody SaveContentJSONBody
+
+// UpdateMeJSONRequestBody defines body for UpdateMe for application/json ContentType.
+type UpdateMeJSONRequestBody UpdateMeJSONBody
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -154,6 +177,9 @@ type ServerInterface interface {
 	// Everyone around the campfire (any signed-in user may look)
 	// (GET /users)
 	ListUsers(c *gin.Context)
+	// Update your own profile (display name, email, avatar, optionally password)
+	// (PUT /users/me)
+	UpdateMe(c *gin.Context)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -306,6 +332,21 @@ func (siw *ServerInterfaceWrapper) ListUsers(c *gin.Context) {
 	siw.Handler.ListUsers(c)
 }
 
+// UpdateMe operation middleware
+func (siw *ServerInterfaceWrapper) UpdateMe(c *gin.Context) {
+
+	c.Set(string(SessionScopes), []string{})
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.UpdateMe(c)
+}
+
 // GinServerOptions provides options for the Gin server.
 type GinServerOptions struct {
 	BaseURL      string
@@ -342,6 +383,7 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.GET(options.BaseURL+"/healthz", wrapper.GetHealth)
 	router.GET(options.BaseURL+"/hello", wrapper.GetHello)
 	router.GET(options.BaseURL+"/users", wrapper.ListUsers)
+	router.PUT(options.BaseURL+"/users/me", wrapper.UpdateMe)
 }
 
 type BadRequestJSONResponse Error
@@ -458,12 +500,7 @@ type GetMeResponseObject interface {
 	VisitGetMeResponse(w http.ResponseWriter) error
 }
 
-type GetMe200JSONResponse struct {
-	DisplayName string `json:"displayName"`
-	Editing     bool   `json:"editing"`
-	Email       string `json:"email"`
-	Role        Role   `json:"role"`
-}
+type GetMe200JSONResponse MeResponse
 
 func (response GetMe200JSONResponse) VisitGetMeResponse(w http.ResponseWriter) error {
 
@@ -859,7 +896,8 @@ type ListUsersResponseObject interface {
 
 type ListUsers200JSONResponse struct {
 	Users []struct {
-		DisplayName string `json:"displayName"`
+		AvatarUrl   *string `json:"avatarUrl,omitempty"`
+		DisplayName string  `json:"displayName"`
 
 		// JoinedAt The day the account was created (UTC).
 		JoinedAt openapi_types.Date `json:"joinedAt"`
@@ -896,6 +934,70 @@ func (response ListUsers401JSONResponse) VisitListUsersResponse(w http.ResponseW
 	return err
 }
 
+type UpdateMeRequestObject struct {
+	Body *UpdateMeJSONRequestBody
+}
+
+type UpdateMeResponseObject interface {
+	VisitUpdateMeResponse(w http.ResponseWriter) error
+}
+
+type UpdateMe200JSONResponse MeResponse
+
+func (response UpdateMe200JSONResponse) VisitUpdateMeResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type UpdateMe400JSONResponse struct{ BadRequestJSONResponse }
+
+func (response UpdateMe400JSONResponse) VisitUpdateMeResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type UpdateMe401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response UpdateMe401JSONResponse) VisitUpdateMeResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type UpdateMe409JSONResponse Error
+
+func (response UpdateMe409JSONResponse) VisitUpdateMeResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
 // StrictServerInterface represents all server handlers.
 type StrictServerInterface interface {
 	// Exchange credentials for a session token
@@ -925,6 +1027,9 @@ type StrictServerInterface interface {
 	// Everyone around the campfire (any signed-in user may look)
 	// (GET /users)
 	ListUsers(ctx context.Context, request ListUsersRequestObject) (ListUsersResponseObject, error)
+	// Update your own profile (display name, email, avatar, optionally password)
+	// (PUT /users/me)
+	UpdateMe(ctx context.Context, request UpdateMeRequestObject) (UpdateMeResponseObject, error)
 }
 
 type StrictHandlerFunc func(ctx *gin.Context, request any) (any, error)
@@ -1216,6 +1321,37 @@ func (sh *strictHandler) ListUsers(ctx *gin.Context) {
 		sh.options.HandlerErrorFunc(ctx, err)
 	} else if validResponse, ok := response.(ListUsersResponseObject); ok {
 		if err := validResponse.VisitListUsersResponse(ctx.Writer); err != nil {
+			sh.options.ResponseErrorHandlerFunc(ctx, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(ctx, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UpdateMe operation middleware
+func (sh *strictHandler) UpdateMe(ctx *gin.Context) {
+	var request UpdateMeRequestObject
+
+	var body UpdateMeJSONRequestBody
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(ctx, err)
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx *gin.Context, request interface{}) (interface{}, error) {
+		return sh.ssi.UpdateMe(ctx, request.(UpdateMeRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UpdateMe")
+	}
+
+	response, err := handler(ctx, request)
+
+	if err != nil {
+		sh.options.HandlerErrorFunc(ctx, err)
+	} else if validResponse, ok := response.(UpdateMeResponseObject); ok {
+		if err := validResponse.VisitUpdateMeResponse(ctx.Writer); err != nil {
 			sh.options.ResponseErrorHandlerFunc(ctx, err)
 		}
 	} else if response != nil {

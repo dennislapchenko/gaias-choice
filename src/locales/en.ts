@@ -100,6 +100,17 @@ const en = {
   "account.signedOut": "Sign in to take your place by the fire.",
   "account.offline": "The campfire is out of reach right now — try again later.",
 
+  "account.fields.title": "Your details",
+  "account.fields.name": "Name",
+  "account.fields.avatar": "Avatar",
+  "account.fields.avatarPlaceholder": "Image URL",
+  "account.fields.role": "Role",
+  "account.fields.email": "Email",
+  "account.fields.password": "Password",
+  "account.fields.passwordPlaceholder": "Leave blank to keep current",
+  "account.fields.save": "Save",
+  "account.fields.saveError": "Couldn't save — try again.",
+
   "astro.prevMonth": "Previous month",
   "astro.nextMonth": "Next month",
   "astro.noEvents": "No marked events this month.",

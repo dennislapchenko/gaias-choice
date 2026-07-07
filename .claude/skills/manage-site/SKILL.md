@@ -164,6 +164,14 @@ or re-verifying work that was already verified and just pushed. When ~95%
 certain nothing functional changed, reading your own diff *is* the
 verification — say so and move on. When genuinely unsure, run it.
 
+**Any layout/CSS/component change gets checked at mobile width too — always,
+not just desktop.** This site has a real, load-bearing mobile breakpoint
+(`900px`, sometimes `480px`/`820px` — see `references/development.md`), and a
+change that looks right at desktop width has broken mobile before (e.g. a
+rail's `order:-1` shoving content out of place). Use `preview_resize` with the
+`mobile` preset (or narrower) and screenshot it — don't skip this step because
+the desktop screenshot looked fine.
+
 **Report longer runs as a woven summary.** When a run changed several files,
 end with a succinct summary that interweaves *what changed where and why it
 hangs together* — not a flat file list. Quote a small diff/example only where
