@@ -502,8 +502,9 @@ VM is down the live site silently degrades to the static baseline.
   answer 503), `internal/content`
   (the live-edit seam), `internal/enrich` (the LLM seam — one shared stdlib
   HTTP call to the Anthropic Messages API behind two methods: `Enrich`
-  re-tunes a blank template's prompts to a post title, `Translate` faithfully
-  translates a whole content file's prose into another locale; `ANTHROPIC_API_KEY`
+  re-tunes a blank template's prompts to a post title AND pre-fills its
+  `tags:` frontmatter, `Translate` faithfully translates a whole content
+  file's prose into another locale; `ANTHROPIC_API_KEY`
   gates both — `ANTHROPIC_MODEL` overrides the default; unset ⇒ nil ⇒
   `/api/content/{template,translate}` answer 503),
   `internal/httpapi` (gin router, hand-written CORS
@@ -646,21 +647,26 @@ VM is down the live site silently degrades to the static baseline.
   edit a content file's whole raw text, frontmatter + body, in a textarea;
   `openDraft` — the draft composer, creates a new content file, save without
   sha; on open it fires `enrichTemplate(title, template)` (api.ts →
-  `POST /content/template`) and swaps the LLM-retuned template in **only if the
-  admin hasn't started typing** — degrades silently to the static scaffold when
-  enrichment is off/unreachable). The dialog has a **markdown toolbar**
+  `POST /content/template`) with the editor **dimmed + locked** (status
+  `enriching`, spinner overlay) and swaps the LLM-retuned template in when it
+  lands — degrades silently to the static scaffold when enrichment is
+  off/unreachable). The dialog has a **markdown toolbar**
   (bold/heading/list/link/image — pure textarea surgery, no dep) and a
   **Write/Preview** tab that renders the body with the bundled `marked` — the
   instant-feedback answer to the ~2-min publish lag (the editor sees their
-  markdown rendered before it ever deploys). In `openFile` mode a content file
-  (products/journal/compass/pages) also shows a **Translate → <other locale>**
-  button: it calls `translateContent` (api.ts → `POST /content/translate`),
-  stamps `translatedFrom: <source-locale>` into the result, and saves it as the
-  sibling-locale file (overwrites on re-translate) — the disclosed
-  machine-translation path (see SKILL.md #6). New drafts get an **English slug**
+  markdown rendered before it ever deploys). New drafts get an **English slug**
   regardless of authoring locale: `Upcoming.tsx`'s ＋ button prompts for the
   slug (defaulting to `slugify(title)`) so RU-authored posts still get nice
-  URLs. Plus one dialog-less action, `setScalar(ref, value)`, that flips a
+  URLs. **Translation is automatic on save** (`syncSibling`, reviews + journal
+  only; there is no manual button): a **new draft** seeds BOTH locales — the
+  sibling is an LLM translation stamped `translatedFrom:` via
+  `POST /content/translate`, or a verbatim copy when the translator is
+  off/unreachable so the stub exists in both; **editing an existing RU post**
+  re-translates it to EN (EN may be AI; translator down ⇒ EN left untouched,
+  never clobbered with Russian); **editing an existing EN post touches nothing
+  else — Russian stays human-authored** (the RU-is-source-of-truth rule, see
+  SKILL.md #6). Each sibling save is its own git commit, so one action makes up
+  to two. Plus one dialog-less action, `setScalar(ref, value)`, that flips a
   single YAML scalar directly — used by `components/StateToggle.tsx`, the
   iPhone-style switch on `ReviewDetail`/`EntryDetail` that flips a post's
   `state` between `active`/`upcoming`. `setScalar` does **CST-level,

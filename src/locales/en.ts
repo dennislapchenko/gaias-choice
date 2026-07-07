@@ -182,8 +182,7 @@ const en = {
   "editor.mdList": "Bullet list",
   "editor.mdLink": "Link",
   "editor.mdImage": "Image",
-  "editor.translateTo": "Translate → {{lang}}",
-  "editor.translateHint": "Translate this entry into {{lang}} and save it as that locale's version (marked as translated)",
+  "editor.enriching": "Tuning the template to your title…",
 } satisfies Record<string, string>;
 
 export default en;

@@ -2654,10 +2654,42 @@ a.respected-card:hover {
 .content-editor-error {
     color: #b3423a;
 }
-.content-editor-translate {
-    background: var(--white);
-    border: 1px solid var(--sage);
+/* Editor body wrapper — hosts the textarea/preview plus the enriching overlay. */
+.content-editor-body {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+/* Dim the static template while the LLM re-tunes it (status 'enriching'). */
+.content-editor-textarea.is-dimmed {
+    opacity: 0.4;
+}
+.content-editor-enriching {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 0.85rem;
     color: var(--sage-dark);
+    background: rgba(255, 255, 255, 0.35);
+    pointer-events: none;
+}
+.content-editor-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--line);
+    border-top-color: var(--sage);
+    border-radius: 999px;
+    animation: ce-spin 0.7s linear infinite;
+}
+@keyframes ce-spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 /* Disclosure that an entry is a machine translation of another locale. */
 .translated-mark {

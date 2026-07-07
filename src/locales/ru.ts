@@ -182,8 +182,7 @@ const ru: Record<keyof typeof en, string> = {
   "editor.mdList": "Список",
   "editor.mdLink": "Ссылка",
   "editor.mdImage": "Картинка",
-  "editor.translateTo": "Перевести → {{lang}}",
-  "editor.translateHint": "Перевести эту запись на {{lang}} и сохранить как версию для этой локали (с пометкой о переводе)",
+  "editor.enriching": "Подгоняем шаблон под заголовок…",
 };
 
 export default ru;

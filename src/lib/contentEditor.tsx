@@ -25,14 +25,17 @@ import { Composer, CST, isScalar, Parser, parseDocument } from 'yaml'
 import CopyButton from '../components/CopyButton'
 import { apiGet, apiPost, ApiError, enrichTemplate, translateContent, type ContentFile, type SaveResponse } from './api'
 import { useEditMode } from './editMode'
-import { LOCALE_LABELS, SUPPORTED_LOCALES, useI18n } from './i18n'
+import { SUPPORTED_LOCALES, useI18n } from './i18n'
 import type { EditRef } from './types'
 
 type EditorMode =
   | { kind: 'file'; path: string; sha: string }
   | { kind: 'create'; path: string; message: string }
 
-type Status = 'idle' | 'loading' | 'saving' | 'published' | 'error'
+// 'enriching' = the draft composer is fetching the LLM-tuned template to inject
+// (editor dimmed + disabled meanwhile); on failure it drops to 'idle' with the
+// static template left in place.
+type Status = 'idle' | 'loading' | 'enriching' | 'saving' | 'published' | 'error'
 
 interface EditorState {
   title: string
@@ -213,25 +216,25 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
 
   const openDraft: ContentEditorApi['openDraft'] = ({ title, path, initialValue, message }) => {
     setView('write')
+    // Show the static template immediately, but dimmed + disabled while the LLM
+    // re-tunes it (status 'enriching'). The editor is locked during the fetch,
+    // so the tuned template always replaces the static one on success; any
+    // failure (no model / BE down / 503) just unlocks the static template.
     setState({
       title,
       value: initialValue,
       mode: { kind: 'create', path, message },
-      status: 'idle',
+      status: 'enriching',
     })
-    // Progressive enhancement: ask the backend to re-tune the template's
-    // prompts to this title (LLM). Swap it in only if the admin hasn't started
-    // typing yet; any failure (no model configured / BE down / 503) just leaves
-    // the static template in place.
+    const stillEnriching = (s: EditorState | null) =>
+      s && s.mode?.kind === 'create' && s.mode.path === path && s.status === 'enriching'
     enrichTemplate(title, initialValue, token ?? undefined)
       .then((body) => {
-        setState((s) =>
-          s && s.mode?.kind === 'create' && s.mode.path === path && s.value === initialValue
-            ? { ...s, value: body }
-            : s,
-        )
+        setState((s) => (stillEnriching(s) ? { ...s!, value: body, status: 'idle' } : s))
       })
-      .catch(() => {})
+      .catch(() => {
+        setState((s) => (stillEnriching(s) ? { ...s!, status: 'idle' } : s))
+      })
   }
 
   const setScalar: ContentEditorApi['setScalar'] = async (ref, newValue) => {
@@ -285,10 +288,12 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
             throw new Error(t('editor.conflict'))
           throw err2
         }
-        return
+      } else {
+        throw err
       }
-      throw err
     }
+    // A RU edit mirrors to EN; an EN edit leaves RU alone (see syncSibling).
+    await syncSibling(mode.path, value, false)
   }
 
   const saveDraft = async (mode: Extract<EditorMode, { kind: 'create' }>, value: string) => {
@@ -308,24 +313,43 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       { path: mode.path, content: value, message: mode.message },
       { token: token ?? undefined },
     )
+    // A new draft seeds BOTH locales (translated, or a verbatim copy when the
+    // translator is offline) — see syncSibling.
+    await syncSibling(mode.path, value, true)
   }
 
-  // Translate the current file's prose into the OTHER locale and save it as the
-  // sibling-locale file, stamped with a translatedFrom mark (the disclosure
-  // that keeps this inside the provenance contract). File mode only. Overwrites
-  // the sibling if it already exists (a re-translate), else creates it.
-  const translate = async (mode: Extract<EditorMode, { kind: 'file' }>, value: string) => {
-    const source = /\/locales\/([^/]+)\//.exec(mode.path)?.[1]
+  // Auto-mirror a just-saved reviews/journal file into its sibling locale, per
+  // the translation rules (SKILL.md #6):
+  //   - Any NEW draft (isCreate) seeds BOTH locales: the sibling is an LLM
+  //     translation (stamped `translatedFrom:`), or — when the translator is
+  //     off/unreachable — a verbatim copy so the stub exists in both.
+  //   - Editing an existing RU post re-translates it to EN (EN may be AI); if
+  //     the translator is unavailable the EN sibling is LEFT AS-IS (never
+  //     clobbered with untranslated Russian).
+  //   - Editing an existing EN post does NOTHING — Russian stays human-authored.
+  // Each sibling save is its own git commit (so an action makes up to two).
+  const syncSibling = async (path: string, value: string, isCreate: boolean) => {
+    if (!/\/locales\/[^/]+\/(products|journal)\//.test(path)) return
+    const source = /\/locales\/([^/]+)\//.exec(path)?.[1]
     const target = SUPPORTED_LOCALES.find((l) => l !== source)
-    if (!source || !target) throw new Error('cannot resolve sibling locale')
-    const siblingPath = mode.path.replace(`/locales/${source}/`, `/locales/${target}/`)
-    const translated = await translateContent(value, target, token ?? undefined)
-    // Fail safe rather than corrupt the sibling: the stamp below assumes a
-    // frontmatter block; if the model ever dropped it, don't save.
-    if (!FRONTMATTER_RE.test(translated)) throw new Error('translation returned no frontmatter')
-    // Insert `translatedFrom: <source>` into the translated file's frontmatter
-    // (applyScalarEdit inserts the key when absent — see editYamlScalar).
-    const stamped = applyScalarEdit(translated, { file: siblingPath, path: ['translatedFrom'] }, source)
+    if (!source || !target) return
+    // Editing existing EN never seeds/overwrites RU; only a brand-new draft does.
+    if (!isCreate && source !== 'ru') return
+    const siblingPath = path.replace(`/locales/${source}/`, `/locales/${target}/`)
+    let siblingText: string
+    try {
+      const translated = await translateContent(value, target, token ?? undefined)
+      // Fail safe rather than corrupt the sibling: the stamp assumes a
+      // frontmatter block; if the model ever dropped it, treat as a failure.
+      if (!FRONTMATTER_RE.test(translated)) throw new Error('translation returned no frontmatter')
+      // Insert `translatedFrom: <source>` (applyScalarEdit inserts when absent).
+      siblingText = applyScalarEdit(translated, { file: siblingPath, path: ['translatedFrom'] }, source)
+    } catch {
+      // Translator off/unreachable/failed: on create, seed a verbatim copy so
+      // both stubs exist; on an edit, leave the good sibling untouched.
+      if (!isCreate) return
+      siblingText = value
+    }
     let sha: string | undefined
     try {
       const cur = await apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(siblingPath)}`, {
@@ -337,7 +361,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     }
     await apiPost<SaveResponse>(
       '/content/save',
-      { path: siblingPath, content: stamped, sha, message: `content: translate ${siblingPath}` },
+      { path: siblingPath, content: siblingText, sha, message: `content: sync ${siblingPath}` },
       { token: token ?? undefined },
     )
   }
@@ -367,30 +391,15 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
   }
 
   const save = () => {
-    if (!state?.mode || state.status === 'saving') return
+    if (!state?.mode || state.status === 'saving' || state.status === 'enriching') return
     const { mode, value } = state
     setState({ ...state, status: 'saving', errorText: undefined })
     finish(mode.kind === 'file' ? saveFile(mode, value) : saveDraft(mode, value))
   }
 
-  const runTranslate = () => {
-    if (!state?.mode || state.mode.kind !== 'file' || state.status === 'saving') return
-    const { mode, value } = state
-    setState({ ...state, status: 'saving', errorText: undefined })
-    finish(translate(mode, value))
-  }
-
   const api: ContentEditorApi = { openFile, openDraft, setScalar }
-  const busy = state?.status === 'loading' || state?.status === 'saving'
-
-  // Translate button: only for a localized content file (not site.yaml/themes),
-  // and only when the other locale is resolvable.
-  const filePath = state?.mode?.kind === 'file' ? state.mode.path : null
-  const sourceLoc = filePath ? /\/locales\/([^/]+)\//.exec(filePath)?.[1] : undefined
-  const targetLoc =
-    filePath && /\/locales\/[^/]+\/(products|journal|compass|pages)\//.test(filePath)
-      ? SUPPORTED_LOCALES.find((l) => l !== sourceLoc)
-      : undefined
+  const busy =
+    state?.status === 'loading' || state?.status === 'saving' || state?.status === 'enriching'
 
   return (
     <ContentEditorContext.Provider value={api}>
@@ -449,22 +458,30 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                 </button>
               </div>
             </div>
-            {view === 'write' ? (
-              <textarea
-                ref={taRef}
-                className="content-editor-textarea"
-                value={state.value}
-                spellCheck={false}
-                disabled={busy || state.status === 'published'}
-                onChange={(e) => setState({ ...state, value: e.target.value })}
-              />
-            ) : (
-              // Author-controlled content, same trust model as Markdown.tsx.
-              <div
-                className="content-editor-preview prose"
-                dangerouslySetInnerHTML={{ __html: marked.parse(mdBody(state.value)) as string }}
-              />
-            )}
+            <div className="content-editor-body">
+              {view === 'write' ? (
+                <textarea
+                  ref={taRef}
+                  className={`content-editor-textarea${state.status === 'enriching' ? ' is-dimmed' : ''}`}
+                  value={state.value}
+                  spellCheck={false}
+                  disabled={busy || state.status === 'published'}
+                  onChange={(e) => setState({ ...state, value: e.target.value })}
+                />
+              ) : (
+                // Author-controlled content, same trust model as Markdown.tsx.
+                <div
+                  className="content-editor-preview prose"
+                  dangerouslySetInnerHTML={{ __html: marked.parse(mdBody(state.value)) as string }}
+                />
+              )}
+              {state.status === 'enriching' && (
+                <div className="content-editor-enriching" aria-live="polite">
+                  <span className="content-editor-spinner" aria-hidden="true" />
+                  {t('editor.enriching')}
+                </div>
+              )}
+            </div>
             <div className="content-editor-actions">
               {state.status === 'published' ? (
                 <p className="content-editor-status">{t('editor.published')}</p>
@@ -480,17 +497,6 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                 className="content-editor-copy"
                 ariaLabel={t('editor.copyAria')}
               />
-              {targetLoc && (
-                <button
-                  type="button"
-                  className="btn content-editor-translate"
-                  disabled={busy || state.status === 'published'}
-                  onClick={runTranslate}
-                  title={t('editor.translateHint', { lang: LOCALE_LABELS[targetLoc] })}
-                >
-                  {t('editor.translateTo', { lang: LOCALE_LABELS[targetLoc] })}
-                </button>
-              )}
               <button
                 type="button"
                 className="btn btn-primary content-editor-save"
