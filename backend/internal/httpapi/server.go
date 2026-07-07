@@ -467,3 +467,30 @@ func (s *server) EnrichTemplate(ctx context.Context, req EnrichTemplateRequestOb
 	}
 	return EnrichTemplate200JSONResponse{Body: body}, nil
 }
+
+// languageNames maps our locale codes to the display name the translate prompt
+// uses. Unknown codes fall through to the code itself (the model copes).
+var languageNames = map[string]string{"en": "English", "ru": "Russian"}
+
+// TranslateContent translates a whole content file's prose into another locale
+// via the Anthropic API (internal/enrich). It's a faithful translation of
+// existing human-written content, disclosed on the sibling file by the FE's
+// `translatedFrom:` mark — so it stays inside the provenance contract. Nil
+// enricher ⇒ 503.
+func (s *server) TranslateContent(ctx context.Context, req TranslateContentRequestObject) (TranslateContentResponseObject, error) {
+	if s.enrich == nil {
+		return TranslateContent503JSONResponse{NotConfiguredJSONResponse{Error: "translation not configured"}}, nil
+	}
+	if req.Body == nil || req.Body.Text == "" || strings.TrimSpace(req.Body.TargetLocale) == "" {
+		return TranslateContent400JSONResponse{BadRequestJSONResponse{Error: "text and targetLocale required"}}, nil
+	}
+	lang := languageNames[req.Body.TargetLocale]
+	if lang == "" {
+		lang = req.Body.TargetLocale
+	}
+	text, err := s.enrich.Translate(ctx, lang, req.Body.Text)
+	if err != nil {
+		return TranslateContent502JSONResponse{UpstreamJSONResponse{Error: err.Error()}}, nil
+	}
+	return TranslateContent200JSONResponse{Text: text}, nil
+}

@@ -58,6 +58,11 @@ export default function ReviewDetail() {
       <div className="detail-meta">
         {product.price && <span className="price">{product.price}</span>}
         <span className="muted">{product.date}</span>
+        {product.translatedFrom && (
+          <span className="muted translated-mark">
+            {t(`detail.translatedFrom.${product.translatedFrom}`)}
+          </span>
+        )}
       </div>
       {site.ratingCriteria && (
         <GaiaScore

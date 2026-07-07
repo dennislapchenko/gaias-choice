@@ -59,6 +59,8 @@ const ru: Record<keyof typeof en, string> = {
   "journalDetail.backLink": "← К заметкам",
 
   "detail.wip": "В работе — ещё не готово",
+  "detail.translatedFrom.en": "Переведено с английского",
+  "detail.translatedFrom.ru": "Переведено с русского",
 
   "notFound.title": "Страница не найдена",
   "notFound.body": "Эта тропа пока никуда не ведёт.",
@@ -169,9 +171,19 @@ const ru: Record<keyof typeof en, string> = {
   "editor.copyAria": "Скопировать черновик",
   "editor.queueAria": "Добавить запись в очередь «в работе»",
   "editor.queuePrompt": "Заголовок будущей записи:",
+  "editor.slugPrompt": "URL-адрес (english, строчными через дефис):",
   "editor.stateAria": "Переключить: активна / в работе",
   "editor.contentTitle": "Редактировать содержимое",
   "editor.contentAria": "Редактировать содержимое записи",
+  "editor.write": "Текст",
+  "editor.preview": "Просмотр",
+  "editor.mdBold": "Жирный",
+  "editor.mdHeading": "Заголовок",
+  "editor.mdList": "Список",
+  "editor.mdLink": "Ссылка",
+  "editor.mdImage": "Картинка",
+  "editor.translateTo": "Перевести → {{lang}}",
+  "editor.translateHint": "Перевести эту запись на {{lang}} и сохранить как версию для этой локали (с пометкой о переводе)",
 };
 
 export default ru;

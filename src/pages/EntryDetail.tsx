@@ -75,6 +75,11 @@ export default function EntryDetail({ kind }: { kind: 'compass' | 'journal' }) {
         <h1>{entry.title}</h1>
         <div className="detail-meta">
           <span className="muted">{entry.date}</span>
+          {entry.translatedFrom && (
+            <span className="muted translated-mark">
+              {t(`detail.translatedFrom.${entry.translatedFrom}`)}
+            </span>
+          )}
         </div>
         {entry.image && (
           <img className="detail-image" src={withBase(entry.image)} alt={entry.title} />

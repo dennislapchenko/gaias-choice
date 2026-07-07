@@ -500,10 +500,12 @@ VM is down the live site silently degrades to the static baseline.
   getUpdates for `/start <code>` taps and confirms senders via sendMessage —
   two stdlib HTTP calls, no client lib; unset ⇒ nil bot ⇒ `/api/auth/telegram*`
   answer 503), `internal/content`
-  (the live-edit seam), `internal/enrich` (the template-enrichment seam;
-  `ANTHROPIC_API_KEY` set ⇒ one stdlib HTTP call to the Anthropic Messages API
-  re-tunes a blank template's prompts to a post title — `ANTHROPIC_MODEL`
-  overrides the default; unset ⇒ nil ⇒ `/api/content/template` answers 503),
+  (the live-edit seam), `internal/enrich` (the LLM seam — one shared stdlib
+  HTTP call to the Anthropic Messages API behind two methods: `Enrich`
+  re-tunes a blank template's prompts to a post title, `Translate` faithfully
+  translates a whole content file's prose into another locale; `ANTHROPIC_API_KEY`
+  gates both — `ANTHROPIC_MODEL` overrides the default; unset ⇒ nil ⇒
+  `/api/content/{template,translate}` answer 503),
   `internal/httpapi` (gin router, hand-written CORS
   allowlist, middleware, handlers). Endpoints: `/api/healthz`, `/api/hello`
   (hits counter proving a DB round-trip), `/api/auth/telegram` +
@@ -517,7 +519,10 @@ VM is down the live site silently degrades to the static baseline.
   `session: [admin]` scope, never touches their email),
   `/api/content/{file,save}`, `POST /api/content/template` (the draft
   composer's title→prompts enrichment — `session: [editor]`, 503 when no
-  model configured).
+  model configured), `POST /api/content/translate` (translate a whole content
+  file's prose into another locale — `session: [editor]`, 503 when no model;
+  the FE saves the result as the sibling-locale file with a `translatedFrom:`
+  disclosure mark).
 - **Auth (users/sessions/roles):** `users` rows (argon2id password hashes,
   public `display_name`) carry role `admin`, `editor`, or `viewer`. `email` is
   **nullable** (migration 006) — Telegram-only accounts have none, so they key
@@ -643,8 +648,19 @@ VM is down the live site silently degrades to the static baseline.
   sha; on open it fires `enrichTemplate(title, template)` (api.ts →
   `POST /content/template`) and swaps the LLM-retuned template in **only if the
   admin hasn't started typing** — degrades silently to the static scaffold when
-  enrichment is off/unreachable) plus one dialog-less action,
-  `setScalar(ref, value)`, that flips a
+  enrichment is off/unreachable). The dialog has a **markdown toolbar**
+  (bold/heading/list/link/image — pure textarea surgery, no dep) and a
+  **Write/Preview** tab that renders the body with the bundled `marked` — the
+  instant-feedback answer to the ~2-min publish lag (the editor sees their
+  markdown rendered before it ever deploys). In `openFile` mode a content file
+  (products/journal/compass/pages) also shows a **Translate → <other locale>**
+  button: it calls `translateContent` (api.ts → `POST /content/translate`),
+  stamps `translatedFrom: <source-locale>` into the result, and saves it as the
+  sibling-locale file (overwrites on re-translate) — the disclosed
+  machine-translation path (see SKILL.md #6). New drafts get an **English slug**
+  regardless of authoring locale: `Upcoming.tsx`'s ＋ button prompts for the
+  slug (defaulting to `slugify(title)`) so RU-authored posts still get nice
+  URLs. Plus one dialog-less action, `setScalar(ref, value)`, that flips a
   single YAML scalar directly — used by `components/StateToggle.tsx`, the
   iPhone-style switch on `ReviewDetail`/`EntryDetail` that flips a post's
   `state` between `active`/`upcoming`. `setScalar` does **CST-level,

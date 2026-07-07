@@ -19,12 +19,13 @@
 // Mounted once at the app root (see App.tsx), above <Routes> — never
 // unmounted by client-side navigation, so an open draft survives following
 // a link and coming back.
-import { createContext, useContext, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
+import { marked } from 'marked'
 import { Composer, CST, isScalar, Parser, parseDocument } from 'yaml'
 import CopyButton from '../components/CopyButton'
-import { apiGet, apiPost, ApiError, enrichTemplate, type ContentFile, type SaveResponse } from './api'
+import { apiGet, apiPost, ApiError, enrichTemplate, translateContent, type ContentFile, type SaveResponse } from './api'
 import { useEditMode } from './editMode'
-import { useI18n } from './i18n'
+import { LOCALE_LABELS, SUPPORTED_LOCALES, useI18n } from './i18n'
 import type { EditRef } from './types'
 
 type EditorMode =
@@ -113,14 +114,85 @@ function applyScalarEdit(fileText: string, ref: EditRef, newValue: string): stri
   return `${open}${editYamlScalar(yamlText, ref.path, newValue)}${close}${body}`
 }
 
+// The raw markdown body a preview should render — everything after the `---`
+// frontmatter block (which is YAML, not prose). Plain-YAML files (site.yaml)
+// have no frontmatter match, so the whole text is passed through (harmless: a
+// preview of YAML is just not useful, and the toolbar/preview only matter for
+// the markdown content files anyway).
+const mdBody = (raw: string): string => {
+  const m = FRONTMATTER_RE.exec(raw)
+  return m ? m[4] : raw
+}
+
+type MdAction = 'bold' | 'h2' | 'ul' | 'link' | 'image'
+
+/**
+ * A markdown toolbar edit: given the textarea's value + selection, return the
+ * new value and the selection to restore. Line actions (h2/ul) prefix every
+ * line the selection touches; wrap actions (bold/link/image) wrap the selection
+ * (or a placeholder when empty), and for link/image the caret lands on `url` so
+ * the next keystroke replaces it.
+ */
+function applyMdAction(
+  action: MdAction,
+  value: string,
+  s: number,
+  e: number,
+): { text: string; selStart: number; selEnd: number } {
+  if (action === 'h2' || action === 'ul') {
+    const prefix = action === 'h2' ? '## ' : '- '
+    const lineStart = value.lastIndexOf('\n', s - 1) + 1
+    const prefixed = value.slice(lineStart, e).replace(/^/gm, prefix)
+    const text = value.slice(0, lineStart) + prefixed + value.slice(e)
+    return { text, selStart: lineStart, selEnd: lineStart + prefixed.length }
+  }
+  const [before, after, placeholder] =
+    action === 'bold'
+      ? ['**', '**', 'text']
+      : action === 'link'
+        ? ['[', '](url)', 'text']
+        : ['![', '](url)', 'alt']
+  const body = value.slice(s, e) || placeholder
+  const text = value.slice(0, s) + before + body + after + value.slice(e)
+  if (action === 'link' || action === 'image') {
+    const urlAt = s + before.length + body.length + 2 // past `](`
+    return { text, selStart: urlAt, selEnd: urlAt + 3 } // select `url`
+  }
+  const bodyAt = s + before.length
+  return { text, selStart: bodyAt, selEnd: bodyAt + body.length }
+}
+
 export function ContentEditorProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<EditorState | null>(null)
+  const [view, setView] = useState<'write' | 'preview'>('write')
+  const taRef = useRef<HTMLTextAreaElement>(null)
+  const pendingSel = useRef<[number, number] | null>(null)
   const { token } = useEditMode()
   const { t } = useI18n()
+
+  // Restore the caret/selection after a toolbar action re-renders the textarea
+  // with new text (React controls the value, so the browser can't keep it).
+  useEffect(() => {
+    if (pendingSel.current && taRef.current) {
+      const [s, e] = pendingSel.current
+      pendingSel.current = null
+      taRef.current.focus()
+      taRef.current.setSelectionRange(s, e)
+    }
+  })
+
+  const applyMd = (action: MdAction) => {
+    const ta = taRef.current
+    if (!ta || !state) return
+    const next = applyMdAction(action, ta.value, ta.selectionStart, ta.selectionEnd)
+    pendingSel.current = [next.selStart, next.selEnd]
+    setState({ ...state, value: next.text })
+  }
 
   const close = () => setState(null)
 
   const openFile: ContentEditorApi['openFile'] = ({ title, path }) => {
+    setView('write')
     setState({ title, value: '', mode: null, status: 'loading' })
     apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(path)}`, {
       token: token ?? undefined,
@@ -140,6 +212,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
   }
 
   const openDraft: ContentEditorApi['openDraft'] = ({ title, path, initialValue, message }) => {
+    setView('write')
     setState({
       title,
       value: initialValue,
@@ -237,16 +310,44 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     )
   }
 
-  const save = () => {
-    if (!state?.mode || state.status === 'saving') return
-    const { mode, value } = state
-    setState({ ...state, status: 'saving', errorText: undefined })
-    const run = mode.kind === 'file' ? saveFile(mode, value) : saveDraft(mode, value)
+  // Translate the current file's prose into the OTHER locale and save it as the
+  // sibling-locale file, stamped with a translatedFrom mark (the disclosure
+  // that keeps this inside the provenance contract). File mode only. Overwrites
+  // the sibling if it already exists (a re-translate), else creates it.
+  const translate = async (mode: Extract<EditorMode, { kind: 'file' }>, value: string) => {
+    const source = /\/locales\/([^/]+)\//.exec(mode.path)?.[1]
+    const target = SUPPORTED_LOCALES.find((l) => l !== source)
+    if (!source || !target) throw new Error('cannot resolve sibling locale')
+    const siblingPath = mode.path.replace(`/locales/${source}/`, `/locales/${target}/`)
+    const translated = await translateContent(value, target, token ?? undefined)
+    // Fail safe rather than corrupt the sibling: the stamp below assumes a
+    // frontmatter block; if the model ever dropped it, don't save.
+    if (!FRONTMATTER_RE.test(translated)) throw new Error('translation returned no frontmatter')
+    // Insert `translatedFrom: <source>` into the translated file's frontmatter
+    // (applyScalarEdit inserts the key when absent — see editYamlScalar).
+    const stamped = applyScalarEdit(translated, { file: siblingPath, path: ['translatedFrom'] }, source)
+    let sha: string | undefined
+    try {
+      const cur = await apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(siblingPath)}`, {
+        token: token ?? undefined,
+      })
+      sha = cur.sha
+    } catch (err) {
+      if (!(err instanceof ApiError && err.status === 404)) throw err
+    }
+    await apiPost<SaveResponse>(
+      '/content/save',
+      { path: siblingPath, content: stamped, sha, message: `content: translate ${siblingPath}` },
+      { token: token ?? undefined },
+    )
+  }
+
+  // Shared tail for save/translate: flip to published (auto-closing after a
+  // beat, unless a dialog was reopened meanwhile) or surface the error.
+  const finish = (run: Promise<unknown>) => {
     run
       .then(() => {
         setState((s) => (s ? { ...s, status: 'published' } : s))
-        // Auto-close the confirmation — but only if the dialog is still
-        // showing it (a dialog reopened within the delay must survive).
         window.setTimeout(
           () => setState((s) => (s && s.status === 'published' ? null : s)),
           2500,
@@ -265,8 +366,31 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       })
   }
 
+  const save = () => {
+    if (!state?.mode || state.status === 'saving') return
+    const { mode, value } = state
+    setState({ ...state, status: 'saving', errorText: undefined })
+    finish(mode.kind === 'file' ? saveFile(mode, value) : saveDraft(mode, value))
+  }
+
+  const runTranslate = () => {
+    if (!state?.mode || state.mode.kind !== 'file' || state.status === 'saving') return
+    const { mode, value } = state
+    setState({ ...state, status: 'saving', errorText: undefined })
+    finish(translate(mode, value))
+  }
+
   const api: ContentEditorApi = { openFile, openDraft, setScalar }
   const busy = state?.status === 'loading' || state?.status === 'saving'
+
+  // Translate button: only for a localized content file (not site.yaml/themes),
+  // and only when the other locale is resolvable.
+  const filePath = state?.mode?.kind === 'file' ? state.mode.path : null
+  const sourceLoc = filePath ? /\/locales\/([^/]+)\//.exec(filePath)?.[1] : undefined
+  const targetLoc =
+    filePath && /\/locales\/[^/]+\/(products|journal|compass|pages)\//.test(filePath)
+      ? SUPPORTED_LOCALES.find((l) => l !== sourceLoc)
+      : undefined
 
   return (
     <ContentEditorContext.Provider value={api}>
@@ -290,13 +414,57 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                 ×
               </button>
             </div>
-            <textarea
-              className="content-editor-textarea"
-              value={state.value}
-              spellCheck={false}
-              disabled={busy || state.status === 'published'}
-              onChange={(e) => setState({ ...state, value: e.target.value })}
-            />
+            <div className="content-editor-toolbar">
+              <div className="content-editor-md" aria-hidden={view !== 'write'}>
+                <button type="button" onClick={() => applyMd('bold')} title={t('editor.mdBold')}>
+                  <b>B</b>
+                </button>
+                <button type="button" onClick={() => applyMd('h2')} title={t('editor.mdHeading')}>
+                  H
+                </button>
+                <button type="button" onClick={() => applyMd('ul')} title={t('editor.mdList')}>
+                  •
+                </button>
+                <button type="button" onClick={() => applyMd('link')} title={t('editor.mdLink')}>
+                  🔗
+                </button>
+                <button type="button" onClick={() => applyMd('image')} title={t('editor.mdImage')}>
+                  🖼
+                </button>
+              </div>
+              <div className="content-editor-tabs">
+                <button
+                  type="button"
+                  className={view === 'write' ? 'is-active' : ''}
+                  onClick={() => setView('write')}
+                >
+                  {t('editor.write')}
+                </button>
+                <button
+                  type="button"
+                  className={view === 'preview' ? 'is-active' : ''}
+                  onClick={() => setView('preview')}
+                >
+                  {t('editor.preview')}
+                </button>
+              </div>
+            </div>
+            {view === 'write' ? (
+              <textarea
+                ref={taRef}
+                className="content-editor-textarea"
+                value={state.value}
+                spellCheck={false}
+                disabled={busy || state.status === 'published'}
+                onChange={(e) => setState({ ...state, value: e.target.value })}
+              />
+            ) : (
+              // Author-controlled content, same trust model as Markdown.tsx.
+              <div
+                className="content-editor-preview prose"
+                dangerouslySetInnerHTML={{ __html: marked.parse(mdBody(state.value)) as string }}
+              />
+            )}
             <div className="content-editor-actions">
               {state.status === 'published' ? (
                 <p className="content-editor-status">{t('editor.published')}</p>
@@ -312,6 +480,17 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                 className="content-editor-copy"
                 ariaLabel={t('editor.copyAria')}
               />
+              {targetLoc && (
+                <button
+                  type="button"
+                  className="btn content-editor-translate"
+                  disabled={busy || state.status === 'published'}
+                  onClick={runTranslate}
+                  title={t('editor.translateHint', { lang: LOCALE_LABELS[targetLoc] })}
+                >
+                  {t('editor.translateTo', { lang: LOCALE_LABELS[targetLoc] })}
+                </button>
+              )}
               <button
                 type="button"
                 className="btn btn-primary content-editor-save"

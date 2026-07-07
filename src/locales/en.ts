@@ -59,6 +59,8 @@ const en = {
   "journalDetail.backLink": "← Back to the Journal",
 
   "detail.wip": "In the works — not finished yet",
+  "detail.translatedFrom.en": "Translated from English",
+  "detail.translatedFrom.ru": "Translated from Russian",
 
   "notFound.title": "Not found",
   "notFound.body": "This trail doesn't lead anywhere yet.",
@@ -169,9 +171,19 @@ const en = {
   "editor.copyAria": "Copy draft",
   "editor.queueAria": "Queue a new upcoming post",
   "editor.queuePrompt": "Title of the upcoming post:",
+  "editor.slugPrompt": "URL slug (english, lowercase-dashes):",
   "editor.stateAria": "Toggle active / upcoming",
   "editor.contentTitle": "Edit content",
   "editor.contentAria": "Edit post content",
+  "editor.write": "Write",
+  "editor.preview": "Preview",
+  "editor.mdBold": "Bold",
+  "editor.mdHeading": "Heading",
+  "editor.mdList": "Bullet list",
+  "editor.mdLink": "Link",
+  "editor.mdImage": "Image",
+  "editor.translateTo": "Translate → {{lang}}",
+  "editor.translateHint": "Translate this entry into {{lang}} and save it as that locale's version (marked as translated)",
 } satisfies Record<string, string>;
 
 export default en;

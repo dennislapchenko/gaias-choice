@@ -201,6 +201,24 @@ export function enrichTemplate(title: string, template: string, token?: string):
   ).then((r) => r.body)
 }
 
+/** POST /api/content/translate — faithfully translate a whole content file's
+ *  prose into `targetLocale`, keeping structure/keys/links. 503 when no model
+ *  is configured. The editor saves the result as the sibling file + stamps the
+ *  translatedFrom mark. */
+export interface TranslateResponse {
+  text: string
+}
+
+/** Ask the backend to translate `text` (a full content file) into `targetLocale`;
+ *  resolves to the translated file text. Rejects when translation is off/unreachable. */
+export function translateContent(text: string, targetLocale: string, token?: string): Promise<string> {
+  return apiPost<TranslateResponse>(
+    '/content/translate',
+    { text, targetLocale },
+    { token },
+  ).then((r) => r.text)
+}
+
 interface ApiState<T> {
   data: T | null
   error: ApiError | Error | null

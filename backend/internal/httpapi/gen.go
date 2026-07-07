@@ -165,6 +165,15 @@ type EnrichTemplateJSONBody struct {
 	Title    string `json:"title"`
 }
 
+// TranslateContentJSONBody defines parameters for TranslateContent.
+type TranslateContentJSONBody struct {
+	// TargetLocale The locale to translate INTO (e.g. "en", "ru").
+	TargetLocale string `json:"targetLocale"`
+
+	// Text The whole source file (frontmatter + body); under the content cap.
+	Text string `json:"text"`
+}
+
 // UpdateMeJSONBody defines parameters for UpdateMe.
 type UpdateMeJSONBody struct {
 	// AvatarUrl Image shown around the campfire — a URL or an inlined data: URI (browser-downscaled upload). Omit or empty to clear it.
@@ -213,6 +222,9 @@ type SaveContentJSONRequestBody SaveContentJSONBody
 // EnrichTemplateJSONRequestBody defines body for EnrichTemplate for application/json ContentType.
 type EnrichTemplateJSONRequestBody EnrichTemplateJSONBody
 
+// TranslateContentJSONRequestBody defines body for TranslateContent for application/json ContentType.
+type TranslateContentJSONRequestBody TranslateContentJSONBody
+
 // UpdateMeJSONRequestBody defines body for UpdateMe for application/json ContentType.
 type UpdateMeJSONRequestBody UpdateMeJSONBody
 
@@ -254,6 +266,9 @@ type ServerInterface interface {
 	// Re-tune a blank content template's prompts to a post title (LLM)
 	// (POST /content/template)
 	EnrichTemplate(c *gin.Context)
+	// Translate a content file's prose to another locale (LLM)
+	// (POST /content/translate)
+	TranslateContent(c *gin.Context)
 	// Liveness probe
 	// (GET /healthz)
 	GetHealth(c *gin.Context)
@@ -447,6 +462,21 @@ func (siw *ServerInterfaceWrapper) EnrichTemplate(c *gin.Context) {
 	siw.Handler.EnrichTemplate(c)
 }
 
+// TranslateContent operation middleware
+func (siw *ServerInterfaceWrapper) TranslateContent(c *gin.Context) {
+
+	c.Set(string(SessionScopes), []string{"editor"})
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.TranslateContent(c)
+}
+
 // GetHealth operation middleware
 func (siw *ServerInterfaceWrapper) GetHealth(c *gin.Context) {
 
@@ -568,6 +598,7 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.GET(options.BaseURL+"/content/file", wrapper.GetContentFile)
 	router.POST(options.BaseURL+"/content/save", wrapper.SaveContent)
 	router.POST(options.BaseURL+"/content/template", wrapper.EnrichTemplate)
+	router.POST(options.BaseURL+"/content/translate", wrapper.TranslateContent)
 	router.GET(options.BaseURL+"/healthz", wrapper.GetHealth)
 	router.GET(options.BaseURL+"/hello", wrapper.GetHello)
 	router.GET(options.BaseURL+"/users", wrapper.ListUsers)
@@ -1397,6 +1428,100 @@ func (response EnrichTemplate503JSONResponse) VisitEnrichTemplateResponse(w http
 	return err
 }
 
+type TranslateContentRequestObject struct {
+	Body *TranslateContentJSONRequestBody
+}
+
+type TranslateContentResponseObject interface {
+	VisitTranslateContentResponse(w http.ResponseWriter) error
+}
+
+type TranslateContent200JSONResponse struct {
+	Text string `json:"text"`
+}
+
+func (response TranslateContent200JSONResponse) VisitTranslateContentResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type TranslateContent400JSONResponse struct{ BadRequestJSONResponse }
+
+func (response TranslateContent400JSONResponse) VisitTranslateContentResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type TranslateContent401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response TranslateContent401JSONResponse) VisitTranslateContentResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type TranslateContent403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response TranslateContent403JSONResponse) VisitTranslateContentResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type TranslateContent502JSONResponse struct{ UpstreamJSONResponse }
+
+func (response TranslateContent502JSONResponse) VisitTranslateContentResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(502)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type TranslateContent503JSONResponse struct{ NotConfiguredJSONResponse }
+
+func (response TranslateContent503JSONResponse) VisitTranslateContentResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
 type GetHealthRequestObject struct {
 }
 
@@ -1689,6 +1814,9 @@ type StrictServerInterface interface {
 	// Re-tune a blank content template's prompts to a post title (LLM)
 	// (POST /content/template)
 	EnrichTemplate(ctx context.Context, request EnrichTemplateRequestObject) (EnrichTemplateResponseObject, error)
+	// Translate a content file's prose to another locale (LLM)
+	// (POST /content/translate)
+	TranslateContent(ctx context.Context, request TranslateContentRequestObject) (TranslateContentResponseObject, error)
 	// Liveness probe
 	// (GET /healthz)
 	GetHealth(ctx context.Context, request GetHealthRequestObject) (GetHealthResponseObject, error)
@@ -2078,6 +2206,37 @@ func (sh *strictHandler) EnrichTemplate(ctx *gin.Context) {
 		sh.options.HandlerErrorFunc(ctx, err)
 	} else if validResponse, ok := response.(EnrichTemplateResponseObject); ok {
 		if err := validResponse.VisitEnrichTemplateResponse(ctx.Writer); err != nil {
+			sh.options.ResponseErrorHandlerFunc(ctx, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(ctx, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// TranslateContent operation middleware
+func (sh *strictHandler) TranslateContent(ctx *gin.Context) {
+	var request TranslateContentRequestObject
+
+	var body TranslateContentJSONRequestBody
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(ctx, err)
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx *gin.Context, request interface{}) (interface{}, error) {
+		return sh.ssi.TranslateContent(ctx, request.(TranslateContentRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "TranslateContent")
+	}
+
+	response, err := handler(ctx, request)
+
+	if err != nil {
+		sh.options.HandlerErrorFunc(ctx, err)
+	} else if validResponse, ok := response.(TranslateContentResponseObject); ok {
+		if err := validResponse.VisitTranslateContentResponse(ctx.Writer); err != nil {
 			sh.options.ResponseErrorHandlerFunc(ctx, err)
 		}
 	} else if response != nil {

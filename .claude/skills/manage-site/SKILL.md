@@ -105,7 +105,14 @@ classify-and-do as usual.
    the human blog) and **reviews** are written by the owners; truth-first
    applies with full force there (no fabricated trips, scenes, or durations).
    Don't blur the line: don't quietly AI-author a Journal entry or review, and
-   don't strip Compass's provenance disclosure.
+   don't strip Compass's provenance disclosure. **The one allowed machine
+   assist outside Compass is *translation*:** the editor's Translate button
+   (`POST /content/translate`) may render an already-hand-written entry into
+   the other locale, because it *translates* existing human content — it
+   invents nothing. The derived file always carries a `translatedFrom:`
+   frontmatter mark, rendered on the page ("Translated from Russian" / etc.),
+   so the assist is disclosed. Authoring (not translating) any Journal/review
+   with an LLM stays forbidden.
 
 ## Coding principles
 

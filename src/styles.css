@@ -604,6 +604,33 @@ h1 {
     transform: translate(-50%, -50%);
     text-align: center;
 }
+/* Rank ring by role — a coiled dragon (DragonRing in Account.tsx), not a
+   plain colored outline. Positioned absolute so it overlaps the avatar's
+   edge like the reference art; the avatar is the column's first flex child,
+   so top-aligning at 0 centers the ring on it without extra math. */
+.dragon-ring {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    width: 128px;
+    height: 128px;
+    transform: translateX(-50%);
+    pointer-events: none;
+    overflow: visible;
+}
+.dragon-shimmer {
+    animation: dragon-shimmer 3s ease-in-out infinite;
+    transform-origin: 60px 60px;
+}
+@keyframes dragon-shimmer {
+    0%,
+    100% {
+        filter: brightness(1) drop-shadow(0 0 2px rgba(110, 210, 255, 0.6));
+    }
+    50% {
+        filter: brightness(1.25) drop-shadow(0 0 6px rgba(150, 230, 255, 0.95));
+    }
+}
 .camper-avatar {
     display: flex;
     align-items: center;
@@ -665,6 +692,11 @@ h1 {
         width: 42px;
         height: 42px;
         font-size: 1rem;
+    }
+    .dragon-ring {
+        top: -6px;
+        width: 54px;
+        height: 54px;
     }
     .camper-name {
         font-size: 0.74rem;
@@ -2533,6 +2565,62 @@ a.respected-card:hover {
     color: var(--ink);
     background: rgba(47, 44, 39, 0.08);
 }
+.content-editor-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--line);
+    background: var(--white);
+}
+.content-editor-md {
+    display: flex;
+    gap: 4px;
+}
+.content-editor-md[aria-hidden="true"] {
+    visibility: hidden;
+}
+.content-editor-md button {
+    min-width: 30px;
+    height: 30px;
+    padding: 0 8px;
+    font-size: 0.9rem;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    cursor: pointer;
+}
+.content-editor-md button:hover {
+    background: var(--sand);
+}
+.content-editor-tabs {
+    display: flex;
+    gap: 4px;
+}
+.content-editor-tabs button {
+    padding: 5px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    cursor: pointer;
+}
+.content-editor-tabs button.is-active {
+    color: var(--on-accent);
+    background: var(--sage);
+}
+.content-editor-preview {
+    flex: 1;
+    min-height: 260px;
+    margin: 0;
+    padding: 16px 20px;
+    overflow: auto;
+    background: var(--white);
+}
 .content-editor-textarea {
     flex: 1;
     min-height: 260px;
@@ -2565,6 +2653,15 @@ a.respected-card:hover {
 }
 .content-editor-error {
     color: #b3423a;
+}
+.content-editor-translate {
+    background: var(--white);
+    border: 1px solid var(--sage);
+    color: var(--sage-dark);
+}
+/* Disclosure that an entry is a machine translation of another locale. */
+.translated-mark {
+    font-style: italic;
 }
 
 /* Copy button parked at the right edge of a wallet address, revealed on hover

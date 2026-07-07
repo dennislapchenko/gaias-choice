@@ -50,14 +50,21 @@ export default function Upcoming({
     if (!draft) return;
     const name = window.prompt(t("editor.queuePrompt"))?.trim();
     if (!name) return;
+    // The slug is the filename, so it's the URL — keep it English even for a
+    // Russian title (slugify only transliterates Cyrillic, giving an ugly
+    // latin slug). Default to that but let the author type the real English
+    // slug; the file is still written under the current locale.
+    const slug =
+      window.prompt(t("editor.slugPrompt"), slugify(name))?.trim().replace(/[^a-z0-9-]/gi, "-") ||
+      slugify(name);
     editor.openDraft({
       title: name,
-      path: `content/locales/${locale}/${draft.dir}/${slugify(name)}.md`,
+      path: `content/locales/${locale}/${draft.dir}/${slug}.md`,
       initialValue: draft.template.replace(
         /^title: ".*"$/m,
         `title: "${name.replace(/"/g, '\\"')}"`,
       ),
-      message: `content: queue ${slugify(name)} via portal`,
+      message: `content: queue ${slug} via portal`,
     });
   };
 

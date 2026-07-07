@@ -55,15 +55,42 @@ func New(apiKey, model string) *Enricher {
 	return &Enricher{key: apiKey, model: model, client: &http.Client{Timeout: 60 * time.Second}}
 }
 
+// translatePrompt keeps the model translating an existing human-written file,
+// never adding or removing meaning — which, paired with the FE's visible
+// `translatedFrom:` mark, is what keeps machine translation inside the
+// provenance contract.
+const translatePrompt = `You translate an existing Markdown content file into %s. You are given a file with YAML frontmatter (between --- lines) and a Markdown body.
+
+Hard rules:
+- Translate ONLY human-facing prose: the frontmatter "title" and "excerpt" values, and the Markdown body text.
+- Keep every frontmatter KEY unchanged, and leave non-prose values exactly as-is: dates, numbers, slugs, category codes, scores, image paths, URLs, tags.
+- Keep all Markdown structure intact: headings, lists, links, image syntax, code, and any fenced blocks (translate visible link text, never the URL).
+- Do not add, drop, summarise, or embellish meaning. Faithful translation only.
+- Output only the raw translated file: no code fences, no preamble, no commentary.`
+
 // Enrich returns the template with its prompts re-tuned to title. The template
 // is the base scaffold the FE already holds; only its guidance changes.
 func (e *Enricher) Enrich(ctx context.Context, title, template string) (string, error) {
+	return e.complete(ctx, systemPrompt, "Post title: "+title+"\n\nTemplate:\n"+template)
+}
+
+// Translate returns the whole content file with its prose translated into the
+// target language (a display name like "English"/"Russian"). Structure, keys,
+// dates, links and slugs are preserved; the FE stamps the translatedFrom mark.
+func (e *Enricher) Translate(ctx context.Context, targetLang, text string) (string, error) {
+	return e.complete(ctx, fmt.Sprintf(translatePrompt, targetLang), text)
+}
+
+// complete makes one Anthropic Messages API round-trip and returns the model's
+// de-fenced text. Shared by Enrich and Translate — the only difference between
+// them is the system prompt.
+func (e *Enricher) complete(ctx context.Context, system, user string) (string, error) {
 	reqBody, err := json.Marshal(map[string]any{
 		"model":      e.model,
 		"max_tokens": maxTokens,
-		"system":     systemPrompt,
+		"system":     system,
 		"messages": []map[string]string{
-			{"role": "user", "content": "Post title: " + title + "\n\nTemplate:\n" + template},
+			{"role": "user", "content": user},
 		},
 	})
 	if err != nil {

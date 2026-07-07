@@ -591,6 +591,57 @@ paths:
         '503':
           $ref: '#/components/responses/NotConfigured'
 
+  /content/translate:
+    post:
+      operationId: translateContent
+      summary: Translate a content file's prose to another locale (LLM)
+      description: >-
+        Takes a full content file (YAML frontmatter + markdown body) and a
+        target locale, and returns the same file with its human-facing prose
+        (title, excerpt, body) translated, structure/keys/dates/links left
+        intact. The FE saves the result as the sibling-locale file and stamps a
+        `translatedFrom:` mark on it — the disclosure that keeps this inside the
+        provenance contract. 503 when no model is configured.
+      tags: [content]
+      security:
+        - session: [editor]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text, targetLocale]
+              properties:
+                text:
+                  type: string
+                  description: The whole source file (frontmatter + body); under the content cap.
+                  maxLength: 262144
+                targetLocale:
+                  type: string
+                  description: The locale to translate INTO (e.g. "en", "ru").
+                  maxLength: 8
+      responses:
+        '200':
+          description: The file with its prose translated to the target locale.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [text]
+                properties:
+                  text: { type: string }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '502':
+          $ref: '#/components/responses/Upstream'
+        '503':
+          $ref: '#/components/responses/NotConfigured'
+
 components:
   securitySchemes:
     session:

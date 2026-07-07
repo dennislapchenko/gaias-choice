@@ -99,6 +99,10 @@ export interface Entry {
   slug: string
   title: string
   html: string
+  /** Source locale code when this file is a machine translation of another
+   *  locale's entry (set by the editor's Translate action). Absent on
+   *  hand-authored files. Rendered as a disclosure mark on the detail page. */
+  translatedFrom?: string
 }
 
 export interface Product extends Entry {
