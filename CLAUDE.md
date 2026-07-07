@@ -477,21 +477,38 @@ VM is down the live site silently degrades to the static baseline.
   Layout: `main.go` is wiring only; `internal/config` (env), `internal/store`
   (SQLite via `modernc.org/sqlite`, pure-Go so `CGO_ENABLED=0` stays static;
   WAL; hand-rolled embedded-`.sql` migration runner; **all SQL lives here**),
-  `internal/auth` (users/sessions/roles), `internal/content` (the live-edit
-  seam), `internal/httpapi` (gin router, hand-written CORS allowlist,
-  middleware, handlers). Endpoints: `/api/healthz`, `/api/hello` (hits counter
-  proving a DB round-trip), `/api/auth/{login,register,logout,me}`,
+  `internal/auth` (users/sessions/roles/magic-link tokens), `internal/mail`
+  (the magic-link email; transports by config — `POSTMARK_TOKEN` ⇒
+  Postmark's HTTP API (the live path), else `SMTP_HOST` ⇒ stdlib `net/smtp`
+  submission (provider-neutral fallback), `SMTP_HOST=log` ⇒ print to stdout
+  (dev, wins over everything), none ⇒ nil mailer ⇒ `/api/auth/magic` answers
+  503; `MAIL_FROM`/`POSTMARK_STREAM` complete the block — deliberately a
+  transactional provider, never a self-hosted server), `internal/content`
+  (the live-edit seam), `internal/httpapi` (gin router, hand-written CORS
+  allowlist, middleware, handlers). Endpoints: `/api/healthz`, `/api/hello`
+  (hits counter proving a DB round-trip), `/api/auth/magic` +
+  `/api/auth/magic/verify` (the passwordless login),
+  `/api/auth/{login,register,logout,me}`,
   `/api/users` (the campfire listing), `PUT /api/users/me` (self-service
   profile edit — display name, email, avatar URL, optional password
   change), `/api/content/{file,save}`.
 - **Auth (users/sessions/roles):** `users` rows (argon2id password hashes,
   public `display_name`) carry role `admin`, `editor`, or `viewer`.
-  **Self-registration is open** (`POST /api/auth/register`, per-IP
-  rate-limited) and creates **viewers** — real accounts that may sign in and
-  see the community, but **can never touch content**; editors are an admin
-  concern (future portal). Login and register (both per-IP rate-limited)
-  issue an opaque 30-day bearer session token; only its sha256 lands in
-  `sessions`, and logout revokes it. Enforcement is **spec-driven**:
+  **The primary login is the passwordless magic link:** `POST /api/auth/magic`
+  (per-IP rate-limited, always 200) emails a one-time link; its token (sha256
+  in `login_tokens`, 15-min TTL, deleted on redemption — single-use) is
+  traded at `POST /api/auth/magic/verify` for a session, and **first
+  redemption creates a viewer account** (empty password hash ⇒ password
+  login always refuses it; the link arriving IS the email verification).
+  Viewers are real accounts that may sign in and see the community, but
+  **can never touch content**; editors are an admin concern (future portal).
+  Password login stays as the fallback for accounts that have one (the
+  bootstrap admin); `POST /api/auth/register` (open, rate-limited) still
+  exists but the FE no longer calls it. Every path issues the same opaque
+  30-day bearer session token; only its sha256 lands in `sessions`, and
+  logout revokes it. WebAuthn passkeys are planned **only after the site
+  moves to its permanent domain** — a passkey binds to its domain forever
+  (the plan: `context/auth/auth-paths.md`). Enforcement is **spec-driven**:
   operations marked `security: session` in `openapi.yaml` are checked by the
   session middleware (keyed off the generated `SessionScopes` marker), and
   the `editor` **scope** (`session: [editor]`, on both content ops) demands
@@ -524,8 +541,13 @@ VM is down the live site silently degrades to the static baseline.
 - **Login & accounts (FE side):** `src/lib/session.tsx` is the one session
   seam — it owns the token (`localStorage['gc-session']`), validates it
   against `/api/auth/me` on every load (401 ⇒ silent drop), exposes
-  login/register/signOut, and renders `components/LoginDialog.tsx` (centered
-  sign-in / create-account modal over a blurred backdrop). Chrome is gated on
+  requestMagicLink/login/signOut, consumes the emailed `#magic=<token>` hash
+  (on mount and on hashchange; scrubbed from the URL, traded at
+  `/auth/magic/verify`, dead token ⇒ reopen the dialog), and renders
+  `components/LoginDialog.tsx` (centered modal over a blurred backdrop:
+  email-first "send me a sign-in link" → a "check your inbox" state; the
+  password form sits behind a toggle for accounts that have one — there is
+  no separate registration form, first sign-in registers). Chrome is gated on
   `backendUp` (a `/healthz` probe when signed out): `components/UserButton.tsx`
   (header, left of the palette switcher, mobile included) renders **only when
   the API answers** — signed out it opens the dialog, signed in it shows the
@@ -543,9 +565,8 @@ VM is down the live site silently degrades to the static baseline.
   CSS-driven (no JS breakpoint branch — see `.account-fields`/
   `.account-fields-toggle` in `styles.css`). A sign-out button sits below the
   scene. BE down ⇒ none of this exists — **readers ship zero account/editing
-  chrome**.
-  Passwords are the stopgap; magic-link (needs SMTP) and WebAuthn are the
-  plan.
+  chrome**; no email transport configured ⇒ only the magic path degrades
+  (dialog reports links unavailable, password fallback still works).
 - **Edit mode (FE side):** `src/lib/editMode.tsx` is now a thin consumer of
   the session: `active` simply mirrors `/api/auth/me`'s role-aware
   `editing` flag. `#edit` in any URL stays as the deliberate shortcut —

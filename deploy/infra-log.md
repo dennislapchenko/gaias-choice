@@ -128,6 +128,26 @@
   200 with a session; `/api/content/file` → 200 as admin; CORS preflight from
   the Pages origin → 204; logout → 204.
 
+### 8. Email delivery: Postmark (transport live, account approval pending)
+
+- Registered with **Postmark** as the transactional email provider (magic-link
+  path A in `context/auth/auth-paths.md`).
+- Added a **DKIM** record and a **CNAME** (`returnpath`) record for the
+  sending domain on Namecheap, per Postmark's setup instructions — verified
+  (sends from `login@gardenofatlantis.com` are accepted).
+- Backend side is built: `internal/mail` + `/api/auth/magic{,/verify}` ship
+  with the repo (see CLAUDE.md "Backend"). The live transport is **Postmark's
+  HTTP API** (`POSTMARK_TOKEN` + `POSTMARK_STREAM=choice-email`, message
+  stream created in the Postmark console); SMTP remains a dormant fallback.
+  Env block passed through `deploy/compose.yaml`; values mirror the repo-root
+  `.env` locally and `deploy.env` on the VM.
+- Verified with a real API call: `POST https://api.postmarkapp.com/email`
+  from `login@gardenofatlantis.com` on stream `choice-email` → `ErrorCode: 0`.
+- **Open: Postmark account approval.** While pending, Postmark rejects (412)
+  any recipient outside `gardenofatlantis.com` — reader magic links will NOT
+  deliver until the account is approved in the Postmark console (owner
+  action). The BE logs each failed send (`mail: magic-link send failed`).
+
 ## Redeploy / operate (quick reference)
 
 - **New backend image:** push to `main` touching `backend/**` → CI builds

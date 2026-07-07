@@ -14,6 +14,7 @@ import (
 	"github.com/dennislapchenko/gaias-choice/backend/internal/config"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/content"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/httpapi"
+	"github.com/dennislapchenko/gaias-choice/backend/internal/mail"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/store"
 )
 
@@ -39,11 +40,28 @@ func main() {
 		log.Printf("auth: bootstrap admin %q created", cfg.BootstrapAdminEmail)
 	}
 
+	mailer := mail.New(mail.Config{
+		PostmarkToken:  cfg.PostmarkToken,
+		PostmarkStream: cfg.PostmarkStream,
+		SMTPHost:       cfg.SMTPHost,
+		SMTPPort:       cfg.SMTPPort,
+		SMTPUser:       cfg.SMTPUser,
+		SMTPPass:       cfg.SMTPPass,
+		From:           cfg.MailFrom,
+	})
+	if mailer == nil {
+		log.Print("mail: DISABLED (no POSTMARK_TOKEN or SMTP_HOST) — /api/auth/magic → 503")
+	} else {
+		log.Printf("mail: %s (from %s)", mailer.Transport(), cfg.MailFrom)
+	}
+
 	r := httpapi.NewRouter(httpapi.Deps{
 		CORSOrigins: cfg.CORSOrigins,
 		Store:       st,
 		Auth:        authSvc,
 		Content:     contentStoreFor(cfg),
+		Mailer:      mailer,
+		SiteURL:     cfg.PublicSiteURL,
 	})
 
 	log.Printf("listening on :%s (data dir %s)", cfg.Port, cfg.DataDir)

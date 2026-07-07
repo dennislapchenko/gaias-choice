@@ -17,6 +17,19 @@ services:
       GITHUB_TOKEN: ${GITHUB_TOKEN:-}
       BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:-}
       BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:-}
+      # Magic-link sign-in email. Live transport: Postmark's HTTP API
+      # (POSTMARK_TOKEN + POSTMARK_STREAM). The SMTP_* block stays as the
+      # provider-neutral fallback (unused while a token is set). Neither
+      # configured ⇒ /api/auth/magic answers 503 (the dialog reports links
+      # unavailable). Values live in deploy.env on the VM.
+      POSTMARK_TOKEN: ${POSTMARK_TOKEN:-}
+      POSTMARK_STREAM: ${POSTMARK_STREAM:-outbound}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      MAIL_FROM: ${MAIL_FROM:-}
+      PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-}
     volumes:
       - /srv/gaias-choice/data:/data # host bind mount, per D9 (boring backups)
 

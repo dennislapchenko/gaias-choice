@@ -85,7 +85,7 @@ export interface HelloResponse {
 
 export type Role = 'admin' | 'editor' | 'viewer'
 
-/** POST /api/auth/login and /api/auth/register both answer with this grant. */
+/** POST /api/auth/magic/verify and /api/auth/login answer with this grant. */
 export interface LoginResponse {
   token: string
   role: Role
@@ -93,11 +93,13 @@ export interface LoginResponse {
   expiresAt: string
 }
 
-/** POST /api/auth/register — open self-registration; creates a viewer. */
-export interface RegisterPayload {
+/** POST /api/auth/magic — email a one-time sign-in link (the passwordless
+ *  login; first redemption creates a viewer account). Always answers 200;
+ *  503 when the deployment has no SMTP configured. */
+export interface MagicRequestPayload {
   email: string
-  password: string
-  displayName: string
+  /** UI locale ("ru", "en") — picks the email's language. */
+  locale: string
 }
 
 /** GET /api/auth/me — session probe; `editing` is true only for admin/editor

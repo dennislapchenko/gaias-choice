@@ -3,17 +3,19 @@ import { ApiError } from '../lib/api'
 import { useI18n } from '../lib/i18n'
 import { useSession } from '../lib/session'
 
-// The centered sign-in / create-account dialog over a blurred backdrop.
-// Rendered by SessionProvider whenever `loginOpen` is true; new accounts get
-// the viewer role server-side. Passwords are a stopgap — magic-link and
-// biometric (WebAuthn) sign-in are the plan once there's an SMTP server.
+// The centered sign-in dialog over a blurred backdrop, rendered by
+// SessionProvider whenever `loginOpen` is true. Sign-in is passwordless-first:
+// email in, one-time link out, and the #magic=<token> landing in session.tsx
+// finishes the job (first sign-in creates a viewer account server-side, so
+// there is no separate registration form). The password form stays as the
+// fallback for accounts that have one (admin/bootstrap); WebAuthn passkeys
+// are planned once the site sits on its permanent domain.
 export default function LoginDialog() {
-  const { t } = useI18n()
-  const { login, register, closeLogin } = useSession()
-  const [mode, setMode] = useState<'signin' | 'register'>('signin')
+  const { t, locale } = useI18n()
+  const { login, requestMagicLink, closeLogin } = useSession()
+  const [mode, setMode] = useState<'magic' | 'password' | 'sent'>('magic')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [displayName, setDisplayName] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const emailRef = useRef<HTMLInputElement>(null)
@@ -31,9 +33,9 @@ export default function LoginDialog() {
   const errorText = (err: unknown): string => {
     if (err instanceof ApiError) {
       if (err.status === 401) return t('login.badCredentials')
-      if (err.status === 409) return t('login.emailTaken')
       if (err.status === 400) return t('login.invalid')
       if (err.status === 429) return t('login.tooMany')
+      if (err.status === 503) return t('login.magicUnavailable')
     }
     return t('login.failed')
   }
@@ -43,16 +45,21 @@ export default function LoginDialog() {
     setBusy(true)
     setError(null)
     try {
-      if (mode === 'signin') await login(email, password)
-      else await register({ email, password, displayName })
-      closeLogin()
+      if (mode === 'password') {
+        await login(email, password)
+        closeLogin()
+      } else {
+        await requestMagicLink(email, locale)
+        setMode('sent')
+        setBusy(false)
+      }
     } catch (err) {
       setError(errorText(err))
       setBusy(false)
     }
   }
 
-  const registering = mode === 'register'
+  const usingPassword = mode === 'password'
 
   return (
     <div
@@ -70,58 +77,52 @@ export default function LoginDialog() {
         >
           ×
         </button>
-        <h2 id="login-title">{registering ? t('login.createAccount') : t('login.signIn')}</h2>
-        <form onSubmit={submit}>
-          {registering && (
-            <label className="login-field">
-              <span>{t('login.displayName')}</span>
-              <input
-                type="text"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                maxLength={50}
-                autoComplete="nickname"
-                required
-              />
-            </label>
-          )}
-          <label className="login-field">
-            <span>{t('login.email')}</span>
-            <input
-              ref={emailRef}
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
-              required
-            />
-          </label>
-          <label className="login-field">
-            <span>{t('login.password')}</span>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              minLength={registering ? 8 : undefined}
-              autoComplete={registering ? 'new-password' : 'current-password'}
-              required
-            />
-          </label>
-          {error && <p className="login-error">{error}</p>}
-          <button type="submit" className="btn btn-primary login-submit" disabled={busy}>
-            {registering ? t('login.submitRegister') : t('login.submitSignIn')}
-          </button>
-        </form>
-        <button
-          type="button"
-          className="login-switch"
-          onClick={() => {
-            setMode(registering ? 'signin' : 'register')
-            setError(null)
-          }}
-        >
-          {registering ? t('login.switchToSignIn') : t('login.switchToRegister')}
-        </button>
+        <h2 id="login-title">{t('login.signIn')}</h2>
+        {mode === 'sent' ? (
+          <p>{t('login.sent')}</p>
+        ) : (
+          <>
+            <form onSubmit={submit}>
+              <label className="login-field">
+                <span>{t('login.email')}</span>
+                <input
+                  ref={emailRef}
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                  required
+                />
+              </label>
+              {usingPassword && (
+                <label className="login-field">
+                  <span>{t('login.password')}</span>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="current-password"
+                    required
+                  />
+                </label>
+              )}
+              {error && <p className="login-error">{error}</p>}
+              <button type="submit" className="btn btn-primary login-submit" disabled={busy}>
+                {usingPassword ? t('login.submitSignIn') : t('login.sendLink')}
+              </button>
+            </form>
+            <button
+              type="button"
+              className="login-switch"
+              onClick={() => {
+                setMode(usingPassword ? 'magic' : 'password')
+                setError(null)
+              }}
+            >
+              {usingPassword ? t('login.useMagic') : t('login.usePassword')}
+            </button>
+          </>
+        )}
       </div>
     </div>
   )

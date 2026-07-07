@@ -167,6 +167,69 @@ func TestRegister(t *testing.T) {
 	}
 }
 
+func TestMagicLink(t *testing.T) {
+	s, st := testService(t)
+
+	// Garbage addresses refused up front — no token minted, nothing to email.
+	if _, err := s.RequestMagic("not-an-email"); !errors.Is(err, ErrInvalid) {
+		t.Fatalf("bad email: got %v, want ErrInvalid", err)
+	}
+
+	// First redemption creates a viewer (no usable password) and signs in.
+	token, err := s.RequestMagic(" New@Test.dev ")
+	if err != nil {
+		t.Fatal(err)
+	}
+	sess, err := s.VerifyMagic(token)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if sess.User.Role != "viewer" || sess.User.Email != "new@test.dev" ||
+		sess.User.DisplayName != "new" || sess.Token == "" {
+		t.Fatalf("bad magic session: %+v", sess.User)
+	}
+	if u, ok := s.Validate(sess.Token); !ok || u.Email != "new@test.dev" {
+		t.Fatalf("magic session does not validate: ok=%v %+v", ok, u)
+	}
+	if _, err := s.Login("new@test.dev", ""); err != ErrBadCredentials {
+		t.Fatalf("passwordless account must refuse password login: %v", err)
+	}
+
+	// Single-use: the same token again is dead.
+	if _, err := s.VerifyMagic(token); err != ErrBadCredentials {
+		t.Fatalf("token reused: %v", err)
+	}
+	// Garbage token.
+	if _, err := s.VerifyMagic("not-a-token"); err != ErrBadCredentials {
+		t.Fatalf("garbage token: %v", err)
+	}
+
+	// Second link for the same address signs into the SAME account.
+	token2, err := s.RequestMagic("new@test.dev")
+	if err != nil {
+		t.Fatal(err)
+	}
+	sess2, err := s.VerifyMagic(token2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if sess2.User.ID != sess.User.ID {
+		t.Fatalf("second magic login made a new account: %d vs %d", sess2.User.ID, sess.User.ID)
+	}
+	if n, _ := st.CountUsers(); n != 1 {
+		t.Fatalf("users: got %d, want 1", n)
+	}
+
+	// Expired tokens don't redeem (row created directly with a past expiry).
+	expired := randomToken()
+	if err := st.CreateLoginToken(hashToken(expired), "late@test.dev", time.Now().Add(-time.Minute)); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := s.VerifyMagic(expired); err != ErrBadCredentials {
+		t.Fatalf("expired token redeemed: %v", err)
+	}
+}
+
 func TestUpdateProfile(t *testing.T) {
 	s, _ := testService(t)
 	if _, err := s.Bootstrap("owner@test.dev", "correct-horse"); err != nil {

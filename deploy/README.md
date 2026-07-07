@@ -79,7 +79,16 @@ Kept off the repo on purpose — it's server bootstrap, not app config:
    origin if the FE ever calls cross-origin from elsewhere), and `BE_TAG` to
    the pushed sha. Add `GITHUB_TOKEN` + the `BOOTSTRAP_ADMIN_*` pair only when
    live editing should work from the VM-hosted API (they are already passed
-   into the `api` service's `environment:` in `compose.yaml`).
+   into the `api` service's `environment:` in `compose.yaml`). For magic-link
+   sign-in add the mail block (also already passed through — Postmark's HTTP
+   API, per `infra-log.md` §8): `POSTMARK_TOKEN=<Server API token>`,
+   `POSTMARK_STREAM=choice-email`,
+   `MAIL_FROM="Gaia's Choice <login@gardenofatlantis.com>"` (must be on the
+   Postmark-verified sender domain), and `PUBLIC_SITE_URL=<the live site
+   URL>`; the values mirror the repo-root `.env` locally. SMTP (`SMTP_*`
+   vars) remains a dormant provider-neutral fallback — used only when no
+   Postmark token is set. Neither configured ⇒ `/api/auth/magic` answers 503
+   and the login dialog reports links unavailable.
 4. **Point the Pages build at the API** — set `VITE_API_URL=https://api.<domain>/api`
    in the Pages workflow build env when BE features should go live. Until then
    the live site ships without them (badge renders null).

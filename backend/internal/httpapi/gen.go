@@ -96,6 +96,19 @@ type LoginJSONBody struct {
 	Password string `json:"password"`
 }
 
+// RequestMagicLinkJSONBody defines parameters for RequestMagicLink.
+type RequestMagicLinkJSONBody struct {
+	Email string `json:"email"`
+
+	// Locale UI locale ("ru", "en") picking the email's language; defaults to English.
+	Locale *string `json:"locale,omitempty"`
+}
+
+// VerifyMagicLinkJSONBody defines parameters for VerifyMagicLink.
+type VerifyMagicLinkJSONBody struct {
+	Token string `json:"token"`
+}
+
 // RegisterJSONBody defines parameters for Register.
 type RegisterJSONBody struct {
 	// DisplayName Public name shown around the campfire.
@@ -139,6 +152,12 @@ type UpdateMeJSONBody struct {
 // LoginJSONRequestBody defines body for Login for application/json ContentType.
 type LoginJSONRequestBody LoginJSONBody
 
+// RequestMagicLinkJSONRequestBody defines body for RequestMagicLink for application/json ContentType.
+type RequestMagicLinkJSONRequestBody RequestMagicLinkJSONBody
+
+// VerifyMagicLinkJSONRequestBody defines body for VerifyMagicLink for application/json ContentType.
+type VerifyMagicLinkJSONRequestBody VerifyMagicLinkJSONBody
+
 // RegisterJSONRequestBody defines body for Register for application/json ContentType.
 type RegisterJSONRequestBody RegisterJSONBody
 
@@ -156,6 +175,12 @@ type ServerInterface interface {
 	// Revoke the current session
 	// (POST /auth/logout)
 	Logout(c *gin.Context)
+	// Email a one-time sign-in link (the passwordless login)
+	// (POST /auth/magic)
+	RequestMagicLink(c *gin.Context)
+	// Redeem an emailed sign-in token for a session
+	// (POST /auth/magic/verify)
+	VerifyMagicLink(c *gin.Context)
 	// Who am I — the frontend's edit-mode probe
 	// (GET /auth/me)
 	GetMe(c *gin.Context)
@@ -217,6 +242,32 @@ func (siw *ServerInterfaceWrapper) Logout(c *gin.Context) {
 	}
 
 	siw.Handler.Logout(c)
+}
+
+// RequestMagicLink operation middleware
+func (siw *ServerInterfaceWrapper) RequestMagicLink(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.RequestMagicLink(c)
+}
+
+// VerifyMagicLink operation middleware
+func (siw *ServerInterfaceWrapper) VerifyMagicLink(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.VerifyMagicLink(c)
 }
 
 // GetMe operation middleware
@@ -376,6 +427,8 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 
 	router.POST(options.BaseURL+"/auth/login", wrapper.Login)
 	router.POST(options.BaseURL+"/auth/logout", wrapper.Logout)
+	router.POST(options.BaseURL+"/auth/magic", wrapper.RequestMagicLink)
+	router.POST(options.BaseURL+"/auth/magic/verify", wrapper.VerifyMagicLink)
 	router.GET(options.BaseURL+"/auth/me", wrapper.GetMe)
 	router.POST(options.BaseURL+"/auth/register", wrapper.Register)
 	router.GET(options.BaseURL+"/content/file", wrapper.GetContentFile)
@@ -489,6 +542,136 @@ func (response Logout401JSONResponse) VisitLogoutResponse(w http.ResponseWriter)
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(401)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type RequestMagicLinkRequestObject struct {
+	Body *RequestMagicLinkJSONRequestBody
+}
+
+type RequestMagicLinkResponseObject interface {
+	VisitRequestMagicLinkResponse(w http.ResponseWriter) error
+}
+
+type RequestMagicLink200JSONResponse struct {
+	Status string `json:"status"`
+}
+
+func (response RequestMagicLink200JSONResponse) VisitRequestMagicLinkResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type RequestMagicLink400JSONResponse struct{ BadRequestJSONResponse }
+
+func (response RequestMagicLink400JSONResponse) VisitRequestMagicLinkResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type RequestMagicLink429JSONResponse struct{ RateLimitedJSONResponse }
+
+func (response RequestMagicLink429JSONResponse) VisitRequestMagicLinkResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type RequestMagicLink503JSONResponse Error
+
+func (response RequestMagicLink503JSONResponse) VisitRequestMagicLinkResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type VerifyMagicLinkRequestObject struct {
+	Body *VerifyMagicLinkJSONRequestBody
+}
+
+type VerifyMagicLinkResponseObject interface {
+	VisitVerifyMagicLinkResponse(w http.ResponseWriter) error
+}
+
+type VerifyMagicLink200JSONResponse SessionGrant
+
+func (response VerifyMagicLink200JSONResponse) VisitVerifyMagicLinkResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type VerifyMagicLink400JSONResponse struct{ BadRequestJSONResponse }
+
+func (response VerifyMagicLink400JSONResponse) VisitVerifyMagicLinkResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type VerifyMagicLink401JSONResponse Error
+
+func (response VerifyMagicLink401JSONResponse) VisitVerifyMagicLinkResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type VerifyMagicLink429JSONResponse struct{ RateLimitedJSONResponse }
+
+func (response VerifyMagicLink429JSONResponse) VisitVerifyMagicLinkResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
 	_, err := buf.WriteTo(w)
 	return err
 }
@@ -1006,6 +1189,12 @@ type StrictServerInterface interface {
 	// Revoke the current session
 	// (POST /auth/logout)
 	Logout(ctx context.Context, request LogoutRequestObject) (LogoutResponseObject, error)
+	// Email a one-time sign-in link (the passwordless login)
+	// (POST /auth/magic)
+	RequestMagicLink(ctx context.Context, request RequestMagicLinkRequestObject) (RequestMagicLinkResponseObject, error)
+	// Redeem an emailed sign-in token for a session
+	// (POST /auth/magic/verify)
+	VerifyMagicLink(ctx context.Context, request VerifyMagicLinkRequestObject) (VerifyMagicLinkResponseObject, error)
 	// Who am I — the frontend's edit-mode probe
 	// (GET /auth/me)
 	GetMe(ctx context.Context, request GetMeRequestObject) (GetMeResponseObject, error)
@@ -1137,6 +1326,68 @@ func (sh *strictHandler) Logout(ctx *gin.Context) {
 		sh.options.HandlerErrorFunc(ctx, err)
 	} else if validResponse, ok := response.(LogoutResponseObject); ok {
 		if err := validResponse.VisitLogoutResponse(ctx.Writer); err != nil {
+			sh.options.ResponseErrorHandlerFunc(ctx, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(ctx, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// RequestMagicLink operation middleware
+func (sh *strictHandler) RequestMagicLink(ctx *gin.Context) {
+	var request RequestMagicLinkRequestObject
+
+	var body RequestMagicLinkJSONRequestBody
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(ctx, err)
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx *gin.Context, request interface{}) (interface{}, error) {
+		return sh.ssi.RequestMagicLink(ctx, request.(RequestMagicLinkRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "RequestMagicLink")
+	}
+
+	response, err := handler(ctx, request)
+
+	if err != nil {
+		sh.options.HandlerErrorFunc(ctx, err)
+	} else if validResponse, ok := response.(RequestMagicLinkResponseObject); ok {
+		if err := validResponse.VisitRequestMagicLinkResponse(ctx.Writer); err != nil {
+			sh.options.ResponseErrorHandlerFunc(ctx, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(ctx, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// VerifyMagicLink operation middleware
+func (sh *strictHandler) VerifyMagicLink(ctx *gin.Context) {
+	var request VerifyMagicLinkRequestObject
+
+	var body VerifyMagicLinkJSONRequestBody
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(ctx, err)
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx *gin.Context, request interface{}) (interface{}, error) {
+		return sh.ssi.VerifyMagicLink(ctx, request.(VerifyMagicLinkRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "VerifyMagicLink")
+	}
+
+	response, err := handler(ctx, request)
+
+	if err != nil {
+		sh.options.HandlerErrorFunc(ctx, err)
+	} else if validResponse, ok := response.(VerifyMagicLinkResponseObject); ok {
+		if err := validResponse.VisitVerifyMagicLinkResponse(ctx.Writer); err != nil {
 			sh.options.ResponseErrorHandlerFunc(ctx, err)
 		}
 	} else if response != nil {

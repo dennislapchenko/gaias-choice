@@ -29,6 +29,21 @@ type Config struct {
 	// not here.
 	BootstrapAdminEmail    string
 	BootstrapAdminPassword string
+
+	// Magic-link email (internal/mail). PostmarkToken set ⇒ Postmark's HTTP
+	// API (the live transport); else SMTPHost set ⇒ SMTP submission (the
+	// provider-neutral fallback); SMTPHost "log" ⇒ emails print to stdout
+	// (dev, no creds — wins over everything); nothing set ⇒ /api/auth/magic
+	// answers 503. PublicSiteURL is where emailed links point — the SPA
+	// consumes #magic=<token> there.
+	PostmarkToken  string
+	PostmarkStream string
+	SMTPHost       string
+	SMTPPort       string
+	SMTPUser       string
+	SMTPPass       string
+	MailFrom       string
+	PublicSiteURL  string
 }
 
 func Load() Config {
@@ -46,6 +61,15 @@ func Load() Config {
 		LocalContentDir:        os.Getenv("LOCAL_CONTENT_DIR"),
 		BootstrapAdminEmail:    os.Getenv("BOOTSTRAP_ADMIN_EMAIL"),
 		BootstrapAdminPassword: os.Getenv("BOOTSTRAP_ADMIN_PASSWORD"),
+		PostmarkToken:          os.Getenv("POSTMARK_TOKEN"),
+		PostmarkStream:         envOr("POSTMARK_STREAM", "outbound"),
+		SMTPHost:               os.Getenv("SMTP_HOST"),
+		SMTPPort:               envOr("SMTP_PORT", "587"),
+		SMTPUser:               os.Getenv("SMTP_USER"),
+		SMTPPass:               os.Getenv("SMTP_PASS"),
+		MailFrom:               envOr("MAIL_FROM", "Gaia's Choice <login@gardenofatlantis.com>"),
+		PublicSiteURL: strings.TrimRight(
+			envOr("PUBLIC_SITE_URL", "https://dennislapchenko.github.io/gaias-choice"), "/"),
 	}
 }
 

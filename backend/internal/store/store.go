@@ -284,3 +284,35 @@ func (s *Store) DeleteExpiredSessions(now time.Time) error {
 	)
 	return err
 }
+
+func (s *Store) CreateLoginToken(tokenHash, email string, expiresAt time.Time) error {
+	_, err := s.db.Exec(
+		`INSERT INTO login_tokens (token_hash, email, expires_at) VALUES (?, ?, ?)`,
+		tokenHash, email, expiresAt.UTC().Format(time.RFC3339),
+	)
+	return err
+}
+
+// ConsumeLoginToken redeems an unexpired magic-link token for its email,
+// deleting it in the same statement so a token can never be used twice.
+func (s *Store) ConsumeLoginToken(tokenHash string, now time.Time) (string, bool, error) {
+	var email string
+	err := s.db.QueryRow(
+		`DELETE FROM login_tokens WHERE token_hash = ? AND expires_at > ? RETURNING email`,
+		tokenHash, now.UTC().Format(time.RFC3339),
+	).Scan(&email)
+	if errors.Is(err, sql.ErrNoRows) {
+		return "", false, nil
+	}
+	return email, err == nil, err
+}
+
+// DeleteExpiredLoginTokens is the same lazy janitor as sessions, run on every
+// magic-link request.
+func (s *Store) DeleteExpiredLoginTokens(now time.Time) error {
+	_, err := s.db.Exec(
+		`DELETE FROM login_tokens WHERE expires_at <= ?`,
+		now.UTC().Format(time.RFC3339),
+	)
+	return err
+}

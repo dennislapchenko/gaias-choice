@@ -8,7 +8,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -16,6 +18,7 @@ import (
 
 	"github.com/dennislapchenko/gaias-choice/backend/internal/auth"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/content"
+	"github.com/dennislapchenko/gaias-choice/backend/internal/mail"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/store"
 )
 
@@ -25,6 +28,8 @@ type Deps struct {
 	Store       *store.Store
 	Auth        *auth.Service
 	Content     content.Store // nil ⇒ content routes answer 503
+	Mailer      *mail.Mailer  // nil ⇒ /auth/magic answers 503
+	SiteURL     string        // where emailed magic links point (no trailing /)
 }
 
 // NewRouter builds the fully-wired gin engine: logging, recovery, CORS, a
@@ -46,10 +51,14 @@ func NewRouter(d Deps) *gin.Engine {
 		store:        d.Store,
 		auth:         d.Auth,
 		content:      d.Content,
+		mailer:       d.Mailer,
+		siteURL:      d.SiteURL,
 		loginLimiter: newRateLimiter(10, time.Minute),
 		// Registration is open to the world; a tighter lid keeps a bot from
 		// filling the campfire with junk accounts.
 		registerLimiter: newRateLimiter(10, time.Hour),
+		// Each magic request sends a real email — same lid as registration.
+		magicLimiter: newRateLimiter(10, time.Hour),
 	}
 	RegisterHandlersWithOptions(r, NewStrictHandler(srv, nil), GinServerOptions{
 		BaseURL:     "/api",
@@ -65,8 +74,11 @@ type server struct {
 	store           *store.Store
 	auth            *auth.Service
 	content         content.Store
+	mailer          *mail.Mailer
+	siteURL         string
 	loginLimiter    *rateLimiter
 	registerLimiter *rateLimiter
+	magicLimiter    *rateLimiter
 }
 
 // Compile-time proof the contract is fully implemented.
@@ -125,6 +137,65 @@ func (s *server) Register(ctx context.Context, req RegisterRequestObject) (Regis
 		return nil, err
 	}
 	return Register200JSONResponse(grant(sess)), nil
+}
+
+func (s *server) RequestMagicLink(ctx context.Context, req RequestMagicLinkRequestObject) (RequestMagicLinkResponseObject, error) {
+	if s.mailer == nil {
+		return RequestMagicLink503JSONResponse(Error{Error: "sign-in links not configured"}), nil
+	}
+	if c := ginContext(ctx); c != nil && !s.magicLimiter.allow(c.ClientIP()) {
+		return RequestMagicLink429JSONResponse{RateLimitedJSONResponse{Error: "too many attempts — try again later"}}, nil
+	}
+	if req.Body == nil || req.Body.Email == "" {
+		return RequestMagicLink400JSONResponse{BadRequestJSONResponse{Error: "email required"}}, nil
+	}
+	token, err := s.auth.RequestMagic(req.Body.Email)
+	if errors.Is(err, auth.ErrInvalid) {
+		return RequestMagicLink400JSONResponse{BadRequestJSONResponse{Error: "not an email address"}}, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	locale := ""
+	if req.Body.Locale != nil {
+		locale = *req.Body.Locale
+	}
+	subject, body := magicEmail(locale, s.siteURL+"/#magic="+token)
+	// Send failure is an ops problem (bad SMTP config, provider down), not
+	// the user's: log it, keep the answer uniform.
+	if err := s.mailer.Send(strings.TrimSpace(req.Body.Email), subject, body); err != nil {
+		log.Printf("mail: magic-link send failed: %v", err)
+	}
+	return RequestMagicLink200JSONResponse{Status: "sent"}, nil
+}
+
+func (s *server) VerifyMagicLink(ctx context.Context, req VerifyMagicLinkRequestObject) (VerifyMagicLinkResponseObject, error) {
+	if c := ginContext(ctx); c != nil && !s.loginLimiter.allow(c.ClientIP()) {
+		return VerifyMagicLink429JSONResponse{RateLimitedJSONResponse{Error: "too many attempts — try again later"}}, nil
+	}
+	if req.Body == nil || req.Body.Token == "" {
+		return VerifyMagicLink400JSONResponse{BadRequestJSONResponse{Error: "token required"}}, nil
+	}
+	sess, err := s.auth.VerifyMagic(req.Body.Token)
+	if errors.Is(err, auth.ErrBadCredentials) {
+		return VerifyMagicLink401JSONResponse(Error{Error: "link invalid, expired, or already used"}), nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return VerifyMagicLink200JSONResponse(grant(sess)), nil
+}
+
+// magicEmail is the whole email-template system: two locales, plain text.
+func magicEmail(locale, link string) (subject, body string) {
+	if strings.HasPrefix(locale, "ru") {
+		return "Вход на Gaia's Choice",
+			"Здравствуйте!\n\nЧтобы войти, откройте ссылку:\n\n" + link +
+				"\n\nОна сработает один раз и действует 15 минут. Если вы не запрашивали вход — просто проигнорируйте это письмо.\n\n— Gaia's Choice"
+	}
+	return "Sign in to Gaia's Choice",
+		"Hello!\n\nOpen this link to sign in:\n\n" + link +
+			"\n\nIt works once and expires in 15 minutes. If you didn't request it, just ignore this email.\n\n— Gaia's Choice"
 }
 
 // grant maps an issued session onto the shared login/register response body.

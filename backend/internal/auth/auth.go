@@ -20,6 +20,10 @@ import (
 
 const sessionTTL = 30 * 24 * time.Hour
 
+// magicTTL bounds a magic-link token: long enough to open an inbox on
+// another device, short enough that a leaked email is soon worthless.
+const magicTTL = 15 * time.Minute
+
 // ErrBadCredentials covers unknown email and wrong password alike — callers
 // (and users) never learn which.
 var ErrBadCredentials = errors.New("bad credentials")
@@ -189,6 +193,52 @@ func (s *Service) UpdateProfile(userID int64, displayName, email, avatarURL, pas
 	return user, err
 }
 
+// RequestMagic mints a one-time sign-in token for the address and returns
+// the plaintext for the caller to email — this package never sends mail.
+// The address needs no account yet: redemption creates one (VerifyMagic).
+func (s *Service) RequestMagic(email string) (string, error) {
+	addr := normalizeEmail(email)
+	if err := checkEmail(addr); err != nil {
+		return "", err
+	}
+	// Same lazy janitor pattern as sessions.
+	_ = s.store.DeleteExpiredLoginTokens(time.Now())
+
+	token := randomToken()
+	if err := s.store.CreateLoginToken(hashToken(token), addr, time.Now().Add(magicTTL)); err != nil {
+		return "", err
+	}
+	return token, nil
+}
+
+// VerifyMagic redeems a magic-link token (single-use, TTL-bound) for a
+// session, creating a viewer account on first sign-in — the link arriving IS
+// the email verification, so unlike Register there is nothing else to check.
+// Accounts born this way have no usable password (empty hash ⇒ VerifyPassword
+// is always false); they can set one later via UpdateProfile.
+func (s *Service) VerifyMagic(token string) (Session, error) {
+	email, ok, err := s.store.ConsumeLoginToken(hashToken(token), time.Now())
+	if err != nil {
+		return Session{}, err
+	}
+	if !ok {
+		return Session{}, ErrBadCredentials
+	}
+	user, found, err := s.store.UserByEmail(email)
+	if err != nil {
+		return Session{}, err
+	}
+	if !found {
+		if err := s.store.CreateUser(email, "", "viewer", emailLocalPart(email)); err != nil {
+			return Session{}, err
+		}
+		if user, _, err = s.store.UserByEmail(email); err != nil {
+			return Session{}, err
+		}
+	}
+	return s.issueSession(user)
+}
+
 func (s *Service) issueSession(user store.User) (Session, error) {
 	token := randomToken()
 	expires := time.Now().Add(sessionTTL)
@@ -239,7 +289,7 @@ func normalizeEmail(email string) string {
 }
 
 // checkEmail is deliberately shallow — real validation is "the magic link
-// arrived" (future SMTP work). This only rejects obvious garbage.
+// arrived" (RequestMagic/VerifyMagic). This only rejects obvious garbage.
 func checkEmail(addr string) error {
 	at := strings.Index(addr, "@")
 	if len(addr) > 254 || at < 1 || at == len(addr)-1 || strings.ContainsAny(addr, " \t\n") {

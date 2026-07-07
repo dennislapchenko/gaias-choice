@@ -36,6 +36,11 @@ services:
       # empty — nuke backend/data to re-bootstrap. Override via the root .env.
       BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:-dev@local}
       BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:-dev-password}
+      # Magic-link email in dev: "log" mode prints the email (link included)
+      # to this container's stdout — no SMTP credentials (prod uses Postmark;
+      # see deploy/README.md). Copy the link into the browser to sign in.
+      SMTP_HOST: log
+      PUBLIC_SITE_URL: http://localhost:5173
     ports:
       - "8787:8787"
     links:
