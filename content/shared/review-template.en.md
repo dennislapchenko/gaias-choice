@@ -13,18 +13,24 @@ tags: []                   # optional, e.g. [organic, cotton]
 
 <!--
   A review is written by hand, from real use — no invented durations, scenes,
-  or test results. These five sections are the house structure, identical in
-  every review: keep them all, fill them honestly, and cut the prompts before
-  you ship.
+  or test results. We review things because we depend on these decisions
+  ourselves; write to the family who depends on theirs. These six sections
+  are the house structure, identical in every review: keep them all, fill
+  them honestly, and cut the prompts before you ship.
 -->
 
 **Verdict:** the answer in one or two sentences, for the reader who leaves
 after ten seconds. Would you buy it again?
 
-## How we tested it
+## Why we bought it
 
-How long, in what conditions, and whether it was bought or gifted — gifted
-must be disclosed here.
+Nobody wakes up wanting a product review — they wake up with a problem at
+3 a.m. Name the real one this thing had to solve in our actual day.
+
+## How it lived with us
+
+How long, in what conditions — the camper, the road, the baby — and whether
+it was bought or gifted; gifted must be disclosed here.
 
 ## What's genuinely good
 
@@ -38,4 +44,5 @@ it's *not* for.
 
 ## Who it's for
 
-And who should skip it. One honest line each.
+And who should skip it. One honest line each. If it's not for you, we'd
+rather you keep your money — that's the whole point of this site.

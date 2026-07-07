@@ -12,9 +12,14 @@ Two reading rules: **months count from the first real review**, not from
 today — and a phase opens only when the previous one's "done when" line is
 true. One phase at a time.
 
+The order behind the phases is deliberate: **identity → community → trust →
+reviews → revenue** — each rung grows from the one below it, never the other
+way around. That's why the campfire exists before the first affiliate link:
+belonging is harder to copy than content.
+
 ## Phase 0 — Foundations *(now)*
 
-**Goal: nothing on the site is fake.**
+**Goal: nothing on the site is fake — and the site knows who it is.**
 
 - [x] Site scaffolding: content-driven SPA, containerized, deployable
 - [x] Backend foundation: a small Go API with its own database and real
@@ -28,6 +33,8 @@ true. One phase at a time.
 - [ ] Retell About in our own words — the facts are true, the voice isn't ours yet
 - [ ] Decide the public identity once, early: names? faces? how much of the
       homestead dream?
+- [ ] The front page leads with our story — the camper, the two years of
+      building, why the road — before any product. Story before methodology
 - [ ] Real contact email and social accounts in `site.yaml` — or remove the
       placeholders until they exist
 - [ ] Buy the first 5–10 products; start a testing-notes file for each
@@ -46,6 +53,9 @@ true. One phase at a time.
 - [x] Herbalism Compass course finished (all 11 chapters, both languages) —
       real content that isn't reviews
 - [ ] Homeopathy Compass course finished (chapters 4–11, both languages)
+- [ ] Pick one recurring ritual and hold it — a monthly almanac letter, a
+      season-opening Journal note — something readers learn to expect. Trust
+      comes from consistency, not expertise alone
 
 **Voice track (the Compass is the only section drafted with an AI — every
 other place gets our own words; About is tracked separately in Phase 0):**
@@ -78,7 +88,8 @@ the soft-launch test is passed.
 
 ## Phase 2 — Traffic *(months 3–6)*
 
-**Goal: people we don't know read the site.**
+**Goal: people we don't know read the site — and the ones who stay have a
+place to sit.**
 
 - [ ] Pinterest business account; pin templates; every piece pinned
 - [ ] 25+ published pieces, still narrow, still weekly
@@ -90,6 +101,8 @@ the soft-launch test is passed.
       is a natural first candidate)
 - [ ] Monthly metrics half-hour: Search Console queries → next month's content
       list; learn which language actually brings readers and lean that way
+- [ ] Everyone who writes to us gets a real answer — and an invitation to
+      take a seat at the campfire
 
 **Done when:** 1,000 organic visits/month.
 
@@ -119,9 +132,25 @@ the soft-launch test is passed.
 - [ ] Decide on display ads *(probably not — sits badly with "buy less")*
 - [ ] Retire the founder course chapter by chapter, each retold from lived
       experience; archive the originals in a "building in public" corner
+- [ ] Readers around the campfire become contributors — their fixes, their
+      routes, their testing notes, published with credit
 
 **Done when:** it isn't — this phase is the operating state we're building
 toward.
+
+## Phase 5 — The homestead *(the horizon)*
+
+**Goal: the site becomes what it documents.** This phase doesn't open — it
+pulls. Every phase above is a step toward it, and it's the reason none of
+them are allowed to cheat.
+
+- [ ] The circle meets off-screen — a real gathering, however small
+- [ ] The homestead found: land, food forests, animals, the kind sustainable
+      community the whole journey is searching for
+- [ ] Gaia's Choice retold from the land — an operating system for family
+      life, written by a family that lives it
+
+**Done when:** the roadmap stops being about the site.
 
 ---
 

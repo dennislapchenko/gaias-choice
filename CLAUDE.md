@@ -166,7 +166,7 @@ Authoring procedures (frontmatter schemas, voice rules, step-by-steps) live in
 **Reviews** (`/reviews`, `products/*.md`) — frontmatter `title`, `category`
 (filter chip), `rating` 0–5, optional `price`/`affiliateUrl` (rendered
 `rel=sponsored`)/`image`/`tags`/`state`, `excerpt`, `date`. Every review
-follows the universal five-section body structure whose canonical source is
+follows the universal six-section body structure whose canonical source is
 `content/shared/review-template.<locale>.md` — the scaffold the "Contribute!"
 button on `/reviews` copies to the clipboard.
 

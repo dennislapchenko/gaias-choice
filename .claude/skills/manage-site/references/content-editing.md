@@ -44,15 +44,17 @@ existing category set — the filter chips), `rating` 0–5 (a 5 must survive th
 enrolled — never a placeholder), `excerpt`, optional `image` (mandala SVG by
 default), `date`, optional `tags`.
 
-The five body sections are **the universal structure of every review** — keep
+The six body sections are **the universal structure of every review** — keep
 them all, in this order:
 
 1. `**Verdict:** …` — the answer first
-2. `## How we tested it` — duration, conditions, bought vs gifted (gifted
+2. `## Why we bought it` — the real problem it had to solve in the family's
+   day (emotional problem first — nobody wakes up wanting a review)
+3. `## How it lived with us` — duration, conditions, bought vs gifted (gifted
    must be disclosed here)
-3. `## What's genuinely good`
-4. `## What we'd change` — every review names a flaw
-5. `## Who it's for` — and who should skip it
+4. `## What's genuinely good`
+5. `## What we'd change` — every review names a flaw
+6. `## Who it's for` — and who should skip it
 
 To change the structure, edit the template files themselves (keep en + ru in
 lockstep) — don't improvise per review. Ask for real testing notes if the
@@ -117,10 +119,12 @@ runtime for every page).
 
 The **Journal** (user-facing "Journal" / «Заметки») is the site's
 **human-written, date-ordered blog** — the honest counterpart to the
-computer-assisted Compass. Two shapes of entry fit: **trip notes** (what
-actually happened on the road) and **practice write-ups** (something
-beneficial the family actually does, told from lived experience — doesn't
-need to be road-specific). **Truth-first is the whole point either way:** no
+computer-assisted Compass. Two shapes of entry fit: **stories**
+(something that happened once — a drive, a night, a rescue) and **ways we
+live** (a practice, approach, worldview piece, or how a whole category of
+things earns its place — anything that improves a reader's life by sharing
+lived experience; doesn't need to be road-specific). **Truth-first is the
+whole point either way:** no
 invented trips, durations, scenes, or results (the standing rules above apply
 in full). Frontmatter: `title`, `state` (`upcoming` while queued/WIP — the
 template's default; flip to `active` or delete the line to publish), `excerpt`,
@@ -142,7 +146,8 @@ show on every locale's rail; journal idea titles are localized prose — give
 the ru stub the **same slug** as the en one and its title wins on the ru rail.
 
 **The "Contribute!" button** on `/journal` copies a generic, topic-agnostic
-scaffold — the single source is `content/shared/journal-template.<locale>.md`
+scaffold carrying **both shapes' heading sets** (the author keeps one, deletes
+the other) — the single source is `content/shared/journal-template.<locale>.md`
 (edit that file to change what gets copied; en is the fallback). `/reviews`
 has the same button copying the review scaffold — see "Add a product review"
 above; the shared mechanics are the "Contribute!" row in `development.md`.
@@ -289,7 +294,12 @@ in `references/development.md` for the full wiring.
 Public, building-in-public, phased with `- [ ]` checkboxes. Maintenance rules:
 
 - Tick items when milestones actually land; never pre-tick.
-- New scope goes into the matching phase; don't create Phase 5 lightly.
+- New scope goes into the matching phase (0–4). Phase 5 ("The homestead") is
+  the horizon that caps the list — items land there only if they're about the
+  site becoming the life it documents; don't add phases beyond it.
+- The preamble states the build order (identity → community → trust →
+  reviews → revenue — the gaia-mentor growth order); new items should be
+  placeable on that ladder.
 - Update the "*Last updated: <Month Year>*" footer line on every edit.
 - **The roadmap exists in both locales** — mirror every tick/edit in
   `ru/pages/roadmap.md` (RU in her voice) and update both footers. Quick

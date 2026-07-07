@@ -114,11 +114,14 @@ classify-and-do as usual.
   together), keep the small repetition and leave a one-line note on why. DRY is
   the default, not a mandate to abstract prematurely.
 
-## When  project's mission, vision, positioning, product
-  strategy, business model, editorial direction, community, branding,
-  philosophy, prioritization, roadmap, growth, decision-making, or any major
-  trade-offs is discussed then:
-Consider the gaia-mentor skill
+## Strategic decisions → the gaia-mentor skill
+
+Whenever the discussion touches the project's mission, vision, positioning,
+product strategy, business model, editorial direction, community, branding,
+philosophy, prioritization, roadmap, growth, or any major trade-off, invoke
+the **gaia-mentor** skill first — it carries the worldview (the six threads,
+the teachers), the growth order (identity → community → trust → reviews →
+revenue), and the questions every big decision must pass.
 
 ## Project phase awareness
 
