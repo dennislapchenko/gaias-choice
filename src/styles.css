@@ -604,34 +604,43 @@ h1 {
     transform: translate(-50%, -50%);
     text-align: center;
 }
-/* Rank ring by role — a coiled dragon (DragonRing in Account.tsx), not a
-   plain colored outline. Positioned absolute so it overlaps the avatar's
-   edge like the reference art; the avatar is the column's first flex child,
-   so top-aligning at 0 centers the ring on it without extra math. */
-.dragon-ring {
+/* Rank ring by role — a faint Seed-of-Life motif (RankGeometry in
+   Account.tsx) behind the avatar, sized larger than it so only the outer
+   part of the circles peeks past its edge. Centered on the avatar (the
+   column's first flex child, so a top offset of half its own height minus
+   half the avatar's height lines up the two centers). `.camper-avatar` gets
+   an explicit z-index below to guarantee it paints over this ring — relying
+   on the default flex/abspos stacking tie-break was NOT reliable here: it
+   put the ring behind a real `<img>` avatar (whose own `transform: scale(2)`
+   crop promotes it to a compositing layer) but in FRONT of a plain
+   initial-letter avatar (no such promotion), an inconsistency confirmed via
+   `document.elementFromPoint`. An explicit z-index removes the ambiguity
+   for both cases. */
+.rank-geometry {
     position: absolute;
-    top: -13px;
+    top: -15px;
     left: 50%;
-    width: 128px;
-    height: 128px;
+    width: 132px;
+    height: 132px;
     transform: translateX(-50%);
     pointer-events: none;
-    overflow: visible;
+    opacity: 0.5;
 }
-.dragon-shimmer {
-    animation: dragon-shimmer 3s ease-in-out infinite;
-    transform-origin: 60px 60px;
+.rank-geometry-admin {
+    animation: rank-shimmer 4s ease-in-out infinite;
 }
-@keyframes dragon-shimmer {
+@keyframes rank-shimmer {
     0%,
     100% {
-        filter: brightness(1) drop-shadow(0 0 2px rgba(110, 210, 255, 0.6));
+        opacity: 0.4;
     }
     50% {
-        filter: brightness(1.25) drop-shadow(0 0 6px rgba(150, 230, 255, 0.95));
+        opacity: 0.7;
     }
 }
 .camper-avatar {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -693,7 +702,7 @@ h1 {
         height: 42px;
         font-size: 1rem;
     }
-    .dragon-ring {
+    .rank-geometry {
         top: -6px;
         width: 54px;
         height: 54px;
@@ -1222,11 +1231,6 @@ a.respected-card:hover {
         order: -1;
         max-width: 220px;
         margin: 0 auto;
-    }
-    /* Wide prose tables scroll sideways instead of squeezing the columns */
-    .prose table {
-        display: block;
-        overflow-x: auto;
     }
 }
 .eyebrow {
@@ -2089,11 +2093,25 @@ a.respected-card:hover {
     .detail-layout {
         display: flex;
         flex-direction: column;
+        /* The desktop grid rule above sets align-items:start (grid items
+           size to content by default there); left alone here it also
+           applies to this flex column, so items sized to content instead
+           of stretching to the available width — the mechanism that let a
+           wide GFM table's content size (not the column width) become
+           .detail's own width, overflowing the page. */
+        align-items: stretch;
     }
     .detail-nav {
         order: -3;
         max-width: 760px;
         margin: 0 auto;
+        /* Same auto-margin-defeats-stretch gotcha as .detail-layout .detail
+           below: with no explicit width, this shrinks to fit its short
+           content (a link + a couple tag chips) and the auto margins then
+           center that narrow box, instead of it filling the row so its own
+           align-items:flex-start puts the link/tags flush left like the
+           sidebar panels above. */
+        width: 100%;
     }
     /* mobile stack: nav, then title + image, then the TOC, then the body */
     .detail-header {
@@ -2104,6 +2122,19 @@ a.respected-card:hover {
     .detail-layout .detail {
         max-width: 760px;
         margin: 0 auto;
+        /* A flex item with auto margins on the cross axis (the `0 auto`
+           above, needed to center it once the container is wider than
+           760px) ignores align-items/align-self entirely per spec and
+           falls back to sizing itself by CONTENT instead of stretching —
+           so a wide GFM table (table-layout:auto sizes columns to fit
+           content, ignoring the table's own width:100%) was setting
+           .detail's own width, expanding the whole page on narrow
+           screens. An explicit width forces it back to the container's
+           size (still capped by max-width for the centered look above
+           760px), handing the overflow to the table's own
+           .prose table overflow-x:auto instead. */
+        width: 100%;
+        min-width: 0;
     }
     .toc {
         order: -1;
@@ -2237,6 +2268,19 @@ a.respected-card:hover {
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
     overflow: hidden;
+}
+/* Wide prose tables scroll sideways instead of squeezing the columns. Must
+   come AFTER the base .prose table rule above: same selector specificity,
+   so source order decides, and the base rule's overflow:hidden (there to
+   clip the rounded corners) would otherwise win over this overflow-x:auto
+   at every width — which is exactly what let a wide table blow out the
+   whole mobile layout (article rendered at the table's content width
+   instead of the viewport's) until this block was moved down here. */
+@media (max-width: 720px) {
+    .prose table {
+        display: block;
+        overflow-x: auto;
+    }
 }
 .prose th,
 .prose td {
@@ -2454,14 +2498,40 @@ a.respected-card:hover {
     width: 15px;
     height: 15px;
 }
+/* Wider variant with a text label (EditButton's `label` prop, DeleteButton) —
+   the icon-only Upcoming-rail buttons are unaffected since they don't pass
+   `label`. */
+.edit-btn-labeled {
+    padding: 8px 14px;
+    gap: 6px;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+/* Same look as .edit-btn but tips red on hover — a destructive action, not
+   a neutral one. */
+.delete-btn:hover {
+    color: #b3423a;
+    border-color: #b3423a;
+}
 /* iPhone-style switch (src/components/StateToggle.tsx) that flips a post's
    `state` directly — no dialog. ON (sage, knob right) = active/published;
    OFF (line-gray, knob left) = upcoming/queued. Sits in .detail-nav-tools
-   alongside .detail-edit — that row's flex gap handles spacing. */
+   alongside .detail-edit — that row's flex gap handles spacing. The
+   "Active" text label makes the row self-explanatory instead of a bare
+   switch. */
 .state-toggle {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    padding: 6px 12px 6px 6px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+}
+.state-toggle-label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--ink);
 }
 .state-switch {
     position: relative;
@@ -2497,6 +2567,55 @@ a.respected-card:hover {
 .state-toggle-error {
     font-size: 0.78rem;
     color: #b3423a;
+}
+/* "Are you sure?" confirm dialog (src/components/DeleteButton.tsx) — reuses
+   the content-editor overlay's backdrop treatment at a much smaller size. */
+.confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(47, 44, 39, 0.45);
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    z-index: 100;
+}
+.confirm-dialog {
+    width: min(90vw, 380px);
+    padding: 20px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 20px 60px rgba(47, 44, 39, 0.25);
+}
+.confirm-dialog-title {
+    margin: 0 0 8px;
+    font-weight: 700;
+}
+.confirm-dialog-body {
+    margin: 0;
+    color: var(--muted);
+}
+.confirm-dialog-error {
+    margin: 10px 0 0;
+    font-size: 0.85rem;
+    color: #b3423a;
+}
+.confirm-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+}
+.btn-danger {
+    background: #b3423a;
+    color: var(--white);
+}
+.btn-danger:hover {
+    background: #8f342d;
+}
+.btn:disabled {
+    opacity: 0.6;
+    cursor: default;
 }
 
 /* In-place content editor (src/lib/contentEditor.tsx). Mounted once at the

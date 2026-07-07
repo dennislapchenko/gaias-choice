@@ -1,22 +1,27 @@
-// Reusable "edit" icon button (same stroke style as CopyButton). Icon-only;
-// the caller decides visibility (edit-mode-only everywhere) and supplies the
-// click handler — usually a `useContentEditor()` open call. `icon="pencil"`
-// is the in-place edit affordance, `icon="plus"` the start-a-draft one.
+// Reusable "edit" icon button (same stroke style as CopyButton). Icon-only
+// by default; the caller decides visibility (edit-mode-only everywhere) and
+// supplies the click handler — usually a `useContentEditor()` open call.
+// `icon="pencil"` is the in-place edit affordance, `icon="plus"` the
+// start-a-draft one. Pass `label` to also show text (adds `.edit-btn-labeled`
+// for the wider look) — used on the review/journal detail pages; the compact
+// Upcoming-rail callers leave it off.
 export default function EditButton({
   onClick,
   className,
   ariaLabel,
   icon = 'pencil',
+  label,
 }: {
   onClick: () => void
   className?: string
   ariaLabel: string
   icon?: 'pencil' | 'plus'
+  label?: string
 }) {
   return (
     <button
       type="button"
-      className={`edit-btn${className ? ` ${className}` : ''}`}
+      className={`edit-btn${label ? ' edit-btn-labeled' : ''}${className ? ` ${className}` : ''}`}
       onClick={onClick}
       aria-label={ariaLabel}
       title={ariaLabel}
@@ -34,6 +39,7 @@ export default function EditButton({
           </>
         )}
       </svg>
+      {label && <span>{label}</span>}
     </button>
   )
 }

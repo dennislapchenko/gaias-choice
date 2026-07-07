@@ -90,3 +90,24 @@ func (s *LocalStore) Save(p, content, sha, _ string) (SaveResult, error) {
 	}
 	return SaveResult{SHA: localSHA([]byte(content)), Commit: "local"}, nil
 }
+
+func (s *LocalStore) Delete(p, sha, _ string) (DeleteResult, error) {
+	full, err := s.resolve(p)
+	if err != nil {
+		return DeleteResult{}, err
+	}
+	existing, err := os.ReadFile(full)
+	if errors.Is(err, fs.ErrNotExist) {
+		return DeleteResult{NotFound: true}, nil
+	}
+	if err != nil {
+		return DeleteResult{}, err
+	}
+	if localSHA(existing) != sha {
+		return DeleteResult{Conflict: true}, nil
+	}
+	if err := os.Remove(full); err != nil {
+		return DeleteResult{}, err
+	}
+	return DeleteResult{Commit: "local"}, nil
+}

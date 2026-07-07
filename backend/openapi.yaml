@@ -485,6 +485,59 @@ paths:
           $ref: '#/components/responses/Upstream'
         '503':
           $ref: '#/components/responses/NotConfigured'
+    delete:
+      operationId: deleteContent
+      summary: Delete one content/ file (a git commit in prod, a working-tree remove in dev)
+      tags: [content]
+      security:
+        - session: [editor]
+      parameters:
+        - name: path
+          in: query
+          required: true
+          description: Repo-relative path; must live under content/.
+          schema: { type: string, maxLength: 512 }
+        - name: sha
+          in: query
+          required: true
+          description: Handle from a prior read — the same conflict guard as save.
+          schema: { type: string }
+        - name: message
+          in: query
+          required: false
+          description: Commit message; defaulted when omitted.
+          schema: { type: string }
+      responses:
+        '200':
+          description: Deleted. `commit` is the git commit sha in prod, "local" in dev.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [path, commit]
+                properties:
+                  path: { type: string }
+                  commit: { type: string }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: No such file.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '409':
+          description: The file changed since it was read (stale sha) — re-fetch and retry.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '502':
+          $ref: '#/components/responses/Upstream'
+        '503':
+          $ref: '#/components/responses/NotConfigured'
 
   /content/save:
     post:

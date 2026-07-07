@@ -47,6 +47,7 @@ export default function StateToggle({
       >
         <span className="state-switch-knob" />
       </button>
+      <span className="state-toggle-label">{t('editor.stateLabel')}</span>
       {error && <span className="state-toggle-error">{error}</span>}
     </span>
   )

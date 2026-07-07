@@ -103,6 +103,7 @@ func TestSpecDrivenAuth(t *testing.T) {
 		{http.MethodGet, "/api/users"},
 		{http.MethodGet, "/api/content/file?path=content/locales/en/site.yaml"},
 		{http.MethodPost, "/api/content/save"},
+		{http.MethodDelete, "/api/content/file?path=content/locales/en/site.yaml&sha=x"},
 	}
 	for _, req := range secured {
 		for _, bearer := range []string{"", "garbage-token"} {
@@ -222,6 +223,7 @@ func TestViewerForbiddenFromContent(t *testing.T) {
 	for _, req := range [][2]string{
 		{http.MethodGet, "/api/content/file?path=content/locales/en/site.yaml"},
 		{http.MethodPost, "/api/content/save"},
+		{http.MethodDelete, "/api/content/file?path=content/locales/en/site.yaml&sha=x"},
 	} {
 		body := ""
 		if req[0] == http.MethodPost {
@@ -378,6 +380,7 @@ func TestNotConfigured(t *testing.T) {
 	for _, req := range [][2]string{
 		{http.MethodGet, "/api/content/file?path=content/locales/en/site.yaml"},
 		{http.MethodPost, "/api/content/save"},
+		{http.MethodDelete, "/api/content/file?path=content/locales/en/site.yaml&sha=x"},
 	} {
 		body := ""
 		if req[0] == http.MethodPost {
@@ -578,6 +581,69 @@ func TestSaveConflict(t *testing.T) {
 	}
 }
 
+func TestDeleteContent(t *testing.T) {
+	type ghDelete struct {
+		Message string `json:"message"`
+		SHA     string `json:"sha"`
+		Branch  string `json:"branch"`
+	}
+	var got ghDelete
+	var sawMethod string
+	up := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sawMethod = r.Method
+		json.NewDecoder(r.Body).Decode(&got)
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, `{"commit":{"sha":"delcommit"}}`)
+	}))
+	defer up.Close()
+	r, token := testEnv(t, githubSeam(up.URL))
+
+	w := do(r, http.MethodDelete,
+		"/api/content/file?path=content/locales/en/products/old.md&sha=oldsha", token, "")
+	if w.Code != http.StatusOK {
+		t.Fatalf("delete: got %d: %s", w.Code, w.Body.String())
+	}
+	if sawMethod != http.MethodDelete {
+		t.Errorf("upstream method: %s", sawMethod)
+	}
+	if got.SHA != "oldsha" {
+		t.Errorf("sha not passed through: %q", got.SHA)
+	}
+	if got.Message != "content: delete content/locales/en/products/old.md via portal" {
+		t.Errorf("default message: %q", got.Message)
+	}
+	if got.Branch != "main" {
+		t.Errorf("branch: %q", got.Branch)
+	}
+	var resp struct{ Path, Commit string }
+	json.Unmarshal(w.Body.Bytes(), &resp)
+	if resp.Path != "content/locales/en/products/old.md" || resp.Commit != "delcommit" {
+		t.Errorf("response mapping: %+v", resp)
+	}
+}
+
+func TestDeleteConflictAndNotFound(t *testing.T) {
+	for _, tc := range []struct {
+		upstreamCode int
+		want         int
+	}{
+		{http.StatusConflict, http.StatusConflict},
+		{http.StatusUnprocessableEntity, http.StatusConflict},
+		{http.StatusNotFound, http.StatusNotFound},
+	} {
+		up := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(tc.upstreamCode)
+		}))
+		r, token := testEnv(t, githubSeam(up.URL))
+		w := do(r, http.MethodDelete,
+			"/api/content/file?path=content/locales/en/site.yaml&sha=stale", token, "")
+		if w.Code != tc.want {
+			t.Errorf("upstream %d: got %d, want %d", tc.upstreamCode, w.Code, tc.want)
+		}
+		up.Close()
+	}
+}
+
 // The dev sandbox: a LocalStore seam routes saves to the filesystem —
 // create/read/update round-trip on disk, with the same 404/409 semantics as
 // the GitHub path (no upstream, no commit).
@@ -632,6 +698,29 @@ func TestLocalStore(t *testing.T) {
 	onDisk, _ = os.ReadFile(filepath.Join(dir, filepath.FromSlash(p)))
 	if string(onDisk) != "---\ntitle: Local 2\n---\n" {
 		t.Errorf("update not written: %q", onDisk)
+	}
+
+	// Delete with a stale sha → 409, file untouched.
+	if w := do(r, http.MethodDelete, q+"&sha=deadbeef", token, ""); w.Code != http.StatusConflict {
+		t.Errorf("stale delete: got %d, want 409", w.Code)
+	}
+	if _, err := os.Stat(filepath.Join(dir, filepath.FromSlash(p))); err != nil {
+		t.Fatalf("file removed despite stale sha: %v", err)
+	}
+
+	// Delete with the current sha → 200, file gone.
+	w = do(r, http.MethodGet, q, token, "")
+	json.Unmarshal(w.Body.Bytes(), &got)
+	if w := do(r, http.MethodDelete, q+"&sha="+got.Sha, token, ""); w.Code != http.StatusOK {
+		t.Fatalf("delete: got %d: %s", w.Code, w.Body.String())
+	}
+	if _, err := os.Stat(filepath.Join(dir, filepath.FromSlash(p))); !os.IsNotExist(err) {
+		t.Fatalf("file still on disk after delete: err=%v", err)
+	}
+
+	// Delete again (already gone) → 404.
+	if w := do(r, http.MethodDelete, q+"&sha="+got.Sha, token, ""); w.Code != http.StatusNotFound {
+		t.Errorf("re-delete: got %d, want 404", w.Code)
 	}
 }
 

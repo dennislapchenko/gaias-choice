@@ -75,6 +75,11 @@ export function apiPut<T>(path: string, body?: unknown, opts?: { token?: string 
   return apiSend<T>('PUT', path, body, opts)
 }
 
+export async function apiDelete<T>(path: string, opts?: { token?: string }): Promise<T> {
+  const res = await fetch(apiUrl(path), { method: 'DELETE', headers: headers(opts?.token) })
+  return parseJson<T>(res)
+}
+
 // Request/response types live here until there are enough to split out.
 // They mirror backend/openapi.yaml — the endpoint contract's single source
 // of truth.
@@ -181,6 +186,13 @@ export interface SaveResponse {
   path: string
   sha: string // new blob sha
   commit: string // the commit this save produced
+}
+
+/** DELETE /api/content/file — remove one content/ file as a git commit;
+ *  `sha` is the same optimistic-concurrency handle as save. */
+export interface DeleteResponse {
+  path: string
+  commit: string
 }
 
 /** POST /api/content/template — re-tune a blank template's guiding prompts to a

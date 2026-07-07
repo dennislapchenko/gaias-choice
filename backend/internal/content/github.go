@@ -129,3 +129,46 @@ func (s *GitHubStore) Save(p, content, sha, message string) (SaveResult, error) 
 	}
 	return SaveResult{SHA: gh.Content.SHA, Commit: gh.Commit.SHA}, nil
 }
+
+func (s *GitHubStore) Delete(p, sha, message string) (DeleteResult, error) {
+	ghBody := map[string]any{
+		"message": message,
+		"sha":     sha,
+		"branch":  s.branch,
+		"committer": map[string]string{
+			"name":  "Gaia's Choice portal",
+			"email": "portal@users.noreply.github.com",
+		},
+	}
+	payload, err := json.Marshal(ghBody)
+	if err != nil {
+		return DeleteResult{}, errors.New("encode failed")
+	}
+	resp, err := s.do(http.MethodDelete, s.contentsURL(p), strings.NewReader(string(payload)))
+	if err != nil {
+		return DeleteResult{}, errors.New("github unreachable")
+	}
+	defer resp.Body.Close()
+	switch resp.StatusCode {
+	case http.StatusOK:
+		// fall through to decode below
+	case http.StatusNotFound:
+		return DeleteResult{NotFound: true}, nil
+	case http.StatusConflict, http.StatusUnprocessableEntity:
+		// sha mismatch — the FE's retry path
+		return DeleteResult{Conflict: true}, nil
+	case http.StatusUnauthorized, http.StatusForbidden:
+		return DeleteResult{}, errors.New("github auth failed")
+	default:
+		return DeleteResult{}, fmt.Errorf("github %d", resp.StatusCode)
+	}
+	var gh struct {
+		Commit struct {
+			SHA string `json:"sha"`
+		} `json:"commit"`
+	}
+	if err := json.NewDecoder(io.LimitReader(resp.Body, 1024*1024)).Decode(&gh); err != nil {
+		return DeleteResult{}, errors.New("unexpected github response")
+	}
+	return DeleteResult{Commit: gh.Commit.SHA}, nil
+}

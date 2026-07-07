@@ -23,7 +23,17 @@ import { createContext, useContext, useEffect, useRef, useState, type ReactNode 
 import { marked } from 'marked'
 import { Composer, CST, isScalar, Parser, parseDocument } from 'yaml'
 import CopyButton from '../components/CopyButton'
-import { apiGet, apiPost, ApiError, enrichTemplate, translateContent, type ContentFile, type SaveResponse } from './api'
+import {
+  apiDelete,
+  apiGet,
+  apiPost,
+  ApiError,
+  enrichTemplate,
+  translateContent,
+  type ContentFile,
+  type DeleteResponse,
+  type SaveResponse,
+} from './api'
 import { useEditMode } from './editMode'
 import { LOCALE_LABELS, SUPPORTED_LOCALES, useI18n } from './i18n'
 import type { EditRef } from './types'
@@ -61,6 +71,8 @@ interface ContentEditorApi {
   openDraft: (opts: { title: string; path: string; initialValue: string; message: string }) => void
   /** Flip one YAML scalar directly, no dialog; `ref` comes from a content.ts provenance getter. */
   setScalar: (ref: EditRef, newValue: string) => Promise<void>
+  /** Delete a content file outright (a git commit in prod, a working-tree remove in dev). */
+  deleteFile: (path: string) => Promise<void>
 }
 
 const ContentEditorContext = createContext<ContentEditorApi | null>(null)
@@ -273,6 +285,31 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  // Delete outright — same fetch-sha-then-write, retry-once-on-409 shape as
+  // setScalar/saveFile, just ending in a DELETE instead of a save.
+  const deleteFile: ContentEditorApi['deleteFile'] = async (path) => {
+    const file = await apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(path)}`, {
+      token: token ?? undefined,
+    })
+    const attempt = (sha: string) =>
+      apiDelete<DeleteResponse>(
+        `/content/file?path=${encodeURIComponent(path)}&sha=${encodeURIComponent(sha)}`,
+        { token: token ?? undefined },
+      )
+    try {
+      await attempt(file.sha)
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 409) {
+        const fresh = await apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(path)}`, {
+          token: token ?? undefined,
+        })
+        await attempt(fresh.sha)
+        return
+      }
+      throw err
+    }
+  }
+
   const saveFile = async (mode: Extract<EditorMode, { kind: 'file' }>, value: string) => {
     const attempt = (sha: string) =>
       apiPost<SaveResponse>(
@@ -430,7 +467,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       })
   }
 
-  const api: ContentEditorApi = { openFile, openDraft, setScalar }
+  const api: ContentEditorApi = { openFile, openDraft, setScalar, deleteFile }
   const busy =
     state?.status === 'loading' ||
     state?.status === 'saving' ||

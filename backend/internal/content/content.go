@@ -25,12 +25,14 @@ const MaxBytes = 256 * 1024
 
 // Store is the storage backend behind the seam. Get returns a file's text
 // plus an opaque sha handle (optimistic concurrency); Save writes one file
-// (empty sha = create). Conflicts (sha mismatch / create-vs-existing) and
-// not-found are signalled in the result structs, not as errors — any returned
-// error is an infrastructure failure (the HTTP layer maps it to 502).
+// (empty sha = create); Delete removes one file, guarded by the same sha
+// handle. Conflicts (sha mismatch / create-vs-existing), not-found, are
+// signalled in the result structs, not as errors — any returned error is an
+// infrastructure failure (the HTTP layer maps it to 502).
 type Store interface {
 	Get(path string) (GetResult, error)
 	Save(path, content, sha, message string) (SaveResult, error)
+	Delete(path, sha, message string) (DeleteResult, error)
 }
 
 type GetResult struct {
@@ -43,6 +45,12 @@ type SaveResult struct {
 	SHA      string
 	Commit   string // git commit sha in prod; "local" in dev (no commit)
 	Conflict bool
+}
+
+type DeleteResult struct {
+	Commit   string // git commit sha in prod; "local" in dev (no commit)
+	Conflict bool
+	NotFound bool
 }
 
 // ValidPath allows only clean, relative, content/-rooted paths.

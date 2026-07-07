@@ -10,6 +10,7 @@ import Markdown from '../components/Markdown'
 import GaiaScore from '../components/GaiaScore'
 import EditButton from '../components/EditButton'
 import StateToggle from '../components/StateToggle'
+import DeleteButton from '../components/DeleteButton'
 import NotFound from './NotFound'
 
 export default function ReviewDetail() {
@@ -47,10 +48,12 @@ export default function ReviewDetail() {
             <EditButton
               className="detail-edit"
               ariaLabel={t('editor.contentAria')}
+              label={t('editor.edit')}
               onClick={() =>
                 editor.openFile({ title: t('editor.contentTitle'), path: getProductFile(locale, slug!) })
               }
             />
+            <DeleteButton path={getProductFile(locale, slug!)} redirectTo="/reviews" />
           </div>
         )}
       </div>

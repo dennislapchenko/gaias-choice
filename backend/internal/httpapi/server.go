@@ -450,6 +450,37 @@ func (s *server) SaveContent(_ context.Context, req SaveContentRequestObject) (S
 	return SaveContent200JSONResponse{Path: b.Path, Sha: res.SHA, Commit: res.Commit}, nil
 }
 
+func (s *server) DeleteContent(_ context.Context, req DeleteContentRequestObject) (DeleteContentResponseObject, error) {
+	if s.content == nil {
+		return DeleteContent503JSONResponse{NotConfiguredJSONResponse{Error: "editing not configured"}}, nil
+	}
+	p := req.Params.Path
+	if !content.ValidPath(p) {
+		return DeleteContent400JSONResponse{BadRequestJSONResponse{Error: "invalid path"}}, nil
+	}
+	msg := ""
+	if req.Params.Message != nil {
+		msg = *req.Params.Message
+	}
+	if msg == "" {
+		msg = fmt.Sprintf("content: delete %s via portal", p)
+	}
+	if len(msg) > 200 {
+		msg = msg[:200]
+	}
+	res, err := s.content.Delete(p, req.Params.Sha, msg)
+	if err != nil {
+		return DeleteContent502JSONResponse{UpstreamJSONResponse{Error: err.Error()}}, nil
+	}
+	if res.NotFound {
+		return DeleteContent404JSONResponse(Error{Error: "not found"}), nil
+	}
+	if res.Conflict {
+		return DeleteContent409JSONResponse(Error{Error: "conflict — file changed"}), nil
+	}
+	return DeleteContent200JSONResponse{Path: p, Commit: res.Commit}, nil
+}
+
 // EnrichTemplate re-tunes a blank template's prompts to a post title via the
 // Anthropic API (internal/enrich). It reshapes questions only — never authors
 // content — so the provenance contract holds. Nil enricher ⇒ 503 and the FE
