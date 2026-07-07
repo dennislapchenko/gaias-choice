@@ -451,30 +451,48 @@ h1 {
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 120px;
+    width: 240px;
     transform: translate(-50%, -50%);
+    animation: campfire-glow 2.4s ease-in-out infinite;
 }
-.campfire-flames {
+/* Each flame layer flickers on its own timing (out of sync with the others)
+   so the fire reads as alive rather than one shape pulsing uniformly. */
+.campfire-flames path {
     transform-origin: 60px 88px;
-    animation: flame-flicker 2.4s ease-in-out infinite;
+    animation: flame-flicker 2.6s ease-in-out infinite;
+}
+.campfire-flames path:nth-child(2) {
+    animation-duration: 2.1s;
+    animation-delay: -0.5s;
+}
+.campfire-flames path:nth-child(3) {
+    animation-duration: 1.7s;
+    animation-delay: -1s;
 }
 @keyframes flame-flicker {
     0%,
     100% {
-        transform: scale(1);
+        transform: scale(1) translateY(0);
     }
-    40% {
-        transform: scale(1.05, 0.95);
+    35% {
+        transform: scale(1.06, 0.94) translateY(1px);
     }
-    70% {
-        transform: scale(0.96, 1.06);
-    }
-}
-@media (prefers-reduced-motion: reduce) {
-    .campfire-flames {
-        animation: none;
+    65% {
+        transform: scale(0.95, 1.07) translateY(-1px);
     }
 }
+@keyframes campfire-glow {
+    0%,
+    100% {
+        filter: drop-shadow(0 0 8px rgba(246, 160, 77, 0.45));
+    }
+    50% {
+        filter: drop-shadow(0 0 18px rgba(246, 160, 77, 0.8));
+    }
+}
+/* Deliberately NOT gated behind prefers-reduced-motion: a small decorative
+   flicker on one icon, not essential UI motion — the owner wants it alive
+   regardless. */
 .camper {
     position: absolute;
     display: flex;

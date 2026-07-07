@@ -8,6 +8,7 @@
 // renders nothing in that case, so the static site stays identical for
 // readers when the backend is absent.
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   apiGet,
   apiPost,
@@ -68,6 +69,7 @@ function storeToken(token: string | null) {
 }
 
 export function SessionProvider({ children }: { children: ReactNode }) {
+  const navigate = useNavigate()
   const [token, setToken] = useState<string | null>(() => {
     try {
       localStorage.removeItem(LEGACY_TOKEN_KEY)
@@ -121,6 +123,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     // one (with the server-decided `editing`) right after.
     setMe({ email, role: grant.role, displayName: grant.displayName, editing: false })
     setToken(grant.token)
+    navigate('/account') // to the fireplace
   }
 
   const login = async (email: string, password: string) => {

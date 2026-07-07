@@ -1,43 +1,43 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { Link, NavLink, useLocation } from 'react-router-dom'
-import { getSite } from '../lib/content'
-import { useI18n } from '../lib/i18n'
-import ThemeSwitcher from './ThemeSwitcher'
-import LanguageSwitcher from './LanguageSwitcher'
-import UserButton from './UserButton'
-import Sidebar from './Sidebar'
-import BackendBadge from './BackendBadge'
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { getSite } from "../lib/content";
+import { useI18n } from "../lib/i18n";
+import ThemeSwitcher from "./ThemeSwitcher";
+import LanguageSwitcher from "./LanguageSwitcher";
+import UserButton from "./UserButton";
+import Sidebar from "./Sidebar";
+import BackendBadge from "./BackendBadge";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { pathname } = useLocation()
-  const { locale, t } = useI18n()
-  const site = getSite(locale)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const headerRef = useRef<HTMLDivElement>(null)
+  const { pathname } = useLocation();
+  const { locale, t } = useI18n();
+  const site = getSite(locale);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLDivElement>(null);
 
   // Scroll to top + close the mobile menu on client-side navigation.
   useEffect(() => {
-    window.scrollTo(0, 0)
-    setMenuOpen(false)
-  }, [pathname])
+    window.scrollTo(0, 0);
+    setMenuOpen(false);
+  }, [pathname]);
 
   // While the mobile menu is open, close it on Escape or an outside click
   // (mirrors the switcher dropdowns' dismissal behaviour).
   useEffect(() => {
-    if (!menuOpen) return
+    if (!menuOpen) return;
     const onDown = (e: MouseEvent) => {
-      if (headerRef.current && !headerRef.current.contains(e.target as Node)) setMenuOpen(false)
-    }
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) setMenuOpen(false);
+    };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setMenuOpen(false)
-    }
-    document.addEventListener('mousedown', onDown)
-    document.addEventListener('keydown', onKey)
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
     return () => {
-      document.removeEventListener('mousedown', onDown)
-      document.removeEventListener('keydown', onKey)
-    }
-  }, [menuOpen])
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
 
   return (
     <div className="app">
@@ -50,32 +50,23 @@ export default function Layout({ children }: { children: ReactNode }) {
             <span className="brand-name">{site.name}</span>
           </Link>
           <div className="header-right">
-            <nav
-              id="site-nav"
-              className={`site-nav${menuOpen ? ' open' : ''}`}
-              aria-label={t('nav.primaryAriaLabel')}
-            >
+            <nav id="site-nav" className={`site-nav${menuOpen ? " open" : ""}`} aria-label={t("nav.primaryAriaLabel")}>
               {site.nav.map((item) => (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  end={item.path === '/'}
-                  className={({ isActive }) => (isActive ? 'active' : undefined)}
-                >
+                <NavLink key={item.path} to={item.path} end={item.path === "/"} className={({ isActive }) => (isActive ? "active" : undefined)}>
                   {item.label}
                 </NavLink>
               ))}
             </nav>
             <div className="header-controls">
               <LanguageSwitcher />
-              <ThemeSwitcher />
               <UserButton />
+              <ThemeSwitcher />
               <button
                 type="button"
                 className="nav-toggle"
                 aria-expanded={menuOpen}
                 aria-controls="site-nav"
-                aria-label={t('nav.menuAriaLabel')}
+                aria-label={t("nav.menuAriaLabel")}
                 onClick={() => setMenuOpen((open) => !open)}
               >
                 <span className="nav-toggle-bars" aria-hidden="true">
@@ -113,18 +104,17 @@ export default function Layout({ children }: { children: ReactNode }) {
                 {s.label}
               </a>
             ))}
-            <a href={`mailto:${site.contactEmail}`}>{t('footer.email')}</a>
+            <a href={`mailto:${site.contactEmail}`}>{t("footer.email")}</a>
           </div>
         </div>
         <div className="container disclosure muted">
           <p>
-            {t('footer.disclosure')}{' '}
-            <Link to="/disclosure">{t('footer.disclosureLinkText')}</Link>.
+            {t("footer.disclosure")} <Link to="/disclosure">{t("footer.disclosureLinkText")}</Link>.
           </p>
-          <p>{t('footer.copyright', { year: new Date().getFullYear(), name: site.name })}</p>
+          <p>{t("footer.copyright", { year: new Date().getFullYear(), name: site.name })}</p>
           <BackendBadge />
         </div>
       </footer>
     </div>
-  )
+  );
 }

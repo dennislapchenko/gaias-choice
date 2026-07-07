@@ -6,6 +6,12 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "4173", "-d", "dist"],
       "port": 4173
+    },
+    {
+      "name": "root",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "4175"],
+      "port": 4175
     }
   ]
 }
