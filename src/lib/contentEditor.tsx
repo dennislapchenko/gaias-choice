@@ -25,7 +25,7 @@ import { Composer, CST, isScalar, Parser, parseDocument } from 'yaml'
 import CopyButton from '../components/CopyButton'
 import { apiGet, apiPost, ApiError, enrichTemplate, translateContent, type ContentFile, type SaveResponse } from './api'
 import { useEditMode } from './editMode'
-import { SUPPORTED_LOCALES, useI18n } from './i18n'
+import { LOCALE_LABELS, SUPPORTED_LOCALES, useI18n } from './i18n'
 import type { EditRef } from './types'
 
 type EditorMode =
@@ -34,8 +34,17 @@ type EditorMode =
 
 // 'enriching' = the draft composer is fetching the LLM-tuned template to inject
 // (editor dimmed + disabled meanwhile); on failure it drops to 'idle' with the
-// static template left in place.
-type Status = 'idle' | 'loading' | 'enriching' | 'saving' | 'published' | 'error'
+// static template left in place. 'syncing'/'synced' = the manual "Sync → English"
+// RU→EN push is running / just succeeded (the dialog stays open either way).
+type Status =
+  | 'idle'
+  | 'loading'
+  | 'enriching'
+  | 'saving'
+  | 'syncing'
+  | 'synced'
+  | 'published'
+  | 'error'
 
 interface EditorState {
   title: string
@@ -292,8 +301,8 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
         throw err
       }
     }
-    // A RU edit mirrors to EN; an EN edit leaves RU alone (see syncSibling).
-    await syncSibling(mode.path, value, false)
+    // Editing does NOT auto-translate — the admin pushes RU→EN on demand with
+    // the "Sync → English" button (runSync). Only a new draft auto-seeds both.
   }
 
   const saveDraft = async (mode: Extract<EditorMode, { kind: 'create' }>, value: string) => {
@@ -318,16 +327,17 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     await syncSibling(mode.path, value, true)
   }
 
-  // Auto-mirror a just-saved reviews/journal file into its sibling locale, per
-  // the translation rules (SKILL.md #6):
-  //   - Any NEW draft (isCreate) seeds BOTH locales: the sibling is an LLM
-  //     translation (stamped `translatedFrom:`), or — when the translator is
-  //     off/unreachable — a verbatim copy so the stub exists in both.
-  //   - Editing an existing RU post re-translates it to EN (EN may be AI); if
-  //     the translator is unavailable the EN sibling is LEFT AS-IS (never
-  //     clobbered with untranslated Russian).
-  //   - Editing an existing EN post does NOTHING — Russian stays human-authored.
-  // Each sibling save is its own git commit (so an action makes up to two).
+  // Mirror a reviews/journal file into its sibling locale, per the translation
+  // rules (SKILL.md #6). Two callers:
+  //   - saveDraft (isCreate): a NEW draft seeds BOTH locales automatically —
+  //     the sibling is an LLM translation (stamped `translatedFrom:`), or, when
+  //     the translator is off/unreachable, a verbatim copy so the stub exists
+  //     in both. Best-effort: a copy always lands.
+  //   - runSync (isCreate=false): the "Sync → English" button on an existing RU
+  //     post — a deliberate RU→EN push. Here a translation failure THROWS so the
+  //     admin sees it (no silent copy — they asked for a translation). EN posts
+  //     never get the button, so RU is never overwritten by AI.
+  // Each sibling save is its own git commit.
   const syncSibling = async (path: string, value: string, isCreate: boolean) => {
     if (!/\/locales\/[^/]+\/(products|journal)\//.test(path)) return
     const source = /\/locales\/([^/]+)\//.exec(path)?.[1]
@@ -344,10 +354,10 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       if (!FRONTMATTER_RE.test(translated)) throw new Error('translation returned no frontmatter')
       // Insert `translatedFrom: <source>` (applyScalarEdit inserts when absent).
       siblingText = applyScalarEdit(translated, { file: siblingPath, path: ['translatedFrom'] }, source)
-    } catch {
-      // Translator off/unreachable/failed: on create, seed a verbatim copy so
-      // both stubs exist; on an edit, leave the good sibling untouched.
-      if (!isCreate) return
+    } catch (err) {
+      // Create seeds a verbatim copy so both stubs exist; a manual sync surfaces
+      // the failure instead (the admin explicitly wanted a translation).
+      if (!isCreate) throw err
       siblingText = value
     }
     let sha: string | undefined
@@ -391,15 +401,46 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
   }
 
   const save = () => {
-    if (!state?.mode || state.status === 'saving' || state.status === 'enriching') return
+    if (!state?.mode || busy) return
     const { mode, value } = state
     setState({ ...state, status: 'saving', errorText: undefined })
     finish(mode.kind === 'file' ? saveFile(mode, value) : saveDraft(mode, value))
   }
 
+  // The "Sync → English" button: translate this RU post's CURRENT editor text
+  // to EN and save it (no auto-close — the admin is still editing the RU). Note
+  // it syncs `state.value` (unsaved edits included), so pressing Save first is
+  // not required.
+  const runSync = () => {
+    if (!state?.mode || state.mode.kind !== 'file' || busy) return
+    const { mode, value } = state
+    setState({ ...state, status: 'syncing', errorText: undefined })
+    syncSibling(mode.path, value, false)
+      .then(() => {
+        setState((s) => (s ? { ...s, status: 'synced' } : s))
+        window.setTimeout(
+          () => setState((s) => (s && s.status === 'synced' ? { ...s, status: 'idle' } : s)),
+          2500,
+        )
+      })
+      .catch((err: unknown) => {
+        setState((s) =>
+          s ? { ...s, status: 'error', errorText: err instanceof Error ? err.message : String(err) } : s,
+        )
+      })
+  }
+
   const api: ContentEditorApi = { openFile, openDraft, setScalar }
   const busy =
-    state?.status === 'loading' || state?.status === 'saving' || state?.status === 'enriching'
+    state?.status === 'loading' ||
+    state?.status === 'saving' ||
+    state?.status === 'enriching' ||
+    state?.status === 'syncing'
+
+  // The Sync button shows only when editing an existing RU reviews/journal file
+  // (RU is the source of truth; EN files never push back to RU).
+  const filePath = state?.mode?.kind === 'file' ? state.mode.path : null
+  const canSync = !!filePath && /\/locales\/ru\/(products|journal)\//.test(filePath)
 
   return (
     <ContentEditorContext.Provider value={api}>
@@ -491,7 +532,22 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                 </p>
               ) : state.status === 'loading' ? (
                 <p className="content-editor-status">{t('editor.loading')}</p>
+              ) : state.status === 'syncing' ? (
+                <p className="content-editor-status">{t('editor.syncing')}</p>
+              ) : state.status === 'synced' ? (
+                <p className="content-editor-status">{t('editor.synced')}</p>
               ) : null}
+              {canSync && (
+                <button
+                  type="button"
+                  className="btn content-editor-sync"
+                  disabled={busy || state.status === 'published'}
+                  onClick={runSync}
+                  title={t('editor.syncHint')}
+                >
+                  {t('editor.sync', { lang: LOCALE_LABELS.en })}
+                </button>
+              )}
               <CopyButton
                 value={state.value}
                 className="content-editor-copy"

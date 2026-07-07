@@ -657,16 +657,17 @@ VM is down the live site silently degrades to the static baseline.
   markdown rendered before it ever deploys). New drafts get an **English slug**
   regardless of authoring locale: `Upcoming.tsx`'s ＋ button prompts for the
   slug (defaulting to `slugify(title)`) so RU-authored posts still get nice
-  URLs. **Translation is automatic on save** (`syncSibling`, reviews + journal
-  only; there is no manual button): a **new draft** seeds BOTH locales — the
-  sibling is an LLM translation stamped `translatedFrom:` via
-  `POST /content/translate`, or a verbatim copy when the translator is
-  off/unreachable so the stub exists in both; **editing an existing RU post**
-  re-translates it to EN (EN may be AI; translator down ⇒ EN left untouched,
-  never clobbered with Russian); **editing an existing EN post touches nothing
-  else — Russian stays human-authored** (the RU-is-source-of-truth rule, see
-  SKILL.md #6). Each sibling save is its own git commit, so one action makes up
-  to two. Plus one dialog-less action, `setScalar(ref, value)`, that flips a
+  URLs. **Translation mirrors reviews/journal into the sibling locale**
+  (`syncSibling`, reviews + journal only): a **new draft** auto-seeds BOTH
+  locales on save — the sibling is an LLM translation stamped `translatedFrom:`
+  via `POST /content/translate`, or a verbatim copy when the translator is
+  off/unreachable so the stub exists in both. **Edits do NOT auto-translate**
+  (that would spend a Claude call + a commit on every keystroke-save); instead,
+  editing an existing **RU** reviews/journal file shows a **"Sync → English"**
+  button (`runSync`) that pushes the current text RU→EN on demand (a failure
+  surfaces, no silent copy). **EN files never get the button — Russian stays
+  human-authored** (the RU-is-source-of-truth rule, see SKILL.md #6). Each
+  sibling save is its own git commit. Plus one dialog-less action, `setScalar(ref, value)`, that flips a
   single YAML scalar directly — used by `components/StateToggle.tsx`, the
   iPhone-style switch on `ReviewDetail`/`EntryDetail` that flips a post's
   `state` between `active`/`upcoming`. `setScalar` does **CST-level,

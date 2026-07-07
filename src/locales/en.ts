@@ -183,6 +183,10 @@ const en = {
   "editor.mdLink": "Link",
   "editor.mdImage": "Image",
   "editor.enriching": "Tuning the template to your title…",
+  "editor.sync": "Sync → {{lang}}",
+  "editor.syncHint": "Translate this Russian post to English and save it as the English version (marked as translated)",
+  "editor.syncing": "Translating to English…",
+  "editor.synced": "Synced to English ✓",
 } satisfies Record<string, string>;
 
 export default en;
