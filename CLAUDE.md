@@ -117,7 +117,7 @@ src/
                          # LanguageSwitcher, UserButton, LoginDialog, ProductCard,
                          # CompassCard, CompassRow, JournalRow, Upcoming, Markdown,
                          # Rating, TableOfContents, CopyButton, EditButton, BackendBadge,
-                         # AccountFields, ImagePicker (bundled-image chooser)
+                         # AccountFields, ImagePicker (bundled-image chooser — parked for post covers)
   pages/                 # Home, Reviews, ReviewDetail, Compass, Journal,
                          # EntryDetail (shared Compass+Journal detail w/ TOC),
                          # MarkdownPage (about/contact/etc), Support,
@@ -587,10 +587,12 @@ VM is down the live site silently degrades to the static baseline.
   circle around an animated fire (display name + initial-letter or avatar
   image, cropped/zoomed the same way as Compass's epic thumbnails — see
   `.avatar-img` in `styles.css`; `you` marked). Beside the scene,
-  `components/AccountFields.tsx` is a self-service form — name, avatar URL
-  (the row splits 50/50 into a URL input + a "Browse" button opening
-  `components/ImagePicker.tsx`, a modal grid of the bundled `public/images/*`
-  enumerated by filename at build time — reused later for post covers),
+  `components/AccountFields.tsx` is a self-service form — name, avatar
+  (preview thumb + URL input + an "Upload" button: Upload opens the OS file
+  dialog and downscales the image in-browser to a ≤256px WebP `data:` URI
+  stored verbatim in `avatar_url` — self-contained, no upload endpoint/blob
+  store; a pasted remote URL stays a remote ref since canvas can't inline
+  cross-origin; backend caps `avatarUrl` at 200 KB),
   email, password (Save appears only once a field is dirty; role is shown but
   not editable — that's an admin concern) — that lives in the standard right
   rail (`.reviews-layout`, same as Reviews/Journal/Compass) on desktop,

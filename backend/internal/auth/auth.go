@@ -175,8 +175,12 @@ func (s *Service) UpdateProfile(userID int64, displayName, email, avatarURL, pas
 	if name == "" || len(name) > 50 {
 		return store.User{}, fmt.Errorf("%w: display name must be 1–50 characters", ErrInvalid)
 	}
-	if len(avatarURL) > 1024 {
-		return store.User{}, fmt.Errorf("%w: avatar URL too long", ErrInvalid)
+	// Avatars may be a URL or an inlined data: URI (a browser-downscaled image
+	// the user uploaded). 200 KB comfortably holds a ~256px WebP thumbnail.
+	// ponytail: data URI in the users row (and campfire payload) — fine for a
+	// small community; move to an object store + upload endpoint at scale.
+	if len(avatarURL) > 200_000 {
+		return store.User{}, fmt.Errorf("%w: avatar image too large", ErrInvalid)
 	}
 
 	passwordHash := "" // "" ⇒ store.UpdateUser leaves the password unchanged

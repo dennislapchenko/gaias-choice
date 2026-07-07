@@ -160,7 +160,7 @@ type SaveContentJSONBody struct {
 
 // UpdateMeJSONBody defines parameters for UpdateMe.
 type UpdateMeJSONBody struct {
-	// AvatarUrl Image URL shown around the campfire; omit or empty to clear it.
+	// AvatarUrl Image shown around the campfire — a URL or an inlined data: URI (browser-downscaled upload). Omit or empty to clear it.
 	AvatarUrl   *string `json:"avatarUrl,omitempty"`
 	DisplayName string  `json:"displayName"`
 

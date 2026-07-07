@@ -593,8 +593,8 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 52px;
-    height: 52px;
+    width: 102px;
+    height: 102px;
     border-radius: 999px;
     overflow: hidden;
     border: 2px solid var(--white);
@@ -1737,20 +1737,28 @@ a.respected-card:hover {
     font-size: 0.85rem;
     color: var(--clay);
 }
-/* URL input + "Browse" split evenly across the field row. */
+/* Avatar row: preview + URL input + "Upload" button on one line. */
 .field-split {
     display: flex;
     align-items: center;
     gap: 8px;
 }
-.field-split input {
-    flex: 1 1 50%;
+.field-split input[type='text'] {
+    flex: 1;
     min-width: 0;
 }
 .field-split .btn-ghost {
-    flex: 1 1 50%;
-    padding: 6px 10px;
+    flex: 0 0 auto;
+    padding: 6px 12px;
     font-size: 0.85rem;
+}
+.avatar-preview {
+    flex: 0 0 auto;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--line);
 }
 
 /* ---------- Image picker (avatar / cover chooser) ---------- */
