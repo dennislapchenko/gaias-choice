@@ -462,21 +462,27 @@ VM is down the live site silently degrades to the static baseline.
   counter proving a DB round-trip). Real schema (users/sessions/pages) belongs
   to the future portal plan, not here.
 - **Content seam (live-edit):** `/api/content/{ping,file,save}` in
-  `backend/content.go` proxy the **GitHub Contents API** so the in-browser
-  editor writes the same `content/` files that are the site — **every save is
-  a git commit and git stays the only source of truth** (no DB overlay, no
-  second store; a save publishes via the normal Pages deploy, ~2 min). The BE
-  stays dumb and stateless: bearer auth (`ADMIN_TOKEN`, constant-time
-  compare), `content/`-only path allowlist (traversal ⇒ 400), 256 KB size
-  cap, then one HTTPS call authenticated by `GITHUB_TOKEN` (a fine-grained
-  PAT, Contents RW on this repo only; `GITHUB_REPO`/`GITHUB_BRANCH`/
-  `GITHUB_API` have defaults). **Either token unset ⇒ the content routes
-  answer 503 "editing not configured" — the write path is dead unless
-  deliberately armed**; don't run the ngrok tunnel with tokens set unless
-  editing is wanted right then. GitHub's blob-sha check gives conflict safety
-  (mismatch ⇒ 409; the FE re-fetches, re-applies, retries once). The BE never
-  parses YAML — that happens on the FE. This `ADMIN_TOKEN` gate is the
-  interim; portal sessions/roles (D6) replace it.
+  `backend/content.go` sit behind one `contentStore` interface with two
+  backends, chosen at boot (the BE logs which). **Prod — `githubStore`:**
+  proxies the **GitHub Contents API** so the in-browser editor writes the same
+  `content/` files that are the site — **every save is a git commit and git
+  stays the only source of truth** (no DB overlay; a save publishes via the
+  normal Pages deploy, ~2 min); needs `GITHUB_TOKEN` (fine-grained PAT,
+  Contents RW this repo only; `GITHUB_REPO`/`GITHUB_BRANCH`/`GITHUB_API` have
+  defaults). **Dev — `localStore`:** if `LOCAL_CONTENT_DIR` is set (the repo
+  root; `task dev` sets `/app`), saves write the **working tree directly** — no
+  commit, no deploy, no `GITHUB_TOKEN` — so local portal edits are sandboxed and
+  HMR reflects them; `LOCAL_CONTENT_DIR` **takes precedence** over any
+  `GITHUB_TOKEN`, so dev edits can't leak to the repo. Either way the BE is dumb
+  and stateless: bearer auth (`ADMIN_TOKEN`, constant-time compare),
+  `content/`-only path allowlist (traversal ⇒ 400), 256 KB size cap. **The seam
+  answers 503 "editing not configured" unless armed** — prod needs both
+  `ADMIN_TOKEN` and `GITHUB_TOKEN`; dev needs `ADMIN_TOKEN` + `LOCAL_CONTENT_DIR`
+  (the write path stays dead by default, and a repo-write PAT behind a public
+  tunnel must never be open). A sha handle gives conflict safety (mismatch ⇒
+  409; the FE re-fetches, re-applies, retries once) — GitHub's blob sha in prod,
+  a content hash locally. The BE never parses YAML — that happens on the FE.
+  This `ADMIN_TOKEN` gate is the interim; portal sessions/roles (D6) replace it.
 - **Edit mode (FE side):** `src/lib/editMode.tsx` — visiting any page with
   `#edit` prompts for the token (empty input signs out), stores it in
   `localStorage['gc-edit-token']`, validates against `/api/content/ping`;

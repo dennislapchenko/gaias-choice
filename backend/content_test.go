@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -51,9 +53,9 @@ func do(r *gin.Engine, method, target, bearer, body string) *httptest.ResponseRe
 // Unconfigured (either token missing) ⇒ 503 on every content route, never open.
 func TestNotConfigured(t *testing.T) {
 	for name, cfg := range map[string]config{
-		"no tokens":    {},
-		"only admin":   {adminToken: "x"},
-		"only github":  {githubToken: "y"},
+		"no tokens":   {},
+		"only admin":  {adminToken: "x"},
+		"only github": {githubToken: "y"},
 	} {
 		r := testRouter(newContentAPI(cfg))
 		for _, req := range [][2]string{
@@ -102,9 +104,9 @@ func TestPathValidation(t *testing.T) {
 		"content/./x.md",
 		"content/x.md/",
 		"content\\x.md",
-		"docs/readme.md",         // outside content/
-		"contentious/x.md",       // prefix trick: not content/
-		"content/a/..\x00/b.md",  // null byte
+		"docs/readme.md",        // outside content/
+		"contentious/x.md",      // prefix trick: not content/
+		"content/a/..\x00/b.md", // null byte
 	}
 	for _, p := range bad {
 		w := do(r, http.MethodGet, "/api/content/file?path="+url.QueryEscape(p), "test-admin-token", "")
@@ -268,6 +270,63 @@ func TestSaveConflict(t *testing.T) {
 			t.Errorf("upstream %d: got %d, want 409", upstreamCode, w.Code)
 		}
 		up.Close()
+	}
+}
+
+// The dev sandbox: LOCAL_CONTENT_DIR routes the seam to the filesystem —
+// create/read/update round-trip on disk, with the same 404/409 semantics as the
+// GitHub path (no upstream, no commit).
+func TestLocalStore(t *testing.T) {
+	dir := t.TempDir()
+	r := testRouter(newContentAPI(config{adminToken: "test-admin-token", localContentDir: dir}))
+	p := "content/locales/en/products/local-thing.md"
+	q := "/api/content/file?path=" + url.QueryEscape(p)
+
+	// Missing file → 404 (the create pre-flight's "good case").
+	if w := do(r, http.MethodGet, q, "test-admin-token", ""); w.Code != http.StatusNotFound {
+		t.Fatalf("missing get: got %d, want 404", w.Code)
+	}
+
+	// Create (no sha) → 200, writes the file (and its parent dirs) on disk.
+	create, _ := json.Marshal(map[string]string{"path": p, "content": "---\ntitle: Local\n---\n"})
+	if w := do(r, http.MethodPost, "/api/content/save", "test-admin-token", string(create)); w.Code != http.StatusOK {
+		t.Fatalf("create: got %d: %s", w.Code, w.Body.String())
+	}
+	onDisk, err := os.ReadFile(filepath.Join(dir, filepath.FromSlash(p)))
+	if err != nil || string(onDisk) != "---\ntitle: Local\n---\n" {
+		t.Fatalf("file not written: err=%v content=%q", err, onDisk)
+	}
+
+	// Create again over an existing file → 409 (never clobber).
+	if w := do(r, http.MethodPost, "/api/content/save", "test-admin-token", string(create)); w.Code != http.StatusConflict {
+		t.Errorf("recreate: got %d, want 409", w.Code)
+	}
+
+	// Read back → 200 with a sha handle.
+	w := do(r, http.MethodGet, q, "test-admin-token", "")
+	if w.Code != http.StatusOK {
+		t.Fatalf("read: got %d", w.Code)
+	}
+	var got struct{ Sha, Content string }
+	json.Unmarshal(w.Body.Bytes(), &got)
+	if got.Content != "---\ntitle: Local\n---\n" || got.Sha == "" {
+		t.Fatalf("read mismatch: %+v", got)
+	}
+
+	// Update with a stale sha → 409.
+	stale, _ := json.Marshal(map[string]string{"path": p, "content": "x\n", "sha": "deadbeef"})
+	if w := do(r, http.MethodPost, "/api/content/save", "test-admin-token", string(stale)); w.Code != http.StatusConflict {
+		t.Errorf("stale update: got %d, want 409", w.Code)
+	}
+
+	// Update with the current sha → 200, and disk reflects it.
+	fresh, _ := json.Marshal(map[string]string{"path": p, "content": "---\ntitle: Local 2\n---\n", "sha": got.Sha})
+	if w := do(r, http.MethodPost, "/api/content/save", "test-admin-token", string(fresh)); w.Code != http.StatusOK {
+		t.Fatalf("fresh update: got %d: %s", w.Code, w.Body.String())
+	}
+	onDisk, _ = os.ReadFile(filepath.Join(dir, filepath.FromSlash(p)))
+	if string(onDisk) != "---\ntitle: Local 2\n---\n" {
+		t.Errorf("update not written: %q", onDisk)
 	}
 }
 

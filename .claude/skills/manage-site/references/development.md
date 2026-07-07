@@ -190,13 +190,22 @@ OrbStack: `open -a OrbStack`, wait ~15s, retry.
   stripped immediately). The token lives in `localStorage['gc-edit-token']`
   and is validated against `/api/content/ping` on every load — a 401 clears
   it, BE-down just leaves mode off. Nothing edit-related renders for readers.
-- **Content routes answer 503 until armed:** `/api/content/*` needs BOTH
-  `ADMIN_TOKEN` and `GITHUB_TOKEN` set on the BE — either missing ⇒ 503
-  "editing not configured" (deliberate: a repo-write PAT behind a public
-  ngrok tunnel must never be open). For local editing, pass them to the api
-  service (e.g. a git-ignored `.env` + `env_file` in `compose.dev.yaml`, or
-  `-e` flags on `task be:dev`'s docker run). The PAT is fine-grained,
-  Contents RW, this one repo only.
+- **Content routes answer 503 until armed** — but there are two ways to arm,
+  and `content.go` picks the store at boot (it logs which one). **Dev
+  (sandboxed, the default for `task dev`):** `LOCAL_CONTENT_DIR=/app` routes
+  saves to the **local filesystem** — the portal writes `content/` files in the
+  mounted repo (HMR reflects them) with **no commit, no deploy, no
+  `GITHUB_TOKEN`**. Only `ADMIN_TOKEN` is needed (it gates `#edit`; defaults to
+  `dev` in `compose.dev.yaml`, so local editing works with zero setup — type
+  `dev` at the prompt). A local save can never reach production. **Prod (GitHub
+  proxy):** with no `LOCAL_CONTENT_DIR`, the seam needs BOTH `ADMIN_TOKEN` and
+  `GITHUB_TOKEN` (fine-grained PAT, Contents RW, this repo only) — either
+  missing ⇒ 503 "editing not configured" (deliberate: a repo-write PAT behind a
+  public tunnel must never be open); every save is a git commit → Pages deploy.
+  `LOCAL_CONTENT_DIR` **wins over** `GITHUB_TOKEN` if both are set, so dev edits
+  can't leak to the repo by accident. To exercise the real commit path from a
+  laptop, drop `LOCAL_CONTENT_DIR` and set the two tokens (e.g. via the
+  git-ignored root `.env`), then `task be:tunnel`.
 - **YAML edits must go through the CST route** (`applyScalarEdit` in
   `contentEditor.tsx`): `parseDocument(...).toString()` re-folds long block
   scalars and churns ~190 lines of site.yaml — `CST.setScalarValue` on the

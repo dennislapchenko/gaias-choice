@@ -28,8 +28,18 @@ services:
       - go_cache:/go
     environment:
       GOFLAGS: -buildvcs=false
+      # Live-edit seam, SANDBOXED to the working tree. LOCAL_CONTENT_DIR routes
+      # the content API to the local filesystem instead of the GitHub proxy, so
+      # portal saves write content/ files in the mounted repo (Vite HMR reflects
+      # them) — no commit, no deploy, no GITHUB_TOKEN. The repo is mounted at /app.
+      LOCAL_CONTENT_DIR: /app
+      # ADMIN_TOKEN just gates #edit (the token the prompt asks for). Defaults to
+      # 'dev' so local editing works with zero setup; override via the root .env.
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-dev}
     ports:
       - "8787:8787"
+    links:
+      - web
 
 volumes:
   # Declared external so they are the same volumes `task deps` / the Go cache use.
