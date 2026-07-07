@@ -63,6 +63,17 @@ touching, many-layered questions, and want every answer preserved verbatim.
   permaculturist's rooted system; the Level-42 engineer building the "silicon
   overlords" he's wary of. Name the paradox; let them answer it.
 
+## Always send in both languages
+
+**Every deep question goes out in English *and* Russian**, both versions
+together — the on-request set, the single closing question, and the future
+Telegram delivery alike. The ask reaches Denis; he replies, then forwards the
+Russian version to Lida so she answers too. So each question needs a faithful
+RU rendering (not a machine calque — match the warmth and register; consult
+`context/persona-context.md` and `content/locales/README.md`'s glossary).
+Record each person's answer verbatim under their own heading (Denis dated,
+Lida `#LIDA`) per non-negotiable 2.
+
 ## The rhythm
 
 - **On request:** a set of ~5, prose (not the option-picker tool — these are
