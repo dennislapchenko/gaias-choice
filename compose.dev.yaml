@@ -41,6 +41,11 @@ services:
       # see deploy/README.md). Copy the link into the browser to sign in.
       SMTP_HOST: log
       PUBLIC_SITE_URL: http://localhost:5173
+      # Telegram sign-in bot. Unset ⇒ /api/auth/telegram* answer 503 and the
+      # dialog hides the option (email still works). Put a real BotFather token
+      # in the root .env to exercise the Telegram flow locally — the bot then
+      # long-polls getUpdates against api.telegram.org from this container.
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
     ports:
       - "8787:8787"
     links:

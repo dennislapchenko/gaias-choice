@@ -30,6 +30,10 @@ services:
       SMTP_PASS: ${SMTP_PASS:-}
       MAIL_FROM: ${MAIL_FROM:-}
       PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-}
+      # Telegram sign-in (the primary login). BotFather token; unset ⇒
+      # /api/auth/telegram* answer 503 and the dialog falls back to email.
+      # Value lives in deploy.env on the VM, never committed.
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
     volumes:
       - /srv/gaias-choice/data:/data # host bind mount, per D9 (boring backups)
 

@@ -66,6 +66,15 @@ type SessionGrant struct {
 	Token       string    `json:"token"`
 }
 
+// TelegramChallenge defines model for TelegramChallenge.
+type TelegramChallenge struct {
+	// Bot The bot's @username (no @) — the deep link's host handle.
+	Bot string `json:"bot"`
+
+	// Code One-time code for the t.me/{bot}?start={code} deep link.
+	Code string `json:"code"`
+}
+
 // BadRequest defines model for BadRequest.
 type BadRequest = Error
 
@@ -119,6 +128,17 @@ type RegisterJSONBody struct {
 	Password string `json:"password"`
 }
 
+// RequestTelegramLoginJSONBody defines parameters for RequestTelegramLogin.
+type RequestTelegramLoginJSONBody struct {
+	// Username Telegram @username (with or without the leading @).
+	Username string `json:"username"`
+}
+
+// PollTelegramLoginJSONBody defines parameters for PollTelegramLogin.
+type PollTelegramLoginJSONBody struct {
+	Code string `json:"code"`
+}
+
 // GetContentFileParams defines parameters for GetContentFile.
 type GetContentFileParams struct {
 	// Path Repo-relative path; must live under content/.
@@ -161,6 +181,12 @@ type VerifyMagicLinkJSONRequestBody VerifyMagicLinkJSONBody
 // RegisterJSONRequestBody defines body for Register for application/json ContentType.
 type RegisterJSONRequestBody RegisterJSONBody
 
+// RequestTelegramLoginJSONRequestBody defines body for RequestTelegramLogin for application/json ContentType.
+type RequestTelegramLoginJSONRequestBody RequestTelegramLoginJSONBody
+
+// PollTelegramLoginJSONRequestBody defines body for PollTelegramLogin for application/json ContentType.
+type PollTelegramLoginJSONRequestBody PollTelegramLoginJSONBody
+
 // SaveContentJSONRequestBody defines body for SaveContent for application/json ContentType.
 type SaveContentJSONRequestBody SaveContentJSONBody
 
@@ -187,6 +213,12 @@ type ServerInterface interface {
 	// Create a viewer account (open self-registration) and sign in
 	// (POST /auth/register)
 	Register(c *gin.Context)
+	// Start a Telegram-username sign-in (the primary login)
+	// (POST /auth/telegram)
+	RequestTelegramLogin(c *gin.Context)
+	// Poll a Telegram sign-in for its session grant
+	// (POST /auth/telegram/poll)
+	PollTelegramLogin(c *gin.Context)
 	// Read one content/ file (text + opaque sha for concurrency)
 	// (GET /content/file)
 	GetContentFile(c *gin.Context, params GetContentFileParams)
@@ -296,6 +328,32 @@ func (siw *ServerInterfaceWrapper) Register(c *gin.Context) {
 	}
 
 	siw.Handler.Register(c)
+}
+
+// RequestTelegramLogin operation middleware
+func (siw *ServerInterfaceWrapper) RequestTelegramLogin(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.RequestTelegramLogin(c)
+}
+
+// PollTelegramLogin operation middleware
+func (siw *ServerInterfaceWrapper) PollTelegramLogin(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.PollTelegramLogin(c)
 }
 
 // GetContentFile operation middleware
@@ -431,6 +489,8 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.POST(options.BaseURL+"/auth/magic/verify", wrapper.VerifyMagicLink)
 	router.GET(options.BaseURL+"/auth/me", wrapper.GetMe)
 	router.POST(options.BaseURL+"/auth/register", wrapper.Register)
+	router.POST(options.BaseURL+"/auth/telegram", wrapper.RequestTelegramLogin)
+	router.POST(options.BaseURL+"/auth/telegram/poll", wrapper.PollTelegramLogin)
 	router.GET(options.BaseURL+"/content/file", wrapper.GetContentFile)
 	router.POST(options.BaseURL+"/content/save", wrapper.SaveContent)
 	router.GET(options.BaseURL+"/healthz", wrapper.GetHealth)
@@ -771,6 +831,164 @@ func (response Register429JSONResponse) VisitRegisterResponse(w http.ResponseWri
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(429)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type RequestTelegramLoginRequestObject struct {
+	Body *RequestTelegramLoginJSONRequestBody
+}
+
+type RequestTelegramLoginResponseObject interface {
+	VisitRequestTelegramLoginResponse(w http.ResponseWriter) error
+}
+
+type RequestTelegramLogin200JSONResponse TelegramChallenge
+
+func (response RequestTelegramLogin200JSONResponse) VisitRequestTelegramLoginResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type RequestTelegramLogin400JSONResponse struct{ BadRequestJSONResponse }
+
+func (response RequestTelegramLogin400JSONResponse) VisitRequestTelegramLoginResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type RequestTelegramLogin429JSONResponse struct{ RateLimitedJSONResponse }
+
+func (response RequestTelegramLogin429JSONResponse) VisitRequestTelegramLoginResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type RequestTelegramLogin503JSONResponse Error
+
+func (response RequestTelegramLogin503JSONResponse) VisitRequestTelegramLoginResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type PollTelegramLoginRequestObject struct {
+	Body *PollTelegramLoginJSONRequestBody
+}
+
+type PollTelegramLoginResponseObject interface {
+	VisitPollTelegramLoginResponse(w http.ResponseWriter) error
+}
+
+type PollTelegramLogin200JSONResponse SessionGrant
+
+func (response PollTelegramLogin200JSONResponse) VisitPollTelegramLoginResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type PollTelegramLogin202JSONResponse struct {
+	Status string `json:"status"`
+}
+
+func (response PollTelegramLogin202JSONResponse) VisitPollTelegramLoginResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(202)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type PollTelegramLogin400JSONResponse struct{ BadRequestJSONResponse }
+
+func (response PollTelegramLogin400JSONResponse) VisitPollTelegramLoginResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type PollTelegramLogin401JSONResponse Error
+
+func (response PollTelegramLogin401JSONResponse) VisitPollTelegramLoginResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type PollTelegramLogin429JSONResponse struct{ RateLimitedJSONResponse }
+
+func (response PollTelegramLogin429JSONResponse) VisitPollTelegramLoginResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type PollTelegramLogin503JSONResponse Error
+
+func (response PollTelegramLogin503JSONResponse) VisitPollTelegramLoginResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
 	_, err := buf.WriteTo(w)
 	return err
 }
@@ -1201,6 +1419,12 @@ type StrictServerInterface interface {
 	// Create a viewer account (open self-registration) and sign in
 	// (POST /auth/register)
 	Register(ctx context.Context, request RegisterRequestObject) (RegisterResponseObject, error)
+	// Start a Telegram-username sign-in (the primary login)
+	// (POST /auth/telegram)
+	RequestTelegramLogin(ctx context.Context, request RequestTelegramLoginRequestObject) (RequestTelegramLoginResponseObject, error)
+	// Poll a Telegram sign-in for its session grant
+	// (POST /auth/telegram/poll)
+	PollTelegramLogin(ctx context.Context, request PollTelegramLoginRequestObject) (PollTelegramLoginResponseObject, error)
 	// Read one content/ file (text + opaque sha for concurrency)
 	// (GET /content/file)
 	GetContentFile(ctx context.Context, request GetContentFileRequestObject) (GetContentFileResponseObject, error)
@@ -1443,6 +1667,68 @@ func (sh *strictHandler) Register(ctx *gin.Context) {
 		sh.options.HandlerErrorFunc(ctx, err)
 	} else if validResponse, ok := response.(RegisterResponseObject); ok {
 		if err := validResponse.VisitRegisterResponse(ctx.Writer); err != nil {
+			sh.options.ResponseErrorHandlerFunc(ctx, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(ctx, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// RequestTelegramLogin operation middleware
+func (sh *strictHandler) RequestTelegramLogin(ctx *gin.Context) {
+	var request RequestTelegramLoginRequestObject
+
+	var body RequestTelegramLoginJSONRequestBody
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(ctx, err)
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx *gin.Context, request interface{}) (interface{}, error) {
+		return sh.ssi.RequestTelegramLogin(ctx, request.(RequestTelegramLoginRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "RequestTelegramLogin")
+	}
+
+	response, err := handler(ctx, request)
+
+	if err != nil {
+		sh.options.HandlerErrorFunc(ctx, err)
+	} else if validResponse, ok := response.(RequestTelegramLoginResponseObject); ok {
+		if err := validResponse.VisitRequestTelegramLoginResponse(ctx.Writer); err != nil {
+			sh.options.ResponseErrorHandlerFunc(ctx, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(ctx, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// PollTelegramLogin operation middleware
+func (sh *strictHandler) PollTelegramLogin(ctx *gin.Context) {
+	var request PollTelegramLoginRequestObject
+
+	var body PollTelegramLoginJSONRequestBody
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(ctx, err)
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx *gin.Context, request interface{}) (interface{}, error) {
+		return sh.ssi.PollTelegramLogin(ctx, request.(PollTelegramLoginRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "PollTelegramLogin")
+	}
+
+	response, err := handler(ctx, request)
+
+	if err != nil {
+		sh.options.HandlerErrorFunc(ctx, err)
+	} else if validResponse, ok := response.(PollTelegramLoginResponseObject); ok {
+		if err := validResponse.VisitPollTelegramLoginResponse(ctx.Writer); err != nil {
 			sh.options.ResponseErrorHandlerFunc(ctx, err)
 		}
 	} else if response != nil {

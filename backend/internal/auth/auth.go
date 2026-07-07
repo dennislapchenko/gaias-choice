@@ -239,6 +239,126 @@ func (s *Service) VerifyMagic(token string) (Session, error) {
 	return s.issueSession(user)
 }
 
+// telegramTTL bounds a Telegram sign-in handshake: long enough to switch to
+// the Telegram app and tap the deep link, short enough to be worthless later.
+const telegramTTL = 10 * time.Minute
+
+// RequestTelegram mints a one-time code for a claimed @username and returns
+// the plaintext the FE puts in the t.me/<bot>?start=<code> deep link. No
+// account exists yet — one is created (keyed by telegram id) only once the
+// bot confirms the sender (ConfirmTelegram) and the FE redeems (PollTelegram).
+func (s *Service) RequestTelegram(username string) (string, error) {
+	name, err := normalizeUsername(username)
+	if err != nil {
+		return "", err
+	}
+	_ = s.store.DeleteExpiredTelegramLogins(time.Now())
+
+	code := randomToken()
+	if err := s.store.CreateTelegramLogin(hashToken(code), name, time.Now().Add(telegramTTL)); err != nil {
+		return "", err
+	}
+	return code, nil
+}
+
+// ConfirmTelegram is the security gate: the bot calls it with the code from a
+// /start message plus the SENDER's real @username / id / name. It succeeds
+// only when the sender's username matches the one claimed at RequestTelegram —
+// an attacker who claims someone else's username taps their own bot and fails
+// here. ErrBadCredentials covers unknown/expired code and username mismatch
+// alike (the bot's reply never says which).
+func (s *Service) ConfirmTelegram(code, senderUsername string, tgID int64, senderName string) error {
+	now := time.Now()
+	tl, found, err := s.store.TelegramLoginByCode(hashToken(code), now)
+	if err != nil {
+		return err
+	}
+	if !found {
+		return ErrBadCredentials
+	}
+	claimed, err := normalizeUsername(senderUsername)
+	if err != nil || claimed != tl.Username {
+		return ErrBadCredentials
+	}
+	name := strings.Join(strings.Fields(senderName), " ")
+	if name == "" || len(name) > 50 {
+		name = "@" + tl.Username // always leave a usable display name
+	}
+	ok, err := s.store.ConfirmTelegramLogin(hashToken(code), tgID, name, now)
+	if err != nil {
+		return err
+	}
+	if !ok {
+		return ErrBadCredentials // expired between fetch and update, or already confirmed
+	}
+	return nil
+}
+
+// PollTelegram is the FE's poll: (Session, true) once the bot has confirmed
+// the sender (find-or-create the account keyed by telegram id, single-use —
+// the handshake is consumed); (_, false, nil) while still pending;
+// ErrBadCredentials when the code is unknown or expired.
+func (s *Service) PollTelegram(code string) (Session, bool, error) {
+	tl, found, err := s.store.TelegramLoginByCode(hashToken(code), time.Now())
+	if err != nil {
+		return Session{}, false, err
+	}
+	if !found {
+		return Session{}, false, ErrBadCredentials
+	}
+	if !tl.TgID.Valid {
+		return Session{}, false, nil // not confirmed yet — keep polling
+	}
+	// Consume first so a late second poll can't mint a second session.
+	// ponytail: not atomic with the find-or-create below, fine on this
+	// single-connection SQLite; wrap in a tx if it ever runs concurrent.
+	if err := s.store.DeleteTelegramLogin(hashToken(code)); err != nil {
+		return Session{}, false, err
+	}
+	user, err := s.findOrCreateTelegram(tl.TgID.Int64, tl.TgName)
+	if err != nil {
+		return Session{}, false, err
+	}
+	sess, err := s.issueSession(user)
+	return sess, true, err
+}
+
+func (s *Service) findOrCreateTelegram(tgID int64, name string) (store.User, error) {
+	user, found, err := s.store.UserByTelegramID(tgID)
+	if err != nil {
+		return store.User{}, err
+	}
+	if found {
+		return user, nil
+	}
+	if name == "" {
+		name = "traveler"
+	}
+	if err := s.store.CreateTelegramUser(tgID, name); err != nil {
+		return store.User{}, err
+	}
+	user, _, err = s.store.UserByTelegramID(tgID)
+	return user, err
+}
+
+// normalizeUsername lowercases and strips a leading @, then enforces
+// Telegram's own rule (5–32 chars, [A-Za-z0-9_], must start with a letter) so
+// a bogus claim never reaches the DB. Case-insensitive: Telegram usernames
+// are.
+func normalizeUsername(u string) (string, error) {
+	u = strings.ToLower(strings.TrimSpace(strings.TrimPrefix(strings.TrimSpace(u), "@")))
+	if len(u) < 5 || len(u) > 32 {
+		return "", fmt.Errorf("%w: telegram username must be 5–32 characters", ErrInvalid)
+	}
+	for i, r := range u {
+		ok := r == '_' || (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9')
+		if !ok || (i == 0 && !(r >= 'a' && r <= 'z')) {
+			return "", fmt.Errorf("%w: not a telegram username", ErrInvalid)
+		}
+	}
+	return u, nil
+}
+
 func (s *Service) issueSession(user store.User) (Session, error) {
 	token := randomToken()
 	expires := time.Now().Add(sessionTTL)

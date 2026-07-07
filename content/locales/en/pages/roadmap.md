@@ -27,9 +27,9 @@ belonging is harder to copy than content.
       exactly the same without it. The first reader-facing piece is live:
       you can sign up from the header and take a seat around the campfire on
       the account page *(further portal features only once they exist)*
-- [x] Passwordless sign-in: the door is now a one-time email link — no
-      password to invent or forget *(biometric passkeys come once the site
-      has its permanent address)*
+- [x] Passwordless sign-in: sign in with your Telegram username (tap our bot,
+      you're in) or a one-time email link — no password to invent or forget
+      *(biometric passkeys come once the site has its permanent address)*
 - [x] Founder course written (playbook, reviews, traffic, money, launch)
 - [x] Disclosure & privacy pages
 - [x] True About page — real facts only (turns out the camper story was ours all along)

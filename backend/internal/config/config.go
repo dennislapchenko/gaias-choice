@@ -44,6 +44,12 @@ type Config struct {
 	SMTPPass       string
 	MailFrom       string
 	PublicSiteURL  string
+
+	// Telegram sign-in (internal/telegram). Set ⇒ the bot long-polls for
+	// /start <code> taps and /api/auth/telegram* work; unset ⇒ those endpoints
+	// answer 503 and the FE hides the option. The bot's @username is resolved
+	// at boot via getMe, never configured here.
+	TelegramBotToken string
 }
 
 func Load() Config {
@@ -70,6 +76,7 @@ func Load() Config {
 		MailFrom:               envOr("MAIL_FROM", "Gaia's Choice <login@gardenofatlantis.com>"),
 		PublicSiteURL: strings.TrimRight(
 			envOr("PUBLIC_SITE_URL", "https://dennislapchenko.github.io/gaias-choice"), "/"),
+		TelegramBotToken: os.Getenv("TELEGRAM_BOT_TOKEN"),
 	}
 }
 

@@ -5,6 +5,8 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"log"
 	"os"
 
@@ -16,6 +18,7 @@ import (
 	"github.com/dennislapchenko/gaias-choice/backend/internal/httpapi"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/mail"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/store"
+	"github.com/dennislapchenko/gaias-choice/backend/internal/telegram"
 )
 
 func main() {
@@ -55,12 +58,33 @@ func main() {
 		log.Printf("mail: %s (from %s)", mailer.Transport(), cfg.MailFrom)
 	}
 
+	bot := telegram.New(cfg.TelegramBotToken)
+	if bot == nil {
+		log.Print("telegram: DISABLED (no TELEGRAM_BOT_TOKEN) — /api/auth/telegram* → 503")
+	} else if err := bot.Init(context.Background()); err != nil {
+		log.Printf("telegram: DISABLED — getMe failed: %v", err)
+		bot = nil
+	} else {
+		log.Printf("telegram: sign-in bot @%s ready", bot.Username())
+		// Long-poll loop owns the bot's getUpdates; runs for the process's life.
+		go bot.Run(context.Background(), func(code, username string, tgID int64, name string) string {
+			if err := authSvc.ConfirmTelegram(code, username, tgID, name); err != nil {
+				if errors.Is(err, auth.ErrBadCredentials) {
+					return "This sign-in link is invalid, expired, or for a different account. Start again from the website."
+				}
+				return "Something went wrong — please try again from the website."
+			}
+			return "✅ You're signed in. Head back to your browser tab."
+		})
+	}
+
 	r := httpapi.NewRouter(httpapi.Deps{
 		CORSOrigins: cfg.CORSOrigins,
 		Store:       st,
 		Auth:        authSvc,
 		Content:     contentStoreFor(cfg),
 		Mailer:      mailer,
+		Telegram:    bot,
 		SiteURL:     cfg.PublicSiteURL,
 	})
 

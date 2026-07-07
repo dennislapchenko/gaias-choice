@@ -16,6 +16,7 @@ import {
   type LoginResponse,
   type MagicRequestPayload,
   type MeResponse,
+  type TelegramChallenge,
 } from './api'
 import LoginDialog from '../components/LoginDialog'
 
@@ -32,6 +33,12 @@ interface SessionState {
   requestMagicLink: (email: string, locale: string) => Promise<void>
   /** Password fallback — only for accounts that have one (admin/bootstrap). */
   login: (email: string, password: string) => Promise<void>
+  /** Telegram (primary): claim a @username, get the deep-link code + bot. */
+  requestTelegram: (username: string) => Promise<TelegramChallenge>
+  /** Poll a Telegram handshake: the grant once confirmed, null while pending. */
+  pollTelegram: (code: string) => Promise<LoginResponse | null>
+  /** Finish a Telegram (or any) sign-in from a grant the dialog already has. */
+  acceptGrant: (grant: LoginResponse) => void
   /** Revoke the session server-side (best effort) and clear it locally. */
   signOut: () => void
   /** Sync `me` after a profile edit elsewhere (e.g. AccountFields' save). */
@@ -47,6 +54,9 @@ const SessionContext = createContext<SessionState>({
   backendUp: false,
   requestMagicLink: async () => {},
   login: async () => {},
+  requestTelegram: async () => ({ code: '', bot: '' }),
+  pollTelegram: async () => null,
+  acceptGrant: () => {},
   signOut: () => {},
   updateMe: () => {},
   loginOpen: false,
@@ -159,6 +169,19 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     accept(await apiPost<LoginResponse>('/auth/login', { email, password }), email)
   }
 
+  const requestTelegram = (username: string) =>
+    apiPost<TelegramChallenge>('/auth/telegram', { username })
+
+  // 200 ⇒ a grant (has a token); 202 ⇒ { status: 'pending' } while the user
+  // hasn't confirmed in Telegram yet. A dead/expired code throws (the dialog
+  // stops polling and reopens the claim step).
+  const pollTelegram = async (code: string): Promise<LoginResponse | null> => {
+    const res = await apiPost<LoginResponse | { status: string }>('/auth/telegram/poll', { code })
+    return 'token' in res ? res : null
+  }
+
+  const acceptGrant = (grant: LoginResponse) => accept(grant, '')
+
   const signOut = () => {
     const stored = readStoredToken()
     if (stored) {
@@ -177,6 +200,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         backendUp,
         requestMagicLink,
         login,
+        requestTelegram,
+        pollTelegram,
+        acceptGrant,
         signOut,
         updateMe: setMe,
         loginOpen,

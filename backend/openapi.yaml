@@ -194,6 +194,93 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 
+  /auth/telegram:
+    post:
+      operationId: requestTelegramLogin
+      summary: Start a Telegram-username sign-in (the primary login)
+      description: >-
+        Claims a Telegram @username and mints a one-time code. The reply is a
+        deep link t.me/{bot}?start={code}: the user taps it, the bot confirms
+        the SENDER's username matches the claim (that check is what stops
+        signing in as someone else), and the FE redeems via /auth/telegram/poll.
+        First successful sign-in creates a viewer account keyed by telegram id.
+      tags: [auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username]
+              properties:
+                username:
+                  type: string
+                  maxLength: 33
+                  description: Telegram @username (with or without the leading @).
+      responses:
+        '200':
+          description: Code minted — build the deep link and poll for the grant.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TelegramChallenge' }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          description: Telegram sign-in is not configured on this deployment.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /auth/telegram/poll:
+    post:
+      operationId: pollTelegramLogin
+      summary: Poll a Telegram sign-in for its session grant
+      description: >-
+        Called every couple of seconds after /auth/telegram. 202 while the user
+        hasn't confirmed in Telegram yet; 200 with a session grant once the bot
+        has verified the sender; 401 when the code is unknown or expired.
+      tags: [auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code: { type: string, maxLength: 128 }
+      responses:
+        '200':
+          description: Confirmed — same grant as /auth/login. First use creates a viewer account.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SessionGrant' }
+        '202':
+          description: Not confirmed yet — keep polling.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status: { type: string }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Code unknown or expired — start again.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          description: Telegram sign-in is not configured on this deployment.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
   /auth/logout:
     post:
       operationId: logout
@@ -424,6 +511,16 @@ components:
         role: { $ref: '#/components/schemas/Role' }
         displayName: { type: string }
         expiresAt: { type: string, format: date-time }
+    TelegramChallenge:
+      type: object
+      required: [code, bot]
+      properties:
+        code:
+          type: string
+          description: One-time code for the t.me/{bot}?start={code} deep link.
+        bot:
+          type: string
+          description: The bot's @username (no @) — the deep link's host handle.
     MeResponse:
       type: object
       required: [email, role, displayName, avatarUrl, editing]

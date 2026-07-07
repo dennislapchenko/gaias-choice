@@ -102,6 +102,14 @@ export interface MagicRequestPayload {
   locale: string
 }
 
+/** POST /api/auth/telegram — claim a @username, get back the deep-link code +
+ *  bot handle (the FE builds t.me/<bot>?start=<code>). 503 when the deployment
+ *  has no bot configured. */
+export interface TelegramChallenge {
+  code: string
+  bot: string
+}
+
 /** GET /api/auth/me — session probe; `editing` is true only for admin/editor
  *  AND when the backend has a content storage backend configured. */
 export interface MeResponse {

@@ -145,7 +145,7 @@ func (s *Store) Bump() (int, error) {
 
 type User struct {
 	ID           int64
-	Email        string
+	Email        string // "" for telegram-only accounts (stored NULL, read via COALESCE)
 	PasswordHash string
 	Role         string // "admin" | "editor" | "viewer" (enforced by a CHECK constraint)
 	DisplayName  string // may be "" for pre-003 users; callers fall back to the email local-part
@@ -185,7 +185,7 @@ func (s *Store) CreateUser(email, passwordHash, role, displayName string) error 
 func (s *Store) UserByEmail(email string) (User, bool, error) {
 	var u User
 	err := s.db.QueryRow(
-		`SELECT id, email, password_hash, role, display_name, avatar_url FROM users WHERE email = ?`, email,
+		`SELECT id, COALESCE(email, ''), password_hash, role, display_name, avatar_url FROM users WHERE email = ?`, email,
 	).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.Role, &u.DisplayName, &u.AvatarURL)
 	if errors.Is(err, sql.ErrNoRows) {
 		return User{}, false, nil
@@ -197,12 +197,35 @@ func (s *Store) UserByEmail(email string) (User, bool, error) {
 func (s *Store) UserByID(id int64) (User, bool, error) {
 	var u User
 	err := s.db.QueryRow(
-		`SELECT id, email, password_hash, role, display_name, avatar_url FROM users WHERE id = ?`, id,
+		`SELECT id, COALESCE(email, ''), password_hash, role, display_name, avatar_url FROM users WHERE id = ?`, id,
 	).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.Role, &u.DisplayName, &u.AvatarURL)
 	if errors.Is(err, sql.ErrNoRows) {
 		return User{}, false, nil
 	}
 	return u, err == nil, err
+}
+
+// UserByTelegramID resolves the immutable telegram id to its account — the
+// find in find-or-create (CreateTelegramUser is the create).
+func (s *Store) UserByTelegramID(tgID int64) (User, bool, error) {
+	var u User
+	err := s.db.QueryRow(
+		`SELECT id, COALESCE(email, ''), password_hash, role, display_name, avatar_url FROM users WHERE telegram_id = ?`, tgID,
+	).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.Role, &u.DisplayName, &u.AvatarURL)
+	if errors.Is(err, sql.ErrNoRows) {
+		return User{}, false, nil
+	}
+	return u, err == nil, err
+}
+
+// CreateTelegramUser makes a passwordless, emailless viewer keyed by telegram
+// id — the campfire's newest face after a first Telegram sign-in.
+func (s *Store) CreateTelegramUser(tgID int64, displayName string) error {
+	_, err := s.db.Exec(
+		`INSERT INTO users (email, password_hash, role, display_name, telegram_id) VALUES (NULL, '', 'viewer', ?, ?)`,
+		displayName, tgID,
+	)
+	return err
 }
 
 // UpdateUser changes a user's own-editable profile fields. An empty
@@ -225,7 +248,7 @@ func (s *Store) UpdateUser(id int64, displayName, email, avatarURL, passwordHash
 // ListMembers returns every user, oldest first — the campfire circle.
 func (s *Store) ListMembers() ([]Member, error) {
 	rows, err := s.db.Query(
-		`SELECT id, email, display_name, avatar_url, role, created_at FROM users ORDER BY created_at, id`,
+		`SELECT id, COALESCE(email, ''), display_name, avatar_url, role, created_at FROM users ORDER BY created_at, id`,
 	)
 	if err != nil {
 		return nil, err
@@ -258,7 +281,7 @@ func (s *Store) CreateSession(tokenHash string, userID int64, expiresAt time.Tim
 func (s *Store) UserBySession(tokenHash string, now time.Time) (User, bool, error) {
 	var u User
 	err := s.db.QueryRow(
-		`SELECT u.id, u.email, u.password_hash, u.role, u.display_name, u.avatar_url
+		`SELECT u.id, COALESCE(u.email, ''), u.password_hash, u.role, u.display_name, u.avatar_url
 		   FROM sessions s JOIN users u ON u.id = s.user_id
 		  WHERE s.token_hash = ? AND s.expires_at > ?`,
 		tokenHash, now.UTC().Format(time.RFC3339),
@@ -312,6 +335,70 @@ func (s *Store) ConsumeLoginToken(tokenHash string, now time.Time) (string, bool
 func (s *Store) DeleteExpiredLoginTokens(now time.Time) error {
 	_, err := s.db.Exec(
 		`DELETE FROM login_tokens WHERE expires_at <= ?`,
+		now.UTC().Format(time.RFC3339),
+	)
+	return err
+}
+
+// --- telegram sign-in handshakes ----------------------------------------------
+
+// TelegramLogin is one in-flight sign-in handshake. TgID is valid once the
+// bot has confirmed a sender whose @username matches Username.
+type TelegramLogin struct {
+	Username string
+	TgID     sql.NullInt64
+	TgName   string
+}
+
+func (s *Store) CreateTelegramLogin(codeHash, username string, expiresAt time.Time) error {
+	_, err := s.db.Exec(
+		`INSERT INTO telegram_logins (code_hash, username, expires_at) VALUES (?, ?, ?)`,
+		codeHash, username, expiresAt.UTC().Format(time.RFC3339),
+	)
+	return err
+}
+
+// TelegramLoginByCode returns the unexpired handshake for a code (empty TgID
+// until confirmed). found=false ⇒ unknown or expired.
+func (s *Store) TelegramLoginByCode(codeHash string, now time.Time) (TelegramLogin, bool, error) {
+	var tl TelegramLogin
+	err := s.db.QueryRow(
+		`SELECT username, tg_id, tg_name FROM telegram_logins WHERE code_hash = ? AND expires_at > ?`,
+		codeHash, now.UTC().Format(time.RFC3339),
+	).Scan(&tl.Username, &tl.TgID, &tl.TgName)
+	if errors.Is(err, sql.ErrNoRows) {
+		return TelegramLogin{}, false, nil
+	}
+	return tl, err == nil, err
+}
+
+// ConfirmTelegramLogin stamps the confirmed sender onto an unexpired,
+// not-yet-confirmed handshake. ok=false ⇒ code gone, expired, or already
+// confirmed (so a second sender can't overwrite the first).
+func (s *Store) ConfirmTelegramLogin(codeHash string, tgID int64, tgName string, now time.Time) (bool, error) {
+	res, err := s.db.Exec(
+		`UPDATE telegram_logins SET tg_id = ?, tg_name = ?
+		   WHERE code_hash = ? AND expires_at > ? AND tg_id IS NULL`,
+		tgID, tgName, codeHash, now.UTC().Format(time.RFC3339),
+	)
+	if err != nil {
+		return false, err
+	}
+	n, err := res.RowsAffected()
+	return n > 0, err
+}
+
+// DeleteTelegramLogin consumes a handshake (single-use, called once the poll
+// has turned it into a session).
+func (s *Store) DeleteTelegramLogin(codeHash string) error {
+	_, err := s.db.Exec(`DELETE FROM telegram_logins WHERE code_hash = ?`, codeHash)
+	return err
+}
+
+// DeleteExpiredTelegramLogins is the same lazy janitor, run on every request.
+func (s *Store) DeleteExpiredTelegramLogins(now time.Time) error {
+	_, err := s.db.Exec(
+		`DELETE FROM telegram_logins WHERE expires_at <= ?`,
 		now.UTC().Format(time.RFC3339),
 	)
 	return err

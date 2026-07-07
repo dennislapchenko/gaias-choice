@@ -230,6 +230,95 @@ func TestMagicLink(t *testing.T) {
 	}
 }
 
+func TestTelegramLogin(t *testing.T) {
+	s, st := testService(t)
+
+	// Bogus usernames refused up front — nothing minted.
+	for _, bad := range []string{"ab", "1abc", "has space", "toolong_toolong_toolong_toolong_x"} {
+		if _, err := s.RequestTelegram(bad); !errors.Is(err, ErrInvalid) {
+			t.Errorf("username %q: got %v, want ErrInvalid", bad, err)
+		}
+	}
+
+	// Claim @Wanderer (leading @ and casing normalized away).
+	code, err := s.RequestTelegram(" @Wanderer ")
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Before the bot confirms: pending, not granted, no error.
+	if _, granted, err := s.PollTelegram(code); err != nil || granted {
+		t.Fatalf("pre-confirm poll: granted=%v err=%v (want pending)", granted, err)
+	}
+
+	// The security gate: a sender whose @username isn't the claimed one is
+	// refused, and the handshake stays unconfirmed (still poll-pending).
+	if err := s.ConfirmTelegram(code, "impostor", 555, "Im Poster"); !errors.Is(err, ErrBadCredentials) {
+		t.Fatalf("username mismatch: got %v, want ErrBadCredentials", err)
+	}
+	if _, granted, _ := s.PollTelegram(code); granted {
+		t.Fatal("mismatched confirm granted the login")
+	}
+
+	// The real owner confirms (case-insensitive match); name is tidied.
+	if err := s.ConfirmTelegram(code, "WANDERER", 42, "  The   Wanderer "); err != nil {
+		t.Fatalf("valid confirm: %v", err)
+	}
+	sess, granted, err := s.PollTelegram(code)
+	if err != nil || !granted {
+		t.Fatalf("post-confirm poll: granted=%v err=%v", granted, err)
+	}
+	if sess.User.Role != "viewer" || sess.User.DisplayName != "The Wanderer" ||
+		sess.User.Email != "" || sess.Token == "" {
+		t.Fatalf("bad telegram session: %+v", sess.User)
+	}
+	if u, ok := s.Validate(sess.Token); !ok || u.ID != sess.User.ID {
+		t.Fatalf("telegram session does not validate: ok=%v %+v", ok, u)
+	}
+
+	// Single-use: the code is consumed on redemption.
+	if _, _, err := s.PollTelegram(code); err != ErrBadCredentials {
+		t.Fatalf("code reused: %v", err)
+	}
+
+	// A second sign-in for the same telegram id lands the SAME account, even
+	// under a fresh code and a changed display name (id is the key, not name).
+	code2, err := s.RequestTelegram("wanderer")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := s.ConfirmTelegram(code2, "wanderer", 42, "Renamed Person"); err != nil {
+		t.Fatal(err)
+	}
+	sess2, granted2, err := s.PollTelegram(code2)
+	if err != nil || !granted2 {
+		t.Fatalf("second login poll: granted=%v err=%v", granted2, err)
+	}
+	if sess2.User.ID != sess.User.ID {
+		t.Fatalf("second telegram login made a new account: %d vs %d", sess2.User.ID, sess.User.ID)
+	}
+	if n, _ := st.CountUsers(); n != 1 {
+		t.Fatalf("users: got %d, want 1", n)
+	}
+
+	// Expired handshakes neither confirm nor redeem (row created with a past
+	// expiry directly, bypassing the TTL).
+	expired := randomToken()
+	if err := st.CreateTelegramLogin(hashToken(expired), "latecomer", time.Now().Add(-time.Minute)); err != nil {
+		t.Fatal(err)
+	}
+	if err := s.ConfirmTelegram(expired, "latecomer", 7, "Late"); err != ErrBadCredentials {
+		t.Fatalf("expired confirm: %v", err)
+	}
+	if _, _, err := s.PollTelegram(expired); err != ErrBadCredentials {
+		t.Fatalf("expired poll: %v", err)
+	}
+
+	// Unknown code is indistinguishable from expired.
+	if _, _, err := s.PollTelegram("not-a-code"); err != ErrBadCredentials {
+		t.Fatalf("unknown code: %v", err)
+	}
+}
+
 func TestUpdateProfile(t *testing.T) {
 	s, _ := testService(t)
 	if _, err := s.Bootstrap("owner@test.dev", "correct-horse"); err != nil {

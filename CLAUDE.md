@@ -124,7 +124,7 @@ src/
   styles.css             # single hand-written stylesheet (no CSS framework)
 backend/                 # optional Go/gin API sidecar (see "Backend" below)
   openapi.yaml           # THE endpoint contract — endpoints are born here (task be:gen)
-  main.go, internal/{config,store,auth,content,httpapi}, Dockerfile, go.mod
+  main.go, internal/{config,store,auth,content,mail,telegram,httpapi}, Dockerfile, go.mod
 compose.dev.yaml         # `task dev` stack: web (Vite HMR) + api (air hot reload)
 deploy/                  # live VM deploy stack: compose.yaml (api+Caddy), Caddyfile,
                          # README (target), infra-log.md (provisioning record)
@@ -483,18 +483,39 @@ VM is down the live site silently degrades to the static baseline.
   submission (provider-neutral fallback), `SMTP_HOST=log` ⇒ print to stdout
   (dev, wins over everything), none ⇒ nil mailer ⇒ `/api/auth/magic` answers
   503; `MAIL_FROM`/`POSTMARK_STREAM` complete the block — deliberately a
-  transactional provider, never a self-hosted server), `internal/content`
+  transactional provider, never a self-hosted server), `internal/telegram`
+  (the Telegram sign-in bot; `TELEGRAM_BOT_TOKEN` set ⇒ it long-polls
+  getUpdates for `/start <code>` taps and confirms senders via sendMessage —
+  two stdlib HTTP calls, no client lib; unset ⇒ nil bot ⇒ `/api/auth/telegram*`
+  answer 503), `internal/content`
   (the live-edit seam), `internal/httpapi` (gin router, hand-written CORS
   allowlist, middleware, handlers). Endpoints: `/api/healthz`, `/api/hello`
-  (hits counter proving a DB round-trip), `/api/auth/magic` +
-  `/api/auth/magic/verify` (the passwordless login),
+  (hits counter proving a DB round-trip), `/api/auth/telegram` +
+  `/api/auth/telegram/poll` (the primary Telegram login), `/api/auth/magic` +
+  `/api/auth/magic/verify` (the passwordless email login),
   `/api/auth/{login,register,logout,me}`,
   `/api/users` (the campfire listing), `PUT /api/users/me` (self-service
   profile edit — display name, email, avatar URL, optional password
   change), `/api/content/{file,save}`.
 - **Auth (users/sessions/roles):** `users` rows (argon2id password hashes,
-  public `display_name`) carry role `admin`, `editor`, or `viewer`.
-  **The primary login is the passwordless magic link:** `POST /api/auth/magic`
+  public `display_name`) carry role `admin`, `editor`, or `viewer`. `email` is
+  **nullable** (migration 006) — Telegram-only accounts have none, so they key
+  on the immutable `telegram_id` column instead; reads `COALESCE(email,'')` so
+  the Go layer still sees a plain string.
+  **The primary login is by Telegram username:** a bot cannot DM a user by
+  `@username` (only users who've opened it, by chat id), so login is a
+  deep-link handshake. `POST /api/auth/telegram {username}` mints a one-time
+  code (sha256 in `telegram_logins`, 10-min TTL, single-use — same shape as
+  `login_tokens`) and returns `{code, bot}`; the FE shows a
+  `t.me/<bot>?start=<code>` link. The user taps it, the bot (long-polling
+  getUpdates) sees `/start <code>` and **confirms the SENDER's `@username`
+  equals the claimed one** (`auth.ConfirmTelegram` — this check is what stops
+  signing in as someone else), stamping the sender's telegram id onto the row.
+  The FE polls `POST /api/auth/telegram/poll {code}` (~2s; 202 pending → 200
+  grant → 401 dead), which find-or-creates a viewer keyed by telegram id and
+  issues the session. Only one process may long-poll a bot, so the single BE
+  instance owns the loop (no webhook, no inbound URL).
+  **The passwordless magic link is now a fallback:** `POST /api/auth/magic`
   (per-IP rate-limited, always 200) emails a one-time link; its token (sha256
   in `login_tokens`, 15-min TTL, deleted on redemption — single-use) is
   traded at `POST /api/auth/magic/verify` for a session, and **first
@@ -541,13 +562,21 @@ VM is down the live site silently degrades to the static baseline.
 - **Login & accounts (FE side):** `src/lib/session.tsx` is the one session
   seam — it owns the token (`localStorage['gc-session']`), validates it
   against `/api/auth/me` on every load (401 ⇒ silent drop), exposes
-  requestMagicLink/login/signOut, consumes the emailed `#magic=<token>` hash
+  requestMagicLink/login/requestTelegram/pollTelegram/acceptGrant/signOut,
+  consumes the emailed `#magic=<token>` hash
   (on mount and on hashchange; scrubbed from the URL, traded at
   `/auth/magic/verify`, dead token ⇒ reopen the dialog), and renders
-  `components/LoginDialog.tsx` (centered modal over a blurred backdrop:
-  email-first "send me a sign-in link" → a "check your inbox" state; the
-  password form sits behind a toggle for accounts that have one — there is
-  no separate registration form, first sign-in registers). Chrome is gated on
+  `components/LoginDialog.tsx` (centered modal over a blurred backdrop).
+  **Telegram is the primary flow** (default mode): claim a `@username` →
+  `requestTelegram` returns `{code, bot}` → the dialog shows a
+  `t.me/<bot>?start=<code>` deep link and polls `pollTelegram` every ~2s until
+  a grant arrives (`acceptGrant`), a 202 keeps it waiting, a dead code drops
+  back to the claim step. The two email methods demote to **square toggle
+  buttons at the dialog bottom** (magic-link → "check your inbox"; password →
+  the fallback for accounts that have one); each has a back-link to Telegram.
+  There is no separate registration form — first sign-in by any method
+  registers. Telegram unconfigured (503) shows an inline "try email instead"
+  note. Chrome is gated on
   `backendUp` (a `/healthz` probe when signed out): `components/UserButton.tsx`
   (header, left of the palette switcher, mobile included) renders **only when
   the API answers** — signed out it opens the dialog, signed in it shows the
@@ -565,8 +594,9 @@ VM is down the live site silently degrades to the static baseline.
   CSS-driven (no JS breakpoint branch — see `.account-fields`/
   `.rail-toggle` in `styles.css`). A sign-out button sits below the
   scene. BE down ⇒ none of this exists — **readers ship zero account/editing
-  chrome**; no email transport configured ⇒ only the magic path degrades
-  (dialog reports links unavailable, password fallback still works).
+  chrome**; each sign-in transport degrades independently — no Telegram bot ⇒
+  the Telegram step reports "try email instead", no email transport ⇒ the magic
+  path reports links unavailable, and the password fallback always works.
 - **Edit mode (FE side):** `src/lib/editMode.tsx` is now a thin consumer of
   the session: `active` simply mirrors `/api/auth/me`'s role-aware
   `editing` flag. `#edit` in any URL stays as the deliberate shortcut —

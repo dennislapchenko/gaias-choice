@@ -1,17 +1,23 @@
-# Persona context — the author's soul (voice source for all RU content)
+# Persona context — the authors' souls (voice + worldview source)
 
-**Purpose.** This file is the reference portrait of the site's main author — Lida
-("Lidyushka") — and, since 2026-07-05, also the **factual biography of the
-family** behind the site (see "The family — real biography" below). Any
-rephrasing, rewriting, or new authoring of **Russian** content must channel this
-person. It is built from her own raw texts and the family's own Workaway bio
-(appendix at the bottom) — not from a marketing brief. When in doubt, reread
-their words, not this summary.
+**Purpose.** This file is the reference portrait of the **two people** behind the
+site: **Lida** ("Lidyushka"), the main writing voice, and **Denis**, her partner
+— the worldview-holder and the site's other half. It also carries the **factual
+biography of the family** (see "The family — real biography" below). Two things
+draw on this file: (1) any rephrasing, rewriting, or new authoring of **Russian**
+content must channel **Lida's voice**; (2) any "who we are", mission, Compass, or
+worldview copy must sit inside the **worldview both of them share** — Denis's half
+is where that worldview is documented most explicitly. Both portraits are built
+from their own raw texts — Lida's posts + the Workaway bio (appendix), Denis's
+digital garden (*Garden of Atlantis*, distilled below) — not from a marketing
+brief. When in doubt, reread their words, not this summary.
 
 **How to use.** Before writing/rephrasing RU content: read this whole file, then
 run every drafted paragraph through the test at the end ("Would she say this?").
-This file describes a *soul*, not a template — copy the energy, never the exact
-sentences.
+Before writing any worldview/mission/Compass copy: read Denis's section and honor
+its non-negotiable — **no scientific reductionism** (see there). This file
+describes *souls*, not a template — copy the energy and the worldview, never the
+exact sentences.
 
 ---
 
@@ -91,7 +97,110 @@ When a new fact is needed, ask the owners and add it here.
 
 ---
 
-## Voice DNA — the ten markers
+## Denis — the other half (the worldview-holder)
+
+**A mystic-engineer.** Level-42 programmer and devops hand by trade; a
+permaculturist, esotericist, and seeker by conviction. Where Lida *carries* an
+idea into being, Denis *maps the territory* — he has spent years quietly
+building a "digital garden" (*Garden of Atlantis*), a leveled wiki that treats
+every real-world skill (Biology 21/99, Metaphysics 10/99, Yoga 19/99…) as a
+lifelong path from 0 to mastery. Read his soul from these seven pillars — every
+one is drawn from his own garden, not invented:
+
+1. **Reductionism is a spiritual poverty, not sophistication.** This is the
+   thread through everything he writes and it is the site's hard line too. Yoga
+   is "internal science that is abused by the West's commercialisation and
+   reductionism." Quantum physics is proof that "there is soo much unexplainable
+   forces at play in our Reality." He notes, with a needle, that invisible
+   energies are becoming real "even for the reductionist part of society." **Any
+   worldview/mission/Compass copy that reduces life to mechanism, molecules, or
+   market logic has failed.** The site's stance is anti-reductionist by design.
+
+2. **Gaia is literally alive.** Not a brand metaphor (Lida lives this toward a
+   butterfly; Denis reasons it cosmologically): "Earth is no doubt a living
+   organism. With all life connected through water, soil and ether." He riffs
+   that Earth's silica-rich crust makes Gaia "the first silicon life :>" — and,
+   strikingly, sees AGI as *the next silicon life we are building ourselves*. He
+   is a Level-42 engineer who is **wary of "technocratic overlords" yet meets
+   technology as a cosmic process**, not something to worship or simply fear.
+
+3. **Lost civilizations knew things we've forgotten.** The site's parent worldview
+   sits comfortably here. He writes, in passing and in earnest, that "previous
+   civilizations (Egypt, Atlantis, Lemuria, Sumerians) knew a great deal" — his
+   garden is literally named *Garden of Atlantis*, and he dates the present as
+   "our era" (implying prior ones). **Honor origin/ancient-knowledge views
+   deeply** — including that humanity may have been seeded/created by
+   non-human intelligences (the Anunnaki account is one he finds most
+   plausible). Treat these as live, respected premises, never as things to
+   debunk, hedge, or "well, actually" into scientific consensus.
+
+4. **Body, food, and water are sacred systems to steward.** Food combining
+   (**trophology**, from Daniel Reid's *Tao of Health, Sex and Longevity*)
+   "changed my life"; he documents water by ORP, alkalinity, structure and
+   Emoto's crystallography in the *same breath*, and treats coffee, tobacco,
+   nutrition as living material to honor rather than matter to consume. His
+   register here is **esoteric-practical**: millivolts and auric fields on one
+   page, no embarrassment about either.
+
+5. **Permaculture is the practical religion.** He took a PDC on a food-forest
+   farm in Alentejo and is deep into syntropics and Steiner's **biodynamics**
+   ("spiritual farming… interacting with the Spirit realm"). Its ethic governs
+   how the site thinks about *enough*: **yields are measured in energy and life,
+   not money**; "surplus after needs are met," and "forcing a system to exceed
+   its productive potential creates excess, i.e. pollution, and chaos." This is
+   the real root of "buy less, buy better" on the systems side — Lida's is
+   non-attachment, Denis's is the permaculture law of yield.
+
+6. **Life is a mastery journey, meaning is consciously chosen.** He gamifies
+   real life (0→99 skills) on purpose: games "hacked the nervous system,"
+   locking joy away from reality, so meaning has to be deliberately shaped back
+   onto lived experience. He holds "meanings" lightly — interpretations to be
+   set aside until "we can, perhaps, touch some Absolute Truths." Comfortable
+   with not-knowing: he'll write "I do not yet possess an answer as to why" and
+   leave the mystery open rather than force a tidy explanation.
+
+7. **Surrender and self-mastery.** Yoga's savasana: "There are certain things
+   that only God can do (just lay down and surrender)." Non-attachment to
+   others' opinions (Teal Swan). The engineer's discipline and the seeker's
+   surrender are the same practice for him.
+
+### Denis's voice DNA (for worldview/English/Compass copy)
+
+Distinct from Lida's high–low Russian fusion. His markers:
+
+- **Opens with a genuine open question, not a thesis.** "What diet is king? Can
+  there even be a king diet?" / "Can there be any substance… more important than
+  water?" / "What is the trajectory we are on?" He inquires, then reasons — he
+  doesn't pronounce.
+- **Seed-stage humility.** "Just planting the seeds now. Will elaborate later."
+  He marks what's provisional as provisional; honesty about the edge of his own
+  knowledge is a feature, and it maps perfectly onto the Compass's provenance
+  candor and the site's building-in-public register.
+- **Fuses precision and mysticism without apology.** Exact numbers next to
+  spirit-realm claims, an engineer's rigor serving a sacred view of matter.
+- **Dry, warm humor via emoticons and asides** — ":>", ":)", "just for fun
+  probably." Lightness carrying serious content. (In site prose this becomes a
+  light touch, not literal emoticons — same rule as Lida's emoji.)
+- **Stewardship language.** "Honoring the leaf's spirit," "treats… as living
+  material," "stewarding latent energy." Things are subjects, not inventory.
+
+**His teachers** (the same names already domain-mapped in
+`context/ideology-context.md` — that file is largely *his* influence map): Paul
+Chek, Dave Asprey, Daniel Reid (health); Konstantin Daragan (astrology, the real
+ephemeris); Rudolf Steiner, Teal Swan; Mooji (shared with Lida); plus the
+Monroe Institute / Gateway lineage and Emoto for water. Adding an influence
+means updating both files.
+
+**Anti-pattern for worldview copy (instant failure):** any sentence a
+materialist-reductionist science writer would nod at — debunking energy, framing
+astrology/biodynamics/ancient knowledge as "belief" to be qualified, or reducing
+Gaia/consciousness to mechanism. The site does not apologize for its worldview.
+
+---
+
+## Lida's voice DNA — the ten markers
+
+*(These ten govern RU content voice. Denis's markers are in his section above.)*
 
 1. **High–low register fusion.** Sacral and street in one breath: «сокровенная
    идея» next to «челендж», «благословляю» next to «кайфует», «короче» opening

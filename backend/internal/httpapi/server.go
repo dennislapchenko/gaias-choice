@@ -20,6 +20,7 @@ import (
 	"github.com/dennislapchenko/gaias-choice/backend/internal/content"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/mail"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/store"
+	"github.com/dennislapchenko/gaias-choice/backend/internal/telegram"
 )
 
 // Deps is everything the HTTP layer needs, wired explicitly by main.go.
@@ -29,6 +30,7 @@ type Deps struct {
 	Auth        *auth.Service
 	Content     content.Store // nil ⇒ content routes answer 503
 	Mailer      *mail.Mailer  // nil ⇒ /auth/magic answers 503
+	Telegram    *telegram.Bot // nil ⇒ /auth/telegram* answer 503
 	SiteURL     string        // where emailed magic links point (no trailing /)
 }
 
@@ -52,6 +54,7 @@ func NewRouter(d Deps) *gin.Engine {
 		auth:         d.Auth,
 		content:      d.Content,
 		mailer:       d.Mailer,
+		telegram:     d.Telegram,
 		siteURL:      d.SiteURL,
 		loginLimiter: newRateLimiter(10, time.Minute),
 		// Registration is open to the world; a tighter lid keeps a bot from
@@ -59,6 +62,8 @@ func NewRouter(d Deps) *gin.Engine {
 		registerLimiter: newRateLimiter(10, time.Hour),
 		// Each magic request sends a real email — same lid as registration.
 		magicLimiter: newRateLimiter(10, time.Hour),
+		// Poll is cheap and the FE hits it every ~2s for minutes — lenient.
+		pollLimiter: newRateLimiter(120, time.Minute),
 	}
 	RegisterHandlersWithOptions(r, NewStrictHandler(srv, nil), GinServerOptions{
 		BaseURL:     "/api",
@@ -75,10 +80,12 @@ type server struct {
 	auth            *auth.Service
 	content         content.Store
 	mailer          *mail.Mailer
+	telegram        *telegram.Bot
 	siteURL         string
 	loginLimiter    *rateLimiter
 	registerLimiter *rateLimiter
 	magicLimiter    *rateLimiter
+	pollLimiter     *rateLimiter
 }
 
 // Compile-time proof the contract is fully implemented.
@@ -184,6 +191,49 @@ func (s *server) VerifyMagicLink(ctx context.Context, req VerifyMagicLinkRequest
 		return nil, err
 	}
 	return VerifyMagicLink200JSONResponse(grant(sess)), nil
+}
+
+func (s *server) RequestTelegramLogin(ctx context.Context, req RequestTelegramLoginRequestObject) (RequestTelegramLoginResponseObject, error) {
+	if s.telegram == nil {
+		return RequestTelegramLogin503JSONResponse(Error{Error: "telegram sign-in not configured"}), nil
+	}
+	if c := ginContext(ctx); c != nil && !s.loginLimiter.allow(c.ClientIP()) {
+		return RequestTelegramLogin429JSONResponse{RateLimitedJSONResponse{Error: "too many attempts — try again later"}}, nil
+	}
+	if req.Body == nil || req.Body.Username == "" {
+		return RequestTelegramLogin400JSONResponse{BadRequestJSONResponse{Error: "username required"}}, nil
+	}
+	code, err := s.auth.RequestTelegram(req.Body.Username)
+	if errors.Is(err, auth.ErrInvalid) {
+		return RequestTelegramLogin400JSONResponse{BadRequestJSONResponse{Error: "not a telegram username"}}, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return RequestTelegramLogin200JSONResponse{Code: code, Bot: s.telegram.Username()}, nil
+}
+
+func (s *server) PollTelegramLogin(ctx context.Context, req PollTelegramLoginRequestObject) (PollTelegramLoginResponseObject, error) {
+	if s.telegram == nil {
+		return PollTelegramLogin503JSONResponse(Error{Error: "telegram sign-in not configured"}), nil
+	}
+	if c := ginContext(ctx); c != nil && !s.pollLimiter.allow(c.ClientIP()) {
+		return PollTelegramLogin429JSONResponse{RateLimitedJSONResponse{Error: "too many attempts — try again later"}}, nil
+	}
+	if req.Body == nil || req.Body.Code == "" {
+		return PollTelegramLogin400JSONResponse{BadRequestJSONResponse{Error: "code required"}}, nil
+	}
+	sess, granted, err := s.auth.PollTelegram(req.Body.Code)
+	if errors.Is(err, auth.ErrBadCredentials) {
+		return PollTelegramLogin401JSONResponse(Error{Error: "code unknown or expired"}), nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	if !granted {
+		return PollTelegramLogin202JSONResponse{Status: "pending"}, nil
+	}
+	return PollTelegramLogin200JSONResponse(grant(sess)), nil
 }
 
 // magicEmail is the whole email-template system: two locales, plain text.
