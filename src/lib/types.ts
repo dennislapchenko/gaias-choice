@@ -24,15 +24,13 @@ export interface RespectedPerson {
 }
 
 /**
- * Something queued but not written yet — rendered as the "in the works" rail
- * (Upcoming.tsx) on /reviews (`upcoming:`) and /journal (`upcomingJournal:`).
- * Not real content: no rating, no date — just the name, plus a reference link
- * for products. Remove an entry once the real review/entry ships.
+ * Lifecycle of a post (a review or Journal entry). Absent = active. An
+ * `upcoming` post is a real content file that isn't finished yet: it drops out
+ * of the main listing and shows title-only in the "in the works" rail
+ * (Upcoming.tsx); flipping the frontmatter to active (or deleting the line)
+ * moves it into the main spot. Compass chapters and pages ignore this field.
  */
-export interface UpcomingItem {
-  name: string
-  url?: string // product listing (Amazon, for now) — reference only, not an affiliate link; journal ideas have none
-}
+export type PostState = 'active' | 'upcoming'
 
 /**
  * A themed collection of Compass chapters ("epic"). Membership is derived from a
@@ -76,8 +74,6 @@ export interface SiteConfig {
   respected?: RespectedPerson[] // teachers/influences listed in the sidebar "Respected" panel
   sidebar?: SidebarWidget[] // left-rail composition + order; falls back to a default when absent
   epics?: GuideEpic[] // themed Compass collections shown as thumbnails on /compass
-  upcoming?: UpcomingItem[] // reviews queued but not yet written, shown on /reviews
-  upcomingJournal?: UpcomingItem[] // journal entries planned but not yet written, shown on /journal (no urls)
   support?: SupportConfig // payment methods for /support; non-localized, so authored in en/ only and inherited by other locales (see getSite)
   nav: NavItem[]
   footerNav?: NavItem[]
@@ -89,12 +85,12 @@ export interface SiteConfig {
  * Address of one editable value for the live-edit seam: the source file that
  * actually supplied it (locale fallback means a RU page often renders EN
  * values — only the content layer knows which file won) + the YAML path to
- * the value inside that file. Handed out by provenance getters in content.ts
- * (e.g. getUpcomingEditRef); components never construct these themselves.
+ * the value inside that file. Handed out by provenance getters in content.ts;
+ * components never construct these themselves.
  */
 export interface EditRef {
   file: string // repo-relative, e.g. 'content/locales/en/site.yaml'
-  path: (string | number)[] // yaml Document path, e.g. ['upcoming', 2, 'name']
+  path: (string | number)[] // yaml Document path, e.g. ['epics', 2, 'title']
 }
 
 /** Common fields every markdown entry carries. */
@@ -113,6 +109,7 @@ export interface Product extends Entry {
   excerpt: string
   date: string
   tags?: string[]
+  state?: PostState // absent = active; upcoming = WIP, title-only in the rail
 }
 
 /**
@@ -125,6 +122,7 @@ export interface JournalEntry extends Entry {
   date: string
   image?: string
   tags?: string[]
+  state?: PostState // absent = active; upcoming = WIP, title-only in the rail (Journal only — Compass ignores it)
 }
 
 /** A Compass course chapter — a Journal-shaped article plus optional course order. */

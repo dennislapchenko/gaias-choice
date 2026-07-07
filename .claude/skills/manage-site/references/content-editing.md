@@ -36,11 +36,13 @@ pick controls list position. Markdown is GFM (task-list checkboxes render).
 **The canonical scaffold is `content/shared/review-template.<locale>.md`** —
 the same file the "Contribute!" button on `/reviews` copies to the clipboard
 (en + ru; `getReviewTemplate` in `content.ts`). Start every review from it.
-Frontmatter: `title`, `category` (must match the locale's existing category
-set — the filter chips), `rating` 0–5 (a 5 must survive the "no flaws?"
-test), `price` (always quoted), optional `affiliateUrl` (ONLY once enrolled —
-never a placeholder), `excerpt`, optional `image` (mandala SVG by default),
-`date`, optional `tags`.
+Frontmatter: `title`, `state` (`upcoming` while it's queued/WIP — the
+template's default; flip to `active` or delete the line to publish, see "The
+'in the works' queue" under Journal), `category` (must match the locale's
+existing category set — the filter chips), `rating` 0–5 (a 5 must survive the
+"no flaws?" test), `price` (always quoted), optional `affiliateUrl` (ONLY once
+enrolled — never a placeholder), `excerpt`, optional `image` (mandala SVG by
+default), `date`, optional `tags`.
 
 The five body sections are **the universal structure of every review** — keep
 them all, in this order:
@@ -120,18 +122,24 @@ actually happened on the road) and **practice write-ups** (something
 beneficial the family actually does, told from lived experience — doesn't
 need to be road-specific). **Truth-first is the whole point either way:** no
 invented trips, durations, scenes, or results (the standing rules above apply
-in full). Frontmatter: `title`, `excerpt`, `date`, optional `tags`,
+in full). Frontmatter: `title`, `state` (`upcoming` while queued/WIP — the
+template's default; flip to `active` or delete the line to publish), `excerpt`,
+`date`, optional `tags`,
 optional `image`. Flat folder (no epic subfolders), no code/route wiring — the
 file appears on `/journal` (newest first, filed under its year in the filter
 chips) and opens through the same table-of-contents detail layout as a Compass
 chapter. Use `##`/`###` headings so the TOC renders (3+ needed). RU entries in
 her voice (persona-context).
 
-**The "in the works" queue:** planned-but-unwritten entries live in
-`upcomingJournal:` in `site.yaml` (both locales; titles are localized prose,
-no urls) and render as the right-hand rail on `/journal` — same idea as the
-reviews `upcoming:` queue. Add an idea when it's real, delete it when the
-entry ships.
+**The "in the works" queue:** an unfinished post is a real content file with
+`state: upcoming` in its frontmatter — it renders title-only in the right-hand
+rail instead of the main listing (reviews and journal both). To queue an idea,
+copy the contribute template (it already carries `state: upcoming`) into
+`journal/` (or `products/`); when the post is finished, flip the line to
+`state: active` (or delete it) — the file never moves. Review stub titles are
+brand names (do-not-translate), so those stubs live in `en/products/` only and
+show on every locale's rail; journal idea titles are localized prose — give
+the ru stub the **same slug** as the en one and its title wins on the ru rail.
 
 **The "Contribute!" button** on `/journal` copies a generic, topic-agnostic
 scaffold — the single source is `content/shared/journal-template.<locale>.md`

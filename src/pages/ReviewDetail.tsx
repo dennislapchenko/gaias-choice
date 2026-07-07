@@ -20,6 +20,7 @@ export default function ReviewDetail() {
         {t('reviewDetail.backLink')}
       </Link>
       <span className="tag">{product.category}</span>
+      {product.state === 'upcoming' && <span className="tag">{t('detail.wip')}</span>}
       <h1>{product.title}</h1>
       <div className="detail-meta">
         <Rating value={product.rating} />

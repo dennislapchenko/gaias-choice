@@ -1,4 +1,4 @@
-# Locale-identical config (name, url, heroImage, sidebar, upcoming, social,
+# Locale-identical config (name, url, heroImage, sidebar, social,
 # contactEmail, support) is authored once in en/site.yaml and inherited here
 # via getSite's fall-back-to-en merge — don't copy it back.
 tagline: Натуральная жизнь в дороге с малышом. Рил ба.
@@ -95,14 +95,6 @@ epics:
     title: Трофология
     image: /images/epic-trophology.svg
     blurb: Курс из 5 глав — о сочетании продуктов — собрать карту на холодильник и дневник пищеварения и проверить, от каких привычек за столом вам правда легче, — судя по своему телу, а не по догме.
-
-# Заметки в планах, ещё не написанные, — та же полоса «в работе», что и у
-# обзоров, на /journal. Без `url`: это идеи, а не товары. Заголовки локализуются
-# (это проза, не бренды; Bulletproof — бренд, остаётся). Удаляем запись, когда
-# выходит настоящая заметка.
-upcomingJournal:
-  - name: Bulletproof-кофе — взлёты и падения
-  - name: Тесная жизнь на 6 м² кемпера
 
 nav:
   - { label: Главная, path: / }

@@ -114,51 +114,10 @@ epics:
     image: /images/epic-inside-websites.svg
     blurb: A 5-chapter guide for developers, designers and ops people — how a modern frontend site works under the hood, taught on this site's own code, from the URL bar down to the lockfile.
 
-# Reviews queued but not written yet — rendered as an "in the works" rail on
-# /reviews (src/components/Upcoming.tsx). These are NOT reviews: no rating, no
-# affiliate tag — just the product + its Amazon listing so the queue is public.
-# Delete an entry when its real review ships. Brand/product names stay identical
-# across locales (do-not-translate glossary), so the list lives here only and
-# other locales inherit it — don't copy it into ru/site.yaml.
-upcoming:
-  - name: Manduca XT Baby Carrier
-    url: "https://www.amazon.de/-/en/dp/B0CB8N1ZZ8?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1&th=1"
-  - name: Dreamegg White Noise Machine
-    url: "https://www.amazon.de/-/en/dp/B0B156917Z?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1&th=1"
-  - name: PandaEar Baby Chair Booster piska
-    url: "https://www.amazon.de/-/en/dp/B08BYWRCRH?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_3"
-  - name: Baby Nest for Newborns
-    url: "https://www.amazon.de/-/en/dp/B0DCW69XXF?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_6"
-  - name: Bubba Bear™ Baby Set with Suction Cup Bowl
-    url: "https://www.amazon.de/-/en/dp/B08XXBC81T?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1"
-  - name: Бутылка воды лайфстро
-    url: ""
-  - name: Пакет воды лайфстро
-    url: ""
-  - name: Басейничик из декатлона
-    url: ""
-  - name: Ведро из икеи
-    url: ""
-  - name: Графин из икеи
-    url: ""
-  - name: Стальные миски из икеи
-    url: ""
-  - name: Силиконовые презики из икеи
-    url: ""
-  - name: Массажные мячики из декатлона
-    url: ""
-  - name: Подушка для кормления можно
-    url: ""
-  - name: Подстилка солнышко
-    url: ""
-
-# Journal entries planned but not written yet — the same "in the works" rail as
-# upcoming reviews, on /journal. No `url`: these are ideas, not products.
-# Titles ARE localized (they're prose, not brand names). Delete an entry when
-# the real journal entry ships.
-upcomingJournal:
-  - name: Bulletproof coffee, ups and downs
-  - name: Tight life in 6 m² of the van
+# The "in the works" rails on /reviews and /journal are NOT configured here:
+# an unfinished post is a real content file (products/ or journal/) with
+# `state: upcoming` in its frontmatter — flip it to active (or delete the
+# line) when it's finished and it moves into the main listing.
 
 # Payment methods for the /support page (src/pages/Support.tsx). These values are
 # the SAME in every language, so they live here in en/ only — ru/site.yaml omits

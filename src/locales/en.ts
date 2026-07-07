@@ -60,6 +60,8 @@ const en = {
   "compassDetail.backLink": "← Back to the Compass",
   "journalDetail.backLink": "← Back to the Journal",
 
+  "detail.wip": "In the works — not finished yet",
+
   "notFound.title": "Not found",
   "notFound.body": "This trail doesn't lead anywhere yet.",
   "notFound.backHome": "Back home",
@@ -116,8 +118,8 @@ const en = {
   "editor.exists": "{{path}} already exists — edit it instead.",
   "editor.close": "Close",
   "editor.copyAria": "Copy draft",
-  "editor.editNameAria": "Edit \"{{name}}\"",
-  "editor.draftAria": "Start a draft for \"{{name}}\"",
+  "editor.queueAria": "Queue a new upcoming post",
+  "editor.queuePrompt": "Title of the upcoming post:",
 } satisfies Record<string, string>;
 
 export default en;

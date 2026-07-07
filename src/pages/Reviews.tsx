@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { getProducts, getReviewTemplate, getSite } from '../lib/content'
+import { getProducts, getReviewTemplate, getUpcomingProducts } from '../lib/content'
 import { usePageHead } from '../lib/head'
 import { useI18n } from '../lib/i18n'
 import ProductCard from '../components/ProductCard'
@@ -11,8 +11,8 @@ const ALL = 'All'
 export default function Reviews() {
   const { locale, t } = useI18n()
   usePageHead(t('reviews.title'), t('reviews.lead'))
-  const products = getProducts(locale)
-  const upcoming = getSite(locale).upcoming ?? []
+  const products = getProducts(locale) // active only; WIP posts feed the rail below
+  const upcoming = getUpcomingProducts(locale)
   const categories = useMemo(
     () => [ALL, ...Array.from(new Set(products.map((p) => p.category))).sort()],
     [products],
@@ -63,7 +63,7 @@ export default function Reviews() {
           note={t('reviews.upcomingNote')}
           items={upcoming}
           contribute={{ value: getReviewTemplate(locale), label: t('reviews.templateBtn') }}
-          editKind="upcoming"
+          draft={{ dir: 'products', detailBase: '/reviews' }}
         />
       </div>
     </>

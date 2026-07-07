@@ -2,7 +2,7 @@ import { parse as parseYaml } from 'yaml'
 import { marked, Renderer } from 'marked'
 import { withBaseHtml } from './asset'
 import themesRaw from '../../content/themes.yaml?raw'
-import type { CompassEntry, EditRef, Entry, JournalEntry, Page, Product, SiteConfig, Theme } from './types'
+import type { CompassEntry, Entry, JournalEntry, Page, PostState, Product, SiteConfig, Theme } from './types'
 import type { Locale } from './i18n'
 
 marked.setOptions({ gfm: true, breaks: false })
@@ -17,7 +17,7 @@ const CYRILLIC_MAP: Record<string, string> = {
 }
 
 /** Plain-text heading -> a stable, URL-safe, lowercase slug (dashes, ASCII).
- *  Exported for the live-edit draft flow (file names from Upcoming item names). */
+ *  Exported for the live-edit draft flow (file names from post titles). */
 export function slugify(text: string): string {
   const transliterated = text
     .toLowerCase()
@@ -178,6 +178,24 @@ function entryFor<T extends Entry>(
   )
 }
 
+/**
+ * The `state: upcoming` posts for the "in the works" rail. Unlike
+ * collectionFor's all-or-nothing fallback, this merges en + the locale BY SLUG
+ * (locale wins) — upcoming review stubs live in en/ only (brand names are
+ * do-not-translate) and must still show on every locale's rail, while a
+ * localized journal stub overrides its en counterpart's title. A slug flipped
+ * active in one locale but still upcoming in another stays on that locale's
+ * rail — accurate: its translation isn't done yet.
+ */
+function upcomingFor<T extends Entry & { state?: PostState; date?: string }>(
+  grouped: Partial<Record<Locale, T[]>>,
+  locale: Locale,
+): T[] {
+  const merged = new Map((grouped.en ?? []).map((e) => [e.slug, e]))
+  for (const e of grouped[locale] ?? []) merged.set(e.slug, e)
+  return [...merged.values()].filter((e) => e.state === 'upcoming').sort(byDateDesc)
+}
+
 // Eager glob = content is bundled at build time; no runtime fetch, no server needed.
 // The locale segment is a wildcard so adding content/locales/<lng>/... needs no code change.
 const siteModules = import.meta.glob('../../content/locales/*/site.yaml', {
@@ -256,33 +274,29 @@ export const getSite = (locale: Locale): SiteConfig => {
   return localized && localized !== en ? { ...en, ...localized } : en
 }
 
-export const getProducts = (locale: Locale): Product[] => collectionFor(productsByLocale, locale)
+// Listing getters return ACTIVE posts only — `state: upcoming` posts are WIP
+// and surface through the getUpcoming* getters instead. By-slug getters below
+// stay unfiltered so an upcoming post is previewable at its real URL (the
+// detail pages show a WIP tag).
+export const getProducts = (locale: Locale): Product[] =>
+  collectionFor(productsByLocale, locale).filter((p) => p.state !== 'upcoming')
 export const getCompass = (locale: Locale): CompassEntry[] => collectionFor(compassByLocale, locale)
-export const getJournal = (locale: Locale): JournalEntry[] => collectionFor(journalByLocale, locale)
+export const getJournal = (locale: Locale): JournalEntry[] =>
+  collectionFor(journalByLocale, locale).filter((e) => e.state !== 'upcoming')
 export const getPages = (locale: Locale): Page[] => collectionFor(pagesByLocale, locale)
+
+/** WIP reviews for the /reviews "in the works" rail (title-only). */
+export const getUpcomingProducts = (locale: Locale): Product[] =>
+  upcomingFor(productsByLocale, locale)
+
+/** WIP Journal entries for the /journal "in the works" rail (title-only). */
+export const getUpcomingJournal = (locale: Locale): JournalEntry[] =>
+  upcomingFor(journalByLocale, locale)
 
 export const getProduct = (locale: Locale, slug: string) => entryFor(productsByLocale, locale, slug)
 export const getCompassEntry = (locale: Locale, slug: string) => entryFor(compassByLocale, locale, slug)
 export const getJournalEntry = (locale: Locale, slug: string) => entryFor(journalByLocale, locale, slug)
 export const getPage = (locale: Locale, slug: string) => entryFor(pagesByLocale, locale, slug)
-
-/**
- * Provenance for the live-edit seam (C1): which site.yaml actually supplied
- * the rendered `upcoming:`/`upcomingJournal:` list, and the YAML path to one
- * item's name inside it. getSite's shallow merge means a locale inherits any
- * list it omits from en/ — so the file to edit is the en file unless the
- * active locale's own site.yaml defines the list itself. Components must use
- * this instead of guessing paths; new zones get their own getters here.
- */
-export function getUpcomingEditRef(
-  locale: Locale,
-  kind: 'upcoming' | 'upcomingJournal',
-  index: number,
-): EditRef {
-  const localized = siteByLocale[locale]
-  const srcLocale = localized && localized[kind] !== undefined ? locale : 'en'
-  return { file: `content/locales/${srcLocale}/site.yaml`, path: [kind, index, 'name'] }
-}
 
 /** The blank Journal-entry template for the /journal "Contribute!" button (en fallback). */
 export const getJournalTemplate = (locale: Locale): string => templateFor('journal', locale)

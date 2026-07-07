@@ -106,7 +106,7 @@ classify-and-do as usual.
   and inherited by other locales via `getSite`'s fall-back-to-en merge — don't
   copy it into `ru/site.yaml`. Existing DRY machinery to reuse before you
   duplicate: shared diagram templates (`content/shared/diagrams/`), `t()` UI
-  strings, `epics:`/`upcoming:`/`support:` config lists, and content-as-data
+  strings, `epics:`/`support:` config lists, and content-as-data
   generally.
 - **Readability can outrank DRY** *after* a decision is settled. If collapsing a
   duplication makes the code/content meaningfully harder to follow (an

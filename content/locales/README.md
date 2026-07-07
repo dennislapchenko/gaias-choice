@@ -23,8 +23,8 @@ never breaks while a translation is in progress.
 the locale file over `en/site.yaml` (`{ ...en, ...localized }`), so any
 top-level field that's identical across locales is authored **once, in en/**,
 and simply omitted elsewhere. Currently inherited by `ru/`: `name`, `url`,
-`heroImage`, `sidebar`, `upcoming` (brand names + Amazon URLs — do-not-translate),
-`social`, `contactEmail`, `support`. Don't copy these back into a locale file;
+`heroImage`, `sidebar`, `social`, `contactEmail`, `support`. Don't copy these
+back into a locale file;
 add a field there only to override it. The merge is shallow — a locale that
 overrides a list (e.g. `epics:`) must state that list in full.
 

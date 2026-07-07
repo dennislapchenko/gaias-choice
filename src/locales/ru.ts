@@ -60,6 +60,8 @@ const ru: Record<keyof typeof en, string> = {
   "compassDetail.backLink": "← К пути",
   "journalDetail.backLink": "← К заметкам",
 
+  "detail.wip": "В работе — ещё не готово",
+
   "notFound.title": "Страница не найдена",
   "notFound.body": "Эта тропа пока никуда не ведёт.",
   "notFound.backHome": "На главную",
@@ -116,8 +118,8 @@ const ru: Record<keyof typeof en, string> = {
   "editor.exists": "{{path}} уже существует — отредактируйте его.",
   "editor.close": "Закрыть",
   "editor.copyAria": "Скопировать черновик",
-  "editor.editNameAria": "Изменить «{{name}}»",
-  "editor.draftAria": "Начать черновик «{{name}}»",
+  "editor.queueAria": "Добавить запись в очередь «в работе»",
+  "editor.queuePrompt": "Заголовок будущей записи:",
 };
 
 export default ru;

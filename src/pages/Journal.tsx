@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom'
-import { getJournal, getJournalTemplate, getSite } from '../lib/content'
+import { getJournal, getJournalTemplate, getUpcomingJournal } from '../lib/content'
 import { usePageHead } from '../lib/head'
 import { useI18n } from '../lib/i18n'
 import JournalRow from '../components/JournalRow'
@@ -12,8 +12,8 @@ const yearOf = (date?: string) => (date ?? '').slice(0, 4)
 export default function Journal() {
   const { locale, t } = useI18n()
   usePageHead(t('journal.title'), t('journal.lead'))
-  const entries = getJournal(locale) // already date-descending (content.ts)
-  const upcoming = getSite(locale).upcomingJournal ?? []
+  const entries = getJournal(locale) // already date-descending, active only (content.ts)
+  const upcoming = getUpcomingJournal(locale)
 
   // Distinct years, newest first — the filter chips.
   const years = [...new Set(entries.map((e) => yearOf(e.date)).filter(Boolean))].sort((a, b) =>
@@ -75,7 +75,7 @@ export default function Journal() {
           note={t('journal.upcomingNote')}
           items={upcoming}
           contribute={{ value: getJournalTemplate(locale), label: t('journal.templateBtn') }}
-          editKind="upcomingJournal"
+          draft={{ dir: 'journal', detailBase: '/journal' }}
         />
       </div>
     </>

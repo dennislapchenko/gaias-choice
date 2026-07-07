@@ -58,8 +58,7 @@ content/                 # ALL editable content (no code)
     README.md            # per-locale layout + the do-not-translate glossary
     en/                   # English — source of truth, always complete
       site.yaml           # name, tagline, description, bio, mission, nav, values,
-                          # respected, heroImage, social, url, epics, upcoming,
-                          # upcomingJournal, sidebar, support
+                          # respected, heroImage, social, url, epics, sidebar, support
                           # (locale-identical fields live in en/ ONLY, inherited via
                           # getSite's shallow merge — the list is in locales/README.md)
       products/*.md       # reviews  → /reviews/<filename-without-.md>
@@ -162,13 +161,22 @@ Authoring procedures (frontmatter schemas, voice rules, step-by-steps) live in
 
 **Reviews** (`/reviews`, `products/*.md`) — frontmatter `title`, `category`
 (filter chip), `rating` 0–5, optional `price`/`affiliateUrl` (rendered
-`rel=sponsored`)/`image`/`tags`, `excerpt`, `date`. Every review follows the
-universal five-section body structure whose canonical source is
+`rel=sponsored`)/`image`/`tags`/`state`, `excerpt`, `date`. Every review
+follows the universal five-section body structure whose canonical source is
 `content/shared/review-template.<locale>.md` — the scaffold the "Contribute!"
-button on `/reviews` copies to the clipboard. The public queue of
-not-yet-written reviews is the `upcoming:` list in `site.yaml`, rendered as the
-"in the works" rail on `/reviews` (shared `Upcoming` component) — entries are
-`{name, url}` only, explicitly not reviews.
+button on `/reviews` copies to the clipboard.
+
+**Post states (reviews + Journal):** a post is `state: active` (absent =
+active) or `state: upcoming`. An upcoming post is a real content file that
+isn't finished: it drops out of the main listing and shows **title-only** in
+the "in the works" rail (shared `Upcoming` component; `getUpcomingProducts`/
+`getUpcomingJournal` in `content.ts` merge en + locale **by slug**, locale
+wins, so en-only review stubs appear on every locale's rail). Flipping the
+frontmatter to active moves it into the main spot — the file never moves.
+Detail getters don't filter by state, so a WIP post is previewable at its real
+URL (detail pages show an "In the works" tag). The contribute templates start
+with `state: upcoming`, so drafts arrive queued, not live. Compass chapters
+and pages ignore `state`.
 
 **Compass** (`/compass`, `compass/<epic>/*.md`) — the site's **courses**
 section (user-facing "Compass" / «Путь») and the one **openly
@@ -207,10 +215,11 @@ computer-assisted** section, disclosed by the `compass.provenance` banner
 **Journal** (`/journal`, `journal/*.md`, flat) — the **human-written,
 date-ordered blog**, the honest counterpart to the Compass (provenance
 contract: SKILL.md #6). Frontmatter `title`, `excerpt`, `date`, optional
-`tags`/`image`; no per-entry wiring. The listing page shares the Reviews shell
-(same layout, year chips where Reviews has category chips via `?year=`, and an
-"in the works" rail from `site.yaml` `upcomingJournal:` — planned entry titles,
-no urls, localized); entries list as plain text rows and open through
+`tags`/`image`/`state` (see "Post states" above — upcoming entries show
+title-only in the "in the works" rail; idea titles are localized by giving the
+ru stub the same slug); no per-entry wiring. The listing page shares the
+Reviews shell (same layout, year chips where Reviews has category chips via
+`?year=`); entries list as plain text rows and open through
 `EntryDetail`. A "Contribute!" button on `/journal`
 copies `content/shared/journal-template.<locale>.md`. The landing page
 surfaces it too: a hero "Read the Journal" button and a "Fresh from the
@@ -566,12 +575,13 @@ describes the phase, not the history):
   roadmap milestone. The launch checklist carries an open item to label each
   reader course's provenance at its top.
 - **Journal:** one seed entry — an explicit fill-in template — plus the
-  copy-a-blank-template button.
-- **Reviews:** `products/*` are still **AI placeholder reviews** with fake
-  affiliate URLs (`EXAMPLE…`) — slated for deletion/replacement per the launch
-  checklist. Never add a real affiliate program while these exist. Their
-  images are mandala SVGs; real product photos replace them when reviews ship.
-  The real pipeline is the `upcoming:` rail.
+  copy-a-blank-template button; a couple of `state: upcoming` stubs queued.
+- **Reviews:** the six *active* `products/*` are still **AI placeholder
+  reviews** with fake affiliate URLs (`EXAMPLE…`) — slated for
+  deletion/replacement per the launch checklist. Never add a real affiliate
+  program while these exist. Their images are mandala SVGs; real product
+  photos replace them when reviews ship. The real pipeline is the
+  `state: upcoming` stub files feeding the "in the works" rail.
 - **Pages:** `/roadmap` is public building-in-public — keep it updated when
   milestones land. `/disclosure` and `/privacy` are compliance groundwork,
   required before joining any affiliate program.

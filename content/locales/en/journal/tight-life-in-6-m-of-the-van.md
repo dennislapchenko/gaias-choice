@@ -1,8 +1,8 @@
 ---
-title: "Bulletproof coffee, ups and downs"
+title: "Tight life in 6 m² of the van"
 state: upcoming     # queued "in the works" — delete this line (or set active) when the entry is finished
 excerpt: "<the single sentence a friend would text you about this>"
-date: 2026-07-05    # the day it happened (or you wrote it) — this controls order
+date: 2026-07-04    # the day it happened (or you wrote it) — this controls order
 tags: []            # optional, e.g. [travel, sleep, gear]
 ---
 
@@ -11,7 +11,7 @@ tags: []            # optional, e.g. [travel, sleep, gear]
   The headings below are scaffolding to think against, not sections you must keep.
   Keep what serves the story, delete the rest, and cut the prompts before you ship.
 -->
-what happens here?
+
 ## What we set out to do
 
 The plan, in a line or two — where we were going, what we expected.

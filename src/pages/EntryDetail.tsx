@@ -38,6 +38,7 @@ export default function EntryDetail({ kind }: { kind: 'compass' | 'journal' }) {
         </Link>
         <span className="tag">{tagLabel}</span>
         {chapter != null && <span className="tag">{t('compass.chapter', { n: chapter })}</span>}
+        {entry.state === 'upcoming' && <span className="tag">{t('detail.wip')}</span>}
       </div>
       <header className="detail-header">
         <h1>{entry.title}</h1>

@@ -1,13 +1,13 @@
 ---
-title: "<the product, plainly — brand + what it is>"
+title: "Baby Nest for Newborns"
 state: upcoming            # queued "in the works" — delete this line (or set active) when the review is finished
 category: Sleep            # Sleep | Feeding | Care | Kitchen | Travel — the filter chip on /reviews
 rating: 4                  # 0–5 stars — a 5 must survive the "no flaws at all?" test
 price: "€00"               # what you actually paid; always quote it
-# affiliateUrl: "https://…"  # ONLY once enrolled in the program — never a placeholder
+# affiliateUrl: "https://www.amazon.de/-/en/dp/B0DCW69XXF?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_6"  # ONLY once enrolled in the program — never a placeholder
 excerpt: "<one honest sentence a friend would text you about it>"
 # image: /images/review-<slug>.webp   # real photo (run `task images`) or mandala SVG
-date: 2026-07-06           # today; controls list order
+date: 2026-07-04           # today; controls list order
 tags: []                   # optional, e.g. [organic, cotton]
 ---
 

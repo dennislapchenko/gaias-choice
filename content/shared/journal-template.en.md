@@ -1,5 +1,6 @@
 ---
 title: "<one honest, specific title — what this note is really about>"
+state: upcoming     # queued "in the works" — delete this line (or set active) when the entry is finished
 excerpt: "<the single sentence a friend would text you about this>"
 date: 2026-07-05    # the day it happened (or you wrote it) — this controls order
 tags: []            # optional, e.g. [travel, sleep, gear]
