@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { apiGet, type AdminUserSummary, type Member, type UsersResponse } from '../lib/api'
+import { useEffect, useId, useState } from 'react'
+import { apiGet, type AdminUserSummary, type Member, type Role, type UsersResponse } from '../lib/api'
 import { usePageHead } from '../lib/head'
 import { useI18n } from '../lib/i18n'
 import { useSession } from '../lib/session'
@@ -119,6 +119,7 @@ export default function Account() {
               const editable = isAdmin && !m.you
               const inner = (
                 <>
+                  <RankGeometry tier={m.role} />
                   <span className="camper-avatar" aria-hidden="true">
                     {m.avatarUrl ? (
                       <img className="avatar-img" src={m.avatarUrl} alt="" />
@@ -203,6 +204,52 @@ function EditIcon() {
     <svg className="user-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M4 16.7V20h3.3L18 9.3a1 1 0 0 0 0-1.4l-1.9-1.9a1 1 0 0 0-1.4 0L4 16.7z" />
       <path d="M13.8 6.9l3.3 3.3" />
+    </svg>
+  )
+}
+
+// Rank ring by role — a faint Seed-of-Life motif behind the avatar, not a
+// mascot on top of it: neutral, family-friendly geometry echoing the site's
+// mandala/sacred-geometry look (see CLAUDE.md "Styling & color") rather than
+// a game-y border. Six circles of radius r stamped around a center circle of
+// the same radius (the classic seed-of-life construction) via the mandala
+// generator's own "rotated <use> around a center" trick — one circle drawn
+// once in <defs>, repeated by rotation instead of by hand. It renders BEHIND
+// the avatar (see .rank-geometry in styles.css: no z-index, so the avatar's
+// opaque background naturally paints over its center) — only the parts of
+// the circles that fall outside the avatar's own radius show, as a faint
+// halo just past its edge.
+const RANK_TINTS: Record<Role, string> = {
+  viewer: '#9aa5b1',
+  editor: '#c9a227',
+  admin: '#5fb8d9',
+}
+
+function RankGeometry({ tier }: { tier: Role }) {
+  // Every camper renders its own RankGeometry, so a literal id would repeat
+  // once per instance — duplicate ids are invalid, and `<use href="#…">`
+  // resolving them is implementation-defined. useId() keeps each instance's
+  // id unique, same as the diagram renderer's per-instance id uniquification.
+  const uid = useId()
+  const circleId = `rank-circle-${uid}`
+  const tint = RANK_TINTS[tier]
+  return (
+    <svg
+      className={`rank-geometry rank-geometry-${tier}`}
+      viewBox="0 0 120 120"
+      aria-hidden="true"
+    >
+      <defs>
+        <circle id={circleId} cx="60" cy="30" r="30" />
+      </defs>
+      <g fill="none" stroke={tint} strokeWidth="1">
+        <use href={`#${circleId}`} />
+        {[60, 120, 180, 240, 300].map((a) => (
+          <use key={a} href={`#${circleId}`} transform={`rotate(${a} 60 60)`} />
+        ))}
+        <circle cx="60" cy="60" r="30" />
+        <circle cx="60" cy="60" r="57" />
+      </g>
     </svg>
   )
 }

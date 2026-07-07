@@ -53,6 +53,7 @@ services:
       # ANTHROPIC_MODEL optionally overrides the default (claude-sonnet-5).
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-}
+      GIN_MODE: debug
     ports:
       - "8787:8787"
     links:
