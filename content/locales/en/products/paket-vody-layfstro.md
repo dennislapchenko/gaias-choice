@@ -1,5 +1,5 @@
 ---
-title: "Пакет воды лайфстро"
+title: "Lifestraw гравитационный фильтр и хранение воды"
 state: upcoming            # queued "in the works" — delete this line (or set active) when the review is finished
 category: Sleep            # Sleep | Feeding | Care | Kitchen | Travel — the filter chip on /reviews
 rating: 4                  # 0–5 stars — a 5 must survive the "no flaws at all?" test
