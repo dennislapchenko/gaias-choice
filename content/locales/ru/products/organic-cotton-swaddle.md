@@ -9,7 +9,7 @@ image: /images/review-organic-cotton-swaddle.svg
 date: 2026-06-20
 tags: [organic, cotton, sleep]
 ---
-
+было очень вкусно
 Если бы нам разрешили оставить в сумке только одну детскую вещь, это,
 пожалуй, была бы она.
 
