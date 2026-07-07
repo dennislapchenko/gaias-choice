@@ -1,7 +1,7 @@
 ---
 title: Glass Baby Bottles with Silicone Sleeve
 category: Feeding
-rating: 4
+scores: [4, 4, 4]  # Gaia Score — one 0–5 per criterion in site.yaml ratingCriteria, in order
 price: "€32"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE5?tag=gaiaschoice-20"
 excerpt: Plastic-free bottles that don't cloud, stain, or hold onto smells — with a sleeve that survives travel.

@@ -41,11 +41,18 @@ services:
       # see deploy/README.md). Copy the link into the browser to sign in.
       SMTP_HOST: log
       PUBLIC_SITE_URL: http://localhost:5173
-      # Telegram sign-in bot. Unset ⇒ /api/auth/telegram* answer 503 and the
-      # dialog hides the option (email still works). Put a real BotFather token
-      # in the root .env to exercise the Telegram flow locally — the bot then
-      # long-polls getUpdates against api.telegram.org from this container.
+      # Telegram sign-in bot. main.go always disables polling locally
+      # (LOCAL_CONTENT_DIR is set below) — the live VM instance already owns
+      # getUpdates for this token, and a second poller 409s. So this is
+      # passed through only for parity with prod's env shape; it has no
+      # effect here. Test the Telegram flow against the deployed API instead.
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      # Draft-template enrichment (internal/enrich). Put ANTHROPIC_API_KEY in the
+      # root .env to exercise the title→prompts feature locally; unset ⇒
+      # /api/content/template answers 503 and drafts get the static template.
+      # ANTHROPIC_MODEL optionally overrides the default (claude-sonnet-5).
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-}
     ports:
       - "8787:8787"
     links:

@@ -15,6 +15,7 @@ import (
 	"github.com/dennislapchenko/gaias-choice/backend/internal/auth"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/config"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/content"
+	"github.com/dennislapchenko/gaias-choice/backend/internal/enrich"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/httpapi"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/mail"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/store"
@@ -58,13 +59,20 @@ func main() {
 		log.Printf("mail: %s (from %s)", mailer.Transport(), cfg.MailFrom)
 	}
 
-	bot := telegram.New(cfg.TelegramBotToken)
-	if bot == nil {
+	var bot *telegram.Bot
+	if cfg.LocalContentDir != "" {
+		// Only one process may long-poll getUpdates for a given bot token
+		// (see internal/telegram doc comment); the live VM instance already
+		// owns it, so a local run with the same token 409s forever. Local
+		// dev is LOCAL_CONTENT_DIR's existing signal — reuse it rather than
+		// polling here too.
+		log.Print("telegram: DISABLED locally (LOCAL_CONTENT_DIR set) — /api/auth/telegram* → 503")
+	} else if b := telegram.New(cfg.TelegramBotToken); b == nil {
 		log.Print("telegram: DISABLED (no TELEGRAM_BOT_TOKEN) — /api/auth/telegram* → 503")
-	} else if err := bot.Init(context.Background()); err != nil {
+	} else if err := b.Init(context.Background()); err != nil {
 		log.Printf("telegram: DISABLED — getMe failed: %v", err)
-		bot = nil
 	} else {
+		bot = b
 		log.Printf("telegram: sign-in bot @%s ready", bot.Username())
 		// Long-poll loop owns the bot's getUpdates; runs for the process's life.
 		go bot.Run(context.Background(), func(code, username string, tgID int64, name string) string {
@@ -78,6 +86,13 @@ func main() {
 		})
 	}
 
+	enricher := enrich.New(cfg.AnthropicKey, cfg.AnthropicModel)
+	if enricher == nil {
+		log.Print("enrich: DISABLED (no ANTHROPIC_API_KEY) — /api/content/template → 503")
+	} else {
+		log.Print("enrich: template enrichment ready")
+	}
+
 	r := httpapi.NewRouter(httpapi.Deps{
 		CORSOrigins: cfg.CORSOrigins,
 		Store:       st,
@@ -85,6 +100,7 @@ func main() {
 		Content:     contentStoreFor(cfg),
 		Mailer:      mailer,
 		Telegram:    bot,
+		Enrich:      enricher,
 		SiteURL:     cfg.PublicSiteURL,
 	})
 

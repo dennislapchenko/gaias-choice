@@ -39,6 +39,19 @@ values:
     icon: mindful
     text: Fewer, better things means less waste, lighter travel, and a smaller footprint.
 
+# Gaia Score — the review rating system. Instead of one star number, every
+# product is scored 0–5 on the SAME few criteria, so the scores mean something
+# across the whole site (and, eventually, to the brands we review). Each
+# product's frontmatter `scores:` array aligns to `items` below, in order.
+# NOTE: names are PROVISIONAL (drawn from the strategy notes) — the owners will
+# finalize what we judge on; renaming here relabels every review at once.
+ratingCriteria:
+  title: Our rating
+  items:
+    - Safety
+    - Durability
+    - Repairability
+
 # The teachers behind the site's worldview, shown in the sidebar "Respected"
 # panel. Their substance (ideas we carry, cautions) lives in
 # context/ideology-context.md — keep the two lists in sync, same order.
@@ -99,9 +112,9 @@ epics:
     image: /images/epic-founder-guide.svg
     blurb: A 5-chapter guide — on building a review site people trust — taught on the live example of this very site, from first review to launch.
   - tag: homeopathy
-    title: Homeopathy
+    title: Maybe Homeopathy
     image: /images/epic-homeopathy.svg
-    blurb: A 11-chapter guide — assemble a family remedy kit and learn to use it with honest observation, never replacing your doctor.
+    blurb: An 11-chapter guide, held with an honest "maybe" — we assemble a family remedy kit and test it by careful observation, keeping what seems to help and letting go of what doesn't. An exploration, not a doctrine — and never a replacement for your doctor.
   - tag: herbalism
     title: Herbalism
     image: /images/epic-herbalism.svg

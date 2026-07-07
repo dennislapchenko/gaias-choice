@@ -18,6 +18,7 @@ import (
 
 	"github.com/dennislapchenko/gaias-choice/backend/internal/auth"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/content"
+	"github.com/dennislapchenko/gaias-choice/backend/internal/enrich"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/mail"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/store"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/telegram"
@@ -28,10 +29,11 @@ type Deps struct {
 	CORSOrigins []string
 	Store       *store.Store
 	Auth        *auth.Service
-	Content     content.Store // nil ⇒ content routes answer 503
-	Mailer      *mail.Mailer  // nil ⇒ /auth/magic answers 503
-	Telegram    *telegram.Bot // nil ⇒ /auth/telegram* answer 503
-	SiteURL     string        // where emailed magic links point (no trailing /)
+	Content     content.Store    // nil ⇒ content routes answer 503
+	Mailer      *mail.Mailer     // nil ⇒ /auth/magic answers 503
+	Telegram    *telegram.Bot    // nil ⇒ /auth/telegram* answer 503
+	Enrich      *enrich.Enricher // nil ⇒ /content/template answers 503
+	SiteURL     string           // where emailed magic links point (no trailing /)
 }
 
 // NewRouter builds the fully-wired gin engine: logging, recovery, CORS, a
@@ -55,6 +57,7 @@ func NewRouter(d Deps) *gin.Engine {
 		content:      d.Content,
 		mailer:       d.Mailer,
 		telegram:     d.Telegram,
+		enrich:       d.Enrich,
 		siteURL:      d.SiteURL,
 		loginLimiter: newRateLimiter(10, time.Minute),
 		// Registration is open to the world; a tighter lid keeps a bot from
@@ -81,6 +84,7 @@ type server struct {
 	content         content.Store
 	mailer          *mail.Mailer
 	telegram        *telegram.Bot
+	enrich          *enrich.Enricher
 	siteURL         string
 	loginLimiter    *rateLimiter
 	registerLimiter *rateLimiter
@@ -444,4 +448,22 @@ func (s *server) SaveContent(_ context.Context, req SaveContentRequestObject) (S
 		return SaveContent409JSONResponse(Error{Error: "conflict — file changed"}), nil
 	}
 	return SaveContent200JSONResponse{Path: b.Path, Sha: res.SHA, Commit: res.Commit}, nil
+}
+
+// EnrichTemplate re-tunes a blank template's prompts to a post title via the
+// Anthropic API (internal/enrich). It reshapes questions only — never authors
+// content — so the provenance contract holds. Nil enricher ⇒ 503 and the FE
+// silently keeps the static template.
+func (s *server) EnrichTemplate(ctx context.Context, req EnrichTemplateRequestObject) (EnrichTemplateResponseObject, error) {
+	if s.enrich == nil {
+		return EnrichTemplate503JSONResponse{NotConfiguredJSONResponse{Error: "template enrichment not configured"}}, nil
+	}
+	if req.Body == nil || strings.TrimSpace(req.Body.Title) == "" || req.Body.Template == "" {
+		return EnrichTemplate400JSONResponse{BadRequestJSONResponse{Error: "title and template required"}}, nil
+	}
+	body, err := s.enrich.Enrich(ctx, req.Body.Title, req.Body.Template)
+	if err != nil {
+		return EnrichTemplate502JSONResponse{UpstreamJSONResponse{Error: err.Error()}}, nil
+	}
+	return EnrichTemplate200JSONResponse{Body: body}, nil
 }

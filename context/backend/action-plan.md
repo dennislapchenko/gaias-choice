@@ -416,3 +416,17 @@ Not scoped yet — captured here so it isn't lost.
   not parse or store the prose. Cheapest first cut: env-configured chat ids + a
   flat question list in the repo + a once-a-day tick that fires on even days.
   Single-instance only (same constraint as the sign-in long-poller).
+
+- **Title-seeded smart templates (Anthropic API infusion).** *(Shipped —
+  see CLAUDE.md `internal/enrich` + `POST /api/content/template`.)* When a
+  review or Journal post is queued by title alone (the ＋ button / draft
+  composer), the FE fires `enrichTemplate(title, template)` and the backend
+  sends the base scaffold + the title to the Anthropic Messages API, returning
+  the *same template with its prompts re-tuned to the title*. Gated
+  `session: [editor]`; `ANTHROPIC_API_KEY` unset ⇒ 503 ⇒ FE silently keeps the
+  static template; the swap only lands if the admin hasn't started typing.
+  Truth-first holds: the model reshapes *questions*, never authors content, so
+  the provenance contract is intact. **Open follow-ups if wanted:** a visible
+  "tuning…" hint during the call; a per-locale/kind model or prompt override;
+  wiring `ANTHROPIC_API_KEY` into the VM deploy env (`deploy.env`) so it's live
+  in prod, not just dev.

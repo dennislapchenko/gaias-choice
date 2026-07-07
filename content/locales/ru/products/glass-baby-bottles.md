@@ -1,7 +1,7 @@
 ---
 title: Стеклянные детские бутылочки с силиконовым чехлом
 category: Кормление
-rating: 4
+scores: [4, 4, 4]  # Gaia Score — one 0–5 per criterion in site.yaml ratingCriteria, in order
 price: "€32"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE5?tag=gaiaschoice-20"
 excerpt: Бутылочки без пластика, которые не мутнеют, не окрашиваются и не впитывают запахи — с чехлом, который выдерживает дорогу.

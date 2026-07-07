@@ -22,7 +22,7 @@
 import { createContext, useContext, useState, type ReactNode } from 'react'
 import { Composer, CST, isScalar, Parser, parseDocument } from 'yaml'
 import CopyButton from '../components/CopyButton'
-import { apiGet, apiPost, ApiError, type ContentFile, type SaveResponse } from './api'
+import { apiGet, apiPost, ApiError, enrichTemplate, type ContentFile, type SaveResponse } from './api'
 import { useEditMode } from './editMode'
 import { useI18n } from './i18n'
 import type { EditRef } from './types'
@@ -146,6 +146,19 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       mode: { kind: 'create', path, message },
       status: 'idle',
     })
+    // Progressive enhancement: ask the backend to re-tune the template's
+    // prompts to this title (LLM). Swap it in only if the admin hasn't started
+    // typing yet; any failure (no model configured / BE down / 503) just leaves
+    // the static template in place.
+    enrichTemplate(title, initialValue, token ?? undefined)
+      .then((body) => {
+        setState((s) =>
+          s && s.mode?.kind === 'create' && s.mode.path === path && s.value === initialValue
+            ? { ...s, value: body }
+            : s,
+        )
+      })
+      .catch(() => {})
   }
 
   const setScalar: ContentEditorApi['setScalar'] = async (ref, newValue) => {

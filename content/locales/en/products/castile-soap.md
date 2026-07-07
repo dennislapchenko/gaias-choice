@@ -1,7 +1,7 @@
 ---
 title: Fragrance-Free Castile Soap
 category: Care
-rating: 5
+scores: [5, 5, 5]  # Gaia Score — one 0–5 per criterion in site.yaml ratingCriteria, in order
 price: "€12"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE6?tag=gaiaschoice-20"
 excerpt: One plant-based bottle that washes bodies, dishes, and floors — no fragrance, no plastic clutter.

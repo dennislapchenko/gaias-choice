@@ -177,7 +177,7 @@ chapter 1 — without touching `src/`. Reviews need zero wiring, so add a
 review of any object on your desk (30–40 minutes):
 
 1. Create `content/locales/en/products/my-test-review.md`.
-2. Give it real frontmatter: `title`, `category`, `rating`, `excerpt`,
+2. Give it real frontmatter: `title`, `category`, `scores`, `excerpt`,
    `date` (today), and a couple of `tags`. Copy the shape from any existing
    product file.
 3. Write three honest sentences of body. Add a `## Verdict` heading.

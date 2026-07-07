@@ -33,7 +33,9 @@ one rule 1 leaves open: named as "we haven't tried this", never rated.
    the review says so in the first section, and the brand gets no copy approval.
 3. **Every review names a flaw.** A 5-star review with no "what we'd change"
    section reads as an ad. If you truly can't find a flaw, the flaw is the price
-   or who it's *not* for.
+   or who it's *not* for. The strongest version goes one step further and names
+   *what would make us take the recommendation back* — the sentence a paid
+   reviewer never writes.
 4. **Photos are yours.** Phone camera is fine. Your hands, your floor, your baby's
    crib in the background. Original photos are the single strongest signal — to
    readers and to Google — that the experience is real. Why Google in
@@ -103,7 +105,7 @@ Copy this into `content/products/<slug>.md` and fill it in:
 ---
 title: Product Name
 category: Sleep            # Sleep | Feeding | Care | Kitchen | Travel
-rating: 4                  # 0–5; a 5 must survive the "no flaws?" test
+scores: [4, 4, 4]          # Gaia Score — one 0–5 per criterion in site.yaml, in order
 price: "€28"
 # affiliateUrl: add ONLY after joining the program — never a placeholder
 excerpt: One honest sentence a friend would text you about it.
@@ -122,6 +124,12 @@ tags: [organic, cotton]
 
 ## Who it's for
 ```
+
+**The score isn't a single star.** Every product is scored on the same few
+criteria — the ones named in `site.yaml` (`ratingCriteria`) — so a number means
+the same thing across the whole site, and one day the brands you review start
+paying attention to it. Fill `scores:` in that order; the listing card shows the
+average, the review page shows the breakdown.
 
 ## Disclosure
 

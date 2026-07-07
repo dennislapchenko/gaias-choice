@@ -8,8 +8,11 @@ tags: []            # optional, e.g. [travel, sleep, gear]
 
 <!--
   A Journal entry is a real note, written by hand — no course polish, no
-  upsell. Write it like a voice message to a friend who lives the same life:
-  the story first, the lesson after. Stories spread; methodologies don't.
+  upsell. We're a family on the road looking for the land to put down roots on;
+  the Journal is the honest record of that search. Write it like a voice message
+  to a friend who lives the same life: the story first, the lesson after.
+  Stories spread; methodologies don't. And it's allowed to be a change of mind —
+  what we stopped believing this month reads truer than what we're certain of.
 
   Two shapes of entry fit here — keep the scaffold that matches, delete the
   other, and cut the prompts before you ship:

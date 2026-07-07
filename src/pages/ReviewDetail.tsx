@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { getProduct, getProductFile } from '../lib/content'
+import { getProduct, getProductFile, getSite } from '../lib/content'
 import { PageHead } from '../lib/head'
 import { useI18n } from '../lib/i18n'
 import { withBase } from '../lib/asset'
 import { useContentEditor } from '../lib/contentEditor'
 import { useEditMode } from '../lib/editMode'
 import Markdown from '../components/Markdown'
-import Rating from '../components/Rating'
+import GaiaScore from '../components/GaiaScore'
 import EditButton from '../components/EditButton'
 import StateToggle from '../components/StateToggle'
 import NotFound from './NotFound'
@@ -16,6 +16,7 @@ export default function ReviewDetail() {
   const { slug } = useParams()
   const { locale, t } = useI18n()
   const product = slug ? getProduct(locale, slug) : undefined
+  const site = getSite(locale)
   const editor = useContentEditor()
   const { active: editModeOn } = useEditMode()
   // Local override so flipping state feels immediate (optimistic UI) — the
@@ -55,10 +56,16 @@ export default function ReviewDetail() {
       </div>
       <h1>{product.title}</h1>
       <div className="detail-meta">
-        <Rating value={product.rating} />
         {product.price && <span className="price">{product.price}</span>}
         <span className="muted">{product.date}</span>
       </div>
+      {site.ratingCriteria && (
+        <GaiaScore
+          title={site.ratingCriteria.title}
+          criteria={site.ratingCriteria.items}
+          scores={product.scores}
+        />
+      )}
 
       {product.image && (
         <img className="detail-image" src={withBase(product.image)} alt={product.title} />

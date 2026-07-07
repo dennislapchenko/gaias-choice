@@ -40,10 +40,14 @@ every review from it.
 Frontmatter: `title`, `state` (`upcoming` while it's queued/WIP — the
 template's default; flip to `active` or delete the line to publish, see "The
 'in the works' queue" under Journal), `category` (must match the locale's
-existing category set — the filter chips), `rating` 0–5 (a 5 must survive the
-"no flaws?" test), `price` (always quoted), optional `affiliateUrl` (ONLY once
-enrolled — never a placeholder), `excerpt`, optional `image` (mandala SVG by
-default), `date`, optional `tags`.
+existing category set — the filter chips), `scores` — the **Gaia Score**, an
+array of 0–5 numbers, one per criterion in `site.yaml` `ratingCriteria`, in
+that order (a 5 must survive the "no flaws?" test) — `price` (always quoted),
+optional `affiliateUrl` (ONLY once enrolled — never a placeholder), `excerpt`,
+optional `image` (mandala SVG by default), `date`, optional `tags`. The rating
+criteria themselves are one shared list in `site.yaml` (localized; names
+currently provisional) — renaming there relabels every review; see CLAUDE.md
+"Gaia Score".
 
 The six body sections are **the universal structure of every review** — keep
 them all, in this order:

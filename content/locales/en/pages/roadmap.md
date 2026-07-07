@@ -63,10 +63,13 @@ belonging is harder to copy than content.
 - [ ] First real review published (own product, own photos, honest flaws)
 - [ ] Weekly publishing rhythm held for 8 consecutive weeks
 - [ ] All placeholder reviews and AI images deleted or replaced
+- [x] Reviews scored on a shared **Gaia Score** — the same few criteria for
+      every product (not a lone star), so a rating means the same thing across
+      the whole site *(criteria still provisional, to be finalized)*
 - [ ] 10 reviews + 2–3 guides drawn from lived travel experience
 - [x] Herbalism Compass course finished (all 11 chapters, both languages) —
       real content that isn't reviews
-- [ ] Homeopathy Compass course finished (chapters 4–11, both languages)
+- [ ] "Maybe Homeopathy" Compass course finished (chapters 4–11, both languages)
 - [ ] Pick one recurring ritual and hold it — a monthly almanac letter, a
       season-opening Journal note — something readers learn to expect. Trust
       comes from consistency, not expertise alone
@@ -143,6 +146,9 @@ place to sit.**
 - [ ] Direct brand partnerships (disclosed, no copy approval — ever)
 - [ ] Let the almanac drive seasonal pieces — a real ephemeris is an asset no
       competitor in this niche has
+- [ ] Annual transparency report — what we earned, what share came from
+      affiliate links, which recommendations we got wrong, what we pulled.
+      Almost nobody publishes one; that's exactly why trust compounds from it
 - [ ] Decide on display ads *(probably not — sits badly with "buy less")*
 - [ ] Retire the founder course chapter by chapter, each retold from lived
       experience; archive the originals in a "building in public" corner

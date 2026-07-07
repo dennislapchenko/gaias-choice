@@ -1,7 +1,7 @@
 ---
 title: Stainless Steel Bento Container
 category: Feeding
-rating: 4
+scores: [4, 4, 4]  # Gaia Score — one 0–5 per criterion in site.yaml ratingCriteria, in order
 price: "€34"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE2?tag=gaiaschoice-20"
 excerpt: Plastic-free, leak-resistant food storage that survives being dropped on a gravel pitch.

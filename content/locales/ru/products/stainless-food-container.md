@@ -1,7 +1,7 @@
 ---
 title: Контейнер-бенто из нержавеющей стали
 category: Кормление
-rating: 4
+scores: [4, 4, 4]  # Gaia Score — one 0–5 per criterion in site.yaml ratingCriteria, in order
 price: "€34"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE2?tag=gaiaschoice-20"
 excerpt: Контейнер для еды без пластика, устойчивый к протечкам, который переживёт падение на гравийную площадку.

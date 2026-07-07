@@ -1,4 +1,4 @@
-import { useRef, useState, type ChangeEvent, type FormEvent } from 'react'
+import { useRef, useState, type ChangeEvent, type CSSProperties, type FormEvent } from 'react'
 import {
   apiPut,
   type AdminUserSummary,
@@ -55,11 +55,17 @@ export default function AccountFields({
   target,
   onClose,
   onSaved,
+  anchor,
 }: {
   open: boolean
   target?: Member
   onClose?: () => void
   onSaved?: (u: AdminUserSummary) => void
+  // Viewport coords of the camper the admin clicked — positions the panel as
+  // a popover there on desktop (see .account-fields-target in styles.css).
+  // openUp/maxH keep it on-screen regardless of where in the circle the
+  // click landed.
+  anchor?: { x: number; y: number; openUp: boolean; maxH: number } | null
 }) {
   const { t } = useI18n()
   const { me, token, updateMe } = useSession()
@@ -132,92 +138,105 @@ export default function AccountFields({
   // field / re-upload).
   const isData = avatarUrl.startsWith('data:')
 
+  const popoverStyle =
+    target && anchor
+      ? ({
+          '--popover-x': `${anchor.x}px`,
+          '--popover-y': `${anchor.y}px`,
+          '--popover-max-h': `${anchor.maxH}px`,
+        } as CSSProperties)
+      : undefined
+
   return (
-    <section
-      className={`account-fields${target ? ' account-fields-target' : ''}${open ? ' is-open' : ''}`}
-      aria-label={target ? t('account.editUser', { name: target.displayName }) : t('account.fields.title')}
-    >
-      <div className="side-label-row">
-        <p className="side-label">
-          {target ? t('account.editUser', { name: target.displayName }) : t('account.fields.title')}
-        </p>
-        {target && (
-          <button
-            type="button"
-            className="rail-close"
-            aria-label={t('account.fields.close')}
-            onClick={onClose}
-          >
-            ×
-          </button>
-        )}
-      </div>
-      <form onSubmit={onSubmit}>
-        <label className="field">
-          <span className="field-label">{t('account.fields.name')}</span>
-          <input value={name} onChange={(e) => setName(e.target.value)} />
-        </label>
-        <div className="field">
-          <span className="field-label">{t('account.fields.avatar')}</span>
-          <div className="field-split">
-            {avatarUrl && <img className="avatar-preview" src={withBase(avatarUrl)} alt="" />}
-            {isData ? (
-              <button
-                type="button"
-                className="avatar-datauri"
-                title={t('account.fields.uploaded')}
-                onClick={() => setAvatarUrl('')}
-              >
-                {t('account.fields.uploaded')}
-              </button>
-            ) : (
-              <input
-                type="text"
-                value={avatarUrl}
-                onChange={(e) => setAvatarUrl(e.target.value)}
-                placeholder={t('account.fields.avatarPlaceholder')}
-              />
-            )}
-            <button type="button" className="btn btn-ghost" onClick={() => fileRef.current?.click()}>
-              {t('account.fields.upload')}
+    <>
+      {target && open && <div className="account-popover-backdrop" onClick={onClose} />}
+      <section
+        className={`account-fields${target ? ' account-fields-target' : ''}${anchor?.openUp ? ' opens-up' : ''}${open ? ' is-open' : ''}`}
+        style={popoverStyle}
+        aria-label={target ? t('account.editUser', { name: target.displayName }) : t('account.fields.title')}
+      >
+        <div className="side-label-row">
+          <p className="side-label">
+            {target ? t('account.editUser', { name: target.displayName }) : t('account.fields.title')}
+          </p>
+          {target && (
+            <button
+              type="button"
+              className="rail-close"
+              aria-label={t('account.fields.close')}
+              onClick={onClose}
+            >
+              ×
             </button>
-            <input ref={fileRef} type="file" accept="image/*" hidden onChange={onFile} />
-          </div>
-        </div>
-        <label className="field">
-          <span className="field-label">{t('account.fields.role')}</span>
-          {target ? (
-            <select className="field-select" value={role} onChange={(e) => setRole(e.target.value as Role)}>
-              {ROLES.map((r) => (
-                <option key={r} value={r}>
-                  {r}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <input value={me.role} disabled />
           )}
-        </label>
-        {!target && (
+        </div>
+        <form onSubmit={onSubmit}>
           <label className="field">
-            <span className="field-label">{t('account.fields.email')}</span>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <span className="field-label">{t('account.fields.name')}</span>
+            <input value={name} onChange={(e) => setName(e.target.value)} />
           </label>
-        )}
-        <label className="field">
-          <span className="field-label">{t('account.fields.password')}</span>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder={t('account.fields.passwordPlaceholder')}
-          />
-        </label>
-        {error && <p className="field-error">{t('account.fields.saveError')}</p>}
-        <button type="submit" className="btn btn-primary" disabled={!dirty || saving}>
-          {t('account.fields.save')}
-        </button>
-      </form>
-    </section>
+          <div className="field">
+            <span className="field-label">{t('account.fields.avatar')}</span>
+            <div className="field-split">
+              {avatarUrl && <img className="avatar-preview" src={withBase(avatarUrl)} alt="" />}
+              {isData ? (
+                <button
+                  type="button"
+                  className="avatar-datauri"
+                  title={t('account.fields.uploaded')}
+                  onClick={() => setAvatarUrl('')}
+                >
+                  {t('account.fields.uploaded')}
+                </button>
+              ) : (
+                <input
+                  type="text"
+                  value={avatarUrl}
+                  onChange={(e) => setAvatarUrl(e.target.value)}
+                  placeholder={t('account.fields.avatarPlaceholder')}
+                />
+              )}
+              <button type="button" className="btn btn-ghost" onClick={() => fileRef.current?.click()}>
+                {t('account.fields.upload')}
+              </button>
+              <input ref={fileRef} type="file" accept="image/*" hidden onChange={onFile} />
+            </div>
+          </div>
+          <label className="field">
+            <span className="field-label">{t('account.fields.role')}</span>
+            {target ? (
+              <select className="field-select" value={role} onChange={(e) => setRole(e.target.value as Role)}>
+                {ROLES.map((r) => (
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input value={me.role} disabled />
+            )}
+          </label>
+          {!target && (
+            <label className="field">
+              <span className="field-label">{t('account.fields.email')}</span>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            </label>
+          )}
+          <label className="field">
+            <span className="field-label">{t('account.fields.password')}</span>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder={t('account.fields.passwordPlaceholder')}
+            />
+          </label>
+          {error && <p className="field-error">{t('account.fields.saveError')}</p>}
+          <button type="submit" className="btn btn-primary" disabled={!dirty || saving}>
+            {t('account.fields.save')}
+          </button>
+        </form>
+      </section>
+    </>
   )
 }

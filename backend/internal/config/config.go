@@ -50,6 +50,13 @@ type Config struct {
 	// answer 503 and the FE hides the option. The bot's @username is resolved
 	// at boot via getMe, never configured here.
 	TelegramBotToken string
+
+	// Template enrichment (internal/enrich). AnthropicKey set ⇒ the draft
+	// composer's POST /content/template re-tunes a template's prompts to the
+	// post title via the Anthropic API; unset ⇒ that endpoint answers 503 and
+	// the FE silently keeps the static template. Model defaults when empty.
+	AnthropicKey   string
+	AnthropicModel string
 }
 
 func Load() Config {
@@ -77,6 +84,8 @@ func Load() Config {
 		PublicSiteURL: strings.TrimRight(
 			envOr("PUBLIC_SITE_URL", "https://dennislapchenko.github.io/gaias-choice"), "/"),
 		TelegramBotToken: os.Getenv("TELEGRAM_BOT_TOKEN"),
+		AnthropicKey:     os.Getenv("ANTHROPIC_API_KEY"),
+		AnthropicModel:   os.Getenv("ANTHROPIC_MODEL"),
 	}
 }
 

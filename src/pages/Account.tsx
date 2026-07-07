@@ -19,6 +19,15 @@ export default function Account() {
   // Admin "edit another camper" mode: the picked user + its own mobile toggle.
   const [selected, setSelected] = useState<Member | null>(null)
   const [targetOpen, setTargetOpen] = useState(false)
+  // Where the admin clicked, in viewport coords — desktop pops the editor
+  // there instead of the far right rail (see .account-fields-target in
+  // styles.css). Unused on mobile, where the panel stays a static overlay.
+  // openUp/maxH keep the popover on-screen: it flips above the click when
+  // there isn't room below, and its max-height is capped to whichever side
+  // it opens into so it scrolls internally instead of running off-screen.
+  const [anchor, setAnchor] = useState<{ x: number; y: number; openUp: boolean; maxH: number } | null>(
+    null,
+  )
   const isAdmin = me?.role === 'admin'
 
   // Fold an admin edit back into the circle without a refetch.
@@ -31,6 +40,7 @@ export default function Account() {
   const closeTarget = () => {
     setSelected(null)
     setTargetOpen(false)
+    setAnchor(null)
   }
 
   useEffect(() => {
@@ -130,7 +140,19 @@ export default function Account() {
                   className={`camper camper-editable${selected?.id === m.id ? ' is-selected' : ''}`}
                   style={style}
                   aria-label={t('account.editUser', { name: m.displayName })}
-                  onClick={() => {
+                  onClick={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect()
+                    const margin = 20
+                    const spaceBelow = window.innerHeight - rect.bottom
+                    const spaceAbove = rect.top
+                    const openUp = spaceBelow < 280 && spaceAbove > spaceBelow
+                    const maxH = Math.max(160, (openUp ? spaceAbove : spaceBelow) - margin)
+                    setAnchor({
+                      x: rect.left + rect.width / 2,
+                      y: openUp ? rect.top : rect.bottom,
+                      openUp,
+                      maxH,
+                    })
                     setSelected(m)
                     setTargetOpen(true)
                   }}
@@ -165,6 +187,7 @@ export default function Account() {
             open={targetOpen}
             onClose={closeTarget}
             onSaved={onSaved}
+            anchor={anchor}
           />
         )}
       </div>

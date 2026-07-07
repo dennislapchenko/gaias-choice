@@ -544,6 +544,53 @@ paths:
         '503':
           $ref: '#/components/responses/NotConfigured'
 
+  /content/template:
+    post:
+      operationId: enrichTemplate
+      summary: Re-tune a blank content template's prompts to a post title (LLM)
+      description: >-
+        Takes the base scaffold the editor already holds plus the new post's
+        title, and returns the same template with its guiding prompts re-tuned
+        to the title. Reshapes questions only — never authors content — so the
+        provenance contract holds. 503 when no model is configured; the FE then
+        keeps the static template.
+      tags: [content]
+      security:
+        - session: [editor]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, template]
+              properties:
+                title: { type: string, maxLength: 300 }
+                template:
+                  type: string
+                  description: The base template body to re-tune; capped well under the content cap.
+                  maxLength: 32768
+      responses:
+        '200':
+          description: The template with its prompts re-tuned to the title.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [body]
+                properties:
+                  body: { type: string }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '502':
+          $ref: '#/components/responses/Upstream'
+        '503':
+          $ref: '#/components/responses/NotConfigured'
+
 components:
   securitySchemes:
     session:

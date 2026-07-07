@@ -34,6 +34,12 @@ services:
       # /api/auth/telegram* answer 503 and the dialog falls back to email.
       # Value lives in deploy.env on the VM, never committed.
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      # Draft-template enrichment (internal/enrich). Anthropic API key; unset ⇒
+      # POST /api/content/template answers 503 and the draft composer keeps the
+      # static template. ANTHROPIC_MODEL optionally overrides the default.
+      # Value lives in deploy.env on the VM (swept from the root .env), never committed.
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-}
     volumes:
       - /srv/gaias-choice/data:/data # host bind mount, per D9 (boring backups)
 

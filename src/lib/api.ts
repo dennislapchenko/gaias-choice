@@ -183,6 +183,24 @@ export interface SaveResponse {
   commit: string // the commit this save produced
 }
 
+/** POST /api/content/template — re-tune a blank template's guiding prompts to a
+ *  post title via the backend LLM (the draft composer). 503 when no model is
+ *  configured; callers fall back to the static template. */
+export interface EnrichTemplateResponse {
+  body: string
+}
+
+/** Ask the backend to re-tune `template`'s prompts to `title`; resolves to the
+ *  new body. Rejects when enrichment is off/unreachable — callers keep the
+ *  static template on any error (progressive enhancement). */
+export function enrichTemplate(title: string, template: string, token?: string): Promise<string> {
+  return apiPost<EnrichTemplateResponse>(
+    '/content/template',
+    { title, template },
+    { token },
+  ).then((r) => r.body)
+}
+
 interface ApiState<T> {
   data: T | null
   error: ApiError | Error | null

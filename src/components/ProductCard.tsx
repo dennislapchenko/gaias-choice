@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import type { Product } from '../lib/types'
 import { withBase } from '../lib/asset'
 import Rating from './Rating'
+import { scoreAverage } from './GaiaScore'
 
 export default function ProductCard({ product }: { product: Product }) {
   return (
@@ -28,7 +29,7 @@ export default function ProductCard({ product }: { product: Product }) {
           </Link>
         </h3>
         <div className="card-meta">
-          <Rating value={product.rating} />
+          <Rating value={scoreAverage(product.scores)} />
           {product.price && <span className="price">{product.price}</span>}
         </div>
         <p className="muted">{product.excerpt}</p>

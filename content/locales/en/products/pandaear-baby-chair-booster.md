@@ -2,7 +2,7 @@
 title: "PandaEar Baby Chair Booster"
 state: upcoming            # queued "in the works" — delete this line (or set active) when the review is finished
 category: Sleep            # Sleep | Feeding | Care | Kitchen | Travel — the filter chip on /reviews
-rating: 4                  # 0–5 stars — a 5 must survive the "no flaws at all?" test
+scores: [4, 4, 4]  # Gaia Score — one 0–5 per criterion in site.yaml ratingCriteria, in order
 price: "€00"               # what you actually paid; always quote it
 # affiliateUrl: "https://www.amazon.de/-/en/dp/B08BYWRCRH?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_3"  # ONLY once enrolled in the program — never a placeholder
 excerpt: "<one honest sentence a friend would text you about it>"

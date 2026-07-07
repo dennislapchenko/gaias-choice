@@ -1,7 +1,7 @@
 ---
 title: Organic Cotton Muslin Swaddle
 category: Sleep
-rating: 5
+scores: [5, 5, 5]  # Gaia Score — one 0–5 per criterion in site.yaml ratingCriteria, in order
 price: "€28"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE1?tag=gaiaschoice-20"
 excerpt: A breathable GOTS-certified swaddle that doubles as blanket, sunshade, and nursing cover.

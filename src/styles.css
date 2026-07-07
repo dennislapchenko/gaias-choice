@@ -1826,12 +1826,48 @@ a.respected-card:hover {
     opacity: 0.3;
     cursor: default;
 }
-/* The admin target editor is the third .reviews-layout child; keep it in the
-   right-rail column (under the self panel) instead of falling to column 1.
-   On mobile the grid becomes a flex column, so this is a no-op there and the
-   shared .account-fields mobile rules (hide unless .is-open) take over. */
+/* The admin target editor is the third .reviews-layout child; on mobile the
+   grid becomes a flex column and the shared .account-fields mobile rules
+   (hide unless .is-open, static, order:-1) take over unchanged — that's the
+   behavior that already works. On desktop, instead of parking in the right
+   rail (disconnected from whichever camper the admin clicked), it pops up
+   as a floating panel anchored to that click: --popover-x/-y is the click
+   point, --popover-max-h is however much room Account.tsx measured on
+   whichever side it's opening into (so it scrolls internally rather than
+   running off-screen), and .opens-up flips it above the click when there
+   wasn't room below. */
 .account-fields-target {
     grid-column: 2;
+}
+.account-popover-backdrop {
+    display: none;
+}
+@media (min-width: 901px) {
+    .reviews-layout .account-fields-target {
+        position: fixed;
+        left: clamp(180px, var(--popover-x, 50%), calc(100vw - 180px));
+        top: var(--popover-y, 50%);
+        transform: translate(-50%, 12px);
+        margin: 0;
+        z-index: 61;
+        width: min(320px, calc(100vw - 32px));
+        max-height: var(--popover-max-h, calc(100vh - 40px));
+        overflow-y: auto;
+        padding: 16px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+    }
+    .reviews-layout .account-fields-target.opens-up {
+        transform: translate(-50%, calc(-100% - 12px));
+    }
+    .account-popover-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+    }
 }
 .side-label-row {
     display: flex;
@@ -2613,4 +2649,36 @@ a.respected-card:hover {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+/* Gaia Score — criteria-based review rating (replaces the single star row on
+   the review detail page; the card still shows the rolled-up average). */
+.gaia-score {
+    margin: 0.9rem 0 1.1rem;
+}
+.gaia-score-title {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--sage-dark);
+    margin-bottom: 0.4rem;
+}
+.gaia-score-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.3rem;
+    max-width: 340px;
+}
+.gaia-score-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.gaia-score-crit {
+    color: var(--ink);
 }

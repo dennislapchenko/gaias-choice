@@ -116,7 +116,7 @@ src/
   components/            # Layout, Sidebar, AstroCalendar, ThemeSwitcher,
                          # LanguageSwitcher, UserButton, LoginDialog, ProductCard,
                          # CompassCard, CompassRow, JournalRow, Upcoming, Markdown,
-                         # Rating, TableOfContents, CopyButton, EditButton, BackendBadge,
+                         # Rating, GaiaScore, TableOfContents, CopyButton, EditButton, BackendBadge,
                          # AccountFields, ImagePicker (bundled-image chooser — parked for post covers)
   pages/                 # Home, Reviews, ReviewDetail, Compass, Journal,
                          # EntryDetail (shared Compass+Journal detail w/ TOC),
@@ -125,7 +125,7 @@ src/
   styles.css             # single hand-written stylesheet (no CSS framework)
 backend/                 # optional Go/gin API sidecar (see "Backend" below)
   openapi.yaml           # THE endpoint contract — endpoints are born here (task be:gen)
-  main.go, internal/{config,store,auth,content,mail,telegram,httpapi}, Dockerfile, go.mod
+  main.go, internal/{config,store,auth,content,mail,telegram,enrich,httpapi}, Dockerfile, go.mod
 compose.dev.yaml         # `task dev` stack: web (Vite HMR) + api (air hot reload)
 deploy/                  # live VM deploy stack: compose.yaml (api+Caddy), Caddyfile,
                          # README (target), infra-log.md (provisioning record)
@@ -166,12 +166,22 @@ Authoring procedures (frontmatter schemas, voice rules, step-by-steps) live in
 ## The content sections
 
 **Reviews** (`/reviews`, `products/*.md`) — frontmatter `title`, `category`
-(filter chip), `rating` 0–5, optional `price`/`affiliateUrl` (rendered
-`rel=sponsored`)/`image`/`tags`/`state`, `excerpt`, `date`. Every review
-follows the universal six-section body structure whose canonical source is
-`content/shared/review-template.<locale>.md` — the scaffold an editor's ＋
+(filter chip), `scores` (the **Gaia Score**), optional `price`/`affiliateUrl`
+(rendered `rel=sponsored`)/`image`/`tags`/`state`, `excerpt`, `date`. Every
+review follows the universal six-section body structure whose canonical source
+is `content/shared/review-template.<locale>.md` — the scaffold an editor's ＋
 button (on the `Upcoming` rail, edit mode only — see the Live-edit row of
 `development.md`) seeds a new draft from.
+
+**Gaia Score (review rating).** Reviews are not rated with a single star.
+`site.yaml` `ratingCriteria` defines one shared set of criteria (`{title, items}`,
+localized; names currently **provisional** — owner to finalize), and each
+review's frontmatter `scores:` is an array of 0–5 numbers **aligned to `items`
+by index**. `components/GaiaScore.tsx` renders the per-criterion breakdown on
+the review detail page; `ProductCard` shows the rolled-up average (its
+`scoreAverage` helper) as the old single star row. Adding/renaming a criterion
+is a one-line `site.yaml` edit that relabels every review at once — content-as-data,
+no per-file churn.
 
 **Post states (reviews + Journal):** a post is `state: active` (absent =
 active) or `state: upcoming`. An upcoming post is a real content file that
@@ -490,7 +500,11 @@ VM is down the live site silently degrades to the static baseline.
   getUpdates for `/start <code>` taps and confirms senders via sendMessage —
   two stdlib HTTP calls, no client lib; unset ⇒ nil bot ⇒ `/api/auth/telegram*`
   answer 503), `internal/content`
-  (the live-edit seam), `internal/httpapi` (gin router, hand-written CORS
+  (the live-edit seam), `internal/enrich` (the template-enrichment seam;
+  `ANTHROPIC_API_KEY` set ⇒ one stdlib HTTP call to the Anthropic Messages API
+  re-tunes a blank template's prompts to a post title — `ANTHROPIC_MODEL`
+  overrides the default; unset ⇒ nil ⇒ `/api/content/template` answers 503),
+  `internal/httpapi` (gin router, hand-written CORS
   allowlist, middleware, handlers). Endpoints: `/api/healthz`, `/api/hello`
   (hits counter proving a DB round-trip), `/api/auth/telegram` +
   `/api/auth/telegram/poll` (the primary Telegram login), `/api/auth/magic` +
@@ -501,7 +515,9 @@ VM is down the live site silently degrades to the static baseline.
   avatar URL, optional password change), `PUT /api/users/{id}` (admin-only
   edit of another user — display name, avatar, role, optional password reset;
   `session: [admin]` scope, never touches their email),
-  `/api/content/{file,save}`.
+  `/api/content/{file,save}`, `POST /api/content/template` (the draft
+  composer's title→prompts enrichment — `session: [editor]`, 503 when no
+  model configured).
 - **Auth (users/sessions/roles):** `users` rows (argon2id password hashes,
   public `display_name`) carry role `admin`, `editor`, or `viewer`. `email` is
   **nullable** (migration 006) — Telegram-only accounts have none, so they key
@@ -624,7 +640,11 @@ VM is down the live site silently degrades to the static baseline.
   `src/lib/contentEditor.tsx` is the editor: two dialog flows (`openFile` —
   edit a content file's whole raw text, frontmatter + body, in a textarea;
   `openDraft` — the draft composer, creates a new content file, save without
-  sha) plus one dialog-less action, `setScalar(ref, value)`, that flips a
+  sha; on open it fires `enrichTemplate(title, template)` (api.ts →
+  `POST /content/template`) and swaps the LLM-retuned template in **only if the
+  admin hasn't started typing** — degrades silently to the static scaffold when
+  enrichment is off/unreachable) plus one dialog-less action,
+  `setScalar(ref, value)`, that flips a
   single YAML scalar directly — used by `components/StateToggle.tsx`, the
   iPhone-style switch on `ReviewDetail`/`EntryDetail` that flips a post's
   `state` between `active`/`upcoming`. `setScalar` does **CST-level,

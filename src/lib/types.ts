@@ -74,6 +74,7 @@ export interface SiteConfig {
   respected?: RespectedPerson[] // teachers/influences listed in the sidebar "Respected" panel
   sidebar?: SidebarWidget[] // left-rail composition + order; falls back to a default when absent
   epics?: GuideEpic[] // themed Compass collections shown as thumbnails on /compass
+  ratingCriteria?: { title: string; items: string[] } // Gaia Score criteria (labels); a review's `scores` array aligns to items order
   support?: SupportConfig // payment methods for /support; non-localized, so authored in en/ only and inherited by other locales (see getSite)
   nav: NavItem[]
   footerNav?: NavItem[]
@@ -102,7 +103,7 @@ export interface Entry {
 
 export interface Product extends Entry {
   category: string
-  rating: number
+  scores: number[] // Gaia Score — one 0–5 value per site ratingCriteria item, in order
   price?: string
   affiliateUrl?: string
   image?: string

@@ -158,6 +158,13 @@ type SaveContentJSONBody struct {
 	Sha *string `json:"sha,omitempty"`
 }
 
+// EnrichTemplateJSONBody defines parameters for EnrichTemplate.
+type EnrichTemplateJSONBody struct {
+	// Template The base template body to re-tune; capped well under the content cap.
+	Template string `json:"template"`
+	Title    string `json:"title"`
+}
+
 // UpdateMeJSONBody defines parameters for UpdateMe.
 type UpdateMeJSONBody struct {
 	// AvatarUrl Image shown around the campfire — a URL or an inlined data: URI (browser-downscaled upload). Omit or empty to clear it.
@@ -203,6 +210,9 @@ type PollTelegramLoginJSONRequestBody PollTelegramLoginJSONBody
 // SaveContentJSONRequestBody defines body for SaveContent for application/json ContentType.
 type SaveContentJSONRequestBody SaveContentJSONBody
 
+// EnrichTemplateJSONRequestBody defines body for EnrichTemplate for application/json ContentType.
+type EnrichTemplateJSONRequestBody EnrichTemplateJSONBody
+
 // UpdateMeJSONRequestBody defines body for UpdateMe for application/json ContentType.
 type UpdateMeJSONRequestBody UpdateMeJSONBody
 
@@ -241,6 +251,9 @@ type ServerInterface interface {
 	// Write one content/ file (a git commit in prod, a working-tree write in dev)
 	// (POST /content/save)
 	SaveContent(c *gin.Context)
+	// Re-tune a blank content template's prompts to a post title (LLM)
+	// (POST /content/template)
+	EnrichTemplate(c *gin.Context)
 	// Liveness probe
 	// (GET /healthz)
 	GetHealth(c *gin.Context)
@@ -419,6 +432,21 @@ func (siw *ServerInterfaceWrapper) SaveContent(c *gin.Context) {
 	siw.Handler.SaveContent(c)
 }
 
+// EnrichTemplate operation middleware
+func (siw *ServerInterfaceWrapper) EnrichTemplate(c *gin.Context) {
+
+	c.Set(string(SessionScopes), []string{"editor"})
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.EnrichTemplate(c)
+}
+
 // GetHealth operation middleware
 func (siw *ServerInterfaceWrapper) GetHealth(c *gin.Context) {
 
@@ -539,6 +567,7 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.POST(options.BaseURL+"/auth/telegram/poll", wrapper.PollTelegramLogin)
 	router.GET(options.BaseURL+"/content/file", wrapper.GetContentFile)
 	router.POST(options.BaseURL+"/content/save", wrapper.SaveContent)
+	router.POST(options.BaseURL+"/content/template", wrapper.EnrichTemplate)
 	router.GET(options.BaseURL+"/healthz", wrapper.GetHealth)
 	router.GET(options.BaseURL+"/hello", wrapper.GetHello)
 	router.GET(options.BaseURL+"/users", wrapper.ListUsers)
@@ -1274,6 +1303,100 @@ func (response SaveContent503JSONResponse) VisitSaveContentResponse(w http.Respo
 	return err
 }
 
+type EnrichTemplateRequestObject struct {
+	Body *EnrichTemplateJSONRequestBody
+}
+
+type EnrichTemplateResponseObject interface {
+	VisitEnrichTemplateResponse(w http.ResponseWriter) error
+}
+
+type EnrichTemplate200JSONResponse struct {
+	Body string `json:"body"`
+}
+
+func (response EnrichTemplate200JSONResponse) VisitEnrichTemplateResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type EnrichTemplate400JSONResponse struct{ BadRequestJSONResponse }
+
+func (response EnrichTemplate400JSONResponse) VisitEnrichTemplateResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type EnrichTemplate401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response EnrichTemplate401JSONResponse) VisitEnrichTemplateResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type EnrichTemplate403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response EnrichTemplate403JSONResponse) VisitEnrichTemplateResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type EnrichTemplate502JSONResponse struct{ UpstreamJSONResponse }
+
+func (response EnrichTemplate502JSONResponse) VisitEnrichTemplateResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(502)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type EnrichTemplate503JSONResponse struct{ NotConfiguredJSONResponse }
+
+func (response EnrichTemplate503JSONResponse) VisitEnrichTemplateResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
 type GetHealthRequestObject struct {
 }
 
@@ -1563,6 +1686,9 @@ type StrictServerInterface interface {
 	// Write one content/ file (a git commit in prod, a working-tree write in dev)
 	// (POST /content/save)
 	SaveContent(ctx context.Context, request SaveContentRequestObject) (SaveContentResponseObject, error)
+	// Re-tune a blank content template's prompts to a post title (LLM)
+	// (POST /content/template)
+	EnrichTemplate(ctx context.Context, request EnrichTemplateRequestObject) (EnrichTemplateResponseObject, error)
 	// Liveness probe
 	// (GET /healthz)
 	GetHealth(ctx context.Context, request GetHealthRequestObject) (GetHealthResponseObject, error)
@@ -1921,6 +2047,37 @@ func (sh *strictHandler) SaveContent(ctx *gin.Context) {
 		sh.options.HandlerErrorFunc(ctx, err)
 	} else if validResponse, ok := response.(SaveContentResponseObject); ok {
 		if err := validResponse.VisitSaveContentResponse(ctx.Writer); err != nil {
+			sh.options.ResponseErrorHandlerFunc(ctx, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(ctx, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// EnrichTemplate operation middleware
+func (sh *strictHandler) EnrichTemplate(ctx *gin.Context) {
+	var request EnrichTemplateRequestObject
+
+	var body EnrichTemplateJSONRequestBody
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(ctx, err)
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx *gin.Context, request interface{}) (interface{}, error) {
+		return sh.ssi.EnrichTemplate(ctx, request.(EnrichTemplateRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "EnrichTemplate")
+	}
+
+	response, err := handler(ctx, request)
+
+	if err != nil {
+		sh.options.HandlerErrorFunc(ctx, err)
+	} else if validResponse, ok := response.(EnrichTemplateResponseObject); ok {
+		if err := validResponse.VisitEnrichTemplateResponse(ctx.Writer); err != nil {
 			sh.options.ResponseErrorHandlerFunc(ctx, err)
 		}
 	} else if response != nil {
