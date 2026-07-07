@@ -68,8 +68,8 @@ export default function Layout({ children }: { children: ReactNode }) {
             </nav>
             <div className="header-controls">
               <LanguageSwitcher />
-              <UserButton />
               <ThemeSwitcher />
+              <UserButton />
               <button
                 type="button"
                 className="nav-toggle"
