@@ -124,7 +124,7 @@ src/
   styles.css             # single hand-written stylesheet (no CSS framework)
 backend/                 # optional Go/gin API sidecar (see "Backend" below)
   openapi.yaml           # THE endpoint contract — endpoints are born here (task be:gen)
-  main.go, internal/{config,store,auth,mail,content,httpapi}, Dockerfile, go.mod
+  main.go, internal/{config,store,auth,content,httpapi}, Dockerfile, go.mod
 compose.dev.yaml         # `task dev` stack: web (Vite HMR) + api (air hot reload)
 deploy/                  # live VM deploy stack: compose.yaml (api+Caddy), Caddyfile,
                          # README (target), infra-log.md (provisioning record)
@@ -477,15 +477,10 @@ VM is down the live site silently degrades to the static baseline.
   Layout: `main.go` is wiring only; `internal/config` (env), `internal/store`
   (SQLite via `modernc.org/sqlite`, pure-Go so `CGO_ENABLED=0` stays static;
   WAL; hand-rolled embedded-`.sql` migration runner; **all SQL lives here**),
-  `internal/auth` (users/sessions/roles/magic-link tokens), `internal/mail`
-  (the magic-link email over stdlib `net/smtp` — a transactional SMTP
-  provider, deliberately not a self-hosted server; `SMTP_HOST` unset ⇒ nil
-  mailer ⇒ `/api/auth/magic` answers 503, `SMTP_HOST=log` ⇒ emails print to
-  stdout, the dev loop), `internal/content` (the live-edit seam),
-  `internal/httpapi` (gin router, hand-written CORS allowlist,
+  `internal/auth` (users/sessions/roles), `internal/content` (the live-edit
+  seam), `internal/httpapi` (gin router, hand-written CORS allowlist,
   middleware, handlers). Endpoints: `/api/healthz`, `/api/hello` (hits counter
-  proving a DB round-trip), `/api/auth/magic` + `/api/auth/magic/verify` (the
-  passwordless login), `/api/auth/{login,register,logout,me}`,
+  proving a DB round-trip), `/api/auth/{login,register,logout,me}`,
   `/api/users` (the campfire listing), `PUT /api/users/me` (self-service
   profile edit — display name, email, avatar URL, optional password
   change), `/api/content/{file,save}`.
