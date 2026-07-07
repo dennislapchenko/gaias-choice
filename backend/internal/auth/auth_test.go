@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"errors"
+	"strings"
 	"testing"
 	"time"
 
@@ -110,5 +112,57 @@ func TestLoginAndSessions(t *testing.T) {
 	}
 	if _, ok := s.Validate(expired); ok {
 		t.Error("expired session validated")
+	}
+}
+
+func TestRegister(t *testing.T) {
+	s, st := testService(t)
+	if _, err := s.Bootstrap("owner@test.dev", "correct-horse"); err != nil {
+		t.Fatal(err)
+	}
+
+	// Validation failures all wrap ErrInvalid.
+	for name, in := range map[string][3]string{
+		"bad email":      {"not-an-email", "long-enough-pass", "Wanderer"},
+		"weak password":  {"new@test.dev", "short", "Wanderer"},
+		"empty name":     {"new@test.dev", "long-enough-pass", "   "},
+		"oversized name": {"new@test.dev", "long-enough-pass", strings.Repeat("x", 51)},
+	} {
+		if _, err := s.Register(in[0], in[1], in[2]); !errors.Is(err, ErrInvalid) {
+			t.Errorf("%s: got %v, want ErrInvalid", name, err)
+		}
+	}
+
+	// Success: viewer role, normalized email, tidied display name, live session.
+	sess, err := s.Register(" New@Test.dev ", "long-enough-pass", "  The   Wanderer ")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if sess.User.Role != "viewer" || sess.User.Email != "new@test.dev" ||
+		sess.User.DisplayName != "The Wanderer" || sess.Token == "" {
+		t.Fatalf("bad register session: %+v", sess.User)
+	}
+	if u, ok := s.Validate(sess.Token); !ok || u.Email != "new@test.dev" {
+		t.Fatalf("register session does not validate: ok=%v %+v", ok, u)
+	}
+
+	// Same address again — taken, whatever the casing.
+	if _, err := s.Register("NEW@test.dev", "another-long-pass", "Impostor"); !errors.Is(err, ErrEmailTaken) {
+		t.Fatalf("duplicate email: got %v, want ErrEmailTaken", err)
+	}
+
+	// The circle: bootstrap admin (local-part fallback name) + the viewer.
+	members, err := st.ListMembers()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(members) != 2 {
+		t.Fatalf("members: got %d, want 2", len(members))
+	}
+	if members[0].Role != "admin" || members[1].DisplayName != "The Wanderer" {
+		t.Errorf("members order/content: %+v", members)
+	}
+	if got := DisplayName(store.User{Email: "owner@test.dev"}); got != "owner" {
+		t.Errorf("display-name fallback: %q", got)
 	}
 }

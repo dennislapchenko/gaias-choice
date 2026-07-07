@@ -147,7 +147,22 @@ type User struct {
 	ID           int64
 	Email        string
 	PasswordHash string
-	Role         string // "admin" | "editor" (enforced by a CHECK constraint)
+	Role         string // "admin" | "editor" | "viewer" (enforced by a CHECK constraint)
+	DisplayName  string // may be "" for pre-003 users; callers fall back to the email local-part
+}
+
+// CanEdit reports whether this role may touch the content endpoints —
+// viewers (self-registered) may not.
+func (u User) CanEdit() bool { return u.Role == "admin" || u.Role == "editor" }
+
+// Member is one row of the public community listing — deliberately without
+// email or password hash, so a careless caller cannot leak them.
+type Member struct {
+	ID          int64
+	Email       string // for the display-name fallback only; never serialized
+	DisplayName string
+	Role        string
+	CreatedAt   time.Time
 }
 
 func (s *Store) CountUsers() (int, error) {
@@ -156,10 +171,10 @@ func (s *Store) CountUsers() (int, error) {
 	return n, err
 }
 
-func (s *Store) CreateUser(email, passwordHash, role string) error {
+func (s *Store) CreateUser(email, passwordHash, role, displayName string) error {
 	_, err := s.db.Exec(
-		`INSERT INTO users (email, password_hash, role) VALUES (?, ?, ?)`,
-		email, passwordHash, role,
+		`INSERT INTO users (email, password_hash, role, display_name) VALUES (?, ?, ?, ?)`,
+		email, passwordHash, role, displayName,
 	)
 	return err
 }
@@ -168,12 +183,36 @@ func (s *Store) CreateUser(email, passwordHash, role string) error {
 func (s *Store) UserByEmail(email string) (User, bool, error) {
 	var u User
 	err := s.db.QueryRow(
-		`SELECT id, email, password_hash, role FROM users WHERE email = ?`, email,
-	).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.Role)
+		`SELECT id, email, password_hash, role, display_name FROM users WHERE email = ?`, email,
+	).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.Role, &u.DisplayName)
 	if errors.Is(err, sql.ErrNoRows) {
 		return User{}, false, nil
 	}
 	return u, err == nil, err
+}
+
+// ListMembers returns every user, oldest first — the campfire circle.
+func (s *Store) ListMembers() ([]Member, error) {
+	rows, err := s.db.Query(
+		`SELECT id, email, display_name, role, created_at FROM users ORDER BY created_at, id`,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var members []Member
+	for rows.Next() {
+		var m Member
+		var created string
+		if err := rows.Scan(&m.ID, &m.Email, &m.DisplayName, &m.Role, &created); err != nil {
+			return nil, err
+		}
+		// created_at is SQLite's datetime('now'): "2006-01-02 15:04:05" UTC.
+		m.CreatedAt, _ = time.ParseInLocation("2006-01-02 15:04:05", created, time.UTC)
+		members = append(members, m)
+	}
+	return members, rows.Err()
 }
 
 func (s *Store) CreateSession(tokenHash string, userID int64, expiresAt time.Time) error {
@@ -188,11 +227,11 @@ func (s *Store) CreateSession(tokenHash string, userID int64, expiresAt time.Tim
 func (s *Store) UserBySession(tokenHash string, now time.Time) (User, bool, error) {
 	var u User
 	err := s.db.QueryRow(
-		`SELECT u.id, u.email, u.password_hash, u.role
+		`SELECT u.id, u.email, u.password_hash, u.role, u.display_name
 		   FROM sessions s JOIN users u ON u.id = s.user_id
 		  WHERE s.token_hash = ? AND s.expires_at > ?`,
 		tokenHash, now.UTC().Format(time.RFC3339),
-	).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.Role)
+	).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.Role, &u.DisplayName)
 	if errors.Is(err, sql.ErrNoRows) {
 		return User{}, false, nil
 	}

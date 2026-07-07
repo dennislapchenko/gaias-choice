@@ -100,6 +100,7 @@ func TestSpecDrivenAuth(t *testing.T) {
 	secured := [][2]string{
 		{http.MethodGet, "/api/auth/me"},
 		{http.MethodPost, "/api/auth/logout"},
+		{http.MethodGet, "/api/users"},
 		{http.MethodGet, "/api/content/file?path=content/locales/en/site.yaml"},
 		{http.MethodPost, "/api/content/save"},
 	}
@@ -151,6 +152,149 @@ func TestMeReportsEditing(t *testing.T) {
 	json.Unmarshal(w.Body.Bytes(), &me)
 	if !me.Editing {
 		t.Error("editing=false with a configured seam")
+	}
+}
+
+// registerViewer signs up a fresh viewer account and returns its token.
+func registerViewer(t *testing.T, r *gin.Engine, email, name string) string {
+	t.Helper()
+	w := do(r, http.MethodPost, "/api/auth/register", "",
+		fmt.Sprintf(`{"email":%q,"password":"viewer-pass-123","displayName":%q}`, email, name))
+	if w.Code != http.StatusOK {
+		t.Fatalf("register: got %d: %s", w.Code, w.Body.String())
+	}
+	var resp struct{ Token, Role, DisplayName string }
+	if err := json.Unmarshal(w.Body.Bytes(), &resp); err != nil || resp.Token == "" {
+		t.Fatalf("register response: %v %s", err, w.Body.String())
+	}
+	if resp.Role != "viewer" || resp.DisplayName != name {
+		t.Fatalf("register grant: %+v", resp)
+	}
+	return resp.Token
+}
+
+func TestRegisterFlow(t *testing.T) {
+	r, _ := testEnv(t, nil)
+	token := registerViewer(t, r, "camper@test.dev", "Trail Camper")
+
+	// The new session works.
+	w := do(r, http.MethodGet, "/api/auth/me", token, "")
+	if w.Code != http.StatusOK {
+		t.Fatalf("me: got %d", w.Code)
+	}
+	var me struct {
+		Email, Role, DisplayName string
+		Editing                  bool
+	}
+	json.Unmarshal(w.Body.Bytes(), &me)
+	if me.Email != "camper@test.dev" || me.Role != "viewer" || me.DisplayName != "Trail Camper" || me.Editing {
+		t.Errorf("me after register: %+v", me)
+	}
+
+	// Same email again → 409; broken inputs → 400.
+	if w := do(r, http.MethodPost, "/api/auth/register", "",
+		`{"email":"camper@test.dev","password":"another-pass-123","displayName":"Twin"}`); w.Code != http.StatusConflict {
+		t.Errorf("duplicate email: got %d, want 409", w.Code)
+	}
+	for name, body := range map[string]string{
+		"missing name":  `{"email":"x@test.dev","password":"long-enough-pass"}`,
+		"weak password": `{"email":"x@test.dev","password":"short","displayName":"X"}`,
+		"bad email":     `{"email":"not-an-email","password":"long-enough-pass","displayName":"X"}`,
+	} {
+		if w := do(r, http.MethodPost, "/api/auth/register", "", body); w.Code != http.StatusBadRequest {
+			t.Errorf("%s: got %d, want 400", name, w.Code)
+		}
+	}
+}
+
+// A viewer is a real session — but the editor-scoped content operations turn
+// it away with 403, even with a fully configured storage backend. This is
+// the invariant that keeps open registration away from the repo-write PAT.
+func TestViewerForbiddenFromContent(t *testing.T) {
+	upstreamCalls := 0
+	up := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		upstreamCalls++
+	}))
+	defer up.Close()
+	r, adminToken := testEnv(t, githubSeam(up.URL))
+	viewerToken := registerViewer(t, r, "viewer@test.dev", "Just Looking")
+
+	for _, req := range [][2]string{
+		{http.MethodGet, "/api/content/file?path=content/locales/en/site.yaml"},
+		{http.MethodPost, "/api/content/save"},
+	} {
+		body := ""
+		if req[0] == http.MethodPost {
+			body = `{"path":"content/x.md","content":"x"}`
+		}
+		if w := do(r, req[0], req[1], viewerToken, body); w.Code != http.StatusForbidden {
+			t.Errorf("viewer %s %s: got %d, want 403", req[0], req[1], w.Code)
+		}
+	}
+	if upstreamCalls != 0 {
+		t.Fatalf("viewer requests reached the upstream %d times", upstreamCalls)
+	}
+
+	// Editing capability is role-aware: seam configured, yet viewer sees false.
+	var me struct{ Editing bool }
+	json.Unmarshal(do(r, http.MethodGet, "/api/auth/me", viewerToken, "").Body.Bytes(), &me)
+	if me.Editing {
+		t.Error("viewer me.editing=true with a configured seam")
+	}
+	json.Unmarshal(do(r, http.MethodGet, "/api/auth/me", adminToken, "").Body.Bytes(), &me)
+	if !me.Editing {
+		t.Error("admin me.editing=false with a configured seam")
+	}
+}
+
+func TestUsersList(t *testing.T) {
+	r, adminToken := testEnv(t, nil)
+	viewerToken := registerViewer(t, r, "second@test.dev", "Second Camper")
+
+	w := do(r, http.MethodGet, "/api/users", viewerToken, "")
+	if w.Code != http.StatusOK {
+		t.Fatalf("users: got %d: %s", w.Code, w.Body.String())
+	}
+	var resp struct {
+		Users []struct {
+			DisplayName, Role, JoinedAt string
+			You                         bool
+		}
+	}
+	if err := json.Unmarshal(w.Body.Bytes(), &resp); err != nil {
+		t.Fatal(err)
+	}
+	if len(resp.Users) != 2 {
+		t.Fatalf("users: got %d, want 2", len(resp.Users))
+	}
+	// Oldest first: the bootstrap admin (email local-part fallback), then the
+	// viewer — who is `you` on this token. Emails never appear.
+	if resp.Users[0].DisplayName != "owner" || resp.Users[0].Role != "admin" || resp.Users[0].You {
+		t.Errorf("admin row: %+v", resp.Users[0])
+	}
+	if resp.Users[1].DisplayName != "Second Camper" || !resp.Users[1].You || resp.Users[1].JoinedAt == "" {
+		t.Errorf("viewer row: %+v", resp.Users[1])
+	}
+	if strings.Contains(w.Body.String(), "@") {
+		t.Error("users listing leaks an email address")
+	}
+
+	// The admin sees the same circle with `you` on their own row.
+	json.Unmarshal(do(r, http.MethodGet, "/api/users", adminToken, "").Body.Bytes(), &resp)
+	if !resp.Users[0].You || resp.Users[1].You {
+		t.Errorf("admin view you-flags: %+v", resp.Users)
+	}
+}
+
+func TestRegisterRateLimit(t *testing.T) {
+	r, _ := testEnv(t, nil)
+	last := 0
+	for i := 0; i < 12; i++ {
+		last = do(r, http.MethodPost, "/api/auth/register", "",
+			fmt.Sprintf(`{"email":"bot%d@test.dev","password":"long-enough-pass","displayName":"Bot"}`, i)).Code
+	}
+	if last != http.StatusTooManyRequests {
+		t.Errorf("after hammering register: got %d, want 429", last)
 	}
 }
 

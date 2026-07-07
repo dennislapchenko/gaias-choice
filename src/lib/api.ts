@@ -74,19 +74,42 @@ export interface HelloResponse {
   hits: number
 }
 
-/** POST /api/auth/login — exchange credentials for an opaque session token. */
+export type Role = 'admin' | 'editor' | 'viewer'
+
+/** POST /api/auth/login and /api/auth/register both answer with this grant. */
 export interface LoginResponse {
   token: string
-  role: 'admin' | 'editor'
+  role: Role
+  displayName: string
   expiresAt: string
 }
 
-/** GET /api/auth/me — session probe; `editing` reports whether the backend
- *  has a content storage backend configured (edit chrome stays off without). */
+/** POST /api/auth/register — open self-registration; creates a viewer. */
+export interface RegisterPayload {
+  email: string
+  password: string
+  displayName: string
+}
+
+/** GET /api/auth/me — session probe; `editing` is true only for admin/editor
+ *  AND when the backend has a content storage backend configured. */
 export interface MeResponse {
   email: string
-  role: 'admin' | 'editor'
+  role: Role
+  displayName: string
   editing: boolean
+}
+
+/** GET /api/users — everyone around the campfire (any signed-in user). */
+export interface Member {
+  displayName: string
+  role: Role
+  joinedAt: string // YYYY-MM-DD
+  you: boolean
+}
+
+export interface UsersResponse {
+  users: Member[]
 }
 
 /** GET /api/content/file — current file text + blob sha (the save's

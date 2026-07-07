@@ -3,6 +3,7 @@ package httpapi
 import (
 	"context"
 	"net/http"
+	"slices"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -18,19 +19,26 @@ import (
 const userKey = "gc.sessionUser"
 
 // sessionAuth enforces the spec's security declarations. The generated
-// wrapper (gen.go) calls c.Set(SessionScopes, …) for exactly the operations
-// openapi.yaml marks `security: session` — so this middleware needs no route
-// list of its own: no scopes on the context ⇒ public operation, pass through;
-// scopes present ⇒ a valid bearer session is required and its user is parked
-// on the context.
+// wrapper (gen.go) calls c.Set(SessionScopes, scopes) for exactly the
+// operations openapi.yaml marks `security: session` — so this middleware
+// needs no route list of its own: no scopes on the context ⇒ public
+// operation, pass through; scopes present ⇒ a valid bearer session is
+// required and its user is parked on the context. The `editor` scope
+// additionally demands an admin/editor role — viewers (self-registered) get
+// 403, which is what keeps open registration away from the content seam.
 func sessionAuth(a *auth.Service) MiddlewareFunc {
 	return func(c *gin.Context) {
-		if _, secured := c.Get(string(SessionScopes)); !secured {
+		v, secured := c.Get(string(SessionScopes))
+		if !secured {
 			return
 		}
 		user, ok := a.Validate(bearerToken(c))
 		if !ok {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, Error{Error: "unauthorized"})
+			return
+		}
+		if scopes, _ := v.([]string); slices.Contains(scopes, "editor") && !user.CanEdit() {
+			c.AbortWithStatusJSON(http.StatusForbidden, Error{Error: "forbidden"})
 			return
 		}
 		c.Set(userKey, user)

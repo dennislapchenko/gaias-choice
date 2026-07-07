@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	openapi_types "github.com/oapi-codegen/runtime/types"
 
 	"github.com/dennislapchenko/gaias-choice/backend/internal/auth"
 	"github.com/dennislapchenko/gaias-choice/backend/internal/content"
@@ -46,6 +47,9 @@ func NewRouter(d Deps) *gin.Engine {
 		auth:         d.Auth,
 		content:      d.Content,
 		loginLimiter: newRateLimiter(10, time.Minute),
+		// Registration is open to the world; a tighter lid keeps a bot from
+		// filling the campfire with junk accounts.
+		registerLimiter: newRateLimiter(10, time.Hour),
 	}
 	RegisterHandlersWithOptions(r, NewStrictHandler(srv, nil), GinServerOptions{
 		BaseURL:     "/api",
@@ -58,10 +62,11 @@ func NewRouter(d Deps) *gin.Engine {
 }
 
 type server struct {
-	store        *store.Store
-	auth         *auth.Service
-	content      content.Store
-	loginLimiter *rateLimiter
+	store           *store.Store
+	auth            *auth.Service
+	content         content.Store
+	loginLimiter    *rateLimiter
+	registerLimiter *rateLimiter
 }
 
 // Compile-time proof the contract is fully implemented.
@@ -88,7 +93,7 @@ func (s *server) GetHello(context.Context, GetHelloRequestObject) (GetHelloRespo
 
 func (s *server) Login(ctx context.Context, req LoginRequestObject) (LoginResponseObject, error) {
 	if c := ginContext(ctx); c != nil && !s.loginLimiter.allow(c.ClientIP()) {
-		return Login429JSONResponse(Error{Error: "too many attempts — try again later"}), nil
+		return Login429JSONResponse{RateLimitedJSONResponse{Error: "too many attempts — try again later"}}, nil
 	}
 	if req.Body == nil || req.Body.Email == "" || req.Body.Password == "" {
 		return Login400JSONResponse{BadRequestJSONResponse{Error: "email and password required"}}, nil
@@ -100,11 +105,36 @@ func (s *server) Login(ctx context.Context, req LoginRequestObject) (LoginRespon
 	if err != nil {
 		return nil, err // infrastructure — generated code answers 500
 	}
-	return Login200JSONResponse{
-		Token:     sess.Token,
-		Role:      Role(sess.User.Role),
-		ExpiresAt: sess.ExpiresAt,
-	}, nil
+	return Login200JSONResponse(grant(sess)), nil
+}
+
+func (s *server) Register(ctx context.Context, req RegisterRequestObject) (RegisterResponseObject, error) {
+	if c := ginContext(ctx); c != nil && !s.registerLimiter.allow(c.ClientIP()) {
+		return Register429JSONResponse{RateLimitedJSONResponse{Error: "too many attempts — try again later"}}, nil
+	}
+	if req.Body == nil || req.Body.Email == "" || req.Body.Password == "" || req.Body.DisplayName == "" {
+		return Register400JSONResponse{BadRequestJSONResponse{Error: "email, password and display name required"}}, nil
+	}
+	sess, err := s.auth.Register(req.Body.Email, req.Body.Password, req.Body.DisplayName)
+	switch {
+	case errors.Is(err, auth.ErrEmailTaken):
+		return Register409JSONResponse(Error{Error: "email already registered"}), nil
+	case errors.Is(err, auth.ErrInvalid):
+		return Register400JSONResponse{BadRequestJSONResponse{Error: err.Error()}}, nil
+	case err != nil:
+		return nil, err
+	}
+	return Register200JSONResponse(grant(sess)), nil
+}
+
+// grant maps an issued session onto the shared login/register response body.
+func grant(sess auth.Session) SessionGrant {
+	return SessionGrant{
+		Token:       sess.Token,
+		Role:        Role(sess.User.Role),
+		DisplayName: auth.DisplayName(sess.User),
+		ExpiresAt:   sess.ExpiresAt,
+	}
 }
 
 func (s *server) Logout(ctx context.Context, _ LogoutRequestObject) (LogoutResponseObject, error) {
@@ -120,10 +150,43 @@ func (s *server) GetMe(ctx context.Context, _ GetMeRequestObject) (GetMeResponse
 		return GetMe401JSONResponse{UnauthorizedJSONResponse{Error: "unauthorized"}}, nil
 	}
 	return GetMe200JSONResponse{
-		Email:   u.Email,
-		Role:    Role(u.Role),
-		Editing: s.content != nil,
+		Email:       u.Email,
+		Role:        Role(u.Role),
+		DisplayName: auth.DisplayName(u),
+		// Edit chrome needs both a configured storage backend and a role
+		// that the content endpoints will actually let through.
+		Editing: s.content != nil && u.CanEdit(),
 	}, nil
+}
+
+func (s *server) ListUsers(ctx context.Context, _ ListUsersRequestObject) (ListUsersResponseObject, error) {
+	caller, ok := sessionUser(ctx)
+	if !ok { // unreachable behind sessionAuth; belt and braces
+		return ListUsers401JSONResponse{UnauthorizedJSONResponse{Error: "unauthorized"}}, nil
+	}
+	members, err := s.store.ListMembers()
+	if err != nil {
+		return nil, err
+	}
+	resp := ListUsers200JSONResponse{}
+	for _, m := range members {
+		name := m.DisplayName
+		if name == "" { // pre-003 account
+			name = auth.DisplayName(store.User{Email: m.Email})
+		}
+		resp.Users = append(resp.Users, struct {
+			DisplayName string             `json:"displayName"`
+			JoinedAt    openapi_types.Date `json:"joinedAt"`
+			Role        Role               `json:"role"`
+			You         bool               `json:"you"`
+		}{
+			DisplayName: name,
+			JoinedAt:    openapi_types.Date{Time: m.CreatedAt},
+			Role:        Role(m.Role),
+			You:         m.ID == caller.ID,
+		})
+	}
+	return resp, nil
 }
 
 // --- content -------------------------------------------------------------------

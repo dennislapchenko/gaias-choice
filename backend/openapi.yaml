@@ -10,8 +10,10 @@ info:
   version: 1.0.0
   description: >-
     Optional progressive-enhancement sidecar for the static site. Auth is an
-    opaque bearer session token issued by /auth/login; content endpoints
-    additionally require the storage backend to be configured (503 otherwise).
+    opaque bearer session token issued by /auth/login or /auth/register
+    (self-registration creates viewer-role users). Content endpoints demand
+    the editor scope (admin/editor role) and additionally require the storage
+    backend to be configured (503 otherwise).
 
 servers:
   - url: /api
@@ -72,22 +74,50 @@ paths:
           description: Session created. Store the token; send it as a bearer.
           content:
             application/json:
-              schema:
-                type: object
-                required: [token, role, expiresAt]
-                properties:
-                  token: { type: string }
-                  role: { $ref: '#/components/schemas/Role' }
-                  expiresAt: { type: string, format: date-time }
+              schema: { $ref: '#/components/schemas/SessionGrant' }
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '429':
-          description: Too many attempts from this address — try again later.
+          $ref: '#/components/responses/RateLimited'
+
+  /auth/register:
+    post:
+      operationId: register
+      summary: Create a viewer account (open self-registration) and sign in
+      tags: [auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, displayName]
+              properties:
+                email: { type: string, maxLength: 254 }
+                password:
+                  type: string
+                  description: At least 8 characters.
+                displayName:
+                  type: string
+                  maxLength: 50
+                  description: Public name shown around the campfire.
+      responses:
+        '200':
+          description: Account created and signed in — same grant as /auth/login.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SessionGrant' }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: That email already has an account.
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Error' }
+        '429':
+          $ref: '#/components/responses/RateLimited'
 
   /auth/logout:
     post:
@@ -118,11 +148,46 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [email, role, editing]
+                required: [email, role, displayName, editing]
                 properties:
                   email: { type: string }
                   role: { $ref: '#/components/schemas/Role' }
+                  displayName: { type: string }
                   editing: { type: boolean }
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /users:
+    get:
+      operationId: listUsers
+      summary: Everyone around the campfire (any signed-in user may look)
+      tags: [auth]
+      security:
+        - session: []
+      responses:
+        '200':
+          description: All registered users, oldest first. Never exposes emails.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [users]
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      required: [displayName, role, joinedAt, you]
+                      properties:
+                        displayName: { type: string }
+                        role: { $ref: '#/components/schemas/Role' }
+                        joinedAt:
+                          type: string
+                          format: date
+                          description: The day the account was created (UTC).
+                        you:
+                          type: boolean
+                          description: True for the row of the caller's own account.
         '401':
           $ref: '#/components/responses/Unauthorized'
 
@@ -132,7 +197,7 @@ paths:
       summary: Read one content/ file (text + opaque sha for concurrency)
       tags: [content]
       security:
-        - session: []
+        - session: [editor]
       parameters:
         - name: path
           in: query
@@ -155,6 +220,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           description: No such file.
           content:
@@ -171,7 +238,7 @@ paths:
       summary: Write one content/ file (a git commit in prod, a working-tree write in dev)
       tags: [content]
       security:
-        - session: []
+        - session: [editor]
       requestBody:
         required: true
         content:
@@ -206,6 +273,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '409':
           description: The file changed since it was read (stale sha) — re-fetch, re-apply, retry.
           content:
@@ -227,14 +296,24 @@ components:
       type: http
       scheme: bearer
       description: >-
-        Opaque session token from POST /auth/login. Enforcement lives in the
-        auth middleware (internal/httpapi), keyed by operation — oapi-codegen
-        does not enforce security requirements itself.
+        Opaque session token from POST /auth/login or /auth/register.
+        Enforcement lives in the auth middleware (internal/httpapi), keyed by
+        operation — oapi-codegen does not enforce security requirements
+        itself. The `editor` scope additionally demands an admin/editor role
+        (403 for viewers).
 
   schemas:
     Role:
       type: string
-      enum: [admin, editor]
+      enum: [admin, editor, viewer]
+    SessionGrant:
+      type: object
+      required: [token, role, displayName, expiresAt]
+      properties:
+        token: { type: string }
+        role: { $ref: '#/components/schemas/Role' }
+        displayName: { type: string }
+        expiresAt: { type: string, format: date-time }
     Error:
       type: object
       required: [error]
@@ -249,6 +328,16 @@ components:
           schema: { $ref: '#/components/schemas/Error' }
     Unauthorized:
       description: Missing, invalid, or expired session token.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Forbidden:
+      description: Signed in, but the account's role may not do this.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    RateLimited:
+      description: Too many attempts from this address — try again later.
       content:
         application/json:
           schema: { $ref: '#/components/schemas/Error' }

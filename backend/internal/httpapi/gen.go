@@ -13,6 +13,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/oapi-codegen/runtime"
+	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
 const (
@@ -23,6 +24,7 @@ const (
 const (
 	Admin  Role = "admin"
 	Editor Role = "editor"
+	Viewer Role = "viewer"
 )
 
 // Valid indicates whether the value is a known member of the Role enum.
@@ -31,6 +33,8 @@ func (e Role) Valid() bool {
 	case Admin:
 		return true
 	case Editor:
+		return true
+	case Viewer:
 		return true
 	default:
 		return false
@@ -45,14 +49,28 @@ type Error struct {
 // Role defines model for Role.
 type Role string
 
+// SessionGrant defines model for SessionGrant.
+type SessionGrant struct {
+	DisplayName string    `json:"displayName"`
+	ExpiresAt   time.Time `json:"expiresAt"`
+	Role        Role      `json:"role"`
+	Token       string    `json:"token"`
+}
+
 // BadRequest defines model for BadRequest.
 type BadRequest = Error
+
+// Forbidden defines model for Forbidden.
+type Forbidden = Error
 
 // Internal defines model for Internal.
 type Internal = Error
 
 // NotConfigured defines model for NotConfigured.
 type NotConfigured = Error
+
+// RateLimited defines model for RateLimited.
+type RateLimited = Error
 
 // Unauthorized defines model for Unauthorized.
 type Unauthorized = Error
@@ -66,6 +84,16 @@ type sessionContextKey string
 // LoginJSONBody defines parameters for Login.
 type LoginJSONBody struct {
 	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+// RegisterJSONBody defines parameters for Register.
+type RegisterJSONBody struct {
+	// DisplayName Public name shown around the campfire.
+	DisplayName string `json:"displayName"`
+	Email       string `json:"email"`
+
+	// Password At least 8 characters.
 	Password string `json:"password"`
 }
 
@@ -91,6 +119,9 @@ type SaveContentJSONBody struct {
 // LoginJSONRequestBody defines body for Login for application/json ContentType.
 type LoginJSONRequestBody LoginJSONBody
 
+// RegisterJSONRequestBody defines body for Register for application/json ContentType.
+type RegisterJSONRequestBody RegisterJSONBody
+
 // SaveContentJSONRequestBody defines body for SaveContent for application/json ContentType.
 type SaveContentJSONRequestBody SaveContentJSONBody
 
@@ -105,6 +136,9 @@ type ServerInterface interface {
 	// Who am I — the frontend's edit-mode probe
 	// (GET /auth/me)
 	GetMe(c *gin.Context)
+	// Create a viewer account (open self-registration) and sign in
+	// (POST /auth/register)
+	Register(c *gin.Context)
 	// Read one content/ file (text + opaque sha for concurrency)
 	// (GET /content/file)
 	GetContentFile(c *gin.Context, params GetContentFileParams)
@@ -117,6 +151,9 @@ type ServerInterface interface {
 	// Scaffold endpoint proving a DB round-trip (feeds BackendBadge)
 	// (GET /hello)
 	GetHello(c *gin.Context)
+	// Everyone around the campfire (any signed-in user may look)
+	// (GET /users)
+	ListUsers(c *gin.Context)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -171,13 +208,26 @@ func (siw *ServerInterfaceWrapper) GetMe(c *gin.Context) {
 	siw.Handler.GetMe(c)
 }
 
+// Register operation middleware
+func (siw *ServerInterfaceWrapper) Register(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.Register(c)
+}
+
 // GetContentFile operation middleware
 func (siw *ServerInterfaceWrapper) GetContentFile(c *gin.Context) {
 
 	var err error
 	_ = err
 
-	c.Set(string(SessionScopes), []string{})
+	c.Set(string(SessionScopes), []string{"editor"})
 
 	// Parameter object where we will unmarshal all parameters from the context
 	var params GetContentFileParams
@@ -203,7 +253,7 @@ func (siw *ServerInterfaceWrapper) GetContentFile(c *gin.Context) {
 // SaveContent operation middleware
 func (siw *ServerInterfaceWrapper) SaveContent(c *gin.Context) {
 
-	c.Set(string(SessionScopes), []string{})
+	c.Set(string(SessionScopes), []string{"editor"})
 
 	for _, middleware := range siw.HandlerMiddlewares {
 		middleware(c)
@@ -241,6 +291,21 @@ func (siw *ServerInterfaceWrapper) GetHello(c *gin.Context) {
 	siw.Handler.GetHello(c)
 }
 
+// ListUsers operation middleware
+func (siw *ServerInterfaceWrapper) ListUsers(c *gin.Context) {
+
+	c.Set(string(SessionScopes), []string{})
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.ListUsers(c)
+}
+
 // GinServerOptions provides options for the Gin server.
 type GinServerOptions struct {
 	BaseURL      string
@@ -271,17 +336,23 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.POST(options.BaseURL+"/auth/login", wrapper.Login)
 	router.POST(options.BaseURL+"/auth/logout", wrapper.Logout)
 	router.GET(options.BaseURL+"/auth/me", wrapper.GetMe)
+	router.POST(options.BaseURL+"/auth/register", wrapper.Register)
 	router.GET(options.BaseURL+"/content/file", wrapper.GetContentFile)
 	router.POST(options.BaseURL+"/content/save", wrapper.SaveContent)
 	router.GET(options.BaseURL+"/healthz", wrapper.GetHealth)
 	router.GET(options.BaseURL+"/hello", wrapper.GetHello)
+	router.GET(options.BaseURL+"/users", wrapper.ListUsers)
 }
 
 type BadRequestJSONResponse Error
 
+type ForbiddenJSONResponse Error
+
 type InternalJSONResponse Error
 
 type NotConfiguredJSONResponse Error
+
+type RateLimitedJSONResponse Error
 
 type UnauthorizedJSONResponse Error
 
@@ -295,11 +366,7 @@ type LoginResponseObject interface {
 	VisitLoginResponse(w http.ResponseWriter) error
 }
 
-type Login200JSONResponse struct {
-	ExpiresAt time.Time `json:"expiresAt"`
-	Role      Role      `json:"role"`
-	Token     string    `json:"token"`
-}
+type Login200JSONResponse SessionGrant
 
 func (response Login200JSONResponse) VisitLoginResponse(w http.ResponseWriter) error {
 
@@ -341,7 +408,7 @@ func (response Login401JSONResponse) VisitLoginResponse(w http.ResponseWriter) e
 	return err
 }
 
-type Login429JSONResponse Error
+type Login429JSONResponse struct{ RateLimitedJSONResponse }
 
 func (response Login429JSONResponse) VisitLoginResponse(w http.ResponseWriter) error {
 
@@ -392,9 +459,10 @@ type GetMeResponseObject interface {
 }
 
 type GetMe200JSONResponse struct {
-	Editing bool   `json:"editing"`
-	Email   string `json:"email"`
-	Role    Role   `json:"role"`
+	DisplayName string `json:"displayName"`
+	Editing     bool   `json:"editing"`
+	Email       string `json:"email"`
+	Role        Role   `json:"role"`
 }
 
 func (response GetMe200JSONResponse) VisitGetMeResponse(w http.ResponseWriter) error {
@@ -419,6 +487,70 @@ func (response GetMe401JSONResponse) VisitGetMeResponse(w http.ResponseWriter) e
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(401)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type RegisterRequestObject struct {
+	Body *RegisterJSONRequestBody
+}
+
+type RegisterResponseObject interface {
+	VisitRegisterResponse(w http.ResponseWriter) error
+}
+
+type Register200JSONResponse SessionGrant
+
+func (response Register200JSONResponse) VisitRegisterResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type Register400JSONResponse struct{ BadRequestJSONResponse }
+
+func (response Register400JSONResponse) VisitRegisterResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type Register409JSONResponse Error
+
+func (response Register409JSONResponse) VisitRegisterResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type Register429JSONResponse struct{ RateLimitedJSONResponse }
+
+func (response Register429JSONResponse) VisitRegisterResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
 	_, err := buf.WriteTo(w)
 	return err
 }
@@ -473,6 +605,20 @@ func (response GetContentFile401JSONResponse) VisitGetContentFileResponse(w http
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(401)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type GetContentFile403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetContentFile403JSONResponse) VisitGetContentFileResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
 	_, err := buf.WriteTo(w)
 	return err
 }
@@ -569,6 +715,20 @@ func (response SaveContent401JSONResponse) VisitSaveContentResponse(w http.Respo
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(401)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type SaveContent403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response SaveContent403JSONResponse) VisitSaveContentResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
 	_, err := buf.WriteTo(w)
 	return err
 }
@@ -690,6 +850,52 @@ func (response GetHello500JSONResponse) VisitGetHelloResponse(w http.ResponseWri
 	return err
 }
 
+type ListUsersRequestObject struct {
+}
+
+type ListUsersResponseObject interface {
+	VisitListUsersResponse(w http.ResponseWriter) error
+}
+
+type ListUsers200JSONResponse struct {
+	Users []struct {
+		DisplayName string `json:"displayName"`
+
+		// JoinedAt The day the account was created (UTC).
+		JoinedAt openapi_types.Date `json:"joinedAt"`
+		Role     Role               `json:"role"`
+
+		// You True for the row of the caller's own account.
+		You bool `json:"you"`
+	} `json:"users"`
+}
+
+func (response ListUsers200JSONResponse) VisitListUsersResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type ListUsers401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response ListUsers401JSONResponse) VisitListUsersResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
 // StrictServerInterface represents all server handlers.
 type StrictServerInterface interface {
 	// Exchange credentials for a session token
@@ -701,6 +907,9 @@ type StrictServerInterface interface {
 	// Who am I — the frontend's edit-mode probe
 	// (GET /auth/me)
 	GetMe(ctx context.Context, request GetMeRequestObject) (GetMeResponseObject, error)
+	// Create a viewer account (open self-registration) and sign in
+	// (POST /auth/register)
+	Register(ctx context.Context, request RegisterRequestObject) (RegisterResponseObject, error)
 	// Read one content/ file (text + opaque sha for concurrency)
 	// (GET /content/file)
 	GetContentFile(ctx context.Context, request GetContentFileRequestObject) (GetContentFileResponseObject, error)
@@ -713,6 +922,9 @@ type StrictServerInterface interface {
 	// Scaffold endpoint proving a DB round-trip (feeds BackendBadge)
 	// (GET /hello)
 	GetHello(ctx context.Context, request GetHelloRequestObject) (GetHelloResponseObject, error)
+	// Everyone around the campfire (any signed-in user may look)
+	// (GET /users)
+	ListUsers(ctx context.Context, request ListUsersRequestObject) (ListUsersResponseObject, error)
 }
 
 type StrictHandlerFunc func(ctx *gin.Context, request any) (any, error)
@@ -851,6 +1063,37 @@ func (sh *strictHandler) GetMe(ctx *gin.Context) {
 	}
 }
 
+// Register operation middleware
+func (sh *strictHandler) Register(ctx *gin.Context) {
+	var request RegisterRequestObject
+
+	var body RegisterJSONRequestBody
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(ctx, err)
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx *gin.Context, request interface{}) (interface{}, error) {
+		return sh.ssi.Register(ctx, request.(RegisterRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "Register")
+	}
+
+	response, err := handler(ctx, request)
+
+	if err != nil {
+		sh.options.HandlerErrorFunc(ctx, err)
+	} else if validResponse, ok := response.(RegisterResponseObject); ok {
+		if err := validResponse.VisitRegisterResponse(ctx.Writer); err != nil {
+			sh.options.ResponseErrorHandlerFunc(ctx, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(ctx, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
 // GetContentFile operation middleware
 func (sh *strictHandler) GetContentFile(ctx *gin.Context, params GetContentFileParams) {
 	var request GetContentFileRequestObject
@@ -949,6 +1192,30 @@ func (sh *strictHandler) GetHello(ctx *gin.Context) {
 		sh.options.HandlerErrorFunc(ctx, err)
 	} else if validResponse, ok := response.(GetHelloResponseObject); ok {
 		if err := validResponse.VisitGetHelloResponse(ctx.Writer); err != nil {
+			sh.options.ResponseErrorHandlerFunc(ctx, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(ctx, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// ListUsers operation middleware
+func (sh *strictHandler) ListUsers(ctx *gin.Context) {
+	var request ListUsersRequestObject
+
+	handler := func(ctx *gin.Context, request interface{}) (interface{}, error) {
+		return sh.ssi.ListUsers(ctx, request.(ListUsersRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "ListUsers")
+	}
+
+	response, err := handler(ctx, request)
+
+	if err != nil {
+		sh.options.HandlerErrorFunc(ctx, err)
+	} else if validResponse, ok := response.(ListUsersResponseObject); ok {
+		if err := validResponse.VisitListUsersResponse(ctx.Writer); err != nil {
 			sh.options.ResponseErrorHandlerFunc(ctx, err)
 		}
 	} else if response != nil {

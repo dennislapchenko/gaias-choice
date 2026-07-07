@@ -107,16 +107,19 @@ src/
     astroText.ts         # all almanac wording, one Vocab per locale
     asset.ts             # withBase/withBaseHtml for BASE_PATH-aware asset URLs
     api.ts               # the whole FE↔BE contract: fetch wrappers, useApi, content types
-    editMode.tsx         # edit-mode gate (#edit + login, session validated via /api/auth/me)
+    session.tsx          # THE login session seam: token, /auth/me validation,
+                         # login/register/signOut, hosts the LoginDialog
+    editMode.tsx         # edit-mode gate — thin session consumer (#edit shortcut)
     contentEditor.tsx    # git-backed editor popup (field edits + draft files)
     types.ts             # SiteConfig, Product, Guide, Page, Theme, AstroEvent, EditRef
   components/            # Layout, Sidebar, AstroCalendar, ThemeSwitcher,
-                         # LanguageSwitcher, ProductCard, CompassCard, CompassRow,
-                         # JournalRow, Upcoming, Markdown, Rating,
-                         # TableOfContents, CopyButton, EditButton, BackendBadge
+                         # LanguageSwitcher, UserButton, LoginDialog, ProductCard,
+                         # CompassCard, CompassRow, JournalRow, Upcoming, Markdown,
+                         # Rating, TableOfContents, CopyButton, EditButton, BackendBadge
   pages/                 # Home, Reviews, ReviewDetail, Compass, Journal,
                          # EntryDetail (shared Compass+Journal detail w/ TOC),
-                         # MarkdownPage (about/contact/etc), Support, NotFound
+                         # MarkdownPage (about/contact/etc), Support,
+                         # Account (the campfire), NotFound
   styles.css             # single hand-written stylesheet (no CSS framework)
 backend/                 # optional Go/gin API sidecar (see "Backend" below)
   openapi.yaml           # THE endpoint contract — endpoints are born here (task be:gen)
@@ -474,17 +477,21 @@ VM is down the live site silently degrades to the static baseline.
   `internal/auth` (users/sessions/roles), `internal/content` (the live-edit
   seam), `internal/httpapi` (gin router, hand-written CORS allowlist,
   middleware, handlers). Endpoints: `/api/healthz`, `/api/hello` (hits counter
-  proving a DB round-trip), `/api/auth/{login,logout,me}`,
-  `/api/content/{file,save}`.
-- **Auth (users/sessions/roles):** **no self-registration.** `users` rows
-  (argon2id password hashes) carry role `admin` or `editor` — both may edit
-  content today; admin-only surface arrives with the portal. `POST
-  /api/auth/login` (per-IP rate-limited) issues an opaque 30-day bearer
-  session token; only its sha256 lands in `sessions`, and logout revokes it.
-  Enforcement is **spec-driven**: operations marked `security: session` in
-  `openapi.yaml` are checked by the session middleware (keyed off the
-  generated `SessionScopes` marker), so protecting a new endpoint = declaring
-  it in the spec. The first admin is bootstrapped from env
+  proving a DB round-trip), `/api/auth/{login,register,logout,me}`,
+  `/api/users` (the campfire listing), `/api/content/{file,save}`.
+- **Auth (users/sessions/roles):** `users` rows (argon2id password hashes,
+  public `display_name`) carry role `admin`, `editor`, or `viewer`.
+  **Self-registration is open** (`POST /api/auth/register`, per-IP
+  rate-limited) and creates **viewers** — real accounts that may sign in and
+  see the community, but **can never touch content**; editors are an admin
+  concern (future portal). Login and register (both per-IP rate-limited)
+  issue an opaque 30-day bearer session token; only its sha256 lands in
+  `sessions`, and logout revokes it. Enforcement is **spec-driven**:
+  operations marked `security: session` in `openapi.yaml` are checked by the
+  session middleware (keyed off the generated `SessionScopes` marker), and
+  the `editor` **scope** (`session: [editor]`, on both content ops) demands
+  an admin/editor role — viewers get 403. Protecting a new endpoint =
+  declaring it in the spec. The first admin is bootstrapped from env
   (`BOOTSTRAP_ADMIN_EMAIL`/`BOOTSTRAP_ADMIN_PASSWORD`) **only while the users
   table is empty**; `task dev` defaults these (`dev@local`/`dev-password`) so
   local editing works with zero setup — nuke `backend/data/` to re-bootstrap.
@@ -502,19 +509,32 @@ VM is down the live site silently degrades to the static baseline.
   them; `LOCAL_CONTENT_DIR` **takes precedence** over any `GITHUB_TOKEN`, so
   dev edits can't leak to the repo. **Neither configured ⇒ content routes
   answer 503 "editing not configured"** and `/api/auth/me` reports
-  `editing: false`, so the FE keeps edit chrome off even for a logged-in
-  user. Validation stays dumb and stateless: `content/`-only path allowlist
+  `editing: false` (it also reports false for viewers — `editing` = storage
+  configured ∧ admin/editor role), so the FE keeps edit chrome off unless a
+  save could actually land. Validation stays dumb and stateless: `content/`-only path allowlist
   (traversal ⇒ 400), 256 KB size cap, and a sha handle for conflict safety
   (mismatch ⇒ 409; the FE re-fetches, re-applies, retries once) — GitHub's
   blob sha in prod, a content hash locally. The BE never parses YAML — that
   happens on the FE.
-- **Edit mode (FE side):** `src/lib/editMode.tsx` — visiting any page with
-  `#edit` prompts for email + password (an empty email signs out and revokes
-  the session), logs in via `/api/auth/login`, stores the session token in
-  `localStorage['gc-session']`, and validates it against `/api/auth/me` on
-  every load (401 ⇒ silent drop; `editing: false` keeps mode off). A wrong
-  password alerts (the owner asked for edit mode explicitly); BE down ⇒ off
-  silently — **readers ship zero editing chrome**. `src/lib/contentEditor.tsx`
+- **Login & accounts (FE side):** `src/lib/session.tsx` is the one session
+  seam — it owns the token (`localStorage['gc-session']`), validates it
+  against `/api/auth/me` on every load (401 ⇒ silent drop), exposes
+  login/register/signOut, and renders `components/LoginDialog.tsx` (centered
+  sign-in / create-account modal over a blurred backdrop). Chrome is gated on
+  `backendUp` (a `/healthz` probe when signed out): `components/UserButton.tsx`
+  (header, left of the palette switcher, mobile included) renders **only when
+  the API answers** — signed out it opens the dialog, signed in it shows the
+  user's initial and links to `/account` (`pages/Account.tsx`): the
+  **campfire** — every registered user seated in a circle around an animated
+  fire (display name + initial avatar; `you` marked; sign-out lives here).
+  BE down ⇒ none of this exists — **readers ship zero account/editing
+  chrome**. Passwords are the stopgap; magic-link (needs SMTP) and WebAuthn
+  are the plan.
+- **Edit mode (FE side):** `src/lib/editMode.tsx` is now a thin consumer of
+  the session: `active` simply mirrors `/api/auth/me`'s role-aware
+  `editing` flag. `#edit` in any URL stays as the deliberate shortcut —
+  signed out it opens the login dialog, signed in it's a no-op.
+  `src/lib/contentEditor.tsx`
   is the editor popup: field edits do **CST-level, byte-preserving YAML
   surgery** with the existing `yaml` dep (only the edited scalar's line
   changes — the Document API would re-fold long block scalars, so the CST

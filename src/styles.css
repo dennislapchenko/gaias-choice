@@ -325,6 +325,217 @@ h1 {
     line-height: 1;
 }
 
+/* ---------- Account button (header) + login dialog + campfire ---------- */
+/* Renders only when the backend answers — readers of the pure static site
+   never see any of this chrome. */
+.user-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border: 1px solid var(--line);
+    background: var(--white);
+    border-radius: 999px;
+    cursor: pointer;
+    line-height: 1;
+    color: var(--ink);
+}
+.user-toggle:hover {
+    background: var(--sand-2);
+    text-decoration: none;
+}
+.user-icon {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+.user-initial {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 999px;
+    background: var(--sage);
+    color: var(--on-accent);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.login-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    background: rgba(43, 42, 38, 0.35);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+}
+.login-dialog {
+    position: relative;
+    width: min(380px, 100%);
+    padding: 28px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+.login-dialog h2 {
+    margin: 0 0 18px;
+    font-size: 1.3rem;
+}
+.login-close {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    padding: 4px;
+    border: 0;
+    background: transparent;
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--ink);
+    cursor: pointer;
+}
+.login-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+.login-field input {
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--sand);
+    font: inherit;
+    font-weight: 400;
+    color: var(--ink);
+}
+.login-field input:focus {
+    outline: 2px solid var(--sage);
+    outline-offset: 1px;
+}
+.login-error {
+    margin: 0 0 12px;
+    color: #b3423f;
+    font-size: 0.9rem;
+}
+.login-submit {
+    width: 100%;
+}
+.login-switch {
+    margin-top: 14px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--sage-dark);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+.login-switch:hover {
+    text-decoration: underline;
+}
+
+/* The campfire circle: the fire sits center, every registered user takes a
+   seat around it (positions computed in Account.tsx). */
+.campfire-scene {
+    position: relative;
+    width: min(560px, 100%);
+    aspect-ratio: 1 / 1;
+    margin: 28px auto;
+}
+.campfire {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 120px;
+    transform: translate(-50%, -50%);
+}
+.campfire-flames {
+    transform-origin: 60px 88px;
+    animation: flame-flicker 2.4s ease-in-out infinite;
+}
+@keyframes flame-flicker {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    40% {
+        transform: scale(1.05, 0.95);
+    }
+    70% {
+        transform: scale(0.96, 1.06);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .campfire-flames {
+        animation: none;
+    }
+}
+.camper {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 96px;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+.camper-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 999px;
+    border: 2px solid var(--white);
+    background: var(--mint);
+    box-shadow: var(--shadow);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--ink);
+}
+.camper:nth-child(3n) .camper-avatar {
+    background: var(--peach);
+}
+.camper:nth-child(3n + 1) .camper-avatar {
+    background: var(--lilac);
+}
+.camper.is-you .camper-avatar {
+    background: var(--sage);
+    color: var(--on-accent);
+}
+.camper-name {
+    font-size: 0.82rem;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+.camper-name em {
+    font-style: normal;
+    color: var(--sage-dark);
+}
+.account-actions {
+    display: flex;
+    justify-content: center;
+}
+@media (max-width: 480px) {
+    .camper {
+        width: 76px;
+    }
+    .camper-avatar {
+        width: 42px;
+        height: 42px;
+        font-size: 1rem;
+    }
+    .camper-name {
+        font-size: 0.74rem;
+    }
+}
+
 /* ---------- Layout ---------- */
 .site-main {
     padding: 32px 0 64px;

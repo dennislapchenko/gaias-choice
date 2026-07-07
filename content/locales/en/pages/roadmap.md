@@ -18,10 +18,10 @@ true. One phase at a time.
 
 - [x] Site scaffolding: content-driven SPA, containerized, deployable
 - [x] Backend foundation: a small Go API with its own database and real
-      accounts (admin/editor logins), running on a little server of its own —
-      and the site works exactly the same without it *(groundwork for a future
-      user portal; nothing reader-facing yet, and we're not promising features
-      before they exist)*
+      accounts, running on a little server of its own — and the site works
+      exactly the same without it. The first reader-facing piece is live:
+      you can sign up from the header and take a seat around the campfire on
+      the account page *(further portal features only once they exist)*
 - [x] Founder course written (playbook, reviews, traffic, money, launch)
 - [x] Disclosure & privacy pages
 - [x] True About page — real facts only (turns out the camper story was ours all along)

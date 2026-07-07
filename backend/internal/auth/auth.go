@@ -1,7 +1,8 @@
-// Package auth implements the portal's login: users with admin/editor roles,
-// argon2id password hashes, and opaque bearer session tokens (30-day TTL,
-// stored hashed). There is no self-registration — the first admin comes from
-// Bootstrap; further users are an admin concern (future portal endpoints).
+// Package auth implements the portal's login: users with admin/editor/viewer
+// roles, argon2id password hashes, and opaque bearer session tokens (30-day
+// TTL, stored hashed). Register creates viewer accounts (open
+// self-registration, rate-limited at the HTTP layer); the first admin comes
+// from Bootstrap; editors are an admin concern (future portal endpoints).
 package auth
 
 import (
@@ -22,6 +23,14 @@ const sessionTTL = 30 * 24 * time.Hour
 // ErrBadCredentials covers unknown email and wrong password alike — callers
 // (and users) never learn which.
 var ErrBadCredentials = errors.New("bad credentials")
+
+// ErrEmailTaken — the address already has an account (register only; login
+// deliberately never reveals this).
+var ErrEmailTaken = errors.New("email already registered")
+
+// ErrInvalid wraps every registration validation failure (bad email shape,
+// weak password, unusable display name) — the HTTP layer maps it to 400.
+var ErrInvalid = errors.New("invalid input")
 
 type Service struct {
 	store *store.Store
@@ -61,7 +70,10 @@ func (s *Service) Bootstrap(email, password string) (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("hash bootstrap password: %w", err)
 	}
-	if err := s.store.CreateUser(normalizeEmail(email), hash, "admin"); err != nil {
+	addr := normalizeEmail(email)
+	// The bootstrap env has no display-name knob; the local-part is a sane
+	// default the admin can change once profile editing exists.
+	if err := s.store.CreateUser(addr, hash, "admin", emailLocalPart(addr)); err != nil {
 		return false, fmt.Errorf("create bootstrap admin: %w", err)
 	}
 	return true, nil
@@ -93,7 +105,51 @@ func (s *Service) Login(email, password string) (Session, error) {
 	if !VerifyPassword(password, user.PasswordHash) {
 		return Session{}, ErrBadCredentials
 	}
+	return s.issueSession(user)
+}
 
+// Register creates a viewer account (open self-registration — the caller is
+// responsible for rate limiting) and signs it straight in. Validation
+// failures wrap ErrInvalid; a known email returns ErrEmailTaken.
+func (s *Service) Register(email, password, displayName string) (Session, error) {
+	_ = s.store.DeleteExpiredSessions(time.Now())
+
+	addr := normalizeEmail(email)
+	if err := checkEmail(addr); err != nil {
+		return Session{}, err
+	}
+	if err := checkPasswordPolicy(password); err != nil {
+		return Session{}, fmt.Errorf("%w: %s", ErrInvalid, err)
+	}
+	name := strings.Join(strings.Fields(displayName), " ") // trim + collapse whitespace
+	if name == "" || len(name) > 50 {
+		return Session{}, fmt.Errorf("%w: display name must be 1–50 characters", ErrInvalid)
+	}
+
+	if _, exists, err := s.store.UserByEmail(addr); err != nil {
+		return Session{}, err
+	} else if exists {
+		return Session{}, ErrEmailTaken
+	}
+	hash, err := HashPassword(password)
+	if err != nil {
+		return Session{}, err
+	}
+	if err := s.store.CreateUser(addr, hash, "viewer", name); err != nil {
+		// Lost the race with a concurrent register for the same address.
+		if strings.Contains(err.Error(), "UNIQUE") {
+			return Session{}, ErrEmailTaken
+		}
+		return Session{}, err
+	}
+	user, _, err := s.store.UserByEmail(addr)
+	if err != nil {
+		return Session{}, err
+	}
+	return s.issueSession(user)
+}
+
+func (s *Service) issueSession(user store.User) (Session, error) {
 	token := randomToken()
 	expires := time.Now().Add(sessionTTL)
 	if err := s.store.CreateSession(hashToken(token), user.ID, expires); err != nil {
@@ -140,4 +196,31 @@ func hashToken(token string) string {
 
 func normalizeEmail(email string) string {
 	return strings.ToLower(strings.TrimSpace(email))
+}
+
+// checkEmail is deliberately shallow — real validation is "the magic link
+// arrived" (future SMTP work). This only rejects obvious garbage.
+func checkEmail(addr string) error {
+	at := strings.Index(addr, "@")
+	if len(addr) > 254 || at < 1 || at == len(addr)-1 || strings.ContainsAny(addr, " \t\n") {
+		return fmt.Errorf("%w: not an email address", ErrInvalid)
+	}
+	return nil
+}
+
+// emailLocalPart is the display-name fallback for accounts that predate
+// display names (and the bootstrap admin's default).
+func emailLocalPart(addr string) string {
+	if at := strings.Index(addr, "@"); at > 0 {
+		return addr[:at]
+	}
+	return addr
+}
+
+// DisplayName resolves what to show for a user, falling back for pre-003 rows.
+func DisplayName(u store.User) string {
+	if u.DisplayName != "" {
+		return u.DisplayName
+	}
+	return emailLocalPart(u.Email)
 }
