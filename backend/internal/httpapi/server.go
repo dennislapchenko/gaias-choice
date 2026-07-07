@@ -291,8 +291,12 @@ func (s *server) UpdateMe(ctx context.Context, req UpdateMeRequestObject) (Updat
 	if !ok { // unreachable behind sessionAuth; belt and braces
 		return UpdateMe401JSONResponse{UnauthorizedJSONResponse{Error: "unauthorized"}}, nil
 	}
-	if req.Body == nil || req.Body.DisplayName == "" || req.Body.Email == "" {
-		return UpdateMe400JSONResponse{BadRequestJSONResponse{Error: "display name and email required"}}, nil
+	if req.Body == nil || req.Body.DisplayName == "" {
+		return UpdateMe400JSONResponse{BadRequestJSONResponse{Error: "display name required"}}, nil
+	}
+	email := "" // empty ⇒ Telegram-only account, no email (UpdateProfile stores NULL)
+	if req.Body.Email != nil {
+		email = *req.Body.Email
 	}
 	avatarURL := ""
 	if req.Body.AvatarUrl != nil {
@@ -302,7 +306,7 @@ func (s *server) UpdateMe(ctx context.Context, req UpdateMeRequestObject) (Updat
 	if req.Body.Password != nil {
 		password = *req.Body.Password
 	}
-	updated, err := s.auth.UpdateProfile(caller.ID, req.Body.DisplayName, req.Body.Email, avatarURL, password)
+	updated, err := s.auth.UpdateProfile(caller.ID, req.Body.DisplayName, email, avatarURL, password)
 	switch {
 	case errors.Is(err, auth.ErrEmailTaken):
 		return UpdateMe409JSONResponse(Error{Error: "email already registered"}), nil

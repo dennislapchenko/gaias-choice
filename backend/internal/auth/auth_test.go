@@ -376,4 +376,25 @@ func TestUpdateProfile(t *testing.T) {
 	if _, err := s.Login("owner2@test.dev", "correct-horse"); err != ErrBadCredentials {
 		t.Fatalf("old password should be dead: %v", err)
 	}
+
+	// A Telegram-only account (no email) can edit its profile with an empty
+	// email — the field is optional, and the empty stays NULL, not ''.
+	code, err := s.RequestTelegram("wanderer")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := s.ConfirmTelegram(code, "wanderer", 42, "Wanderer"); err != nil {
+		t.Fatal(err)
+	}
+	tg, _, err := s.PollTelegram(code)
+	if err != nil {
+		t.Fatal(err)
+	}
+	renamed, err := s.UpdateProfile(tg.User.ID, "Road Wanderer", "", "", "")
+	if err != nil {
+		t.Fatalf("telegram profile update with empty email: %v", err)
+	}
+	if renamed.DisplayName != "Road Wanderer" || renamed.Email != "" {
+		t.Fatalf("telegram update: got %+v, want name renamed and email empty", renamed)
+	}
 }

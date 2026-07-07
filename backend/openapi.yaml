@@ -325,10 +325,13 @@ paths:
           application/json:
             schema:
               type: object
-              required: [displayName, email]
+              required: [displayName]
               properties:
                 displayName: { type: string, maxLength: 50 }
-                email: { type: string, maxLength: 254 }
+                email:
+                  type: string
+                  maxLength: 254
+                  description: Omit or empty for Telegram-only accounts (they have no email).
                 avatarUrl:
                   type: string
                   maxLength: 1024

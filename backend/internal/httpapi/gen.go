@@ -163,7 +163,9 @@ type UpdateMeJSONBody struct {
 	// AvatarUrl Image URL shown around the campfire; omit or empty to clear it.
 	AvatarUrl   *string `json:"avatarUrl,omitempty"`
 	DisplayName string  `json:"displayName"`
-	Email       string  `json:"email"`
+
+	// Email Omit or empty for Telegram-only accounts (they have no email).
+	Email *string `json:"email,omitempty"`
 
 	// Password At least 8 characters. Omit to keep the current password.
 	Password *string `json:"password,omitempty"`

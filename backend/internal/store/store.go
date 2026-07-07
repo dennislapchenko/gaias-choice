@@ -229,17 +229,19 @@ func (s *Store) CreateTelegramUser(tgID int64, displayName string) error {
 }
 
 // UpdateUser changes a user's own-editable profile fields. An empty
-// passwordHash leaves the stored password unchanged.
+// passwordHash leaves the stored password unchanged. NULLIF maps an empty
+// email to NULL — Telegram-only accounts have none, and NULL stays distinct
+// under the UNIQUE index where '' would collide.
 func (s *Store) UpdateUser(id int64, displayName, email, avatarURL, passwordHash string) error {
 	if passwordHash == "" {
 		_, err := s.db.Exec(
-			`UPDATE users SET display_name = ?, email = ?, avatar_url = ? WHERE id = ?`,
+			`UPDATE users SET display_name = ?, email = NULLIF(?, ''), avatar_url = ? WHERE id = ?`,
 			displayName, email, avatarURL, id,
 		)
 		return err
 	}
 	_, err := s.db.Exec(
-		`UPDATE users SET display_name = ?, email = ?, avatar_url = ?, password_hash = ? WHERE id = ?`,
+		`UPDATE users SET display_name = ?, email = NULLIF(?, ''), avatar_url = ?, password_hash = ? WHERE id = ?`,
 		displayName, email, avatarURL, passwordHash, id,
 	)
 	return err

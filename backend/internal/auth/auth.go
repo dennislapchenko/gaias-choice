@@ -158,9 +158,18 @@ func (s *Service) Register(email, password, displayName string) (Session, error)
 // URL, and (if password is non-empty) password. Returns ErrInvalid for bad
 // input, ErrEmailTaken if the new email belongs to a different account.
 func (s *Service) UpdateProfile(userID int64, displayName, email, avatarURL, password string) (store.User, error) {
+	// email is optional: Telegram-only accounts have none. Empty ⇒ stored as
+	// NULL (UpdateUser), so it stays distinct under the UNIQUE index.
 	addr := normalizeEmail(email)
-	if err := checkEmail(addr); err != nil {
-		return store.User{}, err
+	if addr != "" {
+		if err := checkEmail(addr); err != nil {
+			return store.User{}, err
+		}
+		if existing, exists, err := s.store.UserByEmail(addr); err != nil {
+			return store.User{}, err
+		} else if exists && existing.ID != userID {
+			return store.User{}, ErrEmailTaken
+		}
 	}
 	name := strings.Join(strings.Fields(displayName), " ") // trim + collapse whitespace
 	if name == "" || len(name) > 50 {
@@ -168,11 +177,6 @@ func (s *Service) UpdateProfile(userID int64, displayName, email, avatarURL, pas
 	}
 	if len(avatarURL) > 1024 {
 		return store.User{}, fmt.Errorf("%w: avatar URL too long", ErrInvalid)
-	}
-	if existing, exists, err := s.store.UserByEmail(addr); err != nil {
-		return store.User{}, err
-	} else if exists && existing.ID != userID {
-		return store.User{}, ErrEmailTaken
 	}
 
 	passwordHash := "" // "" ⇒ store.UpdateUser leaves the password unchanged
