@@ -1,9 +1,10 @@
+import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getJournal, getJournalTemplate, getUpcomingJournal } from '../lib/content'
 import { usePageHead } from '../lib/head'
 import { useI18n } from '../lib/i18n'
 import JournalRow from '../components/JournalRow'
-import Upcoming from '../components/Upcoming'
+import Upcoming, { UpcomingIcon } from '../components/Upcoming'
 
 const yearOf = (date?: string) => (date ?? '').slice(0, 4)
 
@@ -14,6 +15,7 @@ export default function Journal() {
   usePageHead(t('journal.title'), t('journal.lead'))
   const entries = getJournal(locale) // already date-descending, active only (content.ts)
   const upcoming = getUpcomingJournal(locale)
+  const [upcomingOpen, setUpcomingOpen] = useState(false)
 
   // Distinct years, newest first — the filter chips.
   const years = [...new Set(entries.map((e) => yearOf(e.date)).filter(Boolean))].sort((a, b) =>
@@ -31,7 +33,20 @@ export default function Journal() {
   return (
     <>
       <header className="page-head">
-        <h1>{t('journal.title')}</h1>
+        <div className="page-head-row">
+          <h1>{t('journal.title')}</h1>
+          {upcoming.length > 0 && (
+            <button
+              type="button"
+              className={`user-toggle rail-toggle${upcomingOpen ? ' is-open' : ''}`}
+              aria-expanded={upcomingOpen}
+              aria-label={t('journal.upcomingTitle')}
+              onClick={() => setUpcomingOpen((o) => !o)}
+            >
+              <UpcomingIcon />
+            </button>
+          )}
+        </div>
         <p className="lead">{t('journal.lead')}</p>
       </header>
 
@@ -74,8 +89,8 @@ export default function Journal() {
           title={t('journal.upcomingTitle')}
           note={t('journal.upcomingNote')}
           items={upcoming}
-          contribute={{ value: getJournalTemplate(locale), label: t('journal.templateBtn') }}
-          draft={{ dir: 'journal', detailBase: '/journal' }}
+          open={upcomingOpen}
+          draft={{ dir: 'journal', detailBase: '/journal', template: getJournalTemplate(locale) }}
         />
       </div>
     </>

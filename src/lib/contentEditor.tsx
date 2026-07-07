@@ -4,9 +4,12 @@
 //
 //  - FIELD: edit one YAML scalar in place. Fetches the CURRENT file (never
 //    the stale built-in copy), shows just the scalar, and on Save performs
-//    comment-preserving surgery with the yaml Document API — the whole
-//    updated file + its sha go to /api/content/save. A sha conflict (409)
-//    re-fetches and re-applies once before surfacing.
+//    CST-level byte-preserving surgery — on the whole file for plain YAML
+//    (site.yaml, themes.yaml), or just the `---` frontmatter block for
+//    markdown content files (products/journal/compass), body spliced back
+//    untouched (see FRONTMATTER_RE/applyScalarEdit). The whole updated file +
+//    its sha go to /api/content/save. A sha conflict (409) re-fetches and
+//    re-applies once before surfacing.
 //  - CREATE: the draft composer. Pre-filled template text saved as a NEW
 //    content file (create = save without sha); refuses to overwrite.
 //
@@ -50,21 +53,28 @@ export function useContentEditor(): ContentEditorApi {
   return ctx
 }
 
+// Splits `---`-delimited frontmatter from a markdown file's body, keeping the
+// delimiters themselves so the edited YAML can be spliced back byte-for-byte
+// (content.ts's own parseFrontmatter discards them — it only needs the parsed
+// data, never reconstructs the file). Files with no frontmatter (site.yaml,
+// themes.yaml) don't match, and are treated as one whole YAML document.
+const FRONTMATTER_RE = /^(---\r?\n)([\s\S]*?)(\r?\n---\r?\n?)([\s\S]*)$/
+
 /**
- * Apply one scalar change to file text with true byte preservation: CST-level
- * surgery (Parser → Composer with source tokens → setScalarValue on the ONE
- * token → re-serialize the original token stream). Everything except the
- * edited scalar — comments, folding, quoting, indentation — survives
- * byte-for-byte. (The higher-level Document.toString() would re-fold long
- * block scalars, churning the diff — that's why the CST route.)
+ * Parse+edit ONE scalar in a standalone YAML string via CST-level surgery
+ * (Parser → Composer with source tokens → setScalarValue on the ONE token →
+ * re-serialize the original token stream). Everything except the edited
+ * scalar — comments, folding, quoting, indentation — survives byte-for-byte.
+ * (The higher-level Document.toString() would re-fold long block scalars,
+ * churning the diff — that's why the CST route.)
  */
-function applyScalarEdit(fileText: string, ref: EditRef, newValue: string): string {
-  const tokens = Array.from(new Parser().parse(fileText))
+function editYamlScalar(yamlText: string, path: EditRef['path'], newValue: string): string {
+  const tokens = Array.from(new Parser().parse(yamlText))
   const docs = Array.from(new Composer({ keepSourceTokens: true }).compose(tokens))
   if (docs.length !== 1) throw new Error('expected exactly one YAML document')
   const doc = docs[0]
   if (doc.errors.length > 0) throw new Error(`source YAML parse failed: ${doc.errors[0].message}`)
-  const node = doc.getIn(ref.path, true)
+  const node = doc.getIn(path, true)
   if (!isScalar(node) || !node.srcToken) throw new Error('path is not an editable scalar')
   CST.setScalarValue(node.srcToken, newValue)
   const out = tokens.map((t) => CST.stringify(t)).join('')
@@ -72,8 +82,21 @@ function applyScalarEdit(fileText: string, ref: EditRef, newValue: string): stri
   // and confirm the edit actually landed at the path.
   const check = parseDocument(out)
   if (check.errors.length > 0) throw new Error(`edited YAML re-parse failed: ${check.errors[0].message}`)
-  if (String(check.getIn(ref.path)) !== newValue) throw new Error('edit did not apply cleanly')
+  if (String(check.getIn(path)) !== newValue) throw new Error('edit did not apply cleanly')
   return out
+}
+
+/**
+ * Apply one scalar change to a whole file's text. Plain YAML files
+ * (site.yaml, themes.yaml) are edited whole; markdown content files
+ * (products/journal/compass) have only their frontmatter block edited, with
+ * the body spliced back untouched either side.
+ */
+function applyScalarEdit(fileText: string, ref: EditRef, newValue: string): string {
+  const fm = FRONTMATTER_RE.exec(fileText)
+  if (!fm) return editYamlScalar(fileText, ref.path, newValue)
+  const [, open, yamlText, close, body] = fm
+  return `${open}${editYamlScalar(yamlText, ref.path, newValue)}${close}${body}`
 }
 
 export function ContentEditorProvider({ children }: { children: ReactNode }) {
@@ -89,7 +112,8 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       token: token ?? undefined,
     })
       .then((file) => {
-        const doc = parseDocument(file.content)
+        const fm = FRONTMATTER_RE.exec(file.content)
+        const doc = parseDocument(fm ? fm[2] : file.content)
         const cur = doc.getIn(ref.path)
         setState({
           title,

@@ -28,7 +28,6 @@ const en = {
   "reviews.lead": "Every item here has ridden with us for real miles — tested for materials, safety, and how it holds up to life on the road with a baby.",
   "reviews.filterAriaLabel": "Filter by category",
   "reviews.allCategory": "All",
-  "reviews.templateBtn": "Contribute!",
   "reviews.upcomingTitle": "In the works",
   "reviews.upcomingNote": "Gear we're testing next — queued, not yet reviewed.",
 
@@ -46,7 +45,6 @@ const en = {
   "journal.tag": "Journal",
   "journal.allYears": "All",
   "journal.yearsAriaLabel": "Filter by year",
-  "journal.templateBtn": "Contribute!",
   "journal.empty": "No entries yet — the first notes are on their way.",
   "journal.upcomingTitle": "In the works",
   "journal.upcomingNote": "Entries we're living right now — queued, not yet written.",
@@ -78,17 +76,16 @@ const en = {
 
   "login.open": "Sign in",
   "login.signIn": "Sign in",
-  "login.createAccount": "Create account",
   "login.email": "Email",
   "login.password": "Password",
-  "login.displayName": "Display name",
   "login.submitSignIn": "Sign in",
-  "login.submitRegister": "Join the circle",
-  "login.switchToRegister": "New here? Create an account",
-  "login.switchToSignIn": "Already have an account? Sign in",
+  "login.sendLink": "Email me a sign-in link",
+  "login.sent": "Check your inbox — the link works once and expires in 15 minutes.",
+  "login.usePassword": "Sign in with a password instead",
+  "login.useMagic": "Email me a link instead",
+  "login.magicUnavailable": "Sign-in links aren't available right now — try again later.",
   "login.badCredentials": "Wrong email or password.",
-  "login.emailTaken": "That email is already registered.",
-  "login.invalid": "Check the fields — the password needs at least 8 characters.",
+  "login.invalid": "Check the fields and try again.",
   "login.tooMany": "Too many attempts — try again a bit later.",
   "login.failed": "Something went wrong — try again.",
   "login.close": "Close",
@@ -155,6 +152,8 @@ const en = {
   "editor.copyAria": "Copy draft",
   "editor.queueAria": "Queue a new upcoming post",
   "editor.queuePrompt": "Title of the upcoming post:",
+  "editor.stateTitle": "Post state",
+  "editor.stateAria": "Edit post state",
 } satisfies Record<string, string>;
 
 export default en;

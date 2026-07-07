@@ -1408,10 +1408,12 @@ a.respected-card:hover {
    then list its class alongside the others in the sticky/mobile/wide-screen
    rules below so it behaves like the rest of the family. The page header
    stays full-width above the grid.
-   Account's rail (`.account-fields`) additionally hides itself below 900px
-   (see its own rule further down) unless toggled open via `.account-header`'s
-   `.account-fields-toggle` — everything else about its position here (order,
-   margin) is shared with `.upcoming`/`.epic-rail` as usual. */
+   Account's rail (`.account-fields`) and the Upcoming rail (`.upcoming`)
+   additionally hide themselves below 900px (see the `.rail-toggle` rule
+   further down) unless toggled open via a `.page-head-row`'s `.rail-toggle`
+   button — everything else about their position here (order, margin) is
+   shared with `.epic-rail` as usual, which has no toggle and stays the old
+   always-visible-above-content mobile behavior. */
 .reviews-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) clamp(240px, 24vw, 300px);
@@ -1574,14 +1576,15 @@ a.respected-card:hover {
     line-height: 1.55;
 }
 
-/* ---------- Account header row + mobile fields toggle (/account) ---------- */
-/* The page title always sits in a flex row so the toggle button has a home;
-   the button itself (`.account-fields-toggle`) is the same pill-shaped
-   `.user-toggle` used by the language/account header buttons — consistent
-   header chrome, not a one-off control — but only takes effect below 900px:
-   above that, .account-fields is always visible as the right rail (see the
-   .reviews-layout rules above), so the toggle has nothing to do and hides. */
-.account-header {
+/* ---------- Page-head row + mobile rail toggle (Account, Reviews, Journal) ---------- */
+/* The page title sits in a flex row so a toggle button has a home next to it;
+   the button itself (`.rail-toggle`) is the same pill-shaped `.user-toggle`
+   used by the language/account header buttons — consistent header chrome,
+   not a one-off control per page — but only takes effect below 900px: above
+   that, the rail it opens (.account-fields / .upcoming) is always visible in
+   its normal `.reviews-layout` position (see the rules above), so the toggle
+   has nothing to do and hides. */
+.page-head-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1592,15 +1595,16 @@ a.respected-card:hover {
     border-color: var(--sage);
     color: var(--on-accent);
 }
-.account-fields-toggle {
+.rail-toggle {
     display: none;
 }
 
-/* Right rail on desktop (a `.reviews-layout` sticky child, like
-   .upcoming/.epic-rail — always visible). Below 900px it hides by default
-   and only shows once `.account-header`'s toggle adds `.is-open` (the
-   `open` prop on <AccountFields>) — this is what keeps the campfire scene in
-   its normal spot on mobile instead of a persistent rail shoving it down. */
+/* Right rail on desktop (a `.reviews-layout` sticky child — always visible).
+   Below 900px both hide by default and only show once their page's
+   `.page-head-row` toggle adds `.is-open` (the `open` prop each component
+   takes) — this is what keeps the campfire scene / card grid in its normal
+   spot on mobile instead of a persistent rail shoving it down. `.epic-rail`
+   has no toggle and keeps the older always-visible-above-content behavior. */
 .account-fields {
     display: flex;
     flex-direction: column;
@@ -1608,13 +1612,15 @@ a.respected-card:hover {
     margin: 0 0 26px;
 }
 @media (max-width: 900px) {
-    .account-fields-toggle {
+    .rail-toggle {
         display: inline-flex;
     }
-    .account-fields {
+    .account-fields,
+    .upcoming {
         display: none;
     }
-    .account-fields.is-open {
+    .account-fields.is-open,
+    .upcoming.is-open {
         display: flex;
     }
 }
@@ -2114,6 +2120,12 @@ a.respected-card:hover {
     width: 15px;
     height: 15px;
 }
+/* Sits inline right after the "In the works" tag (ReviewDetail/EntryDetail) —
+   both are inline-level, so this just needs its own gap + baseline nudge. */
+.wip-edit {
+    margin-left: 6px;
+    vertical-align: middle;
+}
 
 /* In-place content editor (src/lib/contentEditor.tsx). Mounted once at the
    app root, above <Routes>, so it survives client-side navigation. Edit-mode
@@ -2255,14 +2267,6 @@ a.respected-card:hover {
 /* The page reuses the Reviews shell wholesale (.reviews-layout/.reviews-main,
    .filters chips for years, the .upcoming rail) — the two pages are
    deliberately homogeneous. Only the entry rows are journal-specific. */
-
-/* The copy-template "Contribute!" action button (labelled CopyButton) — lives
-   at the bottom of the .upcoming rail on /journal and /reviews (the rail's
-   flex gap spaces it). */
-.copy-template-btn {
-    margin: 0;
-    padding: 9px 14px;
-}
 
 .journal-list {
     display: flex;

@@ -71,8 +71,9 @@ content/                 # ALL editable content (no code)
   shared/
     diagrams/*.svg       # diagram templates ({{slot}} tokens) — geometry authored once,
                          # reused by every locale (see Compass below)
-    <kind>-template.<locale>.md   # blank scaffolds behind the "Contribute!" copy
-                                  # buttons (journal- on /journal, review- on /reviews)
+    <kind>-template.<locale>.md   # blank scaffolds seeding new drafts (journal- on
+                                  # /journal, review- on /reviews — see the ＋ button
+                                  # in the Live-edit row of development.md)
   themes.yaml            # color palettes (tag + label + default + colors) — not localized
 context/                 # authoring context (NOT bundled into the site)
   persona-context.md     # the author's voice + the family's REAL biography — read before
@@ -123,7 +124,7 @@ src/
   styles.css             # single hand-written stylesheet (no CSS framework)
 backend/                 # optional Go/gin API sidecar (see "Backend" below)
   openapi.yaml           # THE endpoint contract — endpoints are born here (task be:gen)
-  main.go, internal/{config,store,auth,content,httpapi}, Dockerfile, go.mod
+  main.go, internal/{config,store,auth,mail,content,httpapi}, Dockerfile, go.mod
 compose.dev.yaml         # `task dev` stack: web (Vite HMR) + api (air hot reload)
 deploy/                  # live VM deploy stack: compose.yaml (api+Caddy), Caddyfile,
                          # README (target), infra-log.md (provisioning record)
@@ -167,8 +168,9 @@ Authoring procedures (frontmatter schemas, voice rules, step-by-steps) live in
 (filter chip), `rating` 0–5, optional `price`/`affiliateUrl` (rendered
 `rel=sponsored`)/`image`/`tags`/`state`, `excerpt`, `date`. Every review
 follows the universal six-section body structure whose canonical source is
-`content/shared/review-template.<locale>.md` — the scaffold the "Contribute!"
-button on `/reviews` copies to the clipboard.
+`content/shared/review-template.<locale>.md` — the scaffold an editor's ＋
+button (on the `Upcoming` rail, edit mode only — see the Live-edit row of
+`development.md`) seeds a new draft from.
 
 **Post states (reviews + Journal):** a post is `state: active` (absent =
 active) or `state: upcoming`. An upcoming post is a real content file that
@@ -178,9 +180,11 @@ the "in the works" rail (shared `Upcoming` component; `getUpcomingProducts`/
 wins, so en-only review stubs appear on every locale's rail). Flipping the
 frontmatter to active moves it into the main spot — the file never moves.
 Detail getters don't filter by state, so a WIP post is previewable at its real
-URL (detail pages show an "In the works" tag). The contribute templates start
-with `state: upcoming`, so drafts arrive queued, not live. Compass chapters
-and pages ignore `state`.
+URL, where an admin/editor gets an inline edit button right on the "In the
+works" tag to flip `state` to `active` (session-authed, live-edit seam — see
+the Live-edit row of `development.md`); readers just see the tag. New drafts
+queued via the ＋ button start `state: upcoming`, so they arrive queued, not
+live. Compass chapters and pages ignore `state`.
 
 **Compass** (`/compass`, `compass/<epic>/*.md`) — the site's **courses**
 section (user-facing "Compass" / «Путь») and the one **openly
@@ -224,9 +228,8 @@ title-only in the "in the works" rail; idea titles are localized by giving the
 ru stub the same slug); no per-entry wiring. The listing page shares the
 Reviews shell (same layout, year chips where Reviews has category chips via
 `?year=`); entries list as plain text rows and open through
-`EntryDetail`. A "Contribute!" button on `/journal`
-copies `content/shared/journal-template.<locale>.md`. The landing page
-surfaces it too: a hero "Read the Journal" button and a "Fresh from the
+`EntryDetail`. The landing page
+surfaces the section too: a hero "Read the Journal" button and a "Fresh from the
 Journal" section (latest 3 rows) in `Home.tsx`. The seed
 entry (`journal/driving-with-a-toddler.md`) is an explicit fill-in template,
 not an invented trip.
@@ -474,10 +477,15 @@ VM is down the live site silently degrades to the static baseline.
   Layout: `main.go` is wiring only; `internal/config` (env), `internal/store`
   (SQLite via `modernc.org/sqlite`, pure-Go so `CGO_ENABLED=0` stays static;
   WAL; hand-rolled embedded-`.sql` migration runner; **all SQL lives here**),
-  `internal/auth` (users/sessions/roles), `internal/content` (the live-edit
-  seam), `internal/httpapi` (gin router, hand-written CORS allowlist,
+  `internal/auth` (users/sessions/roles/magic-link tokens), `internal/mail`
+  (the magic-link email over stdlib `net/smtp` — a transactional SMTP
+  provider, deliberately not a self-hosted server; `SMTP_HOST` unset ⇒ nil
+  mailer ⇒ `/api/auth/magic` answers 503, `SMTP_HOST=log` ⇒ emails print to
+  stdout, the dev loop), `internal/content` (the live-edit seam),
+  `internal/httpapi` (gin router, hand-written CORS allowlist,
   middleware, handlers). Endpoints: `/api/healthz`, `/api/hello` (hits counter
-  proving a DB round-trip), `/api/auth/{login,register,logout,me}`,
+  proving a DB round-trip), `/api/auth/magic` + `/api/auth/magic/verify` (the
+  passwordless login), `/api/auth/{login,register,logout,me}`,
   `/api/users` (the campfire listing), `PUT /api/users/me` (self-service
   profile edit — display name, email, avatar URL, optional password
   change), `/api/content/{file,save}`.
@@ -551,10 +559,17 @@ VM is down the live site silently degrades to the static baseline.
   is the editor popup: field edits do **CST-level, byte-preserving YAML
   surgery** with the existing `yaml` dep (only the edited scalar's line
   changes — the Document API would re-fold long block scalars, so the CST
-  route is load-bearing, not a style choice), and the draft composer creates
-  new content files (save without sha). Zone addresses (`EditRef`) come only
-  from provenance getters in `src/lib/content.ts` (locale fallback means RU
-  pages often edit the EN file — components never guess paths).
+  route is load-bearing, not a style choice) — on the whole file for plain
+  YAML (`site.yaml`, `themes.yaml`), or just the `---` frontmatter block for
+  markdown content files, body spliced back untouched (products/journal —
+  the only field wired today is the `state` toggle on their detail pages'
+  "In the works" tag, addressed by `getProductFile`/`getJournalFile` in
+  `content.ts`; adding a new frontmatter field means calling `openField`
+  with that same file + a different `path`, no editor-side change needed).
+  The draft composer creates new content files (save without sha). Zone
+  addresses (`EditRef`) come only from provenance getters in
+  `src/lib/content.ts` (locale fallback means RU pages often edit the EN
+  file — components never guess paths).
 - **Storage (D9):** SQLite at `${DATA_DIR}/gaia.db`. Local: `backend/data/`,
   git-ignored, nuke to reset. Server: a **host bind mount**
   `/srv/gaias-choice/data` so backups are a host concern (`sqlite3 … .backup`,
@@ -628,8 +643,8 @@ describes the phase, not the history):
   "fix" them into consumer content; retelling them from lived experience is a
   roadmap milestone. The launch checklist carries an open item to label each
   reader course's provenance at its top.
-- **Journal:** one seed entry — an explicit fill-in template — plus the
-  copy-a-blank-template button; a couple of `state: upcoming` stubs queued.
+- **Journal:** one seed entry — an explicit fill-in template — plus a couple
+  of `state: upcoming` stubs queued.
 - **Reviews:** the six *active* `products/*` are still **AI placeholder
   reviews** with fake affiliate URLs (`EXAMPLE…`) — slated for
   deletion/replacement per the launch checklist. Never add a real affiliate

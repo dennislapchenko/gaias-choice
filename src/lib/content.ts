@@ -179,6 +179,23 @@ function entryFor<T extends Entry>(
 }
 
 /**
+ * Repo-relative path to the file that actually supplied a product/journal
+ * entry — locale-first, falling back to en (mirrors entryFor's fallback).
+ * Used to build an EditRef for the live-edit field editor (lib/contentEditor.tsx).
+ * Products and journal entries are flat (unlike Compass's epic subfolders),
+ * so the path is a plain convention rather than something tracked per-entry.
+ */
+function fileRefFor<T extends Entry>(
+  grouped: Partial<Record<Locale, T[]>>,
+  locale: Locale,
+  slug: string,
+  kind: 'products' | 'journal',
+): string {
+  const inLocale = (grouped[locale] ?? []).some((e) => e.slug === slug)
+  return `content/locales/${inLocale ? locale : 'en'}/${kind}/${slug}.md`
+}
+
+/**
  * The `state: upcoming` posts for the "in the works" rail. Unlike
  * collectionFor's all-or-nothing fallback, this merges en + the locale BY SLUG
  * (locale wins) — upcoming review stubs live in en/ only (brand names are
@@ -296,6 +313,12 @@ export const getUpcomingJournal = (locale: Locale): JournalEntry[] =>
 export const getProduct = (locale: Locale, slug: string) => entryFor(productsByLocale, locale, slug)
 export const getCompassEntry = (locale: Locale, slug: string) => entryFor(compassByLocale, locale, slug)
 export const getJournalEntry = (locale: Locale, slug: string) => entryFor(journalByLocale, locale, slug)
+
+/** EditRef.file for a product/journal entry — see fileRefFor. */
+export const getProductFile = (locale: Locale, slug: string): string =>
+  fileRefFor(productsByLocale, locale, slug, 'products')
+export const getJournalFile = (locale: Locale, slug: string): string =>
+  fileRefFor(journalByLocale, locale, slug, 'journal')
 export const getPage = (locale: Locale, slug: string) => entryFor(pagesByLocale, locale, slug)
 
 /** The blank Journal-entry template for the /journal "Contribute!" button (en fallback). */

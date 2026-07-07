@@ -1,10 +1,10 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getProducts, getReviewTemplate, getUpcomingProducts } from '../lib/content'
 import { usePageHead } from '../lib/head'
 import { useI18n } from '../lib/i18n'
 import ProductCard from '../components/ProductCard'
-import Upcoming from '../components/Upcoming'
+import Upcoming, { UpcomingIcon } from '../components/Upcoming'
 
 const ALL = 'All'
 
@@ -13,6 +13,7 @@ export default function Reviews() {
   usePageHead(t('reviews.title'), t('reviews.lead'))
   const products = getProducts(locale) // active only; WIP posts feed the rail below
   const upcoming = getUpcomingProducts(locale)
+  const [upcomingOpen, setUpcomingOpen] = useState(false)
   const categories = useMemo(
     () => [ALL, ...Array.from(new Set(products.map((p) => p.category))).sort()],
     [products],
@@ -31,7 +32,20 @@ export default function Reviews() {
   return (
     <>
       <header className="page-head">
-        <h1>{t('reviews.title')}</h1>
+        <div className="page-head-row">
+          <h1>{t('reviews.title')}</h1>
+          {upcoming.length > 0 && (
+            <button
+              type="button"
+              className={`user-toggle rail-toggle${upcomingOpen ? ' is-open' : ''}`}
+              aria-expanded={upcomingOpen}
+              aria-label={t('reviews.upcomingTitle')}
+              onClick={() => setUpcomingOpen((o) => !o)}
+            >
+              <UpcomingIcon />
+            </button>
+          )}
+        </div>
         <p className="lead">{t('reviews.lead')}</p>
       </header>
 
@@ -62,8 +76,8 @@ export default function Reviews() {
           title={t('reviews.upcomingTitle')}
           note={t('reviews.upcomingNote')}
           items={upcoming}
-          contribute={{ value: getReviewTemplate(locale), label: t('reviews.templateBtn') }}
-          draft={{ dir: 'products', detailBase: '/reviews' }}
+          open={upcomingOpen}
+          draft={{ dir: 'products', detailBase: '/reviews', template: getReviewTemplate(locale) }}
         />
       </div>
     </>

@@ -34,8 +34,9 @@ pick controls list position. Markdown is GFM (task-list checkboxes render).
 ## Add a product review → `content/locales/en/products/<slug>.md`
 
 **The canonical scaffold is `content/shared/review-template.<locale>.md`** —
-the same file the "Contribute!" button on `/reviews` copies to the clipboard
-(en + ru; `getReviewTemplate` in `content.ts`). Start every review from it.
+the same file an editor's ＋ button (on the Upcoming rail, edit mode only)
+seeds a new draft from (en + ru; `getReviewTemplate` in `content.ts`). Start
+every review from it.
 Frontmatter: `title`, `state` (`upcoming` while it's queued/WIP — the
 template's default; flip to `active` or delete the line to publish, see "The
 'in the works' queue" under Journal), `category` (must match the locale's
@@ -137,23 +138,29 @@ her voice (persona-context).
 
 **The "in the works" queue:** an unfinished post is a real content file with
 `state: upcoming` in its frontmatter — it renders title-only in the right-hand
-rail instead of the main listing (reviews and journal both). To queue an idea,
-copy the contribute template (it already carries `state: upcoming`) into
-`journal/` (or `products/`); when the post is finished, flip the line to
-`state: active` (or delete it) — the file never moves. Review stub titles are
-brand names (do-not-translate), so those stubs live in `en/products/` only and
-show on every locale's rail; journal idea titles are localized prose — give
-the ru stub the **same slug** as the en one and its title wins on the ru rail.
+rail instead of the main listing (reviews and journal both). To queue an idea
+as an editor, use the ＋ button under the Upcoming rail (edit mode only — see
+the Live-edit row in `development.md`): it prompts for a title and creates
+`journal/<slug>.md` (or `products/<slug>.md`) from the kind's template, which
+already carries `state: upcoming`. Editing by hand works too (copy the
+template into `journal/`/`products/` directly). When the post is finished,
+flip the `state` line to `active` (or delete it) — either by hand, or via the
+same edit-mode pencil button on the post's own "In the works" tag (its detail
+page, session-authed, one field) — the file never moves either way. Review
+stub titles are brand names (do-not-translate), so those stubs live in
+`en/products/` only and show on every locale's rail; journal idea titles are
+localized prose — give the ru stub the **same slug** as the en one and its
+title wins on the ru rail.
 
-**The "Contribute!" button** on `/journal` copies a generic, topic-agnostic
-scaffold carrying **both shapes' heading sets** (the author keeps one, deletes
-the other) — the single source is `content/shared/journal-template.<locale>.md`
-(edit that file to change what gets copied; en is the fallback). `/reviews`
-has the same button copying the review scaffold — see "Add a product review"
-above; the shared mechanics are the "Contribute!" row in `development.md`.
-The seed entry `journal/driving-with-a-toddler.md` (en+ru) is a
-**topic-flavoured template the owner fills in** — kept as an explicit,
-prompt-driven skeleton (honest: it says so), not a fabricated trip.
+**The Journal template** (`content/shared/journal-template.<locale>.md`,
+`getJournalTemplate` in `content.ts`) is a generic, topic-agnostic scaffold
+carrying **both shapes' heading sets** (the author keeps one, deletes the
+other) — edit that file to change what a new draft starts from (en is the
+fallback). `content/shared/review-template.<locale>.md` is the equivalent for
+reviews — see "Add a product review" above. The seed entry
+`journal/driving-with-a-toddler.md` (en+ru) is a **topic-flavoured template
+the owner fills in** — kept as an explicit, prompt-driven skeleton (honest:
+it says so), not a fabricated trip.
 
 ## Visuals inside guides (tables, diagrams, charts) — the house pattern
 

@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import CopyButton from "./CopyButton";
 import EditButton from "./EditButton";
 import { useContentEditor } from "../lib/contentEditor";
 import { useEditMode } from "../lib/editMode";
@@ -15,43 +14,46 @@ import { slugify } from "../lib/content";
  * A post leaves the rail when its frontmatter flips to `state: active` (or
  * the line is deleted) — the file itself never moves.
  *
- * `contribute` renders the "Contribute!" copy-a-template button under the
- * list (for anonymous contributors — always visible). The templates carry
- * `state: upcoming`, so contributed posts arrive queued, not live.
+ * Right rail on desktop (always visible, like `.epic-rail`); below 900px it's
+ * hidden unless `open` — the caller wires a `.rail-toggle` button next to its
+ * page title, same pattern as Account's field-edit panel (see `.upcoming` /
+ * `.rail-toggle` in styles.css).
  *
  * In EDIT MODE only (useEditMode — authed admin, see lib/editMode.tsx), with
  * `draft` set: each row becomes a link to the post's real URL (the WIP
  * preview — detail getters don't filter by state), and a ＋ button under the
  * list queues a NEW upcoming post — prompts for a title, then opens the draft
- * composer with the contribute template (already `state: upcoming`) saved as
- * a new file in `draft.dir`. Readers never see either.
+ * composer with `draft.template` (already carrying `state: upcoming`) saved
+ * as a new file under `draft.dir`. Readers never see either. The old
+ * anonymous "Contribute!" copy-template button is gone — queuing a draft is
+ * now an edit-mode-only action, since the ＋ button covers it directly.
  */
 export default function Upcoming({
   title,
   note,
   items,
-  contribute,
+  open,
   draft,
 }: {
   title: string;
   note: string;
   items: { slug: string; title: string }[]; // upcoming posts — the title is all readers see
-  contribute?: { value: string; label: string };
-  draft?: { dir: "products" | "journal"; detailBase: "/reviews" | "/journal" };
+  open: boolean;
+  draft?: { dir: "products" | "journal"; detailBase: "/reviews" | "/journal"; template: string };
 }) {
   const editor = useContentEditor();
   const { active: editModeOn } = useEditMode();
   const { locale, t } = useI18n();
-  if (items.length === 0 && !contribute) return null;
+  if (items.length === 0 && !(editModeOn && draft)) return null;
 
   const queueDraft = () => {
-    if (!draft || !contribute) return;
+    if (!draft) return;
     const name = window.prompt(t("editor.queuePrompt"))?.trim();
     if (!name) return;
     editor.openDraft({
       title: name,
       path: `content/locales/${locale}/${draft.dir}/${slugify(name)}.md`,
-      initialValue: contribute.value.replace(
+      initialValue: draft.template.replace(
         /^title: ".*"$/m,
         `title: "${name.replace(/"/g, '\\"')}"`,
       ),
@@ -60,7 +62,7 @@ export default function Upcoming({
   };
 
   return (
-    <section className="upcoming" aria-label={title}>
+    <section className={`upcoming${open ? " is-open" : ""}`} aria-label={title}>
       <p className="side-label upcoming-label">{title}</p>
       <p className="upcoming-note">{note}</p>
       <ul className="upcoming-list">
@@ -78,7 +80,7 @@ export default function Upcoming({
           </li>
         ))}
       </ul>
-      {editModeOn && draft && contribute && (
+      {editModeOn && draft && (
         <EditButton
           className="upcoming-edit"
           icon="plus"
@@ -86,7 +88,27 @@ export default function Upcoming({
           onClick={queueDraft}
         />
       )}
-      {contribute && <CopyButton value={contribute.value} label={contribute.label} className="copy-template-btn" />}
     </section>
+  );
+}
+
+// The mobile title-line toggle icon for the Upcoming rail (a small clock —
+// "in the works" — distinct from EditButton's pencil/plus so it doesn't read
+// as an edit action). Shared by Reviews.tsx and Journal.tsx.
+export function UpcomingIcon() {
+  return (
+    <svg
+      className="user-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 7.5V12l3 2" />
+    </svg>
   );
 }

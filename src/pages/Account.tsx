@@ -42,17 +42,18 @@ export default function Account() {
   }
 
   // AccountFields is always mounted — the right rail on desktop (like
-  // Reviews/Journal/Compass), reachable only via the .account-header title-
-  // line toggle on mobile (see the .account-fields-toggle CSS: hidden above
-  // 900px, and .account-fields itself is display:none below 900px unless
-  // `fieldsOpen` adds `.is-open`). One tree, breakpoint entirely in CSS.
+  // Reviews/Journal/Compass), reachable only via the .page-head-row title-
+  // line toggle on mobile (see the .rail-toggle CSS: hidden above 900px, and
+  // .account-fields itself is display:none below 900px unless `fieldsOpen`
+  // adds `.is-open`). One tree, breakpoint entirely in CSS — same pattern
+  // Reviews/Journal now share for their own Upcoming rail toggle.
   return (
     <section className="account-page">
-      <div className="account-header">
+      <div className="page-head-row">
         <h1>{t('account.title')}</h1>
         <button
           type="button"
-          className={`user-toggle account-fields-toggle${fieldsOpen ? ' is-open' : ''}`}
+          className={`user-toggle rail-toggle${fieldsOpen ? ' is-open' : ''}`}
           aria-expanded={fieldsOpen}
           aria-label={t('account.fields.title')}
           onClick={() => setFieldsOpen((o) => !o)}

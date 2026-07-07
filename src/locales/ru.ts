@@ -29,7 +29,6 @@ const ru: Record<keyof typeof en, string> = {
   "reviews.lead": "Каждая вещь здесь проехала с нами реальные километры — мы проверили материалы, безопасность и то, как она выдерживает дорожную жизнь с младенцем.",
   "reviews.filterAriaLabel": "Фильтр по категории",
   "reviews.allCategory": "Все",
-  "reviews.templateBtn": "Сделай вклад!",
   "reviews.upcomingTitle": "В работе",
   "reviews.upcomingNote": "Вещи, которые тестируем следующими, — в очереди, обзора пока нет.",
 
@@ -46,7 +45,6 @@ const ru: Record<keyof typeof en, string> = {
   "journal.tag": "Заметка",
   "journal.allYears": "Все годы",
   "journal.yearsAriaLabel": "Фильтр по годам",
-  "journal.templateBtn": "Сделай вклад!",
   "journal.empty": "Пока пусто — первые записи уже в пути.",
   "journal.upcomingTitle": "В работе",
   "journal.upcomingNote": "Заметки, которые мы сейчас проживаем, — в очереди, текста пока нет.",
@@ -78,17 +76,16 @@ const ru: Record<keyof typeof en, string> = {
 
   "login.open": "Войти",
   "login.signIn": "Вход",
-  "login.createAccount": "Создать аккаунт",
   "login.email": "Эл. почта",
   "login.password": "Пароль",
-  "login.displayName": "Имя в кругу",
   "login.submitSignIn": "Войти",
-  "login.submitRegister": "Присоединиться",
-  "login.switchToRegister": "Впервые здесь? Создайте аккаунт",
-  "login.switchToSignIn": "Уже есть аккаунт? Войдите",
+  "login.sendLink": "Прислать ссылку для входа",
+  "login.sent": "Проверьте почту — ссылка сработает один раз и действует 15 минут.",
+  "login.usePassword": "Войти по паролю",
+  "login.useMagic": "Лучше пришлите ссылку",
+  "login.magicUnavailable": "Вход по ссылке сейчас недоступен — попробуйте позже.",
   "login.badCredentials": "Неверная почта или пароль.",
-  "login.emailTaken": "Эта почта уже зарегистрирована.",
-  "login.invalid": "Проверьте поля — пароль не короче 8 символов.",
+  "login.invalid": "Проверьте поля и попробуйте ещё раз.",
   "login.tooMany": "Слишком много попыток — попробуйте чуть позже.",
   "login.failed": "Что-то пошло не так — попробуйте ещё раз.",
   "login.close": "Закрыть",
@@ -155,6 +152,8 @@ const ru: Record<keyof typeof en, string> = {
   "editor.copyAria": "Скопировать черновик",
   "editor.queueAria": "Добавить запись в очередь «в работе»",
   "editor.queuePrompt": "Заголовок будущей записи:",
+  "editor.stateTitle": "Статус записи",
+  "editor.stateAria": "Изменить статус записи",
 };
 
 export default ru;
