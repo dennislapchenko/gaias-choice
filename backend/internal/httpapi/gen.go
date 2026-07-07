@@ -139,16 +139,24 @@ type PollTelegramLoginJSONBody struct {
 	Code string `json:"code"`
 }
 
-// DeleteContentParams defines parameters for DeleteContent.
-type DeleteContentParams struct {
-	// Path Repo-relative path; must live under content/.
-	Path string `form:"path" json:"path"`
-
-	// Sha Handle from a prior read — the same conflict guard as save.
-	Sha string `form:"sha" json:"sha"`
+// CommitContentJSONBody defines parameters for CommitContent.
+type CommitContentJSONBody struct {
+	Files []struct {
+		Content string `json:"content"`
+		Path    string `json:"path"`
+	} `json:"files"`
 
 	// Message Commit message; defaulted when omitted.
-	Message *string `form:"message,omitempty" json:"message,omitempty"`
+	Message *string `json:"message,omitempty"`
+}
+
+// DeleteContentJSONBody defines parameters for DeleteContent.
+type DeleteContentJSONBody struct {
+	// Message Commit message; defaulted when omitted.
+	Message *string `json:"message,omitempty"`
+
+	// Paths Repo-relative paths; each must live under content/.
+	Paths []string `json:"paths"`
 }
 
 // GetContentFileParams defines parameters for GetContentFile.
@@ -228,6 +236,12 @@ type RequestTelegramLoginJSONRequestBody RequestTelegramLoginJSONBody
 // PollTelegramLoginJSONRequestBody defines body for PollTelegramLogin for application/json ContentType.
 type PollTelegramLoginJSONRequestBody PollTelegramLoginJSONBody
 
+// CommitContentJSONRequestBody defines body for CommitContent for application/json ContentType.
+type CommitContentJSONRequestBody CommitContentJSONBody
+
+// DeleteContentJSONRequestBody defines body for DeleteContent for application/json ContentType.
+type DeleteContentJSONRequestBody DeleteContentJSONBody
+
 // SaveContentJSONRequestBody defines body for SaveContent for application/json ContentType.
 type SaveContentJSONRequestBody SaveContentJSONBody
 
@@ -269,9 +283,12 @@ type ServerInterface interface {
 	// Poll a Telegram sign-in for its session grant
 	// (POST /auth/telegram/poll)
 	PollTelegramLogin(c *gin.Context)
-	// Delete one content/ file (a git commit in prod, a working-tree remove in dev)
+	// Write one or more content/ files in a SINGLE git commit
+	// (POST /content/commit)
+	CommitContent(c *gin.Context)
+	// Delete one or more content/ files in a SINGLE git commit (a working-tree remove in dev)
 	// (DELETE /content/file)
-	DeleteContent(c *gin.Context, params DeleteContentParams)
+	DeleteContent(c *gin.Context)
 	// Read one content/ file (text + opaque sha for concurrency)
 	// (GET /content/file)
 	GetContentFile(c *gin.Context, params GetContentFileParams)
@@ -418,40 +435,10 @@ func (siw *ServerInterfaceWrapper) PollTelegramLogin(c *gin.Context) {
 	siw.Handler.PollTelegramLogin(c)
 }
 
-// DeleteContent operation middleware
-func (siw *ServerInterfaceWrapper) DeleteContent(c *gin.Context) {
-
-	var err error
-	_ = err
+// CommitContent operation middleware
+func (siw *ServerInterfaceWrapper) CommitContent(c *gin.Context) {
 
 	c.Set(string(SessionScopes), []string{"editor"})
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params DeleteContentParams
-
-	// ------------- Required query parameter "path" -------------
-
-	err = runtime.BindQueryParameterWithOptions("form", true, true, "path", c.Request.URL.Query(), &params.Path, runtime.BindQueryParameterOptions{Type: "string", Format: ""})
-	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter path: %w", err), http.StatusBadRequest)
-		return
-	}
-
-	// ------------- Required query parameter "sha" -------------
-
-	err = runtime.BindQueryParameterWithOptions("form", true, true, "sha", c.Request.URL.Query(), &params.Sha, runtime.BindQueryParameterOptions{Type: "string", Format: ""})
-	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter sha: %w", err), http.StatusBadRequest)
-		return
-	}
-
-	// ------------- Optional query parameter "message" -------------
-
-	err = runtime.BindQueryParameterWithOptions("form", true, false, "message", c.Request.URL.Query(), &params.Message, runtime.BindQueryParameterOptions{Type: "string", Format: ""})
-	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter message: %w", err), http.StatusBadRequest)
-		return
-	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
 		middleware(c)
@@ -460,7 +447,22 @@ func (siw *ServerInterfaceWrapper) DeleteContent(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.DeleteContent(c, params)
+	siw.Handler.CommitContent(c)
+}
+
+// DeleteContent operation middleware
+func (siw *ServerInterfaceWrapper) DeleteContent(c *gin.Context) {
+
+	c.Set(string(SessionScopes), []string{"editor"})
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.DeleteContent(c)
 }
 
 // GetContentFile operation middleware
@@ -655,6 +657,7 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.POST(options.BaseURL+"/auth/register", wrapper.Register)
 	router.POST(options.BaseURL+"/auth/telegram", wrapper.RequestTelegramLogin)
 	router.POST(options.BaseURL+"/auth/telegram/poll", wrapper.PollTelegramLogin)
+	router.POST(options.BaseURL+"/content/commit", wrapper.CommitContent)
 	router.DELETE(options.BaseURL+"/content/file", wrapper.DeleteContent)
 	router.GET(options.BaseURL+"/content/file", wrapper.GetContentFile)
 	router.POST(options.BaseURL+"/content/save", wrapper.SaveContent)
@@ -1161,8 +1164,103 @@ func (response PollTelegramLogin503JSONResponse) VisitPollTelegramLoginResponse(
 	return err
 }
 
+type CommitContentRequestObject struct {
+	Body *CommitContentJSONRequestBody
+}
+
+type CommitContentResponseObject interface {
+	VisitCommitContentResponse(w http.ResponseWriter) error
+}
+
+type CommitContent200JSONResponse struct {
+	Commit string   `json:"commit"`
+	Paths  []string `json:"paths"`
+}
+
+func (response CommitContent200JSONResponse) VisitCommitContentResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type CommitContent400JSONResponse struct{ BadRequestJSONResponse }
+
+func (response CommitContent400JSONResponse) VisitCommitContentResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type CommitContent401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response CommitContent401JSONResponse) VisitCommitContentResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type CommitContent403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response CommitContent403JSONResponse) VisitCommitContentResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type CommitContent502JSONResponse struct{ UpstreamJSONResponse }
+
+func (response CommitContent502JSONResponse) VisitCommitContentResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(502)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type CommitContent503JSONResponse struct{ NotConfiguredJSONResponse }
+
+func (response CommitContent503JSONResponse) VisitCommitContentResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
 type DeleteContentRequestObject struct {
-	Params DeleteContentParams
+	Body *DeleteContentJSONRequestBody
 }
 
 type DeleteContentResponseObject interface {
@@ -1170,8 +1268,8 @@ type DeleteContentResponseObject interface {
 }
 
 type DeleteContent200JSONResponse struct {
-	Commit string `json:"commit"`
-	Path   string `json:"path"`
+	Commit string   `json:"commit"`
+	Paths  []string `json:"paths"`
 }
 
 func (response DeleteContent200JSONResponse) VisitDeleteContentResponse(w http.ResponseWriter) error {
@@ -1238,20 +1336,6 @@ func (response DeleteContent404JSONResponse) VisitDeleteContentResponse(w http.R
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(404)
-	_, err := buf.WriteTo(w)
-	return err
-}
-
-type DeleteContent409JSONResponse Error
-
-func (response DeleteContent409JSONResponse) VisitDeleteContentResponse(w http.ResponseWriter) error {
-
-	var buf bytes.Buffer
-	if err := json.NewEncoder(&buf).Encode(response); err != nil {
-		return err
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(409)
 	_, err := buf.WriteTo(w)
 	return err
 }
@@ -1989,7 +2073,10 @@ type StrictServerInterface interface {
 	// Poll a Telegram sign-in for its session grant
 	// (POST /auth/telegram/poll)
 	PollTelegramLogin(ctx context.Context, request PollTelegramLoginRequestObject) (PollTelegramLoginResponseObject, error)
-	// Delete one content/ file (a git commit in prod, a working-tree remove in dev)
+	// Write one or more content/ files in a SINGLE git commit
+	// (POST /content/commit)
+	CommitContent(ctx context.Context, request CommitContentRequestObject) (CommitContentResponseObject, error)
+	// Delete one or more content/ files in a SINGLE git commit (a working-tree remove in dev)
 	// (DELETE /content/file)
 	DeleteContent(ctx context.Context, request DeleteContentRequestObject) (DeleteContentResponseObject, error)
 	// Read one content/ file (text + opaque sha for concurrency)
@@ -2312,11 +2399,47 @@ func (sh *strictHandler) PollTelegramLogin(ctx *gin.Context) {
 	}
 }
 
+// CommitContent operation middleware
+func (sh *strictHandler) CommitContent(ctx *gin.Context) {
+	var request CommitContentRequestObject
+
+	var body CommitContentJSONRequestBody
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(ctx, err)
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx *gin.Context, request interface{}) (interface{}, error) {
+		return sh.ssi.CommitContent(ctx, request.(CommitContentRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "CommitContent")
+	}
+
+	response, err := handler(ctx, request)
+
+	if err != nil {
+		sh.options.HandlerErrorFunc(ctx, err)
+	} else if validResponse, ok := response.(CommitContentResponseObject); ok {
+		if err := validResponse.VisitCommitContentResponse(ctx.Writer); err != nil {
+			sh.options.ResponseErrorHandlerFunc(ctx, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(ctx, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
 // DeleteContent operation middleware
-func (sh *strictHandler) DeleteContent(ctx *gin.Context, params DeleteContentParams) {
+func (sh *strictHandler) DeleteContent(ctx *gin.Context) {
 	var request DeleteContentRequestObject
 
-	request.Params = params
+	var body DeleteContentJSONRequestBody
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(ctx, err)
+		return
+	}
+	request.Body = &body
 
 	handler := func(ctx *gin.Context, request interface{}) (interface{}, error) {
 		return sh.ssi.DeleteContent(ctx, request.(DeleteContentRequestObject))

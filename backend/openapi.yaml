@@ -487,36 +487,41 @@ paths:
           $ref: '#/components/responses/NotConfigured'
     delete:
       operationId: deleteContent
-      summary: Delete one content/ file (a git commit in prod, a working-tree remove in dev)
+      summary: Delete one or more content/ files in a SINGLE git commit (a working-tree remove in dev)
+      description: >
+        Deletes every listed path in one commit — used to wipe a post's ru+en
+        locale files together. Paths that don't exist are skipped; if none
+        existed the response is 404. No sha guard (delete is idempotent).
       tags: [content]
       security:
         - session: [editor]
-      parameters:
-        - name: path
-          in: query
-          required: true
-          description: Repo-relative path; must live under content/.
-          schema: { type: string, maxLength: 512 }
-        - name: sha
-          in: query
-          required: true
-          description: Handle from a prior read — the same conflict guard as save.
-          schema: { type: string }
-        - name: message
-          in: query
-          required: false
-          description: Commit message; defaulted when omitted.
-          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [paths]
+              properties:
+                paths:
+                  type: array
+                  minItems: 1
+                  maxItems: 10
+                  items: { type: string, maxLength: 512 }
+                  description: Repo-relative paths; each must live under content/.
+                message:
+                  type: string
+                  description: Commit message; defaulted when omitted.
       responses:
         '200':
-          description: Deleted. `commit` is the git commit sha in prod, "local" in dev.
+          description: Deleted. `commit` is the git commit sha in prod, "local" in dev; `paths` are the files actually removed.
           content:
             application/json:
               schema:
                 type: object
-                required: [path, commit]
+                required: [paths, commit]
                 properties:
-                  path: { type: string }
+                  paths: { type: array, items: { type: string } }
                   commit: { type: string }
         '400':
           $ref: '#/components/responses/BadRequest'
@@ -525,12 +530,7 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
-          description: No such file.
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Error' }
-        '409':
-          description: The file changed since it was read (stale sha) — re-fetch and retry.
+          description: None of the listed files existed.
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Error' }
@@ -592,6 +592,61 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Error' }
+        '502':
+          $ref: '#/components/responses/Upstream'
+        '503':
+          $ref: '#/components/responses/NotConfigured'
+
+  /content/commit:
+    post:
+      operationId: commitContent
+      summary: Write one or more content/ files in a SINGLE git commit
+      description: >
+        Lands several files together in one commit — used so a post's ru+en
+        files (a state flip + its translation, or a draft + its sibling
+        skeleton) publish as a single change. No sha guard (admin-only,
+        idempotent); each file is create-or-overwrite.
+      tags: [content]
+      security:
+        - session: [editor]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [files]
+              properties:
+                files:
+                  type: array
+                  minItems: 1
+                  maxItems: 10
+                  items:
+                    type: object
+                    required: [path, content]
+                    properties:
+                      path: { type: string, maxLength: 512 }
+                      content: { type: string }
+                message:
+                  type: string
+                  description: Commit message; defaulted when omitted.
+      responses:
+        '200':
+          description: Committed. `commit` is the git commit sha in prod, "local" in dev; `paths` are the files written.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [paths, commit]
+                properties:
+                  paths: { type: array, items: { type: string } }
+                  commit: { type: string }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '502':
           $ref: '#/components/responses/Upstream'
         '503':

@@ -91,23 +91,42 @@ func (s *LocalStore) Save(p, content, sha, _ string) (SaveResult, error) {
 	return SaveResult{SHA: localSHA([]byte(content)), Commit: "local"}, nil
 }
 
-func (s *LocalStore) Delete(p, sha, _ string) (DeleteResult, error) {
-	full, err := s.resolve(p)
-	if err != nil {
-		return DeleteResult{}, err
+func (s *LocalStore) SaveMany(files []FileWrite, _ string) (SaveManyResult, error) {
+	paths := make([]string, 0, len(files))
+	for _, f := range files {
+		full, err := s.resolve(f.Path)
+		if err != nil {
+			return SaveManyResult{}, err
+		}
+		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+			return SaveManyResult{}, err
+		}
+		if err := os.WriteFile(full, []byte(f.Content), 0o644); err != nil {
+			return SaveManyResult{}, err
+		}
+		paths = append(paths, f.Path)
 	}
-	existing, err := os.ReadFile(full)
-	if errors.Is(err, fs.ErrNotExist) {
+	return SaveManyResult{Commit: "local", Paths: paths}, nil
+}
+
+func (s *LocalStore) Delete(paths []string, _ string) (DeleteResult, error) {
+	var deleted []string
+	for _, p := range paths {
+		full, err := s.resolve(p)
+		if err != nil {
+			return DeleteResult{}, err
+		}
+		err = os.Remove(full)
+		if errors.Is(err, fs.ErrNotExist) {
+			continue // skip missing — mirrors GitHub filtering non-existent paths
+		}
+		if err != nil {
+			return DeleteResult{}, err
+		}
+		deleted = append(deleted, p)
+	}
+	if len(deleted) == 0 {
 		return DeleteResult{NotFound: true}, nil
 	}
-	if err != nil {
-		return DeleteResult{}, err
-	}
-	if localSHA(existing) != sha {
-		return DeleteResult{Conflict: true}, nil
-	}
-	if err := os.Remove(full); err != nil {
-		return DeleteResult{}, err
-	}
-	return DeleteResult{Commit: "local"}, nil
+	return DeleteResult{Commit: "local", Deleted: deleted}, nil
 }

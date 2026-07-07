@@ -30,6 +30,7 @@ import {
   apiGet,
   apiPost,
   ApiError,
+  commitFiles,
   enrichTemplate,
   translateContent,
   type ContentFile,
@@ -65,7 +66,7 @@ interface ContentEditorApi {
   /** Flip a post's `state` (no dialog) and propagate to the EN sibling per the
    *  RU→EN contract; `ref` comes from a content.ts provenance getter. */
   setPostState: (ref: EditRef, next: PostState) => Promise<void>
-  /** Delete a content file outright (a git commit in prod, a working-tree remove in dev). */
+  /** Delete a post outright — and its sibling-locale file too (a git commit in prod, a working-tree remove in dev). */
   deleteFile: (path: string) => Promise<void>
 }
 
@@ -139,6 +140,14 @@ function fmScalar(fileText: string, key: string): string | undefined {
   const m = FRONTMATTER_RE.exec(fileText)
   const v = parseDocument(m ? m[2] : fileText).get(key)
   return v == null ? undefined : String(v)
+}
+
+// The same content file in the other locale (ru↔en), or null for a path with no
+// locale segment. Used to keep a post's two locale files in lockstep on delete.
+function siblingLocalePath(path: string): string | null {
+  if (path.includes('/locales/ru/')) return path.replace('/locales/ru/', '/locales/en/')
+  if (path.includes('/locales/en/')) return path.replace('/locales/en/', '/locales/ru/')
+  return null
 }
 
 // The raw markdown body a preview should render — everything after the `---`
@@ -290,29 +299,14 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  // Delete outright — same fetch-sha-then-write, retry-once-on-409 shape as
-  // setScalar/saveFile, just ending in a DELETE instead of a save.
+  // Delete a post outright — and its sibling-locale file too (a post lives in
+  // both ru+en). Both paths go in ONE request so the backend removes them in a
+  // single commit; it skips whichever doesn't exist.
   const deleteFile: ContentEditorApi['deleteFile'] = async (path) => {
-    const file = await apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(path)}`, {
-      token: token ?? undefined,
-    })
-    const attempt = (sha: string) =>
-      apiDelete<DeleteResponse>(
-        `/content/file?path=${encodeURIComponent(path)}&sha=${encodeURIComponent(sha)}`,
-        { token: token ?? undefined },
-      )
-    try {
-      await attempt(file.sha)
-    } catch (err) {
-      if (err instanceof ApiError && err.status === 409) {
-        const fresh = await apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(path)}`, {
-          token: token ?? undefined,
-        })
-        await attempt(fresh.sha)
-        return
-      }
-      throw err
-    }
+    const paths = [path]
+    const sibling = siblingLocalePath(path)
+    if (sibling) paths.push(sibling)
+    await apiDelete<DeleteResponse>('/content/file', { paths }, { token: token ?? undefined })
   }
 
   const saveFile = async (mode: Extract<EditorMode, { kind: 'file' }>, value: string) => {
@@ -359,61 +353,69 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       if (!(err instanceof ApiError && err.status === 404)) throw err
     }
     if (exists) throw new Error(t('editor.exists', { path: mode.path }))
-    await apiPost<SaveResponse>(
-      '/content/save',
-      { path: mode.path, content: value, message: mode.message },
-      { token: token ?? undefined },
-    )
-    // A new RU draft auto-seeds its EN sibling so both locales exist (and the EN
-    // "in the works" rail shows it) from the start — see seedSibling.
-    await seedSibling(mode.path, value)
+    // A new RU draft + its EN sibling skeleton land in ONE commit: the sibling
+    // exists from the start (so the EN "in the works" rail shows it), with only
+    // its title/excerpt translated — the body is fully translated later, when
+    // the post is first flipped Active. See siblingSkeleton.
+    const files = [{ path: mode.path, content: value }]
+    const skeleton = await siblingSkeleton(mode.path, value)
+    if (skeleton) files.push(skeleton)
+    await commitFiles(files, mode.message, token ?? undefined)
   }
 
-  // Seed the EN sibling of a brand-new RU draft. Best-effort: an LLM translation
-  // (stamped translatedFrom) when the model's up, else a verbatim copy so the
-  // stub still lands. Only RU→EN (EN never drives RU); the EN title/excerpt this
-  // establishes is what later Active flips pin to. No sha — the draft is new, so
-  // the sibling is too (create).
-  const seedSibling = async (path: string, value: string) => {
-    if (!/\/locales\/ru\/(products|journal)\//.test(path)) return
+  // Build the EN sibling skeleton for a brand-new RU draft: translate the
+  // FRONTMATTER ONLY (title/excerpt — one cheap call) so the rail entry reads in
+  // English, leaving the body skeletal (the real body translation lands on the
+  // first Active flip). Stamped translatedFrom, state forced upcoming. Translator
+  // offline ⇒ a verbatim copy so the stub still exists. Only RU→EN (EN never
+  // drives RU); null for a non-RU path. Committed together with the RU draft.
+  const siblingSkeleton = async (
+    path: string,
+    value: string,
+  ): Promise<{ path: string; content: string } | null> => {
+    if (!/\/locales\/ru\/(products|journal)\//.test(path)) return null
     const siblingPath = path.replace('/locales/ru/', '/locales/en/')
-    let out: string
+    const fm = FRONTMATTER_RE.exec(value)
+    let content: string
     try {
-      out = await translateContent(value, 'en', token ?? undefined)
+      if (!fm) throw new Error('draft has no frontmatter')
+      // Translate just the `---`-delimited frontmatter block (no body).
+      let out = await translateContent(`${fm[1]}${fm[2]}${fm[3]}`, 'en', token ?? undefined)
       if (!FRONTMATTER_RE.test(out)) throw new Error('translation returned no frontmatter')
       out = applyScalarEdit(out, { file: siblingPath, path: ['translatedFrom'] }, 'ru')
+      out = applyScalarEdit(out, { file: siblingPath, path: ['state'] }, 'upcoming')
+      content = out
     } catch {
-      out = value // translator off/unreachable: verbatim copy so the stub exists
+      content = value // translator off/unreachable: verbatim copy so the stub exists
     }
-    await apiPost<SaveResponse>(
-      '/content/save',
-      { path: siblingPath, content: out, message: `content: seed ${siblingPath}` },
-      { token: token ?? undefined },
-    )
+    return { path: siblingPath, content }
   }
 
   // Flip a post's `state` and propagate to the EN sibling per the RU→EN
   // contract (SKILL.md #6). Only RU reviews/journal drive an EN counterpart —
   // RU is the source of truth, EN never pushes back:
-  //   → active   : (re)translate the CURRENT RU file into EN and force it active.
-  //                title/excerpt are pinned to the EXISTING EN wording (the LLM
-  //                re-words prose on every run; pinning stops that churn), while
-  //                scores/price/tags/image come straight from RU — so a rating
-  //                bump in RU still lands in EN. The body is freshly translated.
-  //                A translation failure THROWS (surfaced by StateToggle) — no
-  //                silent copy. On first activation EN doesn't exist yet, so the
-  //                fresh translation IS the EN version.
-  //   → upcoming : just mirror the state onto the EN sibling; never re-translate
-  //                content when a post is pulled back to WIP.
-  // EN / en-only posts: only the toggled file's own state flips (done above).
-  // Each sibling save is its own git commit.
+  //   → active   : (re)translate the RU file into EN and force it active.
+  //                title/excerpt pinned to the EXISTING EN wording (the LLM
+  //                re-words prose each run; pinning stops that churn), while
+  //                scores/price/tags/image come from RU — so a rating bump in RU
+  //                lands in EN. Body freshly translated. A translation failure
+  //                THROWS (surfaced by StateToggle). First activation: no EN yet,
+  //                so the fresh translation IS the EN version.
+  //   → upcoming : just mirror the state onto the EN sibling (no re-translation).
+  // The RU state flip and the EN write land in ONE commit (commitFiles).
+  // EN / en-only posts: just flip their own state (one sha-guarded file).
   const setPostState: ContentEditorApi['setPostState'] = async (ref, next) => {
-    await setScalar(ref, next) // the toggled post's own state, first
-    if (!/\/locales\/ru\/(products|journal)\//.test(ref.file)) return
+    if (!/\/locales\/ru\/(products|journal)\//.test(ref.file)) {
+      await setScalar(ref, next)
+      return
+    }
     const siblingPath = ref.file.replace('/locales/ru/', '/locales/en/')
+    const ru = await apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(ref.file)}`, {
+      token: token ?? undefined,
+    })
+    const files = [{ path: ref.file, content: applyScalarEdit(ru.content, ref, next) }]
 
-    // The existing EN sibling (if any): its sha for a safe in-place update, and
-    // its title/excerpt to pin. 404 = none yet (first activation creates it).
+    // Existing EN sibling (if any): its title/excerpt to pin. 404 = none yet.
     let en: ContentFile | undefined
     try {
       en = await apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(siblingPath)}`, {
@@ -422,34 +424,27 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       if (!(err instanceof ApiError && err.status === 404)) throw err
     }
-    const saveSibling = (content: string) =>
-      apiPost<SaveResponse>(
-        '/content/save',
-        { path: siblingPath, content, sha: en?.sha, message: `content: sync ${siblingPath}` },
-        { token: token ?? undefined },
-      )
 
     if (next === 'upcoming') {
-      // Nothing to pull back if EN was never created; else flip its state only.
-      if (en) await saveSibling(applyScalarEdit(en.content, { file: siblingPath, path: ['state'] }, 'upcoming'))
-      return
-    }
-
-    // active: (re)translate the current RU file (state already flipped to active).
-    const ru = await apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(ref.file)}`, {
-      token: token ?? undefined,
-    })
-    let out = await translateContent(ru.content, 'en', token ?? undefined)
-    if (!FRONTMATTER_RE.test(out)) throw new Error('translation returned no frontmatter')
-    out = applyScalarEdit(out, { file: siblingPath, path: ['translatedFrom'] }, 'ru')
-    out = applyScalarEdit(out, { file: siblingPath, path: ['state'] }, 'active')
-    if (en) {
-      for (const key of ['title', 'excerpt'] as const) {
-        const pinned = fmScalar(en.content, key)
-        if (pinned != null) out = applyScalarEdit(out, { file: siblingPath, path: [key] }, pinned)
+      if (en)
+        files.push({
+          path: siblingPath,
+          content: applyScalarEdit(en.content, { file: siblingPath, path: ['state'] }, 'upcoming'),
+        })
+    } else {
+      let out = await translateContent(files[0].content, 'en', token ?? undefined)
+      if (!FRONTMATTER_RE.test(out)) throw new Error('translation returned no frontmatter')
+      out = applyScalarEdit(out, { file: siblingPath, path: ['translatedFrom'] }, 'ru')
+      out = applyScalarEdit(out, { file: siblingPath, path: ['state'] }, 'active')
+      if (en) {
+        for (const key of ['title', 'excerpt'] as const) {
+          const pinned = fmScalar(en.content, key)
+          if (pinned != null) out = applyScalarEdit(out, { file: siblingPath, path: [key] }, pinned)
+        }
       }
+      files.push({ path: siblingPath, content: out })
     }
-    await saveSibling(out)
+    await commitFiles(files, undefined, token ?? undefined)
   }
 
   // Shared tail for save/translate: flip to published (auto-closing after a

@@ -103,6 +103,7 @@ func TestSpecDrivenAuth(t *testing.T) {
 		{http.MethodGet, "/api/users"},
 		{http.MethodGet, "/api/content/file?path=content/locales/en/site.yaml"},
 		{http.MethodPost, "/api/content/save"},
+		{http.MethodPost, "/api/content/commit"},
 		{http.MethodDelete, "/api/content/file?path=content/locales/en/site.yaml&sha=x"},
 	}
 	for _, req := range secured {
@@ -223,6 +224,7 @@ func TestViewerForbiddenFromContent(t *testing.T) {
 	for _, req := range [][2]string{
 		{http.MethodGet, "/api/content/file?path=content/locales/en/site.yaml"},
 		{http.MethodPost, "/api/content/save"},
+		{http.MethodPost, "/api/content/commit"},
 		{http.MethodDelete, "/api/content/file?path=content/locales/en/site.yaml&sha=x"},
 	} {
 		body := ""
@@ -380,11 +382,17 @@ func TestNotConfigured(t *testing.T) {
 	for _, req := range [][2]string{
 		{http.MethodGet, "/api/content/file?path=content/locales/en/site.yaml"},
 		{http.MethodPost, "/api/content/save"},
-		{http.MethodDelete, "/api/content/file?path=content/locales/en/site.yaml&sha=x"},
+		{http.MethodPost, "/api/content/commit"},
+		{http.MethodDelete, "/api/content/file"},
 	} {
+		// POST/DELETE carry a body — 503 is checked in-handler, after the strict
+		// binder, so an empty body would 400 before we reach the capability check.
 		body := ""
-		if req[0] == http.MethodPost {
+		switch req[0] {
+		case http.MethodPost:
 			body = `{"path":"content/x.md","content":"x"}`
+		case http.MethodDelete:
+			body = `{"paths":["content/locales/en/site.yaml"]}`
 		}
 		if w := do(r, req[0], req[1], token, body); w.Code != http.StatusServiceUnavailable {
 			t.Errorf("%s %s: got %d, want 503", req[0], req[1], w.Code)
@@ -581,66 +589,149 @@ func TestSaveConflict(t *testing.T) {
 	}
 }
 
+// Deleting a post wipes both locale files in ONE commit via the Git Data API
+// (Contents API can't multi-file-commit). The fake serves the ref→commit→tree→
+// commit→ref-update flow and asserts a single commit drops both paths.
 func TestDeleteContent(t *testing.T) {
-	type ghDelete struct {
-		Message string `json:"message"`
-		SHA     string `json:"sha"`
-		Branch  string `json:"branch"`
+	p1 := "content/locales/ru/products/old.md"
+	p2 := "content/locales/en/products/old.md"
+	var treeBody struct {
+		BaseTree string `json:"base_tree"`
+		Tree     []struct {
+			Path string `json:"path"`
+			SHA  any    `json:"sha"`
+		} `json:"tree"`
 	}
-	var got ghDelete
-	var sawMethod string
+	var commitBody struct {
+		Message string   `json:"message"`
+		Tree    string   `json:"tree"`
+		Parents []string `json:"parents"`
+	}
+	commits, patched := 0, false
 	up := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sawMethod = r.Method
-		json.NewDecoder(r.Body).Decode(&got)
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprint(w, `{"commit":{"sha":"delcommit"}}`)
+		switch {
+		case r.Method == http.MethodGet && strings.Contains(r.URL.Path, "/contents/"):
+			b64 := base64.StdEncoding.EncodeToString([]byte("---\ntitle: x\n---\n"))
+			json.NewEncoder(w).Encode(map[string]any{"sha": "blob", "content": b64, "encoding": "base64"})
+		case r.Method == http.MethodGet && strings.HasSuffix(r.URL.Path, "/git/ref/heads/main"):
+			fmt.Fprint(w, `{"object":{"sha":"headsha"}}`)
+		case r.Method == http.MethodGet && strings.Contains(r.URL.Path, "/git/commits/"):
+			fmt.Fprint(w, `{"tree":{"sha":"basetree"}}`)
+		case r.Method == http.MethodPost && strings.HasSuffix(r.URL.Path, "/git/trees"):
+			json.NewDecoder(r.Body).Decode(&treeBody)
+			fmt.Fprint(w, `{"sha":"newtree"}`)
+		case r.Method == http.MethodPost && strings.HasSuffix(r.URL.Path, "/git/commits"):
+			commits++
+			json.NewDecoder(r.Body).Decode(&commitBody)
+			fmt.Fprint(w, `{"sha":"delcommit"}`)
+		case r.Method == http.MethodPatch && strings.HasSuffix(r.URL.Path, "/git/refs/heads/main"):
+			patched = true
+			fmt.Fprint(w, `{}`)
+		default:
+			t.Errorf("unexpected upstream call: %s %s", r.Method, r.URL.Path)
+			w.WriteHeader(http.StatusInternalServerError)
+		}
 	}))
 	defer up.Close()
 	r, token := testEnv(t, githubSeam(up.URL))
 
-	w := do(r, http.MethodDelete,
-		"/api/content/file?path=content/locales/en/products/old.md&sha=oldsha", token, "")
+	body, _ := json.Marshal(map[string]any{"paths": []string{p1, p2}})
+	w := do(r, http.MethodDelete, "/api/content/file", token, string(body))
 	if w.Code != http.StatusOK {
 		t.Fatalf("delete: got %d: %s", w.Code, w.Body.String())
 	}
-	if sawMethod != http.MethodDelete {
-		t.Errorf("upstream method: %s", sawMethod)
+	if commits != 1 || !patched {
+		t.Errorf("want exactly 1 commit + ref update, got commits=%d patched=%v", commits, patched)
 	}
-	if got.SHA != "oldsha" {
-		t.Errorf("sha not passed through: %q", got.SHA)
+	if len(treeBody.Tree) != 2 || treeBody.Tree[0].SHA != nil || treeBody.BaseTree != "basetree" {
+		t.Errorf("tree should drop both paths with sha:null off basetree: %+v", treeBody)
 	}
-	if got.Message != "content: delete content/locales/en/products/old.md via portal" {
-		t.Errorf("default message: %q", got.Message)
+	if commitBody.Message != "content: delete "+p1+", "+p2+" via portal" {
+		t.Errorf("default message: %q", commitBody.Message)
 	}
-	if got.Branch != "main" {
-		t.Errorf("branch: %q", got.Branch)
+	if len(commitBody.Parents) != 1 || commitBody.Parents[0] != "headsha" || commitBody.Tree != "newtree" {
+		t.Errorf("commit mapping: %+v", commitBody)
 	}
-	var resp struct{ Path, Commit string }
+	var resp struct {
+		Paths  []string
+		Commit string
+	}
 	json.Unmarshal(w.Body.Bytes(), &resp)
-	if resp.Path != "content/locales/en/products/old.md" || resp.Commit != "delcommit" {
+	if len(resp.Paths) != 2 || resp.Commit != "delcommit" {
 		t.Errorf("response mapping: %+v", resp)
 	}
 }
 
-func TestDeleteConflictAndNotFound(t *testing.T) {
-	for _, tc := range []struct {
-		upstreamCode int
-		want         int
-	}{
-		{http.StatusConflict, http.StatusConflict},
-		{http.StatusUnprocessableEntity, http.StatusConflict},
-		{http.StatusNotFound, http.StatusNotFound},
-	} {
-		up := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.WriteHeader(tc.upstreamCode)
-		}))
-		r, token := testEnv(t, githubSeam(up.URL))
-		w := do(r, http.MethodDelete,
-			"/api/content/file?path=content/locales/en/site.yaml&sha=stale", token, "")
-		if w.Code != tc.want {
-			t.Errorf("upstream %d: got %d, want %d", tc.upstreamCode, w.Code, tc.want)
+// A batch write lands every file in ONE commit via the Git Data API. The fake
+// serves the ref→commit→tree→commit→ref-update flow and asserts a single commit
+// carries both files' content.
+func TestCommitContent(t *testing.T) {
+	var treeBody struct {
+		BaseTree string `json:"base_tree"`
+		Tree     []struct {
+			Path    string `json:"path"`
+			Content string `json:"content"`
+		} `json:"tree"`
+	}
+	commits, patched := 0, false
+	up := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case r.Method == http.MethodGet && strings.HasSuffix(r.URL.Path, "/git/ref/heads/main"):
+			fmt.Fprint(w, `{"object":{"sha":"headsha"}}`)
+		case r.Method == http.MethodGet && strings.Contains(r.URL.Path, "/git/commits/"):
+			fmt.Fprint(w, `{"tree":{"sha":"basetree"}}`)
+		case r.Method == http.MethodPost && strings.HasSuffix(r.URL.Path, "/git/trees"):
+			json.NewDecoder(r.Body).Decode(&treeBody)
+			fmt.Fprint(w, `{"sha":"newtree"}`)
+		case r.Method == http.MethodPost && strings.HasSuffix(r.URL.Path, "/git/commits"):
+			commits++
+			fmt.Fprint(w, `{"sha":"newcommit"}`)
+		case r.Method == http.MethodPatch && strings.HasSuffix(r.URL.Path, "/git/refs/heads/main"):
+			patched = true
+			fmt.Fprint(w, `{}`)
+		default:
+			t.Errorf("unexpected upstream call: %s %s", r.Method, r.URL.Path)
+			w.WriteHeader(http.StatusInternalServerError)
 		}
-		up.Close()
+	}))
+	defer up.Close()
+	r, token := testEnv(t, githubSeam(up.URL))
+
+	body, _ := json.Marshal(map[string]any{"files": []map[string]string{
+		{"path": "content/locales/ru/products/x.md", "content": "ru body"},
+		{"path": "content/locales/en/products/x.md", "content": "en body"},
+	}})
+	w := do(r, http.MethodPost, "/api/content/commit", token, string(body))
+	if w.Code != http.StatusOK {
+		t.Fatalf("commit: got %d: %s", w.Code, w.Body.String())
+	}
+	if commits != 1 || !patched {
+		t.Errorf("want exactly 1 commit + ref update, got commits=%d patched=%v", commits, patched)
+	}
+	if len(treeBody.Tree) != 2 || treeBody.Tree[0].Content != "ru body" || treeBody.BaseTree != "basetree" {
+		t.Errorf("tree should carry both files' content off basetree: %+v", treeBody)
+	}
+	var resp struct {
+		Paths  []string
+		Commit string
+	}
+	json.Unmarshal(w.Body.Bytes(), &resp)
+	if len(resp.Paths) != 2 || resp.Commit != "newcommit" {
+		t.Errorf("response mapping: %+v", resp)
+	}
+}
+
+// When none of the listed paths exist (the existence check 404s), there's
+// nothing to commit → 404.
+func TestDeleteNotFound(t *testing.T) {
+	up := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+	}))
+	defer up.Close()
+	r, token := testEnv(t, githubSeam(up.URL))
+	body, _ := json.Marshal(map[string]any{"paths": []string{"content/locales/en/site.yaml"}})
+	if w := do(r, http.MethodDelete, "/api/content/file", token, string(body)); w.Code != http.StatusNotFound {
+		t.Errorf("all-missing delete: got %d, want 404", w.Code)
 	}
 }
 
@@ -700,18 +791,9 @@ func TestLocalStore(t *testing.T) {
 		t.Errorf("update not written: %q", onDisk)
 	}
 
-	// Delete with a stale sha → 409, file untouched.
-	if w := do(r, http.MethodDelete, q+"&sha=deadbeef", token, ""); w.Code != http.StatusConflict {
-		t.Errorf("stale delete: got %d, want 409", w.Code)
-	}
-	if _, err := os.Stat(filepath.Join(dir, filepath.FromSlash(p))); err != nil {
-		t.Fatalf("file removed despite stale sha: %v", err)
-	}
-
-	// Delete with the current sha → 200, file gone.
-	w = do(r, http.MethodGet, q, token, "")
-	json.Unmarshal(w.Body.Bytes(), &got)
-	if w := do(r, http.MethodDelete, q+"&sha="+got.Sha, token, ""); w.Code != http.StatusOK {
+	// Delete (batch body, no sha guard) → 200, file gone.
+	del, _ := json.Marshal(map[string]any{"paths": []string{p}})
+	if w := do(r, http.MethodDelete, "/api/content/file", token, string(del)); w.Code != http.StatusOK {
 		t.Fatalf("delete: got %d: %s", w.Code, w.Body.String())
 	}
 	if _, err := os.Stat(filepath.Join(dir, filepath.FromSlash(p))); !os.IsNotExist(err) {
@@ -719,7 +801,7 @@ func TestLocalStore(t *testing.T) {
 	}
 
 	// Delete again (already gone) → 404.
-	if w := do(r, http.MethodDelete, q+"&sha="+got.Sha, token, ""); w.Code != http.StatusNotFound {
+	if w := do(r, http.MethodDelete, "/api/content/file", token, string(del)); w.Code != http.StatusNotFound {
 		t.Errorf("re-delete: got %d, want 404", w.Code)
 	}
 }

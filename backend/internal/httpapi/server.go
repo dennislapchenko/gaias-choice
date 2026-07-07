@@ -454,31 +454,70 @@ func (s *server) DeleteContent(_ context.Context, req DeleteContentRequestObject
 	if s.content == nil {
 		return DeleteContent503JSONResponse{NotConfiguredJSONResponse{Error: "editing not configured"}}, nil
 	}
-	p := req.Params.Path
-	if !content.ValidPath(p) {
-		return DeleteContent400JSONResponse{BadRequestJSONResponse{Error: "invalid path"}}, nil
+	if req.Body == nil || len(req.Body.Paths) == 0 {
+		return DeleteContent400JSONResponse{BadRequestJSONResponse{Error: "no paths"}}, nil
+	}
+	for _, p := range req.Body.Paths {
+		if !content.ValidPath(p) {
+			return DeleteContent400JSONResponse{BadRequestJSONResponse{Error: "invalid path"}}, nil
+		}
 	}
 	msg := ""
-	if req.Params.Message != nil {
-		msg = *req.Params.Message
+	if req.Body.Message != nil {
+		msg = *req.Body.Message
 	}
 	if msg == "" {
-		msg = fmt.Sprintf("content: delete %s via portal", p)
+		msg = fmt.Sprintf("content: delete %s via portal", strings.Join(req.Body.Paths, ", "))
 	}
 	if len(msg) > 200 {
 		msg = msg[:200]
 	}
-	res, err := s.content.Delete(p, req.Params.Sha, msg)
+	res, err := s.content.Delete(req.Body.Paths, msg)
 	if err != nil {
 		return DeleteContent502JSONResponse{UpstreamJSONResponse{Error: err.Error()}}, nil
 	}
 	if res.NotFound {
 		return DeleteContent404JSONResponse(Error{Error: "not found"}), nil
 	}
-	if res.Conflict {
-		return DeleteContent409JSONResponse(Error{Error: "conflict — file changed"}), nil
+	return DeleteContent200JSONResponse{Paths: res.Deleted, Commit: res.Commit}, nil
+}
+
+// CommitContent writes several files in one commit (a post's ru+en files
+// together). Same validation as Save, per file; no sha guard.
+func (s *server) CommitContent(_ context.Context, req CommitContentRequestObject) (CommitContentResponseObject, error) {
+	if s.content == nil {
+		return CommitContent503JSONResponse{NotConfiguredJSONResponse{Error: "editing not configured"}}, nil
 	}
-	return DeleteContent200JSONResponse{Path: p, Commit: res.Commit}, nil
+	if req.Body == nil || len(req.Body.Files) == 0 {
+		return CommitContent400JSONResponse{BadRequestJSONResponse{Error: "no files"}}, nil
+	}
+	files := make([]content.FileWrite, 0, len(req.Body.Files))
+	paths := make([]string, 0, len(req.Body.Files))
+	for _, f := range req.Body.Files {
+		if !content.ValidPath(f.Path) {
+			return CommitContent400JSONResponse{BadRequestJSONResponse{Error: "invalid path"}}, nil
+		}
+		if len(f.Content) == 0 || len(f.Content) > content.MaxBytes {
+			return CommitContent400JSONResponse{BadRequestJSONResponse{Error: "content empty or too large"}}, nil
+		}
+		files = append(files, content.FileWrite{Path: f.Path, Content: f.Content})
+		paths = append(paths, f.Path)
+	}
+	msg := ""
+	if req.Body.Message != nil {
+		msg = *req.Body.Message
+	}
+	if msg == "" {
+		msg = fmt.Sprintf("content: update %s via portal", strings.Join(paths, ", "))
+	}
+	if len(msg) > 200 {
+		msg = msg[:200]
+	}
+	res, err := s.content.SaveMany(files, msg)
+	if err != nil {
+		return CommitContent502JSONResponse{UpstreamJSONResponse{Error: err.Error()}}, nil
+	}
+	return CommitContent200JSONResponse{Paths: res.Paths, Commit: res.Commit}, nil
 }
 
 // EnrichTemplate re-tunes a blank template's prompts to a post title via the

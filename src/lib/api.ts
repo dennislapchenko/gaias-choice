@@ -54,7 +54,7 @@ export async function apiGet<T>(path: string, opts?: { token?: string }): Promis
 }
 
 async function apiSend<T>(
-  method: 'POST' | 'PUT',
+  method: 'POST' | 'PUT' | 'DELETE',
   path: string,
   body?: unknown,
   opts?: { token?: string },
@@ -75,9 +75,8 @@ export function apiPut<T>(path: string, body?: unknown, opts?: { token?: string 
   return apiSend<T>('PUT', path, body, opts)
 }
 
-export async function apiDelete<T>(path: string, opts?: { token?: string }): Promise<T> {
-  const res = await fetch(apiUrl(path), { method: 'DELETE', headers: headers(opts?.token) })
-  return parseJson<T>(res)
+export function apiDelete<T>(path: string, body?: unknown, opts?: { token?: string }): Promise<T> {
+  return apiSend<T>('DELETE', path, body, opts)
 }
 
 // Request/response types live here until there are enough to split out.
@@ -188,11 +187,28 @@ export interface SaveResponse {
   commit: string // the commit this save produced
 }
 
-/** DELETE /api/content/file — remove one content/ file as a git commit;
- *  `sha` is the same optimistic-concurrency handle as save. */
+/** DELETE /api/content/file — remove one or more content/ files in a single
+ *  git commit (used to wipe a post's ru+en files together). `paths` are the
+ *  files actually removed; non-existent ones are skipped. */
 export interface DeleteResponse {
-  path: string
+  paths: string[]
   commit: string
+}
+
+/** POST /api/content/commit — write several files in ONE git commit (a post's
+ *  ru+en files together: a state flip + its translation, or a draft + its
+ *  sibling skeleton). No sha guard. */
+export interface CommitResponse {
+  paths: string[]
+  commit: string
+}
+
+export function commitFiles(
+  files: { path: string; content: string }[],
+  message: string | undefined,
+  token?: string,
+): Promise<CommitResponse> {
+  return apiPost<CommitResponse>('/content/commit', { files, message }, { token })
 }
 
 /** POST /api/content/template — re-tune a blank template's guiding prompts to a

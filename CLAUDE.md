@@ -518,7 +518,12 @@ VM is down the live site silently degrades to the static baseline.
   avatar URL, optional password change), `PUT /api/users/{id}` (admin-only
   edit of another user — display name, avatar, role, optional password reset;
   `session: [admin]` scope, never touches their email),
-  `/api/content/{file,save}`, `POST /api/content/template` (the draft
+  `/api/content/{file,save}`, `POST /api/content/commit` (write one or more
+  content files — `{files:[{path,content}]}` — in a SINGLE commit; the FE lands a
+  post's ru+en files together: a state flip + its translation, or a draft + its
+  sibling skeleton), `DELETE /api/content/file` (delete one or more
+  content files — `{paths:[…]}` — in a SINGLE commit; the FE passes a post's
+  ru+en paths together to wipe both at once), `POST /api/content/template` (the draft
   composer's title→prompts enrichment — `session: [editor]`, 503 when no
   model configured), `POST /api/content/translate` (translate a whole content
   file's prose into another locale — `session: [editor]`, 503 when no model;
@@ -585,7 +590,16 @@ VM is down the live site silently degrades to the static baseline.
   save could actually land. Validation stays dumb and stateless: `content/`-only path allowlist
   (traversal ⇒ 400), 256 KB size cap, and a sha handle for conflict safety
   (mismatch ⇒ 409; the FE re-fetches, re-applies, retries once) — GitHub's
-  blob sha in prod, a content hash locally. The BE never parses YAML — that
+  blob sha in prod, a content hash locally. **The single-file `save` (sha-guarded)
+  is only for lone edits; multi-file writes go through the batch pair
+  `SaveMany`/`Delete`, each a SINGLE commit** so a post's ru+en files publish
+  together: `POST /content/commit` `{files:[{path,content}]}` writes them,
+  `DELETE /content/file` `{paths:[…]}` removes them. On GitHub both use the Git
+  Data API (build a tree with the writes/deletions → one commit → move the branch
+  ref, since the Contents API is one-file-per-commit; shared `commitTree`
+  helper), locally a multi-`os.Write`/`os.Remove`. No sha guard on the batch ops
+  (admin-only, idempotent); for delete, missing paths are skipped and all-missing
+  ⇒ 404. The BE never parses YAML — that
   happens on the FE.
 - **Login & accounts (FE side):** `src/lib/session.tsx` is the one session
   seam — it owns the token (`localStorage['gc-session']`), validates it
@@ -665,18 +679,23 @@ VM is down the live site silently degrades to the static baseline.
   scores/price/tags/image flow from RU (a rating bump in RU lands in EN). The
   body is freshly translated; a translation failure surfaces (no silent copy).
   Flipping an RU post back to **Upcoming** just mirrors the state onto EN — no
-  re-translation. So editing content never auto-translates (that would spend a
-  Claude call + a commit per save) — the next Active flip carries the edits
-  over. A **brand-new RU draft still auto-seeds its EN sibling** on save
-  (`seedSibling` — an LLM translation stamped `translatedFrom:`, or a verbatim
-  copy when the translator is offline, so both stubs exist and the EN rail shows
-  it); the EN title/excerpt this establishes is what later Active flips pin to.
+  re-translation. **The RU state flip and the EN write land in ONE commit** (via
+  `POST /content/commit`; see "Content seam" — the batch keeps a post's two
+  locale files publishing as a single change). So editing content never
+  auto-translates (that would spend a Claude call + a commit per save) — the next
+  Active flip carries the edits over. A **brand-new RU draft auto-seeds its EN
+  sibling in the same create commit** (`siblingSkeleton` — a **frontmatter-only**
+  translation stamped `translatedFrom:` so the EN "in the works" rail entry reads
+  in English while the body stays skeletal, or a verbatim copy when the
+  translator is offline; the real body translation lands on the first Active
+  flip); the EN title/excerpt this establishes is what later Active flips pin to.
   **EN posts never drive RU — Russian stays
-  human-authored** (the RU-is-source-of-truth rule, see SKILL.md #6). Each
-  sibling save is its own git commit. `setPostState` is the public action on
+  human-authored** (the RU-is-source-of-truth rule, see SKILL.md #6).
+  `setPostState` is the public action on
   `components/StateToggle.tsx` (the iPhone-style switch on
-  `ReviewDetail`/`EntryDetail`); it flips the post's own `state` via the
-  internal `setScalar`, then runs the EN propagation above. `setScalar` does
+  `ReviewDetail`/`EntryDetail`); for an RU post it builds both files' new text
+  and commits them together (`commitFiles`), for an EN/en-only post it flips just
+  that file via the internal `setScalar`. `setScalar` does
   **CST-level, byte-preserving YAML surgery** with the existing `yaml` dep (only the
   edited scalar's line changes — the Document API would re-fold long block
   scalars, so the CST route is load-bearing, not a style choice) — on the

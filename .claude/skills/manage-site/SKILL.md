@@ -113,11 +113,14 @@ classify-and-do as usual.
    RU review/journal post **Active** (re)translates it into its EN sibling
    (title/excerpt pinned to any existing EN wording so re-runs don't churn;
    scores/price/tags flow from RU); flipping it **Upcoming** just mirrors the
-   state onto EN (no re-translation). Editing content never auto-translates —
-   the next Active flip carries the edits over. A **brand-new RU draft still
-   auto-seeds its EN sibling** on save (LLM translation, or a verbatim copy when
-   the model is offline). **EN posts never push back to RU** (hand-written RU is
-   never overwritten by AI). Every machine-translated file carries a
+   state onto EN (no re-translation). Both the state flip and the EN write land
+   in ONE commit. Editing content never auto-translates — the next Active flip
+   carries the edits over. A **brand-new RU draft auto-seeds its EN sibling in
+   the same create commit** — a **frontmatter-only** translation (just the
+   title/excerpt, so the "in the works" rail entry reads in English; the body
+   stays skeletal until the first Active flip), or a verbatim copy when the model
+   is offline. **EN posts never push back to RU** (hand-written RU is never
+   overwritten by AI). Every machine-translated file carries a
    `translatedFrom:` frontmatter mark, rendered on the page ("Translated from
    Russian" / etc.), so the assist is disclosed. This is allowed because it
    *translates* existing human content — it invents nothing.

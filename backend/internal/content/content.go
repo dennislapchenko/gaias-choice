@@ -25,14 +25,28 @@ const MaxBytes = 256 * 1024
 
 // Store is the storage backend behind the seam. Get returns a file's text
 // plus an opaque sha handle (optimistic concurrency); Save writes one file
-// (empty sha = create); Delete removes one file, guarded by the same sha
-// handle. Conflicts (sha mismatch / create-vs-existing), not-found, are
-// signalled in the result structs, not as errors — any returned error is an
-// infrastructure failure (the HTTP layer maps it to 502).
+// (empty sha = create, sha-guarded — the single-file edit path); SaveMany and
+// Delete each write/remove one OR MORE files in a SINGLE commit (used to land
+// or wipe a post's ru+en files together) with no sha guard, since those flows
+// are admin-only and idempotent. Save's conflicts (sha mismatch /
+// create-vs-existing) and delete's not-found are signalled in the result
+// structs, not errors — any returned error is infrastructure (HTTP maps to 502).
 type Store interface {
 	Get(path string) (GetResult, error)
 	Save(path, content, sha, message string) (SaveResult, error)
-	Delete(path, sha, message string) (DeleteResult, error)
+	SaveMany(files []FileWrite, message string) (SaveManyResult, error)
+	Delete(paths []string, message string) (DeleteResult, error)
+}
+
+// FileWrite is one file in a SaveMany batch (create or overwrite).
+type FileWrite struct {
+	Path    string
+	Content string
+}
+
+type SaveManyResult struct {
+	Commit string   // git commit sha in prod; "local" in dev (no commit)
+	Paths  []string // the paths written
 }
 
 type GetResult struct {
@@ -48,9 +62,9 @@ type SaveResult struct {
 }
 
 type DeleteResult struct {
-	Commit   string // git commit sha in prod; "local" in dev (no commit)
-	Conflict bool
-	NotFound bool
+	Commit   string   // git commit sha in prod; "local" in dev (no commit)
+	Deleted  []string // the paths actually removed (existing ones); subset of the request
+	NotFound bool     // none of the requested paths existed
 }
 
 // ValidPath allows only clean, relative, content/-rooted paths.
