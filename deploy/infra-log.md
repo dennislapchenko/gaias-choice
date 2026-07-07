@@ -103,27 +103,39 @@
   calls the VM API. Remove that line to unwire (api.ts then falls back to
   same-origin `/api`, i.e. no backend).
 
-### 7. Auth model switch: ADMIN_TOKEN → login sessions (pending VM env update)
+### 7. Auth model switch: ADMIN_TOKEN → login sessions (done)
 
 - The backend replaced the static `ADMIN_TOKEN` bearer with real users/
-  sessions/roles (CLAUDE.md "Backend"): editing now requires logging in at
-  `#edit` with an email + password; the first admin is created from
-  `BOOTSTRAP_ADMIN_EMAIL`/`BOOTSTRAP_ADMIN_PASSWORD` on the first boot that
-  finds the users table empty.
-- **On the next redeploy:** in `deploy.env`, delete `ADMIN_TOKEN` and add the
-  two `BOOTSTRAP_ADMIN_*` values (choose a strong password — it's a real
-  account now), then bump `BE_TAG` and `up -d`. The existing
-  `/srv/gaias-choice/data/gaia.db` migrates itself (002_users_sessions) on
-  boot. Until that redeploy, the old image keeps running unchanged.
-- Post-deploy check: `POST /api/auth/login` with the bootstrap credentials →
-  200 with a token; `GET /api/auth/me` with it → 200, `"editing": true`.
-  `/api/content/ping` no longer exists (the FE probes `/api/auth/me`).
+  sessions/roles, then user accounts went reader-facing (header login,
+  viewer self-registration, `/account` campfire — CLAUDE.md "Backend").
+- Rolled out to the VM: in `deploy.env`, deleted `ADMIN_TOKEN`, added
+  `BOOTSTRAP_ADMIN_EMAIL`/`BOOTSTRAP_ADMIN_PASSWORD`, bumped `BE_TAG`, and
+  `up -d`. The existing `/srv/gaias-choice/data/gaia.db` self-migrated
+  (002_users_sessions + 003_viewer_display_name) and the bootstrap admin was
+  created on first boot.
+- **Two gotchas hit during the rollout, both now rules:**
+  - The VM's `/opt/gaias-choice/deploy/compose.yaml` is a manual `scp` copy —
+    it does NOT track the repo. The stale copy silently dropped the new
+    `BOOTSTRAP_ADMIN_*` env passthrough (no bootstrap, login 401). **When
+    `deploy/compose.yaml` or `deploy/Caddyfile` changes, scp them to the VM
+    before `up -d`** (doco-cd will make this automatic once activated).
+  - The bootstrap password must satisfy the backend's ≥8-char policy or the
+    api container **crash-loops at boot** (fatal bootstrap error + restart
+    policy). The password lives in `deploy.env` on the VM and mirrors the
+    repo-root `.env` locally.
+- Verified externally: login → 200 token; `/api/auth/me` → 200 with
+  `"editing": true` (admin + GitHub seam); `/api/users` → 401 unauthenticated,
+  200 with a session; `/api/content/file` → 200 as admin; CORS preflight from
+  the Pages origin → 204; logout → 204.
 
 ## Redeploy / operate (quick reference)
 
 - **New backend image:** push to `main` touching `backend/**` → CI builds
   `sha-<commit>`. On the VM, bump `BE_TAG` in `deploy.env` and
   `docker compose --env-file deploy.env -f compose.yaml up -d` (pulls + recreates).
+  If `deploy/compose.yaml` or `deploy/Caddyfile` changed in the repo, **scp
+  them to `/opt/gaias-choice/deploy/` first** — the VM copies are manual and
+  do not track the repo (see step 7).
 - **Restart:** same `up -d`; **logs:** `docker compose … logs -f api`.
 - **DB backup (host cron, never `cp` a live WAL db):**
   `docker exec deploy-api-1 …` isn't needed — the db is a host file:
