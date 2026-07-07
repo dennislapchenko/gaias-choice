@@ -228,6 +228,14 @@ compact the docs per the rules above, move finished plans from `context/` to
 memory gets the same treatment — memories should hold preferences and
 pointers, not facts the repo docs already record.
 
+## Deepen the persona — one closing question (optional)
+
+At the **end of a content-working session**, you *may* close with a single
+ultra-deep question for the owner, per the **`deep-questions`** skill — it keeps
+the site's worldview alive and feeds `context/persona-context.md`. Optional and
+non-naggy: skip it when the session was heavy, purely mechanical, or the owner is
+mid-flow. If they answer, record it verbatim per that skill.
+
 ## Committing & shipping
 
 Never commit automatically. Once a change is verified (typecheck + build green),

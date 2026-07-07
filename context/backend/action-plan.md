@@ -396,3 +396,23 @@ Not yet archived (archive at ship time).
    Ship via the SKILL.md background-agent procedure. Then archive
    `context/backend/` → `context/archive/backend/` and fold any durable facts
    already covered above into the docs.
+
+---
+
+## Future backend work (backlog)
+
+Not scoped yet — captured here so it isn't lost.
+
+- **Deep-questions Telegram delivery.** Auto-send **one** ultra-deep worldview
+  question every **other day** to Denis's and Lida's Telegram accounts (the
+  `deep-questions` skill defines the practice + question style). The Telegram
+  bot already exists (`internal/telegram`, long-polls getUpdates for sign-in);
+  this reuses its `sendMessage` path. Sketch: a small scheduler (a goroutine
+  ticker keyed off `DATA_DIR` state, or a cron row) that picks the next
+  unanswered question and DMs the two **hardcoded** chat ids (Denis + Lida —
+  their telegram ids, captured once at sign-in / from env, since a bot can only
+  DM chat ids it has seen). Replies flow back for a human to transcribe verbatim
+  into `context/persona-context.md` → Appendix B (Denis / `#LIDA`) — the BE need
+  not parse or store the prose. Cheapest first cut: env-configured chat ids + a
+  flat question list in the repo + a once-a-day tick that fires on even days.
+  Single-instance only (same constraint as the sign-in long-poller).
