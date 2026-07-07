@@ -34,6 +34,17 @@ for architecture; this skill is the operating manual on top of it.
 | Build, verify, preview, deploy, routes, themes, components, CSS | Read `references/development.md` |
 | Both (e.g. "add a page" = content + route) | Read both — page wiring spans them |
 
+## Text shortcuts (end-of-prompt toggles)
+
+A symbol combo at the very end of the owner's prompt includes/excludes steps
+from the playbooks for that prompt only:
+
+- `!!!` — **no commit, no push.** Do the work and verify as usual, but skip
+  the end-of-task commit question entirely; leave everything in the working
+  tree.
+
+New shortcuts get added to this list as the owner defines them.
+
 ## Big tasks: options doc → action plan → execute
 
 For any big task — architectural changes, anything touching build/deploy or
@@ -136,13 +147,29 @@ check the roadmap so your change moves the current phase forward instead of
 polishing something scheduled for deletion. (Ticking the roadmap when a change
 lands is part of the "Update the docs" loop below.)
 
-## Verify before declaring done
-
-Every change, content or code:
+## Verify before declaring done — proportionally
 
 ```bash
 task typecheck && task build   # vite build alone does NOT type-check
 ```
+
+Run this when the change could plausibly break the build: anything under
+`src/`, frontmatter or any YAML (`site.yaml`, `themes.yaml` — a quoting error
+blanks a page), diagram blocks, config, or the build/deploy pipeline.
+
+**Don't over-verify.** Skip the build when the change can't touch it: prose
+edits inside a markdown body (frontmatter untouched), docs that aren't bundled
+into the site (`CLAUDE.md`, skills, `references/`, `context/`, `README.md`),
+or re-verifying work that was already verified and just pushed. When ~95%
+certain nothing functional changed, reading your own diff *is* the
+verification — say so and move on. When genuinely unsure, run it.
+
+**Report longer runs as a woven summary.** When a run changed several files,
+end with a succinct summary that interweaves *what changed where and why it
+hangs together* — not a flat file list. Quote a small diff/example only where
+seeing it beats describing it; plain words win otherwise. Pitch it at the
+owner: a slightly rusty software engineer and a current devops — spell out
+FE/framework idioms, skip explaining infra basics.
 
 If Docker is down: `open -a OrbStack` and wait ~15s. For visual checks, serve
 `dist/` statically (`task dev` needs a TTY and fails under preview harnesses) —
