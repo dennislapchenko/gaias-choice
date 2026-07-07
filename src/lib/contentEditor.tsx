@@ -8,9 +8,11 @@
 //    (409) re-fetches and retries the same save once before surfacing.
 //  - CREATE: the draft composer. Pre-filled template text saved as a NEW
 //    content file (create = save without sha); refuses to overwrite.
-//  - setScalar: no dialog — flips one YAML scalar directly (e.g. a post's
-//    `state`). Performs CST-level byte-preserving surgery — on the whole file
-//    for plain YAML (site.yaml, themes.yaml), or just the `---` frontmatter
+//  - setPostState: no dialog — flips a post's `state` and, for RU
+//    reviews/journal, propagates to the EN sibling (→ active (re)translates
+//    RU→EN, → upcoming just mirrors the state; RU is the source of truth). The
+//    underlying scalar flip is CST-level byte-preserving surgery — on the whole
+//    file for plain YAML (site.yaml, themes.yaml), or just the `---` frontmatter
 //    block for markdown content files, body spliced back untouched (see
 //    FRONTMATTER_RE/applyScalarEdit). If the key is entirely absent (e.g. an
 //    active post has no `state:` line), it's inserted rather than requiring
@@ -35,8 +37,8 @@ import {
   type SaveResponse,
 } from './api'
 import { useEditMode } from './editMode'
-import { LOCALE_LABELS, SUPPORTED_LOCALES, useI18n } from './i18n'
-import type { EditRef } from './types'
+import { useI18n } from './i18n'
+import type { EditRef, PostState } from './types'
 
 type EditorMode =
   | { kind: 'file'; path: string; sha: string }
@@ -44,17 +46,8 @@ type EditorMode =
 
 // 'enriching' = the draft composer is fetching the LLM-tuned template to inject
 // (editor dimmed + disabled meanwhile); on failure it drops to 'idle' with the
-// static template left in place. 'syncing'/'synced' = the manual "Sync → English"
-// RU→EN push is running / just succeeded (the dialog stays open either way).
-type Status =
-  | 'idle'
-  | 'loading'
-  | 'enriching'
-  | 'saving'
-  | 'syncing'
-  | 'synced'
-  | 'published'
-  | 'error'
+// static template left in place.
+type Status = 'idle' | 'loading' | 'enriching' | 'saving' | 'published' | 'error'
 
 interface EditorState {
   title: string
@@ -69,8 +62,9 @@ interface ContentEditorApi {
   openFile: (opts: { title: string; path: string }) => void
   /** Compose a new content file (draft) at `path` from pre-filled template text. */
   openDraft: (opts: { title: string; path: string; initialValue: string; message: string }) => void
-  /** Flip one YAML scalar directly, no dialog; `ref` comes from a content.ts provenance getter. */
-  setScalar: (ref: EditRef, newValue: string) => Promise<void>
+  /** Flip a post's `state` (no dialog) and propagate to the EN sibling per the
+   *  RU→EN contract; `ref` comes from a content.ts provenance getter. */
+  setPostState: (ref: EditRef, next: PostState) => Promise<void>
   /** Delete a content file outright (a git commit in prod, a working-tree remove in dev). */
   deleteFile: (path: string) => Promise<void>
 }
@@ -136,6 +130,15 @@ function applyScalarEdit(fileText: string, ref: EditRef, newValue: string): stri
   if (!fm) return editYamlScalar(fileText, ref.path, newValue)
   const [, open, yamlText, close, body] = fm
   return `${open}${editYamlScalar(yamlText, ref.path, newValue)}${close}${body}`
+}
+
+// Read one top-level frontmatter scalar as a string (undefined if absent) —
+// used to pin the EN sibling's human-approved title/excerpt across re-syncs so
+// the LLM can't re-word them differently each time.
+function fmScalar(fileText: string, key: string): string | undefined {
+  const m = FRONTMATTER_RE.exec(fileText)
+  const v = parseDocument(m ? m[2] : fileText).get(key)
+  return v == null ? undefined : String(v)
 }
 
 // The raw markdown body a preview should render — everything after the `---`
@@ -258,7 +261,9 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       })
   }
 
-  const setScalar: ContentEditorApi['setScalar'] = async (ref, newValue) => {
+  // Internal primitive: flip one YAML scalar in a file (fetch → CST edit →
+  // save, retry once on 409). Public callers go through setPostState.
+  const setScalar = async (ref: EditRef, newValue: string): Promise<void> => {
     const file = await apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(ref.file)}`, {
       token: token ?? undefined,
     })
@@ -338,8 +343,8 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
         throw err
       }
     }
-    // Editing does NOT auto-translate — the admin pushes RU→EN on demand with
-    // the "Sync → English" button (runSync). Only a new draft auto-seeds both.
+    // Editing does NOT auto-translate — the RU→EN sync happens when a post is
+    // flipped Active (setPostState), not on every content save.
   }
 
   const saveDraft = async (mode: Extract<EditorMode, { kind: 'create' }>, value: string) => {
@@ -359,58 +364,92 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       { path: mode.path, content: value, message: mode.message },
       { token: token ?? undefined },
     )
-    // A new draft seeds BOTH locales (translated, or a verbatim copy when the
-    // translator is offline) — see syncSibling.
-    await syncSibling(mode.path, value, true)
+    // A new RU draft auto-seeds its EN sibling so both locales exist (and the EN
+    // "in the works" rail shows it) from the start — see seedSibling.
+    await seedSibling(mode.path, value)
   }
 
-  // Mirror a reviews/journal file into its sibling locale, per the translation
-  // rules (SKILL.md #6). Two callers:
-  //   - saveDraft (isCreate): a NEW draft seeds BOTH locales automatically —
-  //     the sibling is an LLM translation (stamped `translatedFrom:`), or, when
-  //     the translator is off/unreachable, a verbatim copy so the stub exists
-  //     in both. Best-effort: a copy always lands.
-  //   - runSync (isCreate=false): the "Sync → English" button on an existing RU
-  //     post — a deliberate RU→EN push. Here a translation failure THROWS so the
-  //     admin sees it (no silent copy — they asked for a translation). EN posts
-  //     never get the button, so RU is never overwritten by AI.
-  // Each sibling save is its own git commit.
-  const syncSibling = async (path: string, value: string, isCreate: boolean) => {
-    if (!/\/locales\/[^/]+\/(products|journal)\//.test(path)) return
-    const source = /\/locales\/([^/]+)\//.exec(path)?.[1]
-    const target = SUPPORTED_LOCALES.find((l) => l !== source)
-    if (!source || !target) return
-    // Editing existing EN never seeds/overwrites RU; only a brand-new draft does.
-    if (!isCreate && source !== 'ru') return
-    const siblingPath = path.replace(`/locales/${source}/`, `/locales/${target}/`)
-    let siblingText: string
+  // Seed the EN sibling of a brand-new RU draft. Best-effort: an LLM translation
+  // (stamped translatedFrom) when the model's up, else a verbatim copy so the
+  // stub still lands. Only RU→EN (EN never drives RU); the EN title/excerpt this
+  // establishes is what later Active flips pin to. No sha — the draft is new, so
+  // the sibling is too (create).
+  const seedSibling = async (path: string, value: string) => {
+    if (!/\/locales\/ru\/(products|journal)\//.test(path)) return
+    const siblingPath = path.replace('/locales/ru/', '/locales/en/')
+    let out: string
     try {
-      const translated = await translateContent(value, target, token ?? undefined)
-      // Fail safe rather than corrupt the sibling: the stamp assumes a
-      // frontmatter block; if the model ever dropped it, treat as a failure.
-      if (!FRONTMATTER_RE.test(translated)) throw new Error('translation returned no frontmatter')
-      // Insert `translatedFrom: <source>` (applyScalarEdit inserts when absent).
-      siblingText = applyScalarEdit(translated, { file: siblingPath, path: ['translatedFrom'] }, source)
-    } catch (err) {
-      // Create seeds a verbatim copy so both stubs exist; a manual sync surfaces
-      // the failure instead (the admin explicitly wanted a translation).
-      if (!isCreate) throw err
-      siblingText = value
-    }
-    let sha: string | undefined
-    try {
-      const cur = await apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(siblingPath)}`, {
-        token: token ?? undefined,
-      })
-      sha = cur.sha
-    } catch (err) {
-      if (!(err instanceof ApiError && err.status === 404)) throw err
+      out = await translateContent(value, 'en', token ?? undefined)
+      if (!FRONTMATTER_RE.test(out)) throw new Error('translation returned no frontmatter')
+      out = applyScalarEdit(out, { file: siblingPath, path: ['translatedFrom'] }, 'ru')
+    } catch {
+      out = value // translator off/unreachable: verbatim copy so the stub exists
     }
     await apiPost<SaveResponse>(
       '/content/save',
-      { path: siblingPath, content: siblingText, sha, message: `content: sync ${siblingPath}` },
+      { path: siblingPath, content: out, message: `content: seed ${siblingPath}` },
       { token: token ?? undefined },
     )
+  }
+
+  // Flip a post's `state` and propagate to the EN sibling per the RU→EN
+  // contract (SKILL.md #6). Only RU reviews/journal drive an EN counterpart —
+  // RU is the source of truth, EN never pushes back:
+  //   → active   : (re)translate the CURRENT RU file into EN and force it active.
+  //                title/excerpt are pinned to the EXISTING EN wording (the LLM
+  //                re-words prose on every run; pinning stops that churn), while
+  //                scores/price/tags/image come straight from RU — so a rating
+  //                bump in RU still lands in EN. The body is freshly translated.
+  //                A translation failure THROWS (surfaced by StateToggle) — no
+  //                silent copy. On first activation EN doesn't exist yet, so the
+  //                fresh translation IS the EN version.
+  //   → upcoming : just mirror the state onto the EN sibling; never re-translate
+  //                content when a post is pulled back to WIP.
+  // EN / en-only posts: only the toggled file's own state flips (done above).
+  // Each sibling save is its own git commit.
+  const setPostState: ContentEditorApi['setPostState'] = async (ref, next) => {
+    await setScalar(ref, next) // the toggled post's own state, first
+    if (!/\/locales\/ru\/(products|journal)\//.test(ref.file)) return
+    const siblingPath = ref.file.replace('/locales/ru/', '/locales/en/')
+
+    // The existing EN sibling (if any): its sha for a safe in-place update, and
+    // its title/excerpt to pin. 404 = none yet (first activation creates it).
+    let en: ContentFile | undefined
+    try {
+      en = await apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(siblingPath)}`, {
+        token: token ?? undefined,
+      })
+    } catch (err) {
+      if (!(err instanceof ApiError && err.status === 404)) throw err
+    }
+    const saveSibling = (content: string) =>
+      apiPost<SaveResponse>(
+        '/content/save',
+        { path: siblingPath, content, sha: en?.sha, message: `content: sync ${siblingPath}` },
+        { token: token ?? undefined },
+      )
+
+    if (next === 'upcoming') {
+      // Nothing to pull back if EN was never created; else flip its state only.
+      if (en) await saveSibling(applyScalarEdit(en.content, { file: siblingPath, path: ['state'] }, 'upcoming'))
+      return
+    }
+
+    // active: (re)translate the current RU file (state already flipped to active).
+    const ru = await apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(ref.file)}`, {
+      token: token ?? undefined,
+    })
+    let out = await translateContent(ru.content, 'en', token ?? undefined)
+    if (!FRONTMATTER_RE.test(out)) throw new Error('translation returned no frontmatter')
+    out = applyScalarEdit(out, { file: siblingPath, path: ['translatedFrom'] }, 'ru')
+    out = applyScalarEdit(out, { file: siblingPath, path: ['state'] }, 'active')
+    if (en) {
+      for (const key of ['title', 'excerpt'] as const) {
+        const pinned = fmScalar(en.content, key)
+        if (pinned != null) out = applyScalarEdit(out, { file: siblingPath, path: [key] }, pinned)
+      }
+    }
+    await saveSibling(out)
   }
 
   // Shared tail for save/translate: flip to published (auto-closing after a
@@ -444,40 +483,11 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     finish(mode.kind === 'file' ? saveFile(mode, value) : saveDraft(mode, value))
   }
 
-  // The "Sync → English" button: translate this RU post's CURRENT editor text
-  // to EN and save it (no auto-close — the admin is still editing the RU). Note
-  // it syncs `state.value` (unsaved edits included), so pressing Save first is
-  // not required.
-  const runSync = () => {
-    if (!state?.mode || state.mode.kind !== 'file' || busy) return
-    const { mode, value } = state
-    setState({ ...state, status: 'syncing', errorText: undefined })
-    syncSibling(mode.path, value, false)
-      .then(() => {
-        setState((s) => (s ? { ...s, status: 'synced' } : s))
-        window.setTimeout(
-          () => setState((s) => (s && s.status === 'synced' ? { ...s, status: 'idle' } : s)),
-          2500,
-        )
-      })
-      .catch((err: unknown) => {
-        setState((s) =>
-          s ? { ...s, status: 'error', errorText: err instanceof Error ? err.message : String(err) } : s,
-        )
-      })
-  }
-
-  const api: ContentEditorApi = { openFile, openDraft, setScalar, deleteFile }
+  const api: ContentEditorApi = { openFile, openDraft, setPostState, deleteFile }
   const busy =
     state?.status === 'loading' ||
     state?.status === 'saving' ||
-    state?.status === 'enriching' ||
-    state?.status === 'syncing'
-
-  // The Sync button shows only when editing an existing RU reviews/journal file
-  // (RU is the source of truth; EN files never push back to RU).
-  const filePath = state?.mode?.kind === 'file' ? state.mode.path : null
-  const canSync = !!filePath && /\/locales\/ru\/(products|journal)\//.test(filePath)
+    state?.status === 'enriching'
 
   return (
     <ContentEditorContext.Provider value={api}>
@@ -569,22 +579,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                 </p>
               ) : state.status === 'loading' ? (
                 <p className="content-editor-status">{t('editor.loading')}</p>
-              ) : state.status === 'syncing' ? (
-                <p className="content-editor-status">{t('editor.syncing')}</p>
-              ) : state.status === 'synced' ? (
-                <p className="content-editor-status">{t('editor.synced')}</p>
               ) : null}
-              {canSync && (
-                <button
-                  type="button"
-                  className="btn content-editor-sync"
-                  disabled={busy || state.status === 'published'}
-                  onClick={runSync}
-                  title={t('editor.syncHint')}
-                >
-                  {t('editor.sync', { lang: LOCALE_LABELS.en })}
-                </button>
-              )}
               <CopyButton
                 value={state.value}
                 className="content-editor-copy"

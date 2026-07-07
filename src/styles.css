@@ -2810,12 +2810,6 @@ a.respected-card:hover {
         transform: rotate(360deg);
     }
 }
-/* Manual "Sync → English" button — secondary, sage-outlined (RU→EN push). */
-.content-editor-sync {
-    background: var(--white);
-    border: 1px solid var(--sage);
-    color: var(--sage-dark);
-}
 /* Disclosure that an entry is a machine translation of another locale. */
 .translated-mark {
     font-style: italic;

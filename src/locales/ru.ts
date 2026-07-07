@@ -174,6 +174,7 @@ const ru: Record<keyof typeof en, string> = {
   "editor.slugPrompt": "URL-адрес (english, строчными через дефис):",
   "editor.stateAria": "Переключить: активна / в работе",
   "editor.stateLabel": "Активна",
+  "editor.stateSyncing": "Синхронизация…",
   "editor.contentTitle": "Редактировать содержимое",
   "editor.contentAria": "Редактировать содержимое записи",
   "editor.edit": "Редактировать",
@@ -193,10 +194,6 @@ const ru: Record<keyof typeof en, string> = {
   "editor.mdLink": "Ссылка",
   "editor.mdImage": "Картинка",
   "editor.enriching": "Подгоняем шаблон под заголовок…",
-  "editor.sync": "Синхронизировать → {{lang}}",
-  "editor.syncHint": "Перевести эту русскую запись на английский и сохранить как английскую версию (с пометкой о переводе)",
-  "editor.syncing": "Переводим на английский…",
-  "editor.synced": "Синхронизировано с английским ✓",
 };
 
 export default ru;

@@ -1,5 +1,7 @@
 // iPhone-style switch that flips a post's `state` directly (no dialog) via
-// contentEditor's setScalar. `active` = ON (right, filled); `upcoming` = OFF.
+// contentEditor's setPostState — which also propagates to the EN sibling
+// (flipping an RU post Active (re)translates it to EN; Upcoming just mirrors the
+// state). `active` = ON (right, filled); `upcoming` = OFF.
 import { useState } from 'react'
 import { useContentEditor } from '../lib/contentEditor'
 import { useI18n } from '../lib/i18n'
@@ -27,7 +29,7 @@ export default function StateToggle({
     setBusy(true)
     setError(null)
     editor
-      .setScalar(ref, next)
+      .setPostState(ref, next)
       .then(() => onChanged(next))
       .catch((err: unknown) => setError(err instanceof Error ? err.message : String(err)))
       .finally(() => setBusy(false))
@@ -47,7 +49,7 @@ export default function StateToggle({
       >
         <span className="state-switch-knob" />
       </button>
-      <span className="state-toggle-label">{t('editor.stateLabel')}</span>
+      <span className="state-toggle-label">{busy ? t('editor.stateSyncing') : t('editor.stateLabel')}</span>
       {error && <span className="state-toggle-error">{error}</span>}
     </span>
   )

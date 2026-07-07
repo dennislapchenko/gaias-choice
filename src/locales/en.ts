@@ -174,6 +174,7 @@ const en = {
   "editor.slugPrompt": "URL slug (english, lowercase-dashes):",
   "editor.stateAria": "Toggle active / upcoming",
   "editor.stateLabel": "Active",
+  "editor.stateSyncing": "Syncing English…",
   "editor.contentTitle": "Edit content",
   "editor.contentAria": "Edit post content",
   "editor.edit": "Edit",
@@ -193,10 +194,6 @@ const en = {
   "editor.mdLink": "Link",
   "editor.mdImage": "Image",
   "editor.enriching": "Tuning the template to your title…",
-  "editor.sync": "Sync → {{lang}}",
-  "editor.syncHint": "Translate this Russian post to English and save it as the English version (marked as translated)",
-  "editor.syncing": "Translating to English…",
-  "editor.synced": "Synced to English ✓",
 } satisfies Record<string, string>;
 
 export default en;

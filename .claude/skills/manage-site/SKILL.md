@@ -106,19 +106,21 @@ classify-and-do as usual.
    applies with full force there (no fabricated trips, scenes, or durations).
    Don't blur the line: don't quietly AI-author a Journal entry or review, and
    don't strip Compass's provenance disclosure. **The one allowed machine
-   assist outside Compass is *translation*** (`syncSibling` in
+   assist outside Compass is *translation*** (`setPostState` in
    `contentEditor.tsx` → `POST /content/translate`), governed by one rule:
    **Russian is the human source of truth; English may be machine-translated,
-   never the reverse.** Concretely — a **brand-new draft** auto-seeds both
-   locales on save (the sibling is an LLM translation, or a verbatim copy when
-   the model is offline); **editing an existing RU post** re-translates to EN
-   only when the admin clicks the **"Sync → English"** button (not automatic —
-   edits would otherwise burn a Claude call + commit each save); **editing an
-   existing EN post leaves Russian untouched** (so hand-written RU is never
-   overwritten by AI — there is no EN→RU button). Every machine-translated file
-   carries a `translatedFrom:` frontmatter mark, rendered on the page
-   ("Translated from Russian" / etc.), so the assist is disclosed. This is
-   allowed because it *translates* existing human content — it invents nothing.
+   never the reverse.** The sync is driven by the **state toggle**: flipping an
+   RU review/journal post **Active** (re)translates it into its EN sibling
+   (title/excerpt pinned to any existing EN wording so re-runs don't churn;
+   scores/price/tags flow from RU); flipping it **Upcoming** just mirrors the
+   state onto EN (no re-translation). Editing content never auto-translates —
+   the next Active flip carries the edits over. A **brand-new RU draft still
+   auto-seeds its EN sibling** on save (LLM translation, or a verbatim copy when
+   the model is offline). **EN posts never push back to RU** (hand-written RU is
+   never overwritten by AI). Every machine-translated file carries a
+   `translatedFrom:` frontmatter mark, rendered on the page ("Translated from
+   Russian" / etc.), so the assist is disclosed. This is allowed because it
+   *translates* existing human content — it invents nothing.
    Authoring (not translating) any Journal/review with an LLM stays forbidden.
 
 ## Coding principles

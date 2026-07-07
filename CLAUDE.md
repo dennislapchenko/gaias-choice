@@ -657,21 +657,27 @@ VM is down the live site silently degrades to the static baseline.
   markdown rendered before it ever deploys). New drafts get an **English slug**
   regardless of authoring locale: `Upcoming.tsx`'s ＋ button prompts for the
   slug (defaulting to `slugify(title)`) so RU-authored posts still get nice
-  URLs. **Translation mirrors reviews/journal into the sibling locale**
-  (`syncSibling`, reviews + journal only): a **new draft** auto-seeds BOTH
-  locales on save — the sibling is an LLM translation stamped `translatedFrom:`
-  via `POST /content/translate`, or a verbatim copy when the translator is
-  off/unreachable so the stub exists in both. **Edits do NOT auto-translate**
-  (that would spend a Claude call + a commit on every keystroke-save); instead,
-  editing an existing **RU** reviews/journal file shows a **"Sync → English"**
-  button (`runSync`) that pushes the current text RU→EN on demand (a failure
-  surfaces, no silent copy). **EN files never get the button — Russian stays
+  URLs. **Translation is driven by the state toggle, not a button**
+  (`setPostState`, reviews + journal only): flipping an **RU** post **Active**
+  (re)translates it into its EN sibling via `POST /content/translate` (stamped
+  `translatedFrom:`), forcing EN `state: active`; **title/excerpt are pinned to
+  the existing EN wording** so re-runs don't re-word them, while
+  scores/price/tags/image flow from RU (a rating bump in RU lands in EN). The
+  body is freshly translated; a translation failure surfaces (no silent copy).
+  Flipping an RU post back to **Upcoming** just mirrors the state onto EN — no
+  re-translation. So editing content never auto-translates (that would spend a
+  Claude call + a commit per save) — the next Active flip carries the edits
+  over. A **brand-new RU draft still auto-seeds its EN sibling** on save
+  (`seedSibling` — an LLM translation stamped `translatedFrom:`, or a verbatim
+  copy when the translator is offline, so both stubs exist and the EN rail shows
+  it); the EN title/excerpt this establishes is what later Active flips pin to.
+  **EN posts never drive RU — Russian stays
   human-authored** (the RU-is-source-of-truth rule, see SKILL.md #6). Each
-  sibling save is its own git commit. Plus one dialog-less action, `setScalar(ref, value)`, that flips a
-  single YAML scalar directly — used by `components/StateToggle.tsx`, the
-  iPhone-style switch on `ReviewDetail`/`EntryDetail` that flips a post's
-  `state` between `active`/`upcoming`. `setScalar` does **CST-level,
-  byte-preserving YAML surgery** with the existing `yaml` dep (only the
+  sibling save is its own git commit. `setPostState` is the public action on
+  `components/StateToggle.tsx` (the iPhone-style switch on
+  `ReviewDetail`/`EntryDetail`); it flips the post's own `state` via the
+  internal `setScalar`, then runs the EN propagation above. `setScalar` does
+  **CST-level, byte-preserving YAML surgery** with the existing `yaml` dep (only the
   edited scalar's line changes — the Document API would re-fold long block
   scalars, so the CST route is load-bearing, not a style choice) — on the
   whole file for plain YAML (`site.yaml`, `themes.yaml`), or just the `---`
