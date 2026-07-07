@@ -6,10 +6,10 @@ import { useI18n } from '../lib/i18n'
 import { withBase } from '../lib/asset'
 import { useContentEditor } from '../lib/contentEditor'
 import { useEditMode } from '../lib/editMode'
-import type { PostState } from '../lib/types'
 import Markdown from '../components/Markdown'
 import Rating from '../components/Rating'
 import EditButton from '../components/EditButton'
+import StateToggle from '../components/StateToggle'
 import NotFound from './NotFound'
 
 export default function ReviewDetail() {
@@ -28,28 +28,31 @@ export default function ReviewDetail() {
   return (
     <article className="detail">
       <PageHead title={product.title} description={product.excerpt} />
-      <Link to="/reviews" className="back-link">
-        {t('reviewDetail.backLink')}
-      </Link>
-      <span className="tag">{product.category}</span>
-      {state === 'upcoming' && (
-        <span className="tag">
-          {t('detail.wip')}
-          {editModeOn && (
+      <div className="detail-nav">
+        <Link to="/reviews" className="back-link">
+          {t('reviewDetail.backLink')}
+        </Link>
+        <div className="detail-nav-tags">
+          <span className="tag">{product.category}</span>
+          {state === 'upcoming' && <span className="tag">{t('detail.wip')}</span>}
+        </div>
+        {editModeOn && (
+          <div className="detail-nav-tools">
+            <StateToggle
+              value={state}
+              file={getProductFile(locale, slug!)}
+              onChanged={(v) => setState(v)}
+            />
             <EditButton
-              className="wip-edit"
-              ariaLabel={t('editor.stateAria')}
+              className="detail-edit"
+              ariaLabel={t('editor.contentAria')}
               onClick={() =>
-                editor.openField({
-                  title: t('editor.stateTitle'),
-                  ref: { file: getProductFile(locale, slug!), path: ['state'] },
-                  onSaved: (v) => setState(v as PostState),
-                })
+                editor.openFile({ title: t('editor.contentTitle'), path: getProductFile(locale, slug!) })
               }
             />
-          )}
-        </span>
-      )}
+          </div>
+        )}
+      </div>
       <h1>{product.title}</h1>
       <div className="detail-meta">
         <Rating value={product.rating} />

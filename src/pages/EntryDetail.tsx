@@ -10,6 +10,7 @@ import { useEditMode } from '../lib/editMode'
 import Markdown from '../components/Markdown'
 import TableOfContents from '../components/TableOfContents'
 import EditButton from '../components/EditButton'
+import StateToggle from '../components/StateToggle'
 import NotFound from './NotFound'
 
 // Shared detail layout for both a Compass chapter and a Journal entry — they
@@ -48,25 +49,26 @@ export default function EntryDetail({ kind }: { kind: 'compass' | 'journal' }) {
         <Link to={backTo} className="back-link">
           {backLabel}
         </Link>
-        <span className="tag">{tagLabel}</span>
-        {chapter != null && <span className="tag">{t('compass.chapter', { n: chapter })}</span>}
-        {kind === 'journal' && state === 'upcoming' && (
-          <span className="tag">
-            {t('detail.wip')}
-            {editModeOn && (
-              <EditButton
-                className="wip-edit"
-                ariaLabel={t('editor.stateAria')}
-                onClick={() =>
-                  editor.openField({
-                    title: t('editor.stateTitle'),
-                    ref: { file: getJournalFile(locale, slug!), path: ['state'] },
-                    onSaved: (v) => setState(v as PostState),
-                  })
-                }
-              />
-            )}
-          </span>
+        <div className="detail-nav-tags">
+          <span className="tag">{tagLabel}</span>
+          {chapter != null && <span className="tag">{t('compass.chapter', { n: chapter })}</span>}
+          {kind === 'journal' && state === 'upcoming' && <span className="tag">{t('detail.wip')}</span>}
+        </div>
+        {kind === 'journal' && editModeOn && (
+          <div className="detail-nav-tools">
+            <StateToggle
+              value={state}
+              file={getJournalFile(locale, slug!)}
+              onChanged={(v) => setState(v)}
+            />
+            <EditButton
+              className="detail-edit"
+              ariaLabel={t('editor.contentAria')}
+              onClick={() =>
+                editor.openFile({ title: t('editor.contentTitle'), path: getJournalFile(locale, slug!) })
+              }
+            />
+          </div>
         )}
       </div>
       <header className="detail-header">

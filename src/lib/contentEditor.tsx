@@ -1,17 +1,20 @@
-// The live-edit popup (git-backed, live-edit-paths.md Path A). Two flows,
-// both edit-mode-only (useEditMode) and both ending in a git commit through
-// the backend's /api/content/* seam:
+// The live-edit popup (git-backed, live-edit-paths.md Path A). Two dialog
+// flows plus one dialog-less action, all edit-mode-only (useEditMode) and
+// all ending in a git commit through the backend's /api/content/* seam:
 //
-//  - FIELD: edit one YAML scalar in place. Fetches the CURRENT file (never
-//    the stale built-in copy), shows just the scalar, and on Save performs
-//    CST-level byte-preserving surgery — on the whole file for plain YAML
-//    (site.yaml, themes.yaml), or just the `---` frontmatter block for
-//    markdown content files (products/journal/compass), body spliced back
-//    untouched (see FRONTMATTER_RE/applyScalarEdit). The whole updated file +
-//    its sha go to /api/content/save. A sha conflict (409) re-fetches and
-//    re-applies once before surfacing.
+//  - FILE: edit a content file's whole raw text (frontmatter + body) in a
+//    textarea. Fetches the CURRENT file (never the stale built-in copy); Save
+//    writes back whatever text the admin left, with its sha. A sha conflict
+//    (409) re-fetches and retries the same save once before surfacing.
 //  - CREATE: the draft composer. Pre-filled template text saved as a NEW
 //    content file (create = save without sha); refuses to overwrite.
+//  - setScalar: no dialog — flips one YAML scalar directly (e.g. a post's
+//    `state`). Performs CST-level byte-preserving surgery — on the whole file
+//    for plain YAML (site.yaml, themes.yaml), or just the `---` frontmatter
+//    block for markdown content files, body spliced back untouched (see
+//    FRONTMATTER_RE/applyScalarEdit). If the key is entirely absent (e.g. an
+//    active post has no `state:` line), it's inserted rather than requiring
+//    the key to preexist.
 //
 // Mounted once at the app root (see App.tsx), above <Routes> — never
 // unmounted by client-side navigation, so an open draft survives following
@@ -25,7 +28,7 @@ import { useI18n } from './i18n'
 import type { EditRef } from './types'
 
 type EditorMode =
-  | { kind: 'field'; ref: EditRef; sha: string; fileText: string; onSaved?: (v: string) => void }
+  | { kind: 'file'; path: string; sha: string }
   | { kind: 'create'; path: string; message: string }
 
 type Status = 'idle' | 'loading' | 'saving' | 'published' | 'error'
@@ -33,16 +36,18 @@ type Status = 'idle' | 'loading' | 'saving' | 'published' | 'error'
 interface EditorState {
   title: string
   value: string
-  mode: EditorMode | null // null while the field fetch is in flight
+  mode: EditorMode | null // null while the file fetch is in flight
   status: Status
   errorText?: string
 }
 
 interface ContentEditorApi {
-  /** Edit one YAML scalar in place; `ref` comes from a content.ts provenance getter. */
-  openField: (opts: { title: string; ref: EditRef; onSaved?: (newValue: string) => void }) => void
+  /** Edit a content file's whole raw text (frontmatter + body) in a popup; `path` is repo-relative. */
+  openFile: (opts: { title: string; path: string }) => void
   /** Compose a new content file (draft) at `path` from pre-filled template text. */
   openDraft: (opts: { title: string; path: string; initialValue: string; message: string }) => void
+  /** Flip one YAML scalar directly, no dialog; `ref` comes from a content.ts provenance getter. */
+  setScalar: (ref: EditRef, newValue: string) => Promise<void>
 }
 
 const ContentEditorContext = createContext<ContentEditorApi | null>(null)
@@ -66,7 +71,10 @@ const FRONTMATTER_RE = /^(---\r?\n)([\s\S]*?)(\r?\n---\r?\n?)([\s\S]*)$/
  * re-serialize the original token stream). Everything except the edited
  * scalar — comments, folding, quoting, indentation — survives byte-for-byte.
  * (The higher-level Document.toString() would re-fold long block scalars,
- * churning the diff — that's why the CST route.)
+ * churning the diff — that's why the CST route.) If the key doesn't exist yet
+ * (e.g. an active post has no `state:` line — absent means active), a new
+ * top-level `key: value` line is prepended instead; nested missing keys
+ * aren't supported since nothing needs them today.
  */
 function editYamlScalar(yamlText: string, path: EditRef['path'], newValue: string): string {
   const tokens = Array.from(new Parser().parse(yamlText))
@@ -75,9 +83,15 @@ function editYamlScalar(yamlText: string, path: EditRef['path'], newValue: strin
   const doc = docs[0]
   if (doc.errors.length > 0) throw new Error(`source YAML parse failed: ${doc.errors[0].message}`)
   const node = doc.getIn(path, true)
-  if (!isScalar(node) || !node.srcToken) throw new Error('path is not an editable scalar')
-  CST.setScalarValue(node.srcToken, newValue)
-  const out = tokens.map((t) => CST.stringify(t)).join('')
+  let out: string
+  if (node === undefined) {
+    if (path.length !== 1) throw new Error('cannot insert a missing nested key')
+    out = `${String(path[0])}: ${newValue}\n${yamlText}`
+  } else {
+    if (!isScalar(node) || !node.srcToken) throw new Error('path is not an editable scalar')
+    CST.setScalarValue(node.srcToken, newValue)
+    out = tokens.map((t) => CST.stringify(t)).join('')
+  }
   // Re-parse our own output before it goes anywhere near a commit (C3),
   // and confirm the edit actually landed at the path.
   const check = parseDocument(out)
@@ -106,21 +120,13 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
 
   const close = () => setState(null)
 
-  const openField: ContentEditorApi['openField'] = ({ title, ref, onSaved }) => {
+  const openFile: ContentEditorApi['openFile'] = ({ title, path }) => {
     setState({ title, value: '', mode: null, status: 'loading' })
-    apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(ref.file)}`, {
+    apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(path)}`, {
       token: token ?? undefined,
     })
       .then((file) => {
-        const fm = FRONTMATTER_RE.exec(file.content)
-        const doc = parseDocument(fm ? fm[2] : file.content)
-        const cur = doc.getIn(ref.path)
-        setState({
-          title,
-          value: cur === undefined || cur === null ? '' : String(cur),
-          mode: { kind: 'field', ref, sha: file.sha, fileText: file.content, onSaved },
-          status: 'idle',
-        })
+        setState({ title, value: file.content, mode: { kind: 'file', path, sha: file.sha }, status: 'idle' })
       })
       .catch((err: unknown) => {
         setState({
@@ -142,25 +148,52 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     })
   }
 
-  const saveField = async (mode: Extract<EditorMode, { kind: 'field' }>, value: string) => {
+  const setScalar: ContentEditorApi['setScalar'] = async (ref, newValue) => {
+    const file = await apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(ref.file)}`, {
+      token: token ?? undefined,
+    })
     const attempt = (fileText: string, sha: string) =>
       apiPost<SaveResponse>(
         '/content/save',
-        { path: mode.ref.file, content: applyScalarEdit(fileText, mode.ref, value), sha },
+        { path: ref.file, content: applyScalarEdit(fileText, ref, newValue), sha },
         { token: token ?? undefined },
       )
     try {
-      await attempt(mode.fileText, mode.sha)
+      await attempt(file.content, file.sha)
     } catch (err) {
       if (err instanceof ApiError && err.status === 409) {
         // Someone else committed since we fetched: re-fetch, re-apply onto
         // the fresh document, one retry.
         const fresh = await apiGet<ContentFile>(
-          `/content/file?path=${encodeURIComponent(mode.ref.file)}`,
+          `/content/file?path=${encodeURIComponent(ref.file)}`,
+          { token: token ?? undefined },
+        )
+        await attempt(fresh.content, fresh.sha)
+        return
+      }
+      throw err
+    }
+  }
+
+  const saveFile = async (mode: Extract<EditorMode, { kind: 'file' }>, value: string) => {
+    const attempt = (sha: string) =>
+      apiPost<SaveResponse>(
+        '/content/save',
+        { path: mode.path, content: value, sha },
+        { token: token ?? undefined },
+      )
+    try {
+      await attempt(mode.sha)
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 409) {
+        // Someone else committed since we fetched: re-fetch and retry the
+        // same save once (the admin's text is already the whole desired file).
+        const fresh = await apiGet<ContentFile>(
+          `/content/file?path=${encodeURIComponent(mode.path)}`,
           { token: token ?? undefined },
         )
         try {
-          await attempt(fresh.content, fresh.sha)
+          await attempt(fresh.sha)
         } catch (err2) {
           if (err2 instanceof ApiError && err2.status === 409)
             throw new Error(t('editor.conflict'))
@@ -195,10 +228,9 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     if (!state?.mode || state.status === 'saving') return
     const { mode, value } = state
     setState({ ...state, status: 'saving', errorText: undefined })
-    const run = mode.kind === 'field' ? saveField(mode, value) : saveDraft(mode, value)
+    const run = mode.kind === 'file' ? saveFile(mode, value) : saveDraft(mode, value)
     run
       .then(() => {
-        if (mode.kind === 'field') mode.onSaved?.(value)
         setState((s) => (s ? { ...s, status: 'published' } : s))
         // Auto-close the confirmation — but only if the dialog is still
         // showing it (a dialog reopened within the delay must survive).
@@ -220,7 +252,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       })
   }
 
-  const api: ContentEditorApi = { openField, openDraft }
+  const api: ContentEditorApi = { openFile, openDraft, setScalar }
   const busy = state?.status === 'loading' || state?.status === 'saving'
 
   return (

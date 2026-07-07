@@ -152,8 +152,9 @@ const en = {
   "editor.copyAria": "Copy draft",
   "editor.queueAria": "Queue a new upcoming post",
   "editor.queuePrompt": "Title of the upcoming post:",
-  "editor.stateTitle": "Post state",
-  "editor.stateAria": "Edit post state",
+  "editor.stateAria": "Toggle active / upcoming",
+  "editor.contentTitle": "Edit content",
+  "editor.contentAria": "Edit post content",
 } satisfies Record<string, string>;
 
 export default en;

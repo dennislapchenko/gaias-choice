@@ -1691,8 +1691,24 @@ a.respected-card:hover {
     align-items: start;
     gap: 32px;
 }
+/* Back-link / tags / edit tools each get their own line — cramming all three
+   into one inline row wrapped badly (esp. once StateToggle + EditButton are
+   present). Used both inside .detail-layout's grid (EntryDetail) and as a
+   plain block (ReviewDetail, no grid ancestor — grid-area then no-ops). */
 .detail-nav {
     grid-area: nav;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+.detail-nav-tags,
+.detail-nav-tools {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 .detail-header {
     grid-area: header;
@@ -1844,7 +1860,6 @@ a.respected-card:hover {
 }
 .back-link {
     display: inline-block;
-    margin-bottom: 14px;
     font-weight: 600;
 }
 .cta-row {
@@ -2120,11 +2135,49 @@ a.respected-card:hover {
     width: 15px;
     height: 15px;
 }
-/* Sits inline right after the "In the works" tag (ReviewDetail/EntryDetail) —
-   both are inline-level, so this just needs its own gap + baseline nudge. */
-.wip-edit {
-    margin-left: 6px;
-    vertical-align: middle;
+/* iPhone-style switch (src/components/StateToggle.tsx) that flips a post's
+   `state` directly — no dialog. ON (sage, knob right) = active/published;
+   OFF (line-gray, knob left) = upcoming/queued. Sits in .detail-nav-tools
+   alongside .detail-edit — that row's flex gap handles spacing. */
+.state-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.state-switch {
+    position: relative;
+    flex: 0 0 auto;
+    width: 40px;
+    height: 24px;
+    padding: 2px;
+    border: none;
+    border-radius: 999px;
+    background: var(--line);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.state-switch.is-on {
+    background: var(--sage);
+}
+.state-switch:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+.state-switch-knob {
+    display: block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--white);
+    box-shadow: 0 1px 3px rgba(47, 44, 39, 0.35);
+    transition: transform 0.15s;
+}
+.state-switch.is-on .state-switch-knob {
+    transform: translateX(16px);
+}
+.state-toggle-error {
+    font-size: 0.78rem;
+    color: #b3423a;
 }
 
 /* In-place content editor (src/lib/contentEditor.tsx). Mounted once at the

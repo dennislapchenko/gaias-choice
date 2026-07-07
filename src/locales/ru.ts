@@ -152,8 +152,9 @@ const ru: Record<keyof typeof en, string> = {
   "editor.copyAria": "Скопировать черновик",
   "editor.queueAria": "Добавить запись в очередь «в работе»",
   "editor.queuePrompt": "Заголовок будущей записи:",
-  "editor.stateTitle": "Статус записи",
-  "editor.stateAria": "Изменить статус записи",
+  "editor.stateAria": "Переключить: активна / в работе",
+  "editor.contentTitle": "Редактировать содержимое",
+  "editor.contentAria": "Редактировать содержимое записи",
 };
 
 export default ru;

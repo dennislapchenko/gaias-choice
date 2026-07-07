@@ -145,8 +145,11 @@ the Live-edit row in `development.md`): it prompts for a title and creates
 already carries `state: upcoming`. Editing by hand works too (copy the
 template into `journal/`/`products/` directly). When the post is finished,
 flip the `state` line to `active` (or delete it) — either by hand, or via the
-same edit-mode pencil button on the post's own "In the works" tag (its detail
-page, session-authed, one field) — the file never moves either way. Review
+`StateToggle` iPhone-style switch on the post's own detail page (edit mode
+only, session-authed; flips either direction, active→upcoming too) — the file
+never moves either way. The same detail page also carries a pencil button
+that opens the post's whole raw file (frontmatter + body) in an editor for
+in-place content edits — see the Live-edit row in `development.md`. Review
 stub titles are brand names (do-not-translate), so those stubs live in
 `en/products/` only and show on every locale's rail; journal idea titles are
 localized prose — give the ru stub the **same slug** as the en one and its

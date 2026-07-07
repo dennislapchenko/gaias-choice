@@ -561,9 +561,9 @@ VM is down the live site silently degrades to the static baseline.
   not editable — that's an admin concern) — that lives in the standard right
   rail (`.reviews-layout`, same as Reviews/Journal/Compass) on desktop,
   always visible; below 900px it's hidden and reachable instead via a
-  `.user-toggle` pencil button next to the title (`.account-header`), pure
+  `.user-toggle` pencil button next to the title (`.page-head-row`), pure
   CSS-driven (no JS breakpoint branch — see `.account-fields`/
-  `.account-fields-toggle` in `styles.css`). A sign-out button sits below the
+  `.rail-toggle` in `styles.css`). A sign-out button sits below the
   scene. BE down ⇒ none of this exists — **readers ship zero account/editing
   chrome**; no email transport configured ⇒ only the magic path degrades
   (dialog reports links unavailable, password fallback still works).
@@ -571,19 +571,22 @@ VM is down the live site silently degrades to the static baseline.
   the session: `active` simply mirrors `/api/auth/me`'s role-aware
   `editing` flag. `#edit` in any URL stays as the deliberate shortcut —
   signed out it opens the login dialog, signed in it's a no-op.
-  `src/lib/contentEditor.tsx`
-  is the editor popup: field edits do **CST-level, byte-preserving YAML
-  surgery** with the existing `yaml` dep (only the edited scalar's line
-  changes — the Document API would re-fold long block scalars, so the CST
-  route is load-bearing, not a style choice) — on the whole file for plain
-  YAML (`site.yaml`, `themes.yaml`), or just the `---` frontmatter block for
-  markdown content files, body spliced back untouched (products/journal —
-  the only field wired today is the `state` toggle on their detail pages'
-  "In the works" tag, addressed by `getProductFile`/`getJournalFile` in
-  `content.ts`; adding a new frontmatter field means calling `openField`
-  with that same file + a different `path`, no editor-side change needed).
-  The draft composer creates new content files (save without sha). Zone
-  addresses (`EditRef`) come only from provenance getters in
+  `src/lib/contentEditor.tsx` is the editor: two dialog flows (`openFile` —
+  edit a content file's whole raw text, frontmatter + body, in a textarea;
+  `openDraft` — the draft composer, creates a new content file, save without
+  sha) plus one dialog-less action, `setScalar(ref, value)`, that flips a
+  single YAML scalar directly — used by `components/StateToggle.tsx`, the
+  iPhone-style switch on `ReviewDetail`/`EntryDetail` that flips a post's
+  `state` between `active`/`upcoming`. `setScalar` does **CST-level,
+  byte-preserving YAML surgery** with the existing `yaml` dep (only the
+  edited scalar's line changes — the Document API would re-fold long block
+  scalars, so the CST route is load-bearing, not a style choice) — on the
+  whole file for plain YAML (`site.yaml`, `themes.yaml`), or just the `---`
+  frontmatter block for markdown content files, body spliced back untouched.
+  If the key is entirely absent (an active post has no `state:` line at all)
+  it's **inserted** as a new top-level line rather than requiring the key to
+  preexist — nested missing keys still aren't supported, nothing needs them.
+  Zone addresses (`EditRef`) come only from provenance getters in
   `src/lib/content.ts` (locale fallback means RU pages often edit the EN
   file — components never guess paths).
 - **Storage (D9):** SQLite at `${DATA_DIR}/gaia.db`. Local: `backend/data/`,
