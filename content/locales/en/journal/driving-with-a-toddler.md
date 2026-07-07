@@ -1,63 +1,66 @@
 ---
-title: "Crunching the miles with a toddler"
-excerpt: "A working template for the honest version of a long drive with a small child — the day's real range, the hard hour, and the ways out."
+translatedFrom: ru
+title: "How to rack up the kilometers with a little one"
+excerpt: "A working template for an honest version of a long road with a small child — the real daily range, the hard hour, and the ways out of it."
 date: 2026-07-05
 tags: [travel]
 ---
+privetik
+*This is a template — the shape of a road note waiting for a real trip to fill it
+in. We're leaving it open, along with prompts, so the first real entry has a good
+frame. If you're a parent like us and reading this before we've written our own —
+take the questions for yourself.*
 
-*This is a template — the shape of a driving note, waiting for a real trip to
-fill it. We're leaving it here in the open, prompts and all, so the first real
-one has good bones. If you're a fellow parent reading it before we've written
-ours: steal the questions.*
+The map shows distance. A child is something else. A long road with a little one
+isn't so many kilometers — it's negotiations with a small person who doesn't
+understand why the car seat won't let them go. This note is about honest
+arithmetic: not about the route, but about what the day actually costs and what
+it's paid back with.
 
-The map says a distance. The child says otherwise. A long drive with a toddler
-isn't a number of kilometres — it's a negotiation with a small person who has no
-idea why the seat won't let go of them. This note is for the honest arithmetic of
-that: not the route, but what the day actually costs and what buys it back.
+## The number we planned
 
-## The number you planned
+*Write down the distance and arrival time you were hoping for before setting out —
+the nap you were counting on, that "we'll make it to X" you told yourselves. Name
+the plan honestly: everything else in the note is about the gap between it and
+the real day.*
 
-*Write the distance and arrival time you hoped for before you set off — the nap
-you were counting on, the "we'll just push through to X" you told yourselves.
-Name the plan honestly, because the rest of the note is about the gap between it
-and the day.*
+## The real daily range
 
-## The real range of a day
-
-*How far did you actually get before the mood turned? Not the odometer — the
-point where the drive stopped being worth the tears. What's the honest daily
-range for your family right now: two hours? Three? A single good nap's worth?
-Write the real number down; it's the most useful line in this whole note.*
+*How far did you actually get before the mood changed? Not the odometer — the
+point where the road stopped being worth the tears. What's your family's honest
+daily range right now: two hours? three? one good nap? Write down the real
+number — it's the most useful line in the whole note.*
 
 ## The hard hour
 
-*Every long drive has one. Where were you when it hit — the motorway with no exit,
-the town with no shade, the last hour before dark? What did the meltdown actually
-look like, and what did you try first? Be specific; a reader recognises their own
-hard hour in the details, not in "it was tough."*
+*It's in every long road. Where did it catch you — a highway with no exit, a town
+with no shade, the last hour before dark? What did the breakdown actually look
+like, and what did you try first? Be specific: the reader will recognize their
+own hard hour in the details, not in "it was tough."*
 
-## The ways out
+## Ways out
 
-*The things that actually moved the day forward. Some to weigh:*
+*What actually moved the day forward. Worth weighing:*
 
-- *Rhythm over distance — driving to the nap instead of the map; the early start
-  vs. the night leg.*
-- *The stop you almost skipped and shouldn't have. How long a real reset takes.*
-- *Hands, snacks, sound — what genuinely bought ten quiet minutes, and what only
-  looked like it would.*
-- *The "just thirty more minutes" trap, and the day you called it early and were
-  glad.*
+- *Rhythm matters more than distance — driving around naps, not around the map;
+  an early start versus a night drive.*
+- *The stop you almost skipped and shouldn't have. How long a real reset actually
+  takes.*
+- *Hands, snacks, sound — what actually bought ten quiet minutes, and what only
+  promised to.*
+- *The "just thirty more minutes" trap — and the day you stopped early and were
+  glad you did.*
 
-*Keep the ones you lived. Cut the rest.*
+*Keep what you actually lived through. Cut the rest.*
 
-## Gear that earned its seat
+## Things that earned their place
 
-*One or two things that genuinely pulled their weight on the drive — the seat, the
-carrier for the stops, shade, a specific snack setup. Name the flaw too: the note
-isn't an ad. If something we sell or plan to review belongs here, it links to its
-review, not around it.*
+*One or two things that actually pulled their weight on the road — a car seat, a
+carrier for stops, shade, a specific set of snacks. Name the downside too: the
+note isn't an ad. If something we sell or plan to review belongs here, it should
+link to its own review, not go around it.*
 
 ## What we'd tell ourselves next time
 
-*One honest lesson, in a sentence or two. The thing you now know about driving far
-with a toddler that you'd hand to yourself at the start of this trip.*
+*One honest takeaway, in a couple of lines. What you now know about a long road
+with a little one that you'd hand yourself at the start of this trip.*
