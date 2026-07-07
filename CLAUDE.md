@@ -427,6 +427,7 @@ rise/set/houses/planetary-hours. All wording is in `lib/astroText.ts`;
 | `task dev` | FE + BE together (Vite HMR :5173 + backend air hot-reload :8787) via `compose.dev.yaml` (needs a TTY — see development.md) |
 | `task be:dev` | backend only, `go run .` on :8787 |
 | `task be:test` / `be:tidy` / `be:gen` / `be:image` / `be:run` / `be:verify` / `be:tunnel` | backend: vet+test / tidy+verify / regen OpenAPI server code / build image / run prod image / spec-drift+test+image gate / `ngrok http 8787` |
+| `task be:deploy` | ship the latest CI-built backend image to the VM (owner-invoked, manual; resolves the sha from GitHub Actions, rebuilds `deploy.env`, scps compose+Caddyfile+env, pulls + recreates). Temporary until doco-cd — see `deploy/release.sh` + `deploy/infra-log.md` |
 | `task typecheck` | strict `tsc --noEmit` (Vite build does NOT type-check) |
 | `task build` | build SPA to `dist/` |
 | `task images` | optimize `public/images` to WebP |

@@ -150,12 +150,21 @@
 
 ## Redeploy / operate (quick reference)
 
-- **New backend image:** push to `main` touching `backend/**` → CI builds
-  `sha-<commit>`. On the VM, bump `BE_TAG` in `deploy.env` and
-  `docker compose --env-file deploy.env -f compose.yaml up -d` (pulls + recreates).
-  If `deploy/compose.yaml` or `deploy/Caddyfile` changed in the repo, **scp
-  them to `/opt/gaias-choice/deploy/` first** — the VM copies are manual and
-  do not track the repo (see step 7).
+- **New backend image (automated):** push to `main` touching `backend/**` → CI
+  builds `sha-<commit>`, then run **`task be:deploy`** from the repo (owner
+  machine). It resolves the newest green build's sha from GitHub Actions,
+  regenerates `deploy.env` from the repo-root `.env` (secrets) + the VM
+  non-secrets (`API_DOMAIN`/`CORS_ORIGINS`/`BE_TAG`), scps
+  `compose.yaml`+`Caddyfile`+`deploy.env` to `/opt/gaias-choice/deploy/`, then
+  `pull` + `up -d`. Pin a specific image with `task be:deploy BE_TAG=sha-…`;
+  override host with `VM_SSH=… VM_KEY=…`. This is the temporary stand-in for
+  doco-cd — see `deploy/release.sh`. Because it always reships compose+Caddyfile
+  and rebuilds `deploy.env`, it also covers the two step-7 gotchas (stale VM
+  compose, secret drift) by construction.
+- **Manual fallback** (no `task`): bump `BE_TAG` in the VM's `deploy.env` and
+  `docker compose --env-file deploy.env -f compose.yaml up -d`. If
+  `deploy/compose.yaml` or `deploy/Caddyfile` changed, **scp them first** — the
+  VM copies are manual and do not track the repo (see step 7).
 - **Restart:** same `up -d`; **logs:** `docker compose … logs -f api`.
 - **DB backup (host cron, never `cp` a live WAL db):**
   `docker exec deploy-api-1 …` isn't needed — the db is a host file:
