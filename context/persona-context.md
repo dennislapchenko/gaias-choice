@@ -139,8 +139,8 @@ one is drawn from his own garden, not invented:
    plan* unfolding through us. He holds this while clear-eyed that the plan can be
    throttled by human hands (a government blocking a newly released model overnight).
    He reads the living world **felt, not only reasoned** — Buhner's *"Dream and
-   Feel"* (from *Plant Intelligence*) is tattooed on his clavicles, the only words
-   he wears. Certain fields and places announce themselves to him as a **"harmonic
+   Feel"* (from *Plant Intelligence*) is tattooed on his clavicles — his only *worded*
+   tattoo, among many. Certain fields and places announce themselves to him as a **"harmonic
    expanding feeling inside"** — how he expects to know the homestead land when he
    stands on it, the heart as an organ of perception.
 
