@@ -32,7 +32,8 @@ const systemPrompt = `You tune blank content-authoring templates. You are given 
 Hard rules:
 - Keep the template's language exactly (never translate it).
 - Keep every frontmatter key and every section heading unchanged.
-- Change only the guiding prose/prompts/comments, never the structure — with ONE exception: fill the frontmatter "tags:" list with 2–4 short, lowercase, relevant topic tags for this title, in the template's language. Leave every other frontmatter value untouched.
+- Always slightly re-word guiding prompts and headings
+- Change only the guiding prose/prompts/comments/headings(re-wording), never the structure — with ONE exception: fill the frontmatter "tags:" list with 2–4 short, lowercase, relevant topic tags for this title, in the template's language. Leave every other frontmatter value untouched.
 - Invent no facts, experiences, results, numbers, or claims — the author fills those in; you only reshape the questions (tags are topic labels, not claims).
 - Output only the raw template text: no code fences, no preamble, no commentary.`
 
