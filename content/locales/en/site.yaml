@@ -48,9 +48,9 @@ values:
 ratingCriteria:
   title: Our rating
   items:
-    - Safety
-    - Durability
-    - Repairability
+    - Frequency of use
+    - Worth it
+    - Soul infusion
 
 # The teachers behind the site's worldview, shown in the sidebar "Respected"
 # panel. Their substance (ideas we carry, cautions) lives in

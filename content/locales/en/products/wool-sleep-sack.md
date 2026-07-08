@@ -1,7 +1,7 @@
 ---
 title: Merino Wool Sleep Sack
 category: Sleep
-scores: [5, 5, 5]  # Gaia Score — one 0–5 per criterion in site.yaml ratingCriteria, in order
+scores: [5, 5, 3]
 price: "€46"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE4?tag=gaiaschoice-20"
 excerpt: A temperature-regulating merino sack that keeps a baby comfortable from chilly nights to warm afternoons.
