@@ -77,20 +77,24 @@ export default function ReviewDetail() {
         <Markdown html={product.html} />
       </article>
 
-      {/* Right rail — facts + the buy action. Grows as more get added. */}
+      {/* Right rail — facts + the buy action, each fact its own panel card
+          (same head+body look as the left Sidebar/TOC). Grows as more get added. */}
       <aside className="review-aside">
         {product.price && (
-          <div className="review-fact">
-            <span className="review-fact-label">{t('reviewDetail.priceLabel')}</span>
-            <span className="price review-price">{product.price}</span>
-          </div>
+          <section className="review-panel">
+            <div className="review-panel-head">{t('reviewDetail.priceLabel')}</div>
+            <div className="review-panel-body">
+              <span className="price review-price">{product.price}</span>
+            </div>
+          </section>
         )}
         {site.ratingCriteria && (
-          <GaiaScore
-            title={site.ratingCriteria.title}
-            criteria={site.ratingCriteria.items}
-            scores={product.scores}
-          />
+          <section className="review-panel">
+            <div className="review-panel-head">{site.ratingCriteria.title}</div>
+            <div className="review-panel-body">
+              <GaiaScore criteria={site.ratingCriteria.items} scores={product.scores} />
+            </div>
+          </section>
         )}
         {product.affiliateUrl && (
           <a

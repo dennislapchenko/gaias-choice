@@ -15,14 +15,14 @@ export default function GaiaScore({
   criteria,
   scores,
 }: {
-  title: string
+  title?: string
   criteria: string[]
   scores: number[]
 }) {
   if (!scores?.length || !criteria?.length) return null
   return (
     <div className="gaia-score">
-      <span className="gaia-score-title">{title}</span>
+      {title && <span className="gaia-score-title">{title}</span>}
       <ul className="gaia-score-bars">
         {criteria.map((label, i) => {
           const value = scores[i] ?? 0

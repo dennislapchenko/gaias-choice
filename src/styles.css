@@ -2160,30 +2160,34 @@ a.respected-card:hover {
     max-width: none;
     margin: 0;
 }
+/* Transparent sticky stack — each fact is its own card (see .review-panel),
+   matching how the left Sidebar/TOC populate their rail. */
 .review-aside {
     grid-area: aside;
     position: sticky;
     top: 84px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 18px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
+    gap: 14px;
+}
+/* A rail panel: flat header bar over a bordered body — same look as the
+   sidebar's .side-panel-toggle + .side-panel-body (static, not collapsible). */
+.review-panel-head {
+    padding: 13px 16px;
     background-color: var(--white);
     background-image: linear-gradient(var(--panel-tint), var(--panel-tint));
-}
-.review-fact {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-.review-fact-label {
-    font-size: 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
     font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--sage-dark);
+    font-size: 0.95rem;
+    color: var(--ink);
+}
+.review-panel-body {
+    padding: 14px 16px;
+    background: var(--panel-tint);
+    border: 1px solid var(--line);
+    border-top: none;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
 }
 .review-price {
     font-size: 1.3rem;
