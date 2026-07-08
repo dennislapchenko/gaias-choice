@@ -172,7 +172,8 @@ Authoring procedures (frontmatter schemas, voice rules, step-by-steps) live in
 ## The content sections
 
 **Reviews** (`/reviews`, `products/*.md`) — frontmatter `title`, `category`
-(filter chip), `scores` (the **Gaia Score**), optional `price`/`affiliateUrl`
+(filter chip), `scores` (the **Gaia Score**), optional `price`/`boughtAt`
+(where we got it — free text)/`affiliateUrl`
 (rendered `rel=sponsored`)/`image`/`tags`/`state`, `excerpt`, `date`. Every
 review follows the universal six-section body structure whose canonical source
 is `content/shared/review-template.<locale>.md` — the scaffold an editor's ＋
@@ -182,7 +183,9 @@ centered grid (`.review-layout`) — a full-width `.review-header` (title + date
 spanning the top, then the reading column and a sticky right rail
 (`.review-aside`) below it. The rail is a transparent stack of `.review-panel`
 cards — each fact (price, the Gaia Score bars) in its own header-bar-over-body
-card matching the left Sidebar/TOC panel look — plus the buy CTA (`.review-cta`,
+card matching the left Sidebar/TOC panel look (when `boughtAt` is set the price
+card splits into a two-column `.review-panel-split`: price | where we got it) —
+plus the buy CTA (`.review-cta`,
 the `affiliateUrl` button), and grows as more facts get added. On mobile (`≤900px`) it all stacks:
 nav → header → rail → body.
 

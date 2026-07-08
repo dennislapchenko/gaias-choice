@@ -109,6 +109,7 @@ export interface Product extends Entry {
   category: string
   scores: number[] // Gaia Score — one 0–5 value per site ratingCriteria item, in order
   price?: string
+  boughtAt?: string // "where we got it" — store/place name, free text
   affiliateUrl?: string
   image?: string
   excerpt: string

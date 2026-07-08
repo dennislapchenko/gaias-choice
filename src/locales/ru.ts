@@ -54,8 +54,9 @@ const ru: Record<keyof typeof en, string> = {
   "toc.toggle": "На этой странице",
 
   "reviewDetail.backLink": "← Все обзоры",
-  "reviewDetail.checkPrice": "Узнать текущую цену →",
-  "reviewDetail.priceLabel": "Цена",
+  "reviewDetail.checkPrice": "Линк в магазе →",
+  "reviewDetail.priceLabel": "Дэнги",
+  "reviewDetail.boughtAtLabel": "Где брали",
 
   "compassDetail.backLink": "← К пути",
   "journalDetail.backLink": "← К заметкам",

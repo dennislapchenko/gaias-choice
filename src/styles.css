@@ -2192,6 +2192,27 @@ a.respected-card:hover {
 .review-price {
     font-size: 1.3rem;
 }
+/* A panel split into two side-by-side facts (price | where we got it): a 2×2
+   grid — head row over body row — with thin dividers instead of the stacked
+   panel's own borders. The card owns the outer frame; cells drop theirs. */
+.review-panel-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+.review-panel-split > .review-panel-head,
+.review-panel-split > .review-panel-body {
+    border: none;
+    border-radius: 0;
+}
+.review-panel-split > .review-panel-head {
+    border-bottom: 1px solid var(--line);
+}
+.review-panel-split > :nth-child(even) {
+    border-left: 1px solid var(--line); /* divider between the two columns */
+}
 /* The buy CTA lives in the rail now (under price + rating) — full-width there. */
 .review-cta {
     display: block;

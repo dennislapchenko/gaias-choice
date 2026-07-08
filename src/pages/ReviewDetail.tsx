@@ -80,14 +80,25 @@ export default function ReviewDetail() {
       {/* Right rail — facts + the buy action, each fact its own panel card
           (same head+body look as the left Sidebar/TOC). Grows as more get added. */}
       <aside className="review-aside">
-        {product.price && (
-          <section className="review-panel">
-            <div className="review-panel-head">{t('reviewDetail.priceLabel')}</div>
-            <div className="review-panel-body">
-              <span className="price review-price">{product.price}</span>
-            </div>
-          </section>
-        )}
+        {product.price &&
+          (product.boughtAt ? (
+            // Two facts, one card split down the middle: price | where we got it.
+            <section className="review-panel review-panel-split">
+              <div className="review-panel-head">{t('reviewDetail.priceLabel')}</div>
+              <div className="review-panel-head">{t('reviewDetail.boughtAtLabel')}</div>
+              <div className="review-panel-body">
+                <span className="price review-price">{product.price}</span>
+              </div>
+              <div className="review-panel-body">{product.boughtAt}</div>
+            </section>
+          ) : (
+            <section className="review-panel">
+              <div className="review-panel-head">{t('reviewDetail.priceLabel')}</div>
+              <div className="review-panel-body">
+                <span className="price review-price">{product.price}</span>
+              </div>
+            </section>
+          ))}
         {site.ratingCriteria && (
           <section className="review-panel">
             <div className="review-panel-head">{site.ratingCriteria.title}</div>
