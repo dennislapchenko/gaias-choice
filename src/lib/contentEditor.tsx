@@ -57,6 +57,8 @@ type Status = 'idle' | 'loading' | 'enriching' | 'saving' | 'published' | 'error
 interface EditorState {
   title: string
   value: string
+  baseline: string // the pristine text (fetched file / template); value !== baseline ⇒ dirty
+  restored?: boolean // value came from a recovered localStorage autosave, not the fetch
   mode: EditorMode | null // null while the file fetch is in flight
   status: Status
   errorText?: string
@@ -146,6 +148,42 @@ function fmScalar(fileText: string, key: string): string | undefined {
   return v == null ? undefined : String(v)
 }
 
+// Return the first YAML error in a file's front-matter (or the whole doc for
+// a plain-YAML file), or null if it parses. Blocks the raw-textarea save path
+// from committing a broken `---` block that would blank the built SPA.
+function frontmatterError(fileText: string): string | null {
+  const m = FRONTMATTER_RE.exec(fileText)
+  const doc = parseDocument(m ? m[2] : fileText)
+  return doc.errors.length > 0 ? doc.errors[0].message : null
+}
+
+// Per-file autosave of in-progress edits to localStorage, so an accidental
+// reload / tab-close / backdrop-close never loses a draft (the editor lives in
+// React state alone, above <Routes>). Keyed by content path; written on every
+// dirty keystroke, cleared on publish or when the text returns to pristine.
+const DRAFT_PREFIX = 'gc-draft:'
+const readDraft = (path: string): string | null => {
+  try {
+    return localStorage.getItem(DRAFT_PREFIX + path)
+  } catch {
+    return null
+  }
+}
+const writeDraft = (path: string, value: string) => {
+  try {
+    localStorage.setItem(DRAFT_PREFIX + path, value)
+  } catch {
+    /* private mode / quota: autosave is best-effort, never block editing */
+  }
+}
+const clearDraft = (path: string) => {
+  try {
+    localStorage.removeItem(DRAFT_PREFIX + path)
+  } catch {
+    /* ignore */
+  }
+}
+
 // The same content file in the other locale (ru↔en), or null for a path with no
 // locale segment. Used to keep a post's two locale files in lockstep on delete.
 function siblingLocalePath(path: string): string | null {
@@ -216,6 +254,35 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
   const { token } = useEditMode()
   const { t } = useI18n()
 
+  // Dirty = the user has unsaved edits. Only meaningful while the editor is
+  // interactive (idle/error) — a loading/saving/enriching/published editor is
+  // never "dirty" for the purpose of the close guard or autosave.
+  const dirty =
+    !!state &&
+    (state.status === 'idle' || state.status === 'error') &&
+    state.value !== state.baseline
+
+  // Autosave every dirty edit to localStorage (see readDraft/writeDraft); clear
+  // it the moment the text is clean again (reverted or saved).
+  useEffect(() => {
+    if (!state?.mode) return
+    if (dirty) writeDraft(state.mode.path, state.value)
+    else clearDraft(state.mode.path)
+  }, [state?.value, state?.mode, dirty])
+
+  // Native "leave site?" prompt while a dirty editor is open, so a reflexive
+  // Cmd-R / tab-close doesn't drop the open draft (autosave covers recovery,
+  // this covers the surprise).
+  useEffect(() => {
+    if (!dirty) return
+    const warn = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', warn)
+    return () => window.removeEventListener('beforeunload', warn)
+  }, [dirty])
+
   // Restore the caret/selection after a toolbar action re-renders the textarea
   // with new text (React controls the value, so the browser can't keep it).
   useEffect(() => {
@@ -276,19 +343,46 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
 
   const close = () => setState(null)
 
+  // Backdrop / × close: confirm when there are unsaved edits, so a stray click
+  // can't yank the editor away mid-thought. The draft is autosaved regardless,
+  // so the copy reassures rather than threatens.
+  const attemptClose = () => {
+    if (dirty && !window.confirm(t('editor.discardConfirm'))) return
+    close()
+  }
+
+  // Drop a recovered autosave and fall back to the pristine fetched/template
+  // text (the "discard draft" link on the restored banner).
+  const discardRestored = () => {
+    if (!state?.mode) return
+    clearDraft(state.mode.path)
+    setState({ ...state, value: state.baseline, restored: false })
+  }
+
   const openFile: ContentEditorApi['openFile'] = ({ title, path }) => {
     setView('write')
-    setState({ title, value: '', mode: null, status: 'loading' })
+    setState({ title, value: '', baseline: '', mode: null, status: 'loading' })
     apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(path)}`, {
       token: token ?? undefined,
     })
       .then((file) => {
-        setState({ title, value: file.content, mode: { kind: 'file', path, sha: file.sha }, status: 'idle' })
+        // Recover an autosaved draft over the fetched version if one differs.
+        const saved = readDraft(path)
+        const restored = saved != null && saved !== file.content
+        setState({
+          title,
+          value: restored ? saved! : file.content,
+          baseline: file.content,
+          restored,
+          mode: { kind: 'file', path, sha: file.sha },
+          status: 'idle',
+        })
       })
       .catch((err: unknown) => {
         setState({
           title,
           value: '',
+          baseline: '',
           mode: null,
           status: 'error',
           errorText: err instanceof Error ? err.message : String(err),
@@ -298,6 +392,21 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
 
   const openDraft: ContentEditorApi['openDraft'] = ({ title, path, initialValue, message }) => {
     setView('write')
+    // A recovered autosave wins: skip enrichment (they already have their own
+    // text) and reopen it dirty for saving. Baseline stays the blank template
+    // so autosave/close-guard keep treating it as unsaved work.
+    const saved = readDraft(path)
+    if (saved != null) {
+      setState({
+        title,
+        value: saved,
+        baseline: initialValue,
+        restored: true,
+        mode: { kind: 'create', path, message },
+        status: 'idle',
+      })
+      return
+    }
     // Show the static template immediately, but dimmed + disabled while the LLM
     // re-tunes it (status 'enriching'). The editor is locked during the fetch,
     // so the tuned template always replaces the static one on success; any
@@ -305,6 +414,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     setState({
       title,
       value: initialValue,
+      baseline: initialValue,
       mode: { kind: 'create', path, message },
       status: 'enriching',
     })
@@ -312,7 +422,9 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       s && s.mode?.kind === 'create' && s.mode.path === path && s.status === 'enriching'
     enrichTemplate(title, initialValue, token ?? undefined)
       .then((body) => {
-        setState((s) => (stillEnriching(s) ? { ...s!, value: body, status: 'idle' } : s))
+        // Baseline tracks the enriched template too, so an untouched enrichment
+        // isn't treated as a dirty draft (it'll just re-enrich next open).
+        setState((s) => (stillEnriching(s) ? { ...s!, value: body, baseline: body, status: 'idle' } : s))
       })
       .catch(() => {
         setState((s) => (stillEnriching(s) ? { ...s!, status: 'idle' } : s))
@@ -501,7 +613,10 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
   const finish = (run: Promise<unknown>) => {
     run
       .then(() => {
-        setState((s) => (s ? { ...s, status: 'published' } : s))
+        setState((s) => {
+          if (s?.mode) clearDraft(s.mode.path) // published ⇒ the autosave is spent
+          return s ? { ...s, status: 'published' } : s
+        })
         window.setTimeout(
           () => setState((s) => (s && s.status === 'published' ? null : s)),
           2500,
@@ -523,6 +638,11 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
   const save = () => {
     if (!state?.mode || busy) return
     const { mode, value } = state
+    const fmErr = frontmatterError(value)
+    if (fmErr) {
+      setState({ ...state, status: 'error', errorText: `${t('editor.badFrontmatter')} ${fmErr}` })
+      return
+    }
     setState({ ...state, status: 'saving', errorText: undefined })
     finish(mode.kind === 'file' ? saveFile(mode, value) : saveDraft(mode, value))
   }
@@ -541,7 +661,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     <ContentEditorContext.Provider value={api}>
       {children}
       {state && (
-        <div className="content-editor-overlay" onClick={close}>
+        <div className="content-editor-overlay" onClick={attemptClose}>
           <div
             className="content-editor"
             role="dialog"
@@ -554,11 +674,19 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                 type="button"
                 className="content-editor-close"
                 aria-label={t('editor.close')}
-                onClick={close}
+                onClick={attemptClose}
               >
                 ×
               </button>
             </div>
+            {state.restored && (
+              <p className="content-editor-restored" role="status">
+                {t('editor.draftRestored')}{' '}
+                <button type="button" className="linklike" onClick={discardRestored}>
+                  {t('editor.draftDiscard')}
+                </button>
+              </p>
+            )}
             <div className="content-editor-toolbar">
               <div className="content-editor-md" aria-hidden={view !== 'write'}>
                 <button type="button" onClick={() => applyMd('bold')} title={t('editor.mdBold')}>

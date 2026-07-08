@@ -2594,6 +2594,10 @@ a.respected-card:hover {
     font-size: 0.78rem;
     color: #b3423a;
 }
+.state-toggle-saved {
+    font-size: 0.78rem;
+    color: var(--sage-dark);
+}
 /* "Are you sure?" confirm dialog (src/components/DeleteButton.tsx) — reuses
    the content-editor overlay's backdrop treatment at a much smaller size. */
 .confirm-overlay {
@@ -2642,6 +2646,42 @@ a.respected-card:hover {
 .btn:disabled {
     opacity: 0.6;
     cursor: default;
+}
+/* Queue-a-draft form (src/components/Upcoming.tsx ＋ button) — a confirm-dialog
+   sized up to hold two fields + a live URL preview, replacing the old pair of
+   blocking window.prompt()s. */
+.create-dialog {
+    width: min(92vw, 440px);
+}
+.create-field {
+    display: block;
+    margin-top: 14px;
+}
+.create-field .side-label {
+    display: block;
+    margin-bottom: 4px;
+}
+.create-field input {
+    width: 100%;
+    padding: 9px 12px;
+    font: inherit;
+    color: var(--ink);
+    background: var(--sand2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+}
+.create-field input:focus {
+    outline: none;
+    border-color: var(--sage);
+}
+.create-url {
+    margin: 12px 0 0;
+    font-size: 0.85rem;
+    color: var(--muted);
+    word-break: break-all;
+}
+.create-url strong {
+    color: var(--ink);
 }
 
 /* In-place content editor (src/lib/contentEditor.tsx). Mounted once at the
@@ -2709,6 +2749,25 @@ a.respected-card:hover {
 .content-editor-close:hover {
     color: var(--ink);
     background: rgba(47, 44, 39, 0.08);
+}
+/* Banner shown when the editor reopened a recovered localStorage autosave
+   (contentEditor.tsx, state.restored) — with an inline "discard it" link. */
+.content-editor-restored {
+    margin: 0;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    color: var(--sage-dark);
+    background: color-mix(in srgb, var(--sage) 12%, var(--white));
+    border-bottom: 1px solid var(--line);
+}
+.linklike {
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 .content-editor-toolbar {
     display: flex;

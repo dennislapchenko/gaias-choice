@@ -20,6 +20,7 @@ export default function StateToggle({
   const { t } = useI18n()
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [saved, setSaved] = useState(false)
   const active = value !== 'upcoming'
 
   const flip = () => {
@@ -28,9 +29,17 @@ export default function StateToggle({
     const ref: EditRef = { file, path: ['state'] }
     setBusy(true)
     setError(null)
+    setSaved(false)
     editor
       .setPostState(ref, next)
-      .then(() => onChanged(next))
+      .then(() => {
+        onChanged(next)
+        // The optimistic toggle flips instantly, but the built site only catches
+        // up after the deploy — say so, so a reload-in-between doesn't read as
+        // "my change vanished".
+        setSaved(true)
+        window.setTimeout(() => setSaved(false), 4000)
+      })
       .catch((err: unknown) => setError(err instanceof Error ? err.message : String(err)))
       .finally(() => setBusy(false))
   }
@@ -50,6 +59,7 @@ export default function StateToggle({
         <span className="state-switch-knob" />
       </button>
       <span className="state-toggle-label">{busy ? t('editor.stateSyncing') : t('editor.stateLabel')}</span>
+      {saved && !error && <span className="state-toggle-saved">{t('editor.published')}</span>}
       {error && <span className="state-toggle-error">{error}</span>}
     </span>
   )

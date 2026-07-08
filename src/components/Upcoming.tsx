@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import EditButton from "./EditButton";
 import { useContentEditor } from "../lib/contentEditor";
@@ -44,19 +45,37 @@ export default function Upcoming({
   const editor = useContentEditor();
   const { active: editModeOn } = useEditMode();
   const { locale, t } = useI18n();
+  // The queue-a-draft form (replaces two blocking window.prompt()s): title +
+  // slug + a live URL preview. `slugEdited` tracks whether the author has taken
+  // over the slug — until then it follows the title.
+  const [creating, setCreating] = useState(false);
+  const [titleVal, setTitleVal] = useState("");
+  const [slugVal, setSlugVal] = useState("");
+  const [slugEdited, setSlugEdited] = useState(false);
   if (items.length === 0 && !(editModeOn && draft)) return null;
 
-  const queueDraft = () => {
-    if (!draft) return;
-    const name = window.prompt(t("editor.queuePrompt"))?.trim();
-    if (!name) return;
-    // The slug is the filename, so it's the URL — keep it English even for a
-    // Russian title (slugify only transliterates Cyrillic, giving an ugly
-    // latin slug). Default to that but let the author type the real English
-    // slug; the file is still written under the current locale.
-    const slug =
-      window.prompt(t("editor.slugPrompt"), slugify(name))?.trim().replace(/[^a-z0-9-]/gi, "-") ||
-      slugify(name);
+  // Filename = URL, so keep it english-lowercase-dashes even for a Russian
+  // title (slugify only transliterates Cyrillic into an ugly latin slug).
+  const cleanSlug = (s: string) =>
+    s.toLowerCase().replace(/[^a-z0-9-]+/gi, "-").replace(/^-+|-+$/g, "");
+  const finalSlug = cleanSlug(slugVal) || slugify(titleVal.trim());
+
+  const openCreate = () => {
+    setTitleVal("");
+    setSlugVal("");
+    setSlugEdited(false);
+    setCreating(true);
+  };
+
+  const onTitle = (v: string) => {
+    setTitleVal(v);
+    if (!slugEdited) setSlugVal(slugify(v.trim())); // slug follows title until touched
+  };
+
+  const submitCreate = () => {
+    const name = titleVal.trim();
+    if (!name || !draft) return;
+    const slug = finalSlug;
     editor.openDraft({
       title: name,
       path: `content/locales/${locale}/${draft.dir}/${slug}.md`,
@@ -66,9 +85,11 @@ export default function Upcoming({
       ),
       message: `content: queue ${slug} via portal`,
     });
+    setCreating(false);
   };
 
   return (
+    <>
     <section className={`upcoming${open ? " is-open" : ""}`} aria-label={title}>
       <p className="side-label upcoming-label">{title}</p>
       <p className="upcoming-note">{note}</p>
@@ -92,10 +113,56 @@ export default function Upcoming({
           className="upcoming-edit"
           icon="plus"
           ariaLabel={t("editor.queueAria")}
-          onClick={queueDraft}
+          onClick={openCreate}
         />
       )}
     </section>
+    {creating && draft && (
+      <div className="confirm-overlay" onClick={() => setCreating(false)}>
+        <form
+          className="confirm-dialog create-dialog"
+          onClick={(e) => e.stopPropagation()}
+          onSubmit={(e) => {
+            e.preventDefault();
+            submitCreate();
+          }}
+        >
+          <p className="confirm-dialog-title">{t("editor.createTitle")}</p>
+          <label className="create-field">
+            <span className="side-label">{t("editor.queuePrompt")}</span>
+            <input
+              type="text"
+              autoFocus
+              value={titleVal}
+              onChange={(e) => onTitle(e.target.value)}
+            />
+          </label>
+          <label className="create-field">
+            <span className="side-label">{t("editor.slugPrompt")}</span>
+            <input
+              type="text"
+              value={slugVal}
+              onChange={(e) => {
+                setSlugEdited(true);
+                setSlugVal(e.target.value);
+              }}
+            />
+          </label>
+          <p className="create-url">
+            {draft.detailBase}/<strong>{finalSlug || "…"}</strong>
+          </p>
+          <div className="confirm-dialog-actions">
+            <button type="button" className="btn btn-ghost" onClick={() => setCreating(false)}>
+              {t("editor.cancel")}
+            </button>
+            <button type="submit" className="btn btn-primary" disabled={!titleVal.trim()}>
+              {t("editor.createSubmit")}
+            </button>
+          </div>
+        </form>
+      </div>
+    )}
+    </>
   );
 }
 

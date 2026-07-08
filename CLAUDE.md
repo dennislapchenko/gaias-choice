@@ -676,7 +676,13 @@ VM is down the live site silently degrades to the static baseline.
   `ImagePicker` instead) and a
   **Write/Preview** tab that renders the body with the bundled `marked` — the
   instant-feedback answer to the ~2-min publish lag (the editor sees their
-  markdown rendered before it ever deploys).
+  markdown rendered before it ever deploys). **Save is YAML-guarded** — the
+  frontmatter block is parse-checked (`frontmatterError`) before any commit, so
+  a broken `---` block is refused inline instead of blanking the built SPA.
+  **The editor autosaves** every dirty keystroke to
+  `localStorage['gc-draft:<path>']`; reopening restores it (a banner with a
+  discard link), a dirty close confirms, and a dirty editor arms a
+  `beforeunload` guard — so an accidental reload/close never loses a draft.
   **Images (reviews/journal):** the editor shows a **cover strip** (thumb +
   "Set image", editing frontmatter `image:`) and the 🖼 toolbar button for
   inline images; both open the shared `ImagePicker`, which offers two sources
@@ -689,9 +695,9 @@ VM is down the live site silently degrades to the static baseline.
   (`applyScalarEdit`), inline splices `![](path)` at the caret. So covers are
   real optimized files (not data-URI bundle bloat), matching `ProductCard`.
   New drafts get an **English slug**
-  regardless of authoring locale: `Upcoming.tsx`'s ＋ button prompts for the
-  slug (defaulting to `slugify(title)`) so RU-authored posts still get nice
-  URLs. **Translation is driven by the state toggle, not a button**
+  regardless of authoring locale: `Upcoming.tsx`'s ＋ button opens a small
+  create dialog (title + slug + live URL preview; slug defaults to
+  `slugify(title)`, editable) so RU-authored posts still get nice URLs. **Translation is driven by the state toggle, not a button**
   (`setPostState`, reviews + journal only): flipping an **RU** post **Active**
   (re)translates it into its EN sibling via `POST /content/translate` (stamped
   `translatedFrom:`), forcing EN `state: active`; **title/excerpt are pinned to
