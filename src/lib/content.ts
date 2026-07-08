@@ -111,6 +111,14 @@ function headingIdRenderer(): Renderer {
     if (match) return renderDiagram(match[1], token.text)
     return Renderer.prototype.code.call(this, token)
   }
+  // Prose images: the `![caption](src)` bracket text renders as a visible faint
+  // caption below the image (a figcaption), not just alt text — so non-techy
+  // editors get a real subtitle. Empty brackets = bare image, no caption.
+  renderer.image = ({ href, text }) => {
+    const img = `<img src="${escapeHtml(href ?? '')}" alt="${escapeHtml(text ?? '')}">`
+    if (!text) return img
+    return `<figure class="prose-figure">${img}<figcaption>${escapeHtml(text)}</figcaption></figure>`
+  }
   return renderer
 }
 

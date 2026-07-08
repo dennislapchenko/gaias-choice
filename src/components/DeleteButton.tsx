@@ -4,6 +4,7 @@
 // left to show, so it navigates back to the listing.
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useCmdEnter } from '../lib/cmdEnter'
 import { useContentEditor } from '../lib/contentEditor'
 import { useI18n } from '../lib/i18n'
 
@@ -28,11 +29,14 @@ export default function DeleteButton({ path, redirectTo }: { path: string; redir
       })
   }
 
+  // Cmd/Ctrl+Enter confirms the delete while the yes/no dialog is open.
+  useCmdEnter(confirm, confirming && !busy)
+
   return (
     <>
       <button
         type="button"
-        className="edit-btn edit-btn-labeled delete-btn"
+        className="edit-btn delete-btn"
         aria-label={t('editor.deleteAria')}
         title={t('editor.deleteAria')}
         onClick={() => setConfirming(true)}
@@ -44,7 +48,6 @@ export default function DeleteButton({ path, redirectTo }: { path: string; redir
           <path d="M10 11v6" />
           <path d="M14 11v6" />
         </svg>
-        <span>{t('editor.delete')}</span>
       </button>
       {confirming && (
         <div className="confirm-overlay" onClick={() => !busy && setConfirming(false)}>

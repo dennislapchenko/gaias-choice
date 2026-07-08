@@ -191,9 +191,10 @@ function useIsNarrow() {
 }
 
 // A flat rectangular toggle over collapsible content (desktop left rail).
-// `forceClosed` lets a panel be collapsed while its own full page is open
-// (About's panel vs. `/about`) — it reopens to its normal state once the
-// reader navigates away. Panels that don't pass it behave exactly as before.
+// `forceClosed` lets a panel be collapsed while a page that already covers
+// its content is open (About's panel vs. `/about` or `/account`) — it
+// reopens to its normal state once the reader navigates away. Panels that
+// don't pass it behave exactly as before.
 function CollapsiblePanel({
   label,
   defaultOpen,
@@ -247,10 +248,11 @@ function SidebarMobile({
   // open — its family photo makes the ask to support feel personal (desktop
   // shows About by default anyway). Keyed on pathname only: navigating here
   // opens it once, but the visitor can still close it while they read.
-  // On the About page itself, collapse the About tab if it happens to be
-  // open — its own full page is already showing the same content.
+  // On the About and Account pages, collapse the About tab if it happens to
+  // be open — About's own full page already shows the same content, and
+  // Account is the reader's own profile (the campfire), not About Us.
   useEffect(() => {
-    if (pathname === '/about') {
+    if (pathname === '/about' || pathname === '/account') {
       setOpenType((current) => (current === 'about' ? null : current))
     } else if (pathname === '/support' && widgets.some((w) => w.type === 'about')) {
       setOpenType('about')
@@ -312,7 +314,9 @@ export default function Sidebar() {
             key={`${w.type}-${i}`}
             label={Panel.label(t)}
             defaultOpen={Panel.desktopOpen}
-            forceClosed={w.type === 'about' ? pathname === '/about' : undefined}
+            forceClosed={
+              w.type === 'about' ? pathname === '/about' || pathname === '/account' : undefined
+            }
           >
             <Panel.Body site={site} t={t} locale={locale} />
           </CollapsiblePanel>

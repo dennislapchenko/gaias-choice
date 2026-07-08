@@ -89,3 +89,16 @@ export function setField(text: string, key: string, newValue: FrontmatterField['
   const block = doc.toString({ lineWidth: 0, flowCollectionPadding: false }).replace(/\n$/, '')
   return fm ? `${fm.open}${block}${fm.close}${fm.body}` : block
 }
+
+// Whole-file text with ONE frontmatter key removed entirely (no-op if absent).
+// Used when clearing the cover or emptying the gallery so the block stays clean
+// (`image: ''` / `gallery: []` left behind would be ugly). Same block-only
+// re-emit + body splice as setField.
+export function removeField(text: string, key: string): string {
+  const fm = splitFrontmatter(text)
+  const doc = parseDocument(fm ? fm.yaml : text)
+  if (doc.errors.length > 0) throw new Error(doc.errors[0].message)
+  doc.delete(key)
+  const block = doc.toString({ lineWidth: 0, flowCollectionPadding: false }).replace(/\n$/, '')
+  return fm ? `${fm.open}${block}${fm.close}${fm.body}` : block
+}

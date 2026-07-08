@@ -429,7 +429,7 @@ h1 {
     position: fixed;
     left: 0;
     right: 0;
-    top: 0;
+    top: var(--vv-top, 0px);
     height: var(--vv-h, 100vh);
     z-index: 60;
     display: grid;
@@ -2331,7 +2331,21 @@ a.respected-card:hover {
 }
 .prose img {
     border-radius: var(--radius);
-    margin: 1.2em 0;
+    display: block;
+    margin: 1.2em auto;
+}
+/* `![caption](src)` renders as image + faint centered subtitle below it. */
+.prose figure.prose-figure {
+    margin: 1.2em auto;
+    text-align: center;
+}
+.prose figure.prose-figure img {
+    margin: 0 auto 0.5em;
+}
+.prose figure.prose-figure figcaption {
+    font-size: 0.9rem;
+    color: var(--muted);
+    text-align: center;
 }
 .prose ul,
 .prose ol {
@@ -2772,7 +2786,7 @@ a.respected-card:hover {
     position: fixed;
     left: 0;
     right: 0;
-    top: 0;
+    top: var(--vv-top, 0px);
     height: var(--vv-h, 100vh);
     background: rgba(47, 44, 39, 0.45);
     display: grid;
@@ -2795,15 +2809,39 @@ a.respected-card:hover {
 }
 @media (max-width: 720px) {
     .content-editor-overlay {
-        padding: 10px;
+        /* Full-bleed, and NOT the desktop grid-center: a centered grid item's
+           height:100% resolves against the auto row track (its own content), so
+           the modal under-fills the visible viewport and the body textarea can't
+           grow into the empty space (page bleeds above/below the card). Block
+           makes height:100% resolve against the definite --vv-h, filling it. */
+        padding: 0;
+        display: block;
     }
     .content-editor {
         width: 100%;
         height: 100%;
+        border-radius: 0;
     }
-    /* Longer RU labels (Поля/Исходный/Просмотр, ✓ Сохранить) overflow a phone
-       row and the modal's overflow:hidden clips them — let both rows wrap. */
-    .content-editor-toolbar,
+    /* Every chrome row above the textarea is vertical budget the keyboard-shrunk
+       modal can't spare, so trim them: tighter header, a scrolling (not
+       wrapping) toolbar so the longer RU tab labels never cost a second row,
+       and a compact cover strip. */
+    .content-editor-head {
+        padding: 10px 14px;
+    }
+    .content-editor-toolbar {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+    }
+    .content-editor-cover {
+        padding: 8px 14px;
+    }
+    .ce-image-slot {
+        width: 56px;
+        height: 56px;
+    }
+    /* ✓ Сохранить can wrap under the copy button rather than clip. */
     .content-editor-actions {
         flex-wrap: wrap;
         row-gap: 6px;
@@ -2812,7 +2850,43 @@ a.respected-card:hover {
        modal instead of forcing overflow from a tall min-height. */
     .content-editor-preview,
     .content-editor-textarea {
-        min-height: 120px;
+        min-height: 96px;
+    }
+    .content-editor-body-textarea {
+        min-height: 96px;
+    }
+    /* Redundant next to the folded ПОЛЯ bar (which shows the note title) — the
+       textarea is obviously the body. Reclaim the row. */
+    .ce-body-label {
+        display: none;
+    }
+}
+/* Landscape phone: layout viewport height ~390–430px, and with the keyboard up
+   the strip above it is only ~130px — too short to stack header + toolbar +
+   field + actions. Drop the flex column that shrinks everything to nothing and
+   scroll the whole modal as ONE column instead, so the focused field (iOS
+   scrolls it into view) and the Save row are both reachable. (Portrait phones
+   have innerHeight ~800+, so this never touches them.) */
+@media (max-height: 430px) {
+    .content-editor-overlay {
+        padding: 0;
+        display: block;
+    }
+    .content-editor {
+        width: 100%;
+        height: 100%;
+        max-height: 100%;
+        border-radius: 0;
+        display: block;
+        overflow-y: auto;
+    }
+    .content-editor-toolbar {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+    }
+    .ce-body-label {
+        display: none;
     }
 }
 .content-editor-head {
@@ -2876,38 +2950,142 @@ a.respected-card:hover {
 }
 /* Cover-image strip between the toolbar and the editor body (posts only). */
 .content-editor-cover {
-    display: flex;
-    align-items: center;
-    gap: 12px;
     padding: 10px 14px;
     border-bottom: 1px solid var(--line);
     background: var(--white);
 }
-.content-editor-cover-thumb {
+/* The image row: the cover (special first slot, «Обложка») then gallery thumbs
+   then a ＋. Scrolls horizontally so a long gallery never wraps into rows. */
+.ce-image-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    padding-bottom: 2px;
+}
+.ce-image-slot {
+    position: relative;
     flex: 0 0 auto;
-    width: 64px;
-    height: 64px;
+    width: 72px;
+    height: 72px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
+    padding: 0;
+    border: 1px solid var(--line);
     border-radius: var(--radius-sm);
     overflow: hidden;
     background: var(--sand2);
+    cursor: pointer;
 }
-.content-editor-cover-thumb img {
+.ce-image-slot:disabled {
+    cursor: default;
+    opacity: 0.6;
+}
+.ce-image-slot img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-.content-editor-cover-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+.ce-image-slot.is-cover {
+    border-color: var(--sage);
 }
-.content-editor-cover-actions > div {
+.ce-image-add {
+    border-style: dashed;
+    background: var(--white);
+}
+.ce-image-plus {
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--muted);
+}
+/* «Обложка» badge overlaid on the first slot — marks the cover. */
+.ce-image-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 2px 4px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--on-accent);
+    background: color-mix(in srgb, var(--sage) 88%, transparent);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ce-image-add .ce-image-label {
+    color: var(--muted);
+    background: transparent;
+    position: static;
+    padding: 0;
+    margin-top: 2px;
+}
+.ce-image-add {
+    flex-direction: column;
+    gap: 2px;
+}
+/* ---------- Frameless image viewer / frame editor (ImageFrame.tsx) ---------- */
+/* "No frame, only the factual image" (#9): the canvas IS the popup; a floating
+   control pill sits over it; the backdrop closes on tap (#6). */
+.image-frame-backdrop {
+    position: fixed;
+    inset: 0;
+    top: var(--vv-top, 0px);
+    height: var(--vv-h, 100vh);
+    display: grid;
+    place-items: center;
+    padding: 12px;
+    background: rgba(20, 18, 15, 0.82);
+    z-index: 120;
+    overscroll-behavior: contain;
+}
+.image-frame {
+    position: relative;
+    display: flex;
+}
+.image-frame-canvas {
+    display: block;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    background: #000;
+    cursor: grab;
+    touch-action: none;
+}
+.image-frame-canvas:active {
+    cursor: grabbing;
+}
+.image-frame-controls {
+    position: absolute;
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%);
     display: flex;
     gap: 8px;
+    padding: 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+.image-frame-del {
+    padding-inline: 12px;
+}
+/* Aspect button stacks a faint "aspect" caption over the current value, so
+   "Original" reads unmistakably as the aspect-ratio control. */
+.image-frame-aspect {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    line-height: 1.15;
+}
+.image-frame-aspect-label {
+    font-size: 0.7em;
+    font-weight: 400;
+    color: var(--muted);
 }
 .content-editor-md {
     display: flex;

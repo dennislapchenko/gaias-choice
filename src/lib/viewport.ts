@@ -1,20 +1,22 @@
 import { useEffect } from 'react'
 
 /**
- * Make a full-height modal overlay behave under the mobile on-screen keyboard.
- * While `open`, this does two things:
+ * Make a full-screen modal overlay track the mobile on-screen keyboard. While
+ * `open`, it mirrors `window.visualViewport` onto two global CSS vars the
+ * overlays position against (`.content-editor-overlay`, `.login-overlay`):
  *
- *  1. **Locks background scroll** by pinning `<body>` (position:fixed at the
- *     current scrollY, restored on close). Without this, iOS Safari scrolls the
- *     LAYOUT viewport to reveal a focused input and drags every `position:fixed`
- *     element off-screen with it — the overlay's header ends up above the top
- *     edge. Pinning the body stops that scroll, so the fixed overlay stays put
- *     and can simply sit at `top:0`.
- *  2. **Mirrors the visible height** onto the global `--vv-h` CSS var from
- *     `window.visualViewport` (the only signal that shrinks when the keyboard
- *     opens — iOS keeps `vh`/`dvh` at full screen height under it), so the
- *     overlay fills exactly the space above the keyboard. No visualViewport
- *     (older desktop) ⇒ the var stays unset and CSS falls back to `100vh`.
+ *  - **`--vv-h`** = `visualViewport.height`. iOS keeps `vh`/`dvh` at full screen
+ *    height under the keyboard; the visual viewport is the only signal that
+ *    shrinks. The overlay uses it as its height so it fills exactly the space
+ *    above the keyboard, Save button included.
+ *  - **`--vv-top`** = `visualViewport.offsetTop`. To reveal a focused input, iOS
+ *    pans the VISUAL viewport downward (measured: offsetTop jumps to ~242px),
+ *    which drags every `position:fixed` layer up off the top edge — a body
+ *    scroll-lock does NOT prevent this pan. So the overlay pins its `top` to
+ *    offsetTop and stays glued to the visible rect instead of scrolling away.
+ *
+ * No visualViewport (older desktop) ⇒ both vars stay unset and CSS falls back
+ * to `top:0; height:100vh`.
  *
  * ponytail: no refcount for stacked modals — the only overlays that use this
  * (editor, login) never open at once, so a single writer is always fine.
@@ -22,20 +24,24 @@ import { useEffect } from 'react'
 export function useVisibleViewportVars(open: boolean): void {
   useEffect(() => {
     if (!open) return
-    const body = document.body
     const rootStyle = document.documentElement.style
-
-    // Scroll lock (see #1). Restored exactly on cleanup.
-    const scrollY = window.scrollY
-    body.style.position = 'fixed'
-    body.style.top = `-${scrollY}px`
-    body.style.left = '0'
-    body.style.right = '0'
-    body.style.width = '100%'
-
     const vv = window.visualViewport
     const apply = () => {
-      if (vv) rootStyle.setProperty('--vv-h', `${vv.height}px`)
+      if (!vv) return
+      // iOS's form-assistant accessory bar (~44pt: the Done + prev/next strip)
+      // sits above the keyboard but is NOT excluded from visualViewport.height,
+      // so a modal sized to the full height hides its bottom row (Save) behind
+      // it. Reserve it while the keyboard is up (height shrunk well below
+      // innerHeight). ponytail: 48 is the standard bar height; bump if a future
+      // iOS grows it.
+      // ...but only when there's height to spare. On a landscape phone the
+      // strip above the keyboard is already ~130px; spending 48 of it makes the
+      // modal (which scrolls in that case — see the max-height:430px CSS) worse,
+      // not better, so skip the reserve when the visible viewport is that short.
+      const keyboardUp = window.innerHeight - vv.height > 120
+      const reserve = keyboardUp && vv.height > 200 ? 48 : 0
+      rootStyle.setProperty('--vv-h', `${vv.height - reserve}px`)
+      rootStyle.setProperty('--vv-top', `${vv.offsetTop}px`)
     }
     apply()
     vv?.addEventListener('resize', apply)
@@ -45,12 +51,7 @@ export function useVisibleViewportVars(open: boolean): void {
       vv?.removeEventListener('resize', apply)
       vv?.removeEventListener('scroll', apply)
       rootStyle.removeProperty('--vv-h')
-      body.style.position = ''
-      body.style.top = ''
-      body.style.left = ''
-      body.style.right = ''
-      body.style.width = ''
-      window.scrollTo(0, scrollY)
+      rootStyle.removeProperty('--vv-top')
     }
   }, [open])
 }

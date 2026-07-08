@@ -1,7 +1,7 @@
 # Locale-identical config (name, url, heroImage, sidebar, social,
 # contactEmail, support) is authored once in en/site.yaml and inherited here
 # via getSite's fall-back-to-en merge — don't copy it back.
-tagline: Натуральная жизнь в дороге с малышом. Рил ба.
+tagline: Залезть во все кроличьи норы и остаться собой. Рил ба.
 description: >-
   Честные обзоры натуральных вещей без пластика и отдушек для путешествий с
   малышом — на кемпере, машине или с ручной кладью — плюс бесплатные курсы о

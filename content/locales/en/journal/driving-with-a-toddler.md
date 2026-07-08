@@ -1,9 +1,11 @@
 ---
+image: /images/image-mrcfcpyy.webp
 translatedFrom: ru
 title: "How to rack up kilometers with a baby da"
 excerpt: "A working template for the honest version of a long road trip with a small child — the real daily range, the hard hour, and the ways out of it."
 date: 2026-07-05
 tags: [travel]
+gallery: [/images/image-mrcfd8h7.webp, /images/image-mrcfdi9j.webp]
 ---
 
 *This is a template — the shape of a road note waiting for a real trip to fill

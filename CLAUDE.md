@@ -13,7 +13,9 @@ invariants*. Process rules (truth-first, provenance contract, committing) live
 in `.claude/skills/manage-site/SKILL.md`; the course-batch production
 workflow in `.claude/skills/write-epic-course/SKILL.md`; change-X-edit-Y
 mechanics in `references/development.md`; authoring procedures in
-`references/content-editing.md`; voice/worldview source material in `context/`.
+`references/content-editing.md` (both `references/*` live under
+`.claude/skills/manage-site/`, not the repo root); voice/worldview source
+material in `context/`.
 Docs describe **current state only** — no dates, no "renamed from", no
 changelog framing (git history answers those). When you update docs, fix stale
 lines *and* delete anything that has become history rather than state.
@@ -800,6 +802,11 @@ The owner wants the npm surface kept off the host and minimal.
   `.ngrok.io` under `server.allowedHosts` (Vite 6 blocks unknown hosts). Dev-only.
 - **Type-checking** is separate from building. CI/pre-deploy should run
   `task typecheck` — `vite build` alone will happily ship type errors.
+- **DEBUG gate:** `src/lib/debug.ts` exports `DEBUG` — wrap any dev-only chrome
+  (viewport read-outs, state dumps) in `DEBUG && …`. On automatically in
+  `vite dev`, forceable with `VITE_DEBUG=true|false`, OFF by default in the prod
+  Pages build. It's a Vite env gate, **not** a `site.yaml` field — a debug flag
+  is dev tooling, and `site.yaml` ships to the visitor bundle.
 - **Verifying visually:** build (`task build`) and serve `dist/` with any static
   server; because it's an SPA, deep links only resolve via the nginx fallback, so
   when testing on a plain static server, load `/` and navigate by clicking.

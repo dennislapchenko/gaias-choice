@@ -26,10 +26,13 @@ import { marked } from 'marked'
 import { Composer, CST, isScalar, Parser, parseDocument } from 'yaml'
 import CopyButton from '../components/CopyButton'
 import ImagePicker from '../components/ImagePicker'
+import ImageFrame from '../components/ImageFrame'
 import FrontmatterFields from '../components/FrontmatterFields'
 import { withBase } from './asset'
 import { getSite } from './content'
-import { FRONTMATTER_RE, setField, type FrontmatterField } from './frontmatter'
+import { useCmdEnter } from './cmdEnter'
+import { DEBUG } from './debug'
+import { FRONTMATTER_RE, removeField, setField, type FrontmatterField } from './frontmatter'
 import {
   apiDelete,
   apiGet,
@@ -148,6 +151,14 @@ function fmScalar(fileText: string, key: string): string | undefined {
   return v == null ? undefined : String(v)
 }
 
+// Read a top-level frontmatter list of strings (empty if absent) — the gallery
+// (`gallery: [/images/a.webp, …]`). setField writes it back as a flow seq.
+function fmList(fileText: string, key: string): string[] {
+  const m = FRONTMATTER_RE.exec(fileText)
+  const v = (parseDocument(m ? m[2] : fileText).toJS() as Record<string, unknown> | null)?.[key]
+  return Array.isArray(v) ? v.map(String) : []
+}
+
 // Return the first YAML error in a file's front-matter (or the whole doc for
 // a plain-YAML file), or null if it parses. Blocks the raw-textarea save path
 // from committing a broken `---` block that would blank the built SPA.
@@ -248,16 +259,59 @@ function applyMdAction(
   return { text, selStart: bodyAt, selEnd: bodyAt + body.length }
 }
 
+// DEBUG-gated: live-report the viewport numbers driving the mobile modal height
+// (iOS keyboard pan/visual-viewport). Rendered only when `DEBUG` is on.
+function VvDebug() {
+  const [, force] = useState(0)
+  useEffect(() => {
+    const on = () => force((n) => n + 1)
+    window.visualViewport?.addEventListener('resize', on)
+    window.visualViewport?.addEventListener('scroll', on)
+    const id = window.setInterval(on, 500)
+    return () => {
+      window.visualViewport?.removeEventListener('resize', on)
+      window.visualViewport?.removeEventListener('scroll', on)
+      window.clearInterval(id)
+    }
+  }, [])
+  const vv = window.visualViewport
+  const cssVar = getComputedStyle(document.documentElement).getPropertyValue('--vv-h')
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        // Pin to the VISIBLE viewport top so an iOS keyboard pan can't hide it.
+        top: vv ? vv.offsetTop : 0,
+        left: vv ? vv.offsetLeft : 0,
+        zIndex: 9999,
+        background: 'rgba(0,0,0,0.85)',
+        color: '#0f0',
+        font: '12px monospace',
+        padding: '4px 6px',
+        pointerEvents: 'none',
+        whiteSpace: 'pre',
+      }}
+    >
+      {`vv.h=${vv ? Math.round(vv.height) : 'none'} vv.top=${vv ? Math.round(vv.offsetTop) : '-'}\ninnerH=${window.innerHeight} scrollY=${Math.round(window.scrollY)}\n--vv-h=${cssVar.trim() || 'unset'}`}
+    </div>
+  )
+}
+
 export function ContentEditorProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<EditorState | null>(null)
   // Fields = structured frontmatter + body textarea (the friendly default);
   // raw = whole-file textarea (escape hatch); preview = rendered body.
   const [view, setView] = useState<'fields' | 'raw' | 'preview'>('fields')
-  // Collapse the frontmatter fields to give the body textarea the whole pane.
-  const [fieldsOpen, setFieldsOpen] = useState(true)
-  // Which target an open ImagePicker fills: the frontmatter cover, or an inline
-  // ![]() at the caret. null = closed.
-  const [picker, setPicker] = useState<null | 'cover' | 'inline'>(null)
+  // Collapse the frontmatter fields (+ image row) to give the body textarea the
+  // whole pane. Default open on desktop (room for both); collapsed on mobile,
+  // where the stacked chrome would otherwise leave the textarea a few lines tall.
+  const [fieldsOpen, setFieldsOpen] = useState(() => window.innerWidth > 720)
+  // Which target an open ImagePicker fills: the frontmatter cover, an appended
+  // gallery image, or an inline ![]() at the caret. null = closed.
+  const [picker, setPicker] = useState<null | 'cover' | 'inline' | 'gallery'>(null)
+  // Which image the frameless ImageFrame viewer/frame-editor is open on: the
+  // cover, or a gallery entry by index. null = closed.
+  const [framing, setFraming] = useState<null | { kind: 'cover' } | { kind: 'gallery'; index: number }>(null)
   const taRef = useRef<HTMLTextAreaElement>(null)
   const pendingSel = useRef<[number, number] | null>(null)
   // The textarea selection captured when the inline image picker opened (the
@@ -335,28 +389,37 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  // Downscale a picked file in-browser and commit it to public/images/ as its
-  // own git commit (POST /content/image), returning the /images/<name> path a
-  // post references. Names carry a base36 timestamp so uploads never collide.
-  const uploadFile = async (file: File): Promise<string> => {
-    const dataUrl = await downscaleToWebP(file, 1400)
-    const base64 = dataUrl.split(',')[1] ?? ''
+  // Commit one already-encoded WebP (base64, no data: prefix) to public/images/
+  // as its own git commit (POST /content/image), returning the /images/<name>
+  // path a post references. Names carry a base36 timestamp so writes never
+  // collide (a reframe writes a fresh file, leaving the old one orphaned — cheap
+  // vs. sha-guarded overwrite). Shared by file uploads and ImageFrame reframes.
+  const commitImageBase64 = async (base64: string): Promise<string> => {
     const base =
-      (state?.title ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') ||
-      'image'
+      (fmScalar(state?.value ?? '', 'title') ?? state?.title ?? '')
+        .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'image'
     const name = `${base}-${Date.now().toString(36)}.webp`
     await uploadImage(`public/images/${name}`, base64, token ?? undefined)
     return '/images/' + name
   }
 
+  // Downscale a picked file in-browser, then commit it (the whole-frame path —
+  // ImagePicker's "from your device" upload).
+  const uploadFile = async (file: File): Promise<string> => {
+    const dataUrl = await downscaleToWebP(file, 1400)
+    return commitImageBase64(dataUrl.split(',')[1] ?? '')
+  }
+
   // Put a chosen/uploaded image path where the picker was aimed: the cover sets
   // the frontmatter `image:` scalar (inserted if absent); inline splices an
   // ![](path) at the caret captured when the picker opened.
-  const applyImage = (path: string, target: 'cover' | 'inline') => {
+  const applyImage = (path: string, target: 'cover' | 'inline' | 'gallery') => {
     if (!state) return
     try {
       if (target === 'cover') {
         setState({ ...state, value: applyScalarEdit(state.value, { file: '', path: ['image'] }, path) })
+      } else if (target === 'gallery') {
+        setState({ ...state, value: setField(state.value, 'gallery', [...fmList(state.value, 'gallery'), path]) })
       } else {
         // Splice into whichever text the active textarea shows (body vs whole).
         const base = view === 'raw' ? state.value : mdBody(state.value)
@@ -368,6 +431,36 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       setState({ ...state, status: 'error', errorText: err instanceof Error ? err.message : String(err) })
     }
+  }
+
+  // Point the cover/gallery reference at `path` (a freshly-committed reframe, or
+  // a clear when path is null). Cover clears via removeField (no `image: ''`);
+  // a gallery clear splices the index out, dropping `gallery:` when it empties.
+  const setImageRef = (where: { kind: 'cover' } | { kind: 'gallery'; index: number }, path: string | null) => {
+    if (!state) return
+    try {
+      let value: string
+      if (where.kind === 'cover') {
+        value = path
+          ? applyScalarEdit(state.value, { file: '', path: ['image'] }, path)
+          : removeField(state.value, 'image')
+      } else {
+        const list = fmList(state.value, 'gallery')
+        const next = path ? list.map((p, i) => (i === where.index ? path : p)) : list.filter((_, i) => i !== where.index)
+        value = next.length ? setField(state.value, 'gallery', next) : removeField(state.value, 'gallery')
+      }
+      setState({ ...state, value })
+    } catch (err) {
+      setState({ ...state, status: 'error', errorText: err instanceof Error ? err.message : String(err) })
+    }
+  }
+
+  // ImageFrame Save: commit the reframed crop as a fresh file, then repoint the
+  // reference at it (the old file is orphaned — see commitImageBase64).
+  const saveFraming = async (base64: string) => {
+    if (!framing) return
+    setImageRef(framing, await commitImageBase64(base64))
+    setFraming(null)
   }
 
   const openInlinePicker = () => {
@@ -505,19 +598,22 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     await apiDelete<DeleteResponse>('/content/file', { paths }, { token: token ?? undefined })
   }
 
-  // RU→EN cover mirror: a review/journal `image:` is shared media, and RU is
-  // its source (SKILL.md #6). On saving an RU post, return the EN sibling with
-  // its cover set to RU's — or null when there's nothing to mirror (not an RU
-  // post, no cover set, no EN sibling yet, or already in sync). Inline body
-  // images are per-locale (the EN body is a separate translation) and never
-  // mirror; only the frontmatter `image:` scalar does.
+  // RU→EN media mirror: a review/journal cover (`image:`) AND `gallery:` are
+  // shared media, and RU is their source (SKILL.md #6). On saving an RU post,
+  // return the EN sibling with both set to RU's — or null when there's nothing
+  // to mirror (not an RU post, no cover/gallery, no EN sibling yet, or already
+  // in sync). Inline body images are per-locale (the EN body is a separate
+  // translation) and never mirror; only the frontmatter media does. The cover
+  // is set-only (never cleared, preserving prior behavior); the gallery mirrors
+  // exactly, clearing EN's when RU empties it.
   const enCoverMirror = async (
     ruPath: string,
     ruValue: string,
   ): Promise<{ path: string; content: string } | null> => {
     if (!/\/locales\/ru\/(products|journal)\//.test(ruPath)) return null
     const ruImage = fmScalar(ruValue, 'image')
-    if (ruImage == null) return null
+    const ruGallery = fmList(ruValue, 'gallery')
+    if (ruImage == null && ruGallery.length === 0) return null
     const enPath = ruPath.replace('/locales/ru/', '/locales/en/')
     let en: ContentFile
     try {
@@ -528,8 +624,13 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       if (err instanceof ApiError && err.status === 404) return null // no sibling yet; Active flip seeds it
       throw err
     }
-    if (fmScalar(en.content, 'image') === ruImage) return null
-    return { path: enPath, content: applyScalarEdit(en.content, { file: enPath, path: ['image'] }, ruImage) }
+    const imageInSync = ruImage == null || fmScalar(en.content, 'image') === ruImage
+    const galleryInSync = JSON.stringify(fmList(en.content, 'gallery')) === JSON.stringify(ruGallery)
+    if (imageInSync && galleryInSync) return null
+    let content = en.content
+    if (ruImage != null) content = applyScalarEdit(content, { file: enPath, path: ['image'] }, ruImage)
+    content = ruGallery.length ? setField(content, 'gallery', ruGallery) : removeField(content, 'gallery')
+    return { path: enPath, content }
   }
 
   const saveFile = async (mode: Extract<EditorMode, { kind: 'file' }>, value: string) => {
@@ -723,10 +824,17 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     state?.status === 'loading' ||
     state?.status === 'saving' ||
     state?.status === 'enriching'
+  // Cmd/Ctrl+Enter saves the open post (skipped while the frame editor is up —
+  // its own Cmd+Enter is on top of the stack and takes precedence).
+  useCmdEnter(save, !!state?.mode && !busy && state.status !== 'published')
   // The cover control only makes sense for the two post types (reviews/journal
   // have an `image:` cover); compass/pages/site.yaml don't get it.
   const isPost = !!state?.mode && /\/(products|journal)\//.test(state.mode.path)
   const cover = state ? fmScalar(state.value, 'image') : undefined
+  const gallery = state ? fmList(state.value, 'gallery') : []
+  // The post's own title (frontmatter `title:`), shown greyed on the collapsed
+  // fields bar so you still see what you're editing without expanding it.
+  const noteTitle = state ? fmScalar(state.value, 'title') : undefined
   // Labels for the `scores` field row (aligned to a review's scores by index).
   const scoreLabels = getSite(locale).ratingCriteria?.items ?? []
 
@@ -735,6 +843,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       {children}
       {state && (
         <div className="content-editor-overlay" onClick={attemptClose}>
+          {DEBUG && <VvDebug />}
           <div
             className="content-editor"
             role="dialog"
@@ -742,7 +851,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="content-editor-head">
-              <p className="content-editor-title">{state.title}</p>
+              <p className="content-editor-title">{noteTitle ?? state.title}</p>
               <button
                 type="button"
                 className="content-editor-close"
@@ -802,27 +911,56 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                 </button>
               </div>
             </div>
-            {isPost && (
+            {isPost && (view !== 'fields' || fieldsOpen) && (
+              // Image row: the cover is the special first slot («Обложка»); the
+              // rest are gallery images. A filled slot opens the frame editor
+              // (view/reframe/delete); a ＋ slot opens the picker (library +
+              // device). The gallery ＋ appears only once a cover exists.
               <div className="content-editor-cover">
-                <div className="content-editor-cover-thumb">
+                <div className="ce-image-row">
                   {cover ? (
-                    <img src={withBase(cover)} alt="" />
-                  ) : (
-                    <span aria-hidden="true">🌿</span>
-                  )}
-                </div>
-                <div className="content-editor-cover-actions">
-                  <span className="side-label">{t('editor.cover')}</span>
-                  <div>
                     <button
                       type="button"
-                      className="btn btn-ghost"
+                      className="ce-image-slot is-cover"
+                      disabled={busy || state.status === 'published'}
+                      onClick={() => setFraming({ kind: 'cover' })}
+                    >
+                      <img src={withBase(cover)} alt="" />
+                      <span className="ce-image-label">{t('editor.cover')}</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="ce-image-slot ce-image-add"
                       disabled={busy || state.status === 'published'}
                       onClick={() => setPicker('cover')}
                     >
-                      {t('editor.coverSet')}
+                      <span className="ce-image-plus" aria-hidden="true">＋</span>
+                      <span className="ce-image-label">{t('editor.cover')}</span>
                     </button>
-                  </div>
+                  )}
+                  {gallery.map((path, i) => (
+                    <button
+                      key={path + i}
+                      type="button"
+                      className="ce-image-slot"
+                      disabled={busy || state.status === 'published'}
+                      onClick={() => setFraming({ kind: 'gallery', index: i })}
+                    >
+                      <img src={withBase(path)} alt="" />
+                    </button>
+                  ))}
+                  {(cover || gallery.length > 0) && (
+                    <button
+                      type="button"
+                      className="ce-image-slot ce-image-add"
+                      disabled={busy || state.status === 'published'}
+                      onClick={() => setPicker('gallery')}
+                      title={t('editor.galleryAdd')}
+                    >
+                      <span className="ce-image-plus" aria-hidden="true">＋</span>
+                    </button>
+                  )}
                 </div>
               </div>
             )}
@@ -854,7 +992,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                     onClick={() => setFieldsOpen((o) => !o)}
                   >
                     <span className="side-chevron" aria-hidden="true" />
-                    {t('editor.fields')}
+                    {t('editor.fieldsAndImages')}
                   </button>
                   {fieldsOpen && (
                     <FrontmatterFields
@@ -872,6 +1010,9 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                     value={mdBody(state.value)}
                     spellCheck={false}
                     disabled={busy || state.status === 'published'}
+                    // Focusing the body collapses fields+images so the text owns
+                    // the pane (fields default open on desktop; reopen via toggle).
+                    onFocus={() => setFieldsOpen(false)}
                     onChange={(e) => setState({ ...state, value: withBody(state.value, e.target.value) })}
                   />
                 </div>
@@ -919,6 +1060,21 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
           onUpload={uploadFile}
         />
       )}
+      {state && framing && (() => {
+        const path = framing.kind === 'cover' ? cover : gallery[framing.index]
+        if (!path) return null
+        return (
+          <ImageFrame
+            src={path}
+            onSave={saveFraming}
+            onDelete={() => {
+              setImageRef(framing, null)
+              setFraming(null)
+            }}
+            onClose={() => setFraming(null)}
+          />
+        )
+      })()}
     </ContentEditorContext.Provider>
   )
 }

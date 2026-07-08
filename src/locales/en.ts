@@ -185,7 +185,6 @@ const en = {
   "editor.contentAria": "Edit post content",
   "editor.edit": "Edit",
   "editor.deleteAria": "Delete this post",
-  "editor.delete": "Delete",
   "editor.deleteConfirmTitle": "Delete this post?",
   "editor.deleteConfirmBody": "This removes the file for good. It can't be undone from here.",
   "editor.deleteError": "Delete failed:",
@@ -195,6 +194,7 @@ const en = {
   "editor.write": "Write",
   "editor.preview": "Preview",
   "editor.fields": "Fields",
+  "editor.fieldsAndImages": "Fields & images",
   "editor.raw": "Raw",
   "editor.body": "Body",
   "editor.mdBold": "Bold",
@@ -205,8 +205,15 @@ const en = {
   "editor.enriching": "Tuning the template to your title…",
   "editor.cover": "Cover image",
   "editor.coverSet": "Set image",
+  "editor.galleryAdd": "Add image",
   "editor.imageUploading": "Uploading…",
   "imagePicker.upload": "From your device",
+  "imageFrame.aspect": "aspect",
+  "imageFrame.original": "Original",
+  "imageFrame.save": "Save",
+  "imageFrame.copyMd": "Copy for text",
+  "imageFrame.captionPrompt": "Caption (can be empty):",
+  "imageFrame.deleteConfirm": "Remove this image?",
 } satisfies Record<string, string>;
 
 export default en;
