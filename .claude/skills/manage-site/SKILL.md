@@ -194,6 +194,20 @@ seeing it beats describing it; plain words win otherwise. Pitch it at the
 owner: a slightly rusty software engineer and a current devops — spell out
 FE/framework idioms, skip explaining infra basics.
 
+**The done-message format.** The final "work is done" message of a task (not
+intermediate replies or questions) follows a fixed pattern — everything,
+without miss, but skimmable, never one dense blob:
+
+- Start the message with ✅ and end it with ✅.
+- Body structured for skimming: short paragraphs or bullets grouped by
+  concern (what changed, why, proof), key nouns bold, one idea per line.
+- Then one line per step still left: `🚀 <step that is left>` (commit
+  pending, deploy pending, follow-up work…).
+- Then, if something remains open to think on: `⚖️ <the open question>`.
+- Unrelated dirty files / a contaminated worktree get their own part
+  starting with the line `🪨 Dirty Worktree:`.
+- Omit the 🚀/⚖️/🪨 parts entirely when there's nothing for them.
+
 If Docker is down: `open -a OrbStack` and wait ~15s. For visual checks, serve
 `dist/` statically (`task dev` needs a TTY and fails under preview harnesses) —
 full recipe in `references/development.md`.
