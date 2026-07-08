@@ -508,7 +508,7 @@ paths:
                   minItems: 1
                   maxItems: 10
                   items: { type: string, maxLength: 512 }
-                  description: Repo-relative paths; each must live under content/.
+                  description: Repo-relative paths; each must live under content/ or be a public/images/*.webp file.
                 message:
                   type: string
                   description: Commit message; defaulted when omitted.

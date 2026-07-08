@@ -5,6 +5,7 @@ package config
 
 import (
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -12,6 +13,17 @@ type Config struct {
 	Port        string
 	DataDir     string
 	CORSOrigins []string
+
+	// Debug ⇒ gin runs in debug mode AND the request logger echoes each
+	// endpoint's response (the OpenAPI response description + the JSON body,
+	// truncated to ResponseLogLines lines). Off ⇒ one access line per request,
+	// no body. ResponseLogLines caps that body echo (default 3).
+	Debug            bool
+	ResponseLogLines int
+
+	// LogExclude is the set of request paths the logger skips entirely (noisy
+	// health/poll endpoints). Override via LOG_EXCLUDE (CSV of full paths).
+	LogExclude []string
 
 	// Content seam (internal/content). GitHubToken set ⇒ saves proxy the
 	// GitHub Contents API (every save is a git commit); LocalContentDir set ⇒
@@ -67,6 +79,12 @@ func Load() Config {
 			"CORS_ORIGINS",
 			"http://localhost:5173,https://dennislapchenko.github.io",
 		)),
+		Debug:            envBool("DEBUG"),
+		ResponseLogLines: envInt("RESPONSE_LOG_LINES", 3),
+		LogExclude: splitCSV(envOr(
+			"LOG_EXCLUDE",
+			"/api/healthz,/api/hello,/api/auth/me,/api/auth/telegram/poll",
+		)),
 		GitHubToken:            os.Getenv("GITHUB_TOKEN"),
 		GitHubRepo:             envOr("GITHUB_REPO", "dennislapchenko/gaias-choice"),
 		GitHubBranch:           envOr("GITHUB_BRANCH", "main"),
@@ -87,6 +105,21 @@ func Load() Config {
 		AnthropicKey:     os.Getenv("ANTHROPIC_API_KEY"),
 		AnthropicModel:   os.Getenv("ANTHROPIC_MODEL"),
 	}
+}
+
+func envBool(key string) bool {
+	switch strings.ToLower(os.Getenv(key)) {
+	case "1", "true", "yes", "on":
+		return true
+	}
+	return false
+}
+
+func envInt(key string, fallback int) int {
+	if n, err := strconv.Atoi(os.Getenv(key)); err == nil && n > 0 {
+		return n
+	}
+	return fallback
 }
 
 func envOr(key, fallback string) string {

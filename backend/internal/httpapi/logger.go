@@ -2,6 +2,7 @@ package httpapi
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"strings"
 	"time"
@@ -21,29 +22,47 @@ func (w *bodyLogWriter) Write(b []byte) (int, error) {
 	return w.ResponseWriter.Write(b)
 }
 
-// requestLogger replaces gin.Logger: one line per request with the client IP,
-// then the JSON response body underneath — truncated so a big payload (a
-// content file, a base64 avatar) can't flood the log.
-func requestLogger() gin.HandlerFunc {
+// requestLogger replaces gin.Logger: one access line per request with the
+// client IP. When debug is on it also names what the endpoint just did — the
+// OpenAPI response description for the status it returned (from descriptions,
+// keyed "METHOD /path STATUS") — and echoes the JSON body underneath,
+// truncated to maxLines so a big payload (a content file, a base64 avatar)
+// can't flood the log.
+func requestLogger(debug bool, maxLines int, descriptions map[string]string, exclude []string) gin.HandlerFunc {
+	skip := make(map[string]bool, len(exclude))
+	for _, p := range exclude {
+		skip[p] = true
+	}
 	return func(c *gin.Context) {
+		if skip[c.Request.URL.Path] {
+			c.Next()
+			return
+		}
 		start := time.Now()
 		blw := &bodyLogWriter{ResponseWriter: c.Writer}
 		c.Writer = blw
 		c.Next()
 
+		status := blw.Status()
 		log.Printf("%3d | %13v | %-15s | %-7s %s",
-			blw.Status(), time.Since(start), c.ClientIP(), c.Request.Method, c.Request.URL.Path)
+			status, time.Since(start), c.ClientIP(), c.Request.Method, c.Request.URL.Path)
+		if !debug {
+			return
+		}
+		if desc := descriptions[fmt.Sprintf("%s %s %d", c.Request.Method, c.FullPath(), status)]; desc != "" {
+			log.Printf("      ↳ %s", desc)
+		}
 		if body := strings.TrimSpace(blw.buf.String()); body != "" {
-			log.Print(truncateBody(body))
+			log.Print(truncateBody(body, maxLines))
 		}
 	}
 }
 
-// truncateBody caps the echoed response to 3 lines, each ≤200 chars — plenty to
-// see the shape of a JSON answer, never a wall of base64. Compact JSON is one
-// long line, so the per-line cap is what actually bites there.
-func truncateBody(s string) string {
-	const maxLines, maxLen = 3, 200
+// truncateBody caps the echoed response to maxLines lines, each ≤200 chars —
+// plenty to see the shape of a JSON answer, never a wall of base64. Compact
+// JSON is one long line, so the per-line cap is what actually bites there.
+func truncateBody(s string, maxLines int) string {
+	const maxLen = 200
 	lines := strings.Split(s, "\n")
 	truncated := len(lines) > maxLines
 	if truncated {

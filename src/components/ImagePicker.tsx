@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { withBase } from '../lib/asset'
 import { useI18n } from '../lib/i18n'
 
@@ -22,14 +22,41 @@ export default function ImagePicker({
   onPick,
   onClose,
   onUpload,
+  onDelete,
 }: {
   onPick: (path: string) => void
   onClose: () => void
   onUpload?: (file: File) => Promise<string>
+  onDelete?: (path: string) => Promise<void>
 }) {
   const { t } = useI18n()
   const fileRef = useRef<HTMLInputElement>(null)
   const [busy, setBusy] = useState(false)
+  // Local mirror of the bundled list so a delete drops out of the grid at once
+  // (the build-time glob can't see the just-removed file until the next build).
+  const [images, setImages] = useState(IMAGES)
+
+  const remove = async (name: string) => {
+    if (!onDelete || !window.confirm(t('imagePicker.deleteConfirm'))) return
+    try {
+      await onDelete('/images/' + name)
+      setImages((list) => list.filter((n) => n !== name))
+    } catch {
+      /* leave it in the grid so the admin can retry */
+    }
+  }
+
+  // Esc closes the picker (matches backdrop click / × button).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation()
+        onClose()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
 
   const upload = async (file: File) => {
     if (!onUpload) return
@@ -71,19 +98,31 @@ export default function ImagePicker({
           </div>
         </div>
         <div className="image-picker-grid">
-          {IMAGES.map((name) => (
-            <button
-              key={name}
-              type="button"
-              className="image-picker-item"
-              title={name}
-              onClick={() => {
-                onPick('/images/' + name)
-                onClose()
-              }}
-            >
-              <img src={withBase('/images/' + name)} alt={name} loading="lazy" />
-            </button>
+          {images.map((name) => (
+            <div key={name} className="image-picker-item">
+              <button
+                type="button"
+                className="image-picker-pick"
+                title={name}
+                onClick={() => {
+                  onPick('/images/' + name)
+                  onClose()
+                }}
+              >
+                <img src={withBase('/images/' + name)} alt={name} loading="lazy" />
+              </button>
+              {onDelete && (
+                <button
+                  type="button"
+                  className="image-picker-del"
+                  aria-label={t('imagePicker.delete')}
+                  title={t('imagePicker.delete')}
+                  onClick={() => remove(name)}
+                >
+                  ×
+                </button>
+              )}
+            </div>
           ))}
         </div>
         {onUpload && (

@@ -4,6 +4,13 @@
 # default, set default: true here (and false/remove it on the others).
 #
 # `sage` is the primary accent; `mint`/`peach`/`lilac` are three pastel slots.
+#
+# Dark palettes additionally set `ink` (text), `muted` (secondary text) and
+# `white` (card/raised surface) to flip those dark; light palettes omit them and
+# inherit the light :root defaults. `defaultDark: true` marks the palette used
+# when a first-time visitor's OS is in dark mode (light `default:` is used when
+# it's light); an explicit pick in the switcher persists over both.
+# ponytail: colors are eyeballed for contrast — tune the dark values to taste.
 
 - tag: meadow
   label: Meadow
@@ -35,6 +42,7 @@
 
 - tag: citrus
   label: Citrus
+  default: true
   colors:
     sage: "#bf6a2e"
     sageDark: "#9c521f"
@@ -49,7 +57,6 @@
 
 - tag: periwinkle
   label: Periwinkle
-  default: true
   colors:
     sage: "#7c6cc4"
     sageDark: "#5f4fa8"
@@ -103,3 +110,112 @@
     mint: "#e9d6f5"
     peach: "#f6d3ea"
     lilac: "#d9d5f5"
+
+# --- Dark palettes -----------------------------------------------------------
+
+# Backgrounds are deep but COLOURED (jewel tones, not near-black), accents are
+# bright and a little unexpected — a warm pop against a cool ground and vice
+# versa. ponytail: eyeballed for contrast; nudge if a pairing feels off.
+
+- tag: midnight
+  label: Midnight
+  defaultDark: true
+  colors:
+    sage: "#9d8bff" # electric violet
+    sageDark: "#bcb0ff"
+    onAccent: "#141130"
+    clay: "#ff9ecb" # warm pink pop
+    sand: "#1a1c3a" # deep indigo, not black
+    sand2: "#242848"
+    line: "#3a3f6b"
+    mint: "#2b3160"
+    peach: "#3a2e5e"
+    lilac: "#332c66"
+    ink: "#ecebff"
+    muted: "#a9a6d6"
+    white: "#232750"
+
+- tag: forest
+  label: Forest
+  colors:
+    sage: "#5fe093" # spring lime-green
+    sageDark: "#8ff2b1"
+    onAccent: "#05200f"
+    clay: "#ff9b6b" # coral pop
+    sand: "#0f2a1c" # deep pine
+    sand2: "#173727"
+    line: "#295640"
+    mint: "#1c4230"
+    peach: "#37402a"
+    lilac: "#1e4038"
+    ink: "#e6f7ea"
+    muted: "#93bfa4"
+    white: "#153524"
+
+- tag: plum
+  label: Plum
+  colors:
+    sage: "#dc82ff" # orchid
+    sageDark: "#ecaaff"
+    onAccent: "#210a30"
+    clay: "#ffbf47" # gold pop
+    sand: "#241238" # aubergine
+    sand2: "#301a48"
+    line: "#4a2d6a"
+    mint: "#37225a"
+    peach: "#432560"
+    lilac: "#3a2668"
+    ink: "#f5e9ff"
+    muted: "#bb9cd6"
+    white: "#2d1a45"
+
+- tag: ember
+  label: Ember
+  colors:
+    sage: "#ff8a5c" # glowing coral-orange
+    sageDark: "#ffab86"
+    onAccent: "#2a0d04"
+    clay: "#ffce4d" # amber pop
+    sand: "#2a1512" # deep brick
+    sand2: "#381d18"
+    line: "#57332a"
+    mint: "#452420"
+    peach: "#4e2a1c"
+    lilac: "#3f2a24"
+    ink: "#fae9e0"
+    muted: "#c8a394"
+    white: "#331b16"
+
+- tag: abyss
+  label: Abyss
+  colors:
+    sage: "#35e0cb" # aqua
+    sageDark: "#6ff3e3"
+    onAccent: "#052925"
+    clay: "#ff8f7a" # coral pop
+    sand: "#0a2730" # deep ocean teal
+    sand2: "#10333e"
+    line: "#1f515c"
+    mint: "#123f42"
+    peach: "#1c3f3a"
+    lilac: "#144049"
+    ink: "#dff6f3"
+    muted: "#8cb6b4"
+    white: "#0f313b"
+
+- tag: rose
+  label: Rose
+  colors:
+    sage: "#ff7db0" # hot pink
+    sageDark: "#ffa6c9"
+    onAccent: "#320a1c"
+    clay: "#ffb27a" # peach pop
+    sand: "#2e1224" # deep wine
+    sand2: "#3d1930"
+    line: "#5e2b49"
+    mint: "#4b2440"
+    peach: "#522636"
+    lilac: "#452649"
+    ink: "#ffeaf3"
+    muted: "#cf9db4"
+    white: "#391627"

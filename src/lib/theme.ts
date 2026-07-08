@@ -1,4 +1,4 @@
-import { defaultTheme, themes } from './content'
+import { defaultDarkTheme, defaultTheme, themes } from './content'
 import type { Theme, ThemeColors } from './types'
 
 const STORAGE_KEY = 'gc-theme'
@@ -15,18 +15,51 @@ const CSS_VARS: Record<keyof ThemeColors, string> = {
   mint: '--mint',
   peach: '--peach',
   lilac: '--lilac',
+  ink: '--ink',
+  muted: '--muted',
+  white: '--white',
+}
+
+// Light :root defaults for the optional text/surface slots — used when a
+// (light) palette omits them, so switching dark→light resets them.
+const SLOT_DEFAULTS: Partial<Record<keyof ThemeColors, string>> = {
+  ink: '#2f2c27',
+  muted: '#6f6a60',
+  white: '#ffffff',
 }
 
 export function applyTheme(theme: Theme): void {
   const root = document.documentElement
   ;(Object.keys(CSS_VARS) as (keyof ThemeColors)[]).forEach((key) => {
-    root.style.setProperty(CSS_VARS[key], theme.colors[key])
+    root.style.setProperty(CSS_VARS[key], theme.colors[key] ?? SLOT_DEFAULTS[key] ?? '')
   })
+  // Dark palettes (the ones that set `ink`) sit their card surface almost on top
+  // of --sand, so panels read flat. Lift sidebar/rail cards with a faint white
+  // overlay in dark mode; in light mode --panel-tint is transparent (no change)
+  // and the muted "greyed" surfaces stay a dark-ink wash — they must flip to a
+  // white wash in dark, else the dark-on-dark tint vanishes.
+  const dark = Boolean(theme.colors.ink)
+  root.style.setProperty('--panel-tint', dark ? 'rgba(255, 255, 255, 0.05)' : 'transparent')
+  root.style.setProperty('--surface-muted', dark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(47, 44, 39, 0.05)')
+  root.style.setProperty('--surface-muted-strong', dark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(47, 44, 39, 0.09)')
   root.dataset.theme = theme.tag
 }
 
+function prefersDark(): boolean {
+  try {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+  } catch {
+    return false
+  }
+}
+
+/** The palette to use when the visitor has no saved preference: their OS theme. */
+function systemDefaultTheme(): Theme {
+  return prefersDark() ? defaultDarkTheme : defaultTheme
+}
+
 export function resolveTheme(tag: string | null): Theme {
-  return themes.find((t) => t.tag === tag) ?? defaultTheme
+  return themes.find((t) => t.tag === tag) ?? systemDefaultTheme()
 }
 
 function getStoredTag(): string | null {

@@ -35,6 +35,14 @@ type Deps struct {
 	Telegram    *telegram.Bot    // nil ⇒ /auth/telegram* answer 503
 	Enrich      *enrich.Enricher // nil ⇒ /content/template answers 503
 	SiteURL     string           // where emailed magic links point (no trailing /)
+
+	// Debug ⇒ the request logger echoes each endpoint's response description +
+	// body (see requestLogger). LogLines caps that body echo. Descriptions maps
+	// "METHOD /path STATUS" → the OpenAPI response description (may be nil).
+	Debug        bool
+	LogLines     int
+	Descriptions map[string]string
+	LogExclude   []string // request paths the logger skips entirely (health/poll)
 }
 
 // NewRouter builds the fully-wired gin engine: logging, recovery, CORS, a
@@ -45,7 +53,7 @@ func NewRouter(d Deps) *gin.Engine {
 	// Only the compose-network reverse proxy (Caddy) may set X-Forwarded-For;
 	// otherwise a client could spoof its IP past the login rate limit.
 	_ = r.SetTrustedProxies([]string{"10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"})
-	r.Use(requestLogger(), gin.Recovery(), corsMiddleware(d.CORSOrigins))
+	r.Use(requestLogger(d.Debug, d.LogLines, d.Descriptions, d.LogExclude), gin.Recovery(), corsMiddleware(d.CORSOrigins))
 	// One global body cap. Sized for the largest legitimate body: an image
 	// upload (base64 inflates the decoded cap ~4/3) plus JSON envelope headroom.
 	r.Use(func(c *gin.Context) {
@@ -459,7 +467,8 @@ func (s *server) DeleteContent(_ context.Context, req DeleteContentRequestObject
 		return DeleteContent400JSONResponse{BadRequestJSONResponse{Error: "no paths"}}, nil
 	}
 	for _, p := range req.Body.Paths {
-		if !content.ValidPath(p) {
+		// content/ files (posts) or public/images/*.webp (the picker's delete).
+		if !content.ValidPath(p) && !content.ValidImagePath(p) {
 			return DeleteContent400JSONResponse{BadRequestJSONResponse{Error: "invalid path"}}, nil
 		}
 	}

@@ -39,7 +39,7 @@ Keep this table current — when you add/rename/change a component, update the r
 | **Hand-authored inline SVG icons (page chrome)** | `Campfire()`/`RankGeometry()` in `src/pages/Account.tsx` + `.campfire*`/`.campfire-flames`/`.rank-geometry`/`.rank-geometry-admin` in `styles.css` | Distinct from the Mandala generator above (that's for *content* images): this is the recipe for a one-off decorative icon baked directly into a component — a fixed `viewBox="0 0 120 120"`, shapes layered straight in JSX (paths/circles/polygons, colored via a `<linearGradient>`, a plain stroke color, or a CSS var), optionally wrapped in a `<g className="…">` that a CSS `@keyframes` animates (Campfire's flame flicker/glow; RankGeometry's `.rank-geometry-admin` opacity pulse on the admin tier) — deliberately **not** gated behind `prefers-reduced-motion` for these small flourishes (owner wants them alive). A repeated motif (RankGeometry's six outer circles) reuses the Mandala generator's own trick instead of hand-plotting each copy: draw the shape once in `<defs>`, stamp it around a circle via `<use href="#id" transform="rotate(angle cx cy)">` (rotating about the *same* center the shape is already offset from, not translating afterward — that would move the pre-rotation point instead of sweeping it around the pivot). Reach for this whenever chrome needs its own small bespoke icon that isn't a raster asset and doesn't fit the mandala script — e.g. the per-role rank halo on `/account`'s campfire (`RankGeometry`, a faint Seed-of-Life motif behind each avatar, one tint per tier in `RANK_TINTS`, keyed by `Role`: silver/gold/diamond). |
 | Routes | `src/App.tsx` | Standalone pages need a route here. |
 | **Backend API client** | `src/lib/api.ts` (the whole FE↔BE contract) + `src/components/BackendBadge.tsx` (invisible-when-down consumer, mounted in `Layout.tsx` footer) + `backend.connected` UI string | `api.ts` = `apiGet`/`apiPost`/`ApiError` + a `useApi<T>(path)` hook + request/response types (e.g. `HelloResponse`). Base URL = `VITE_API_URL` (set by the compose dev loop / ngrok) **else** same-origin `/api` (the single-container future). **Degradation rule:** every helper fails quietly — consumers render null on error, never an error page. Two guards keep the live Pages site silent: a **content-type guard** (an HTML-200 SPA-fallback response is treated as "backend unavailable", never data) and the ngrok `ngrok-skip-browser-warning` header. Adding a BE feature = new type + hook call + a consumer that renders null without data. |
-| **Go backend sidecar** | `backend/` (Go/gin, own `Dockerfile` + `go.mod`) — `main.go` (config from env, routes), `store.go` (SQLite + embedded migration runner), `migrations/*.sql`, `cors.go` (hand-written allowlist) | API-only, port **8787**, under `/api`. Endpoints today: `/api/healthz`, `/api/hello` (proves a DB round-trip). SQLite at `${DATA_DIR}/gaia.db` (WAL), git-ignored `backend/data/`. Real schema (users/pages) is the portal plan, not here. Run via `task be:dev` (BE-only) or `task dev` (FE+BE). |
+| **Go backend sidecar** (API, auth, live-edit portal, deploy) | `backend/` | Full architecture — contract-first OpenAPI, auth, the content seam, the account/portal FE, storage, deploy — is in `references/backend.md`. Read that for any backend work; it's not loaded for content/CSS/build tasks. Run via `task be:dev` (BE-only) or `task dev` (FE+BE). |
 | **Deploy stack (VM, live)** | `deploy/compose.yaml` (api behind Caddy) + `deploy/Caddyfile` + `deploy/infra-log.md` (provisioning record + redeploy steps) + `.github/workflows/build-backend.yml` (GHCR image build) + `.doco-cd.yml`/`deploy/README.md` (doco-cd GitOps, deferred) | The backend runs on a Hetzner VM (AlmaLinux, Helsinki), Caddy terminating TLS at `gaias-choice.gardenofatlantis.com`. First deploy is **manual `docker compose`** (image pinned via `BE_TAG`); doco-cd auto-redeploy is prepared but not yet activated. To redeploy or back up, follow `deploy/infra-log.md`. **Never deploys the static site** — that stays on Pages. |
 | **Per-route `<title>` + meta description** | `src/lib/head.tsx` (`usePageHead` hook + `PageHead` component); called by every page in `src/pages/` | Client-side interim until prerendering bakes real per-route heads (`context/seo/seo-paths.md`) — crawlers still see `index.html`'s static head; this covers tabs/bookmarks/history. Title = `"<page> — <site name>"`, home = `"<name> — <tagline>"`; description = page-specific (frontmatter `excerpt`, section lead string) or the site description as fallback. `PageHead` is the same hook as a null-rendering component, for pages that early-return `<NotFound />` (keeps hook order unconditional) — render it only in the found branch; `NotFound` sets its own head. **New page → call `usePageHead(title, desc?)`** (or render `<PageHead …/>` after an early return). |
 | **Copy-to-clipboard button** | `src/components/CopyButton.tsx` + `.copy-btn` in `styles.css` + `copy.*` UI strings | Reusable: `<CopyButton value={text} className? ariaLabel? />`. Shows a brief check + localized "Copied" state (sage). Tries the async Clipboard API, falls back to a hidden-textarea `execCommand` (covers insecure-context / permission-denied / sandboxed-iframe). Generic look in `.copy-btn`; the **caller positions it** (e.g. `.crypto-copy` parks it at the right edge of a wallet address and reveals it on `.crypto-addr-wrap:hover` / `:focus-visible`, staying visible on touch via `@media (hover: hover)`). Reach for this for any copyable field (wallet addresses today; emails, referral/affiliate links, etc. later). |
@@ -143,12 +143,10 @@ OrbStack: `open -a OrbStack`, wait ~15s, retry.
 - **New content field:** extend the type in `src/lib/types.ts`, render it in
   the component — `content.ts` spreads frontmatter automatically, no parser
   changes needed.
-- **New API endpoint:** if it needs new tables, add a numbered
-  `backend/migrations/00N_*.sql` (applied at boot, in order); add a store
-  method in `store.go` and a gin handler in `main.go` under `/api`; on the FE
-  add the request/response type + a call in `src/lib/api.ts`, and a consumer
-  that renders null without data (degradation rule). `task be:verify` +
-  `task typecheck` + `task build`.
+- **New API endpoint:** it's spec-first (born in `backend/openapi.yaml`) and
+  spans BE + FE — full recipe in `references/backend.md` "Common backend dev
+  tasks". FE side: request/response type + call in `src/lib/api.ts`, consumer
+  renders null without data (degradation rule).
 - **Make one scalar flip instantly (a toggle, no dialog):** (1) add a
   provenance getter to `src/lib/content.ts` returning an `EditRef` — it must
   resolve which locale's file actually supplied the rendered value (mirror
@@ -194,45 +192,17 @@ OrbStack: `open -a OrbStack`, wait ~15s, retry.
 - **Go toolchain is containerized too** — never `go` on the host; use the
   `be:*` tasks (deps cached in the `gaias-choice-go-cache` volume). First
   `modernc.org/sqlite` compile is slow; the cache makes it a one-time cost.
-- **Login is a header feature; edit mode rides on it.** The account button
-  (`UserButton`, left of the palette switcher) renders only when the API
-  answers; it opens the `LoginDialog` (Telegram username first; magic-link
-  email + password as square-toggle fallbacks) and, signed in, links to
-  `/account` (the campfire; sign-out lives there). The session seam is `src/lib/session.tsx` — token in
-  `localStorage['gc-session']`, validated against `/api/auth/me` on every
-  load: a 401 clears it, BE-down hides all account chrome. **Edit mode** is simply `me.editing === true`
-  (admin/editor role AND a storage backend configured — viewers and
-  storage-less deployments stay read-only). `#edit` in any URL remains the
-  shortcut: signed out it opens the login dialog; signed in it's a no-op.
-  Accounts live in the backend DB (roles `admin`/`editor`/`viewer`; a first
-  Telegram or magic-link sign-in creates a viewer — Telegram accounts key on
-  `telegram_id` and have no email); in `task dev` the bootstrap admin is
-  `dev@local` / `dev-password` (nuke `backend/data/` to re-bootstrap), magic
-  emails print to the api container's stdout (`SMTP_HOST=log`), and
-  `TELEGRAM_BOT_TOKEN` is unset so the Telegram step 503s unless you add a real
-  BotFather token to the root `.env`.
-- **Content routes answer 503 until a storage backend is configured** —
-  `main.go` picks the store at boot (it logs which one). **Dev (sandboxed,
-  the default for `task dev`):** `LOCAL_CONTENT_DIR=/app` routes saves to the
-  **local filesystem** — the portal writes `content/` files in the mounted
-  repo (HMR reflects them) with **no commit, no deploy, no `GITHUB_TOKEN`**.
-  A local save can never reach production. **Prod (GitHub proxy):** with no
-  `LOCAL_CONTENT_DIR`, the seam needs `GITHUB_TOKEN` (fine-grained PAT,
-  Contents RW, this repo only) — missing ⇒ 503 "editing not configured"
-  (deliberate: a repo-write PAT behind a public tunnel must never be open);
-  every save is a git commit → Pages deploy. `LOCAL_CONTENT_DIR` **wins
-  over** `GITHUB_TOKEN` if both are set, so dev edits can't leak to the repo
-  by accident. To exercise the real commit path from a laptop, drop
-  `LOCAL_CONTENT_DIR` and set `GITHUB_TOKEN` + the `BOOTSTRAP_ADMIN_*` pair
-  (e.g. via the git-ignored root `.env`), then `task be:tunnel`.
-- **Adding an API endpoint is spec-first:** declare it in `backend/openapi.yaml`
-  (mark it `security: session` if it needs login, `session: [editor]` if it
-  needs an admin/editor role — enforcement is derived from the spec), run
-  `task be:gen`, then implement the new method the
-  `StrictServerInterface` in `internal/httpapi/gen.go` now demands (the
-  compile-time `var _ StrictServerInterface` assertion in `server.go` points
-  at what's missing). Commit `gen.go`; `task be:verify` fails if the spec and
-  the generated code drift.
+- **Login/edit mode ride on the backend; in `task dev` they're pre-wired.**
+  `UserButton` (left of the palette switcher) renders only when the API answers;
+  edit mode is simply `me.editing === true` (admin/editor role AND storage
+  configured). For `task dev`: bootstrap admin `dev@local` / `dev-password`
+  (nuke `backend/data/` to re-bootstrap), magic emails print to the api
+  container's stdout (`SMTP_HOST=log`), `TELEGRAM_BOT_TOKEN` unset (Telegram
+  step 503s unless you add a BotFather token to the root `.env`), and
+  `LOCAL_CONTENT_DIR=/app` sandboxes portal saves to the mounted repo — no
+  commit, no deploy, no `GITHUB_TOKEN`, HMR reflects them, and it **wins over**
+  `GITHUB_TOKEN` so dev edits can't leak. Full login / edit-mode / content-seam /
+  spec-first-endpoint mechanics: `references/backend.md`.
 - **YAML edits must go through the CST route** (`applyScalarEdit` in
   `contentEditor.tsx`): `parseDocument(...).toString()` re-folds long block
   scalars and churns ~190 lines of site.yaml — `CST.setScalarValue` on the

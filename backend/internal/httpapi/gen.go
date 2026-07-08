@@ -155,7 +155,7 @@ type DeleteContentJSONBody struct {
 	// Message Commit message; defaulted when omitted.
 	Message *string `json:"message,omitempty"`
 
-	// Paths Repo-relative paths; each must live under content/.
+	// Paths Repo-relative paths; each must live under content/ or be a public/images/*.webp file.
 	Paths []string `json:"paths"`
 }
 

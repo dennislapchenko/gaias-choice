@@ -1,0 +1,8 @@
+# Agent behavior config — flags that toggle how Claude ships work in this repo.
+# Tweak the VALUES freely. What each flag means + every shipping rule/guard has
+# ONE home: .claude/skills/manage-site/SKILL.md "Committing & shipping" (it reads
+# these flags). Keep semantics there, not here — this file is read to change a
+# value, not to learn the procedure. Booleans only for now; more added over time.
+
+AUTO_COMMIT_PUSH: true        # true = commit+push without asking; false = ask first
+COMMIT_PUSH_FOLLOWING: false   # true = after push, follow the deploy through (+ task be:deploy when backend/** changed)

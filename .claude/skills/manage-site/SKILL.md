@@ -31,7 +31,8 @@ for architecture; this skill is the operating manual on top of it.
 | --- | --- |
 | Reviews, Compass courses, Journal entries, pages, site copy, images, roadmap, voice/tone | Read `references/content-editing.md` |
 | Writing/finishing Compass course chapters (any batch size) | Also invoke the `write-epic-course` skill — the production workflow |
-| Build, verify, preview, deploy, routes, themes, components, CSS | Read `references/development.md` |
+| Build, verify, preview, deploy (the static site), routes, themes, components, CSS | Read `references/development.md` |
+| The Go API, login/auth, the live-edit portal, LLM enrich/translate, backend deploy, `be:*` tasks | Read `references/backend.md` — backend detail is out of `CLAUDE.md` and loads only here |
 | Both (e.g. "add a page" = content + route) | Read both — page wiring spans them |
 
 ## Text shortcuts (end-of-prompt toggles)
@@ -229,7 +230,8 @@ If you changed something and touched no doc, assume you forgot one — re-check.
 **One fact, one home.** Each fact has exactly one canonical location; other
 docs link to it instead of restating it: process rules + the provenance
 contract → this `SKILL.md`; architecture + invariants → `CLAUDE.md`;
-change-X-edit-Y mechanics → `references/development.md`; authoring procedures
+static-site change-X-edit-Y mechanics → `references/development.md`; the Go
+API + auth + live-edit portal → `references/backend.md`; authoring procedures
 → `references/content-editing.md`; voice/worldview/course outlines →
 `context/`; public pitch → `README.md`.
 
@@ -257,8 +259,24 @@ mid-flow. If they answer, record it verbatim per that skill.
 
 ## Committing & shipping
 
-Never commit automatically. Once a change is verified (typecheck + build green),
-**ask the owner whether to commit** — a plain yes/no. Only when they confirm:
+**Read `.claude/behavior.yaml` first — it gates this whole section.** The two
+flags there (`AUTO_COMMIT_PUSH`, `COMMIT_PUSH_FOLLOWING`) decide whether to ask
+and whether to follow the deploy; the steps below describe *how* to ship once
+the gate says go. The `!!!` end-of-prompt shortcut always overrides both to "no
+commit, no push".
+
+**The gate.** Once a change is verified (typecheck + build green):
+- `AUTO_COMMIT_PUSH: false` → **ask the owner whether to commit** (plain yes/no);
+  proceed only on confirmation.
+- `AUTO_COMMIT_PUSH: true` → **skip the ask**; commit + push automatically. (The
+  verify gate is *not* skippable — typecheck + build must be green first, since a
+  push to `main` is a production deploy.) **Shared-tree guard:** if the working
+  tree holds another agent's uncommitted work (your edits share files with
+  theirs, or unrelated dirty files you didn't touch are present), do *not*
+  auto-commit — surface it and ask how to scope the commit, even with the flag
+  on. Never sweep another agent's half-done work into your push.
+
+Then, in either case:
 
 1. **Commit message = Conventional Commits:** `<type>: <short imperative
    summary>`, `<type>` being the semantically correct one — `feat`, `fix`,
@@ -266,26 +284,32 @@ Never commit automatically. Once a change is verified (typecheck + build green),
    commit. Examples: `feat: default site language to Russian`,
    `docs: add do-not-translate glossary for translations`. End the message with
    the `Co-Authored-By: Claude ...` trailer.
-2. **Current phase — direct to `main`, shipped by a background agent.** Once
-   the owner confirms, compose the commit message in the main session, then
-   hand the whole ship to a **background agent** (Agent tool,
-   `run_in_background: true`) so the owner's flow never blocks. The agent:
-   commits on `main`, runs `git push origin main`, waits ~60s, and checks the
-   "Deploy to Pages" run's **conclusion once** (`gh run list`). GitHub Pages
-   fails transiently on its own side ("Deployment failed, try again later" at
-   the deploy step while the build is green) — on that failure the agent
-   recovers with `gh workflow run "Deploy to Pages" --ref main` (after
+2. **Current phase — direct to `main`, shipped by a background agent.** Compose
+   the commit message in the main session, then hand the whole ship to a
+   **background agent** (Agent tool, `run_in_background: true`) so the owner's
+   flow never blocks. The agent commits on `main` and runs `git push origin
+   main`, then follows the deploy per `COMMIT_PUSH_FOLLOWING`:
+   - **`false` (single check):** wait ~60s and check the "Deploy to Pages" run's
+     **conclusion once** (`gh run list`). No `gh run watch`, no curl. Never
+     touches the backend.
+   - **`true` (follow through):** poll "Deploy to Pages" to its conclusion; and
+     **if the pushed diff touched `backend/**`** (so the "Build backend image"
+     CI run fired — it's `paths`-filtered to `backend/**`), wait for that image
+     build to go **green**, then run `task be:deploy` to ship it to the VM, and
+     report both results. (`be:deploy` needs the owner's local `.env` +
+     VM secrets and Docker; if they're absent it reports that instead of
+     guessing — see `references/backend.md`.)
+
+   Either way: GitHub Pages fails transiently on its own side ("Deployment
+   failed, try again later" while the build is green) — on that failure the
+   agent recovers with `gh workflow run "Deploy to Pages" --ref main` (after
    confirming remote `main` HEAD is still the pushed commit), up to 2 fresh
-   runs, re-checking each, then reports the final status either way. **Never
-   `gh run rerun`** — build+deploy are one job, so a rerun re-uploads the
-   `github-pages` artifact into the same run and deterministically fails with
-   "Multiple artifacts named github-pages" (documented in
-   `.github/workflows/deploy-pages.yml`; workflow_dispatch starts clean). **A push to `main` is a production
-   deploy** — only ship work verified locally (typecheck + build is the gate).
-   No babysitting beyond the conclusion check: no `gh run watch`, no curling
-   the live site unless the owner asks. Every deploy publishes the full
-   current build, so a failed run is fully recovered by the next successful
-   one.
+   runs, re-checking each. **Never `gh run rerun`** — build+deploy are one job,
+   so a rerun re-uploads the `github-pages` artifact into the same run and
+   deterministically fails with "Multiple artifacts named github-pages"
+   (documented in `.github/workflows/deploy-pages.yml`; workflow_dispatch starts
+   clean). Every deploy publishes the full current build, so a failed run is
+   fully recovered by the next successful one.
 3. **Future (not yet — do this only when the owner switches to it):** work on a
    `feature/<slug>` branch, push it, and open a GitHub PR instead of committing
    to `main` directly.

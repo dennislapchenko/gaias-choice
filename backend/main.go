@@ -8,7 +8,6 @@ import (
 	"context"
 	"errors"
 	"log"
-	"os"
 
 	"github.com/gin-gonic/gin"
 
@@ -25,7 +24,10 @@ import (
 func main() {
 	cfg := config.Load()
 
-	if os.Getenv("GIN_MODE") != "debug" {
+	if cfg.Debug {
+		gin.SetMode(gin.DebugMode)
+		log.Printf("DEBUG on: gin debug mode + per-endpoint response logging (%d body lines)", cfg.ResponseLogLines)
+	} else {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
@@ -102,6 +104,15 @@ func main() {
 		Telegram:    bot,
 		Enrich:      enricher,
 		SiteURL:     cfg.PublicSiteURL,
+		Debug:       cfg.Debug,
+		LogLines:    cfg.ResponseLogLines,
+		LogExclude:  cfg.LogExclude,
+		Descriptions: func() map[string]string {
+			if cfg.Debug {
+				return endpointDescriptions()
+			}
+			return nil
+		}(),
 	})
 
 	log.Printf("listening on :%s (data dir %s)", cfg.Port, cfg.DataDir)

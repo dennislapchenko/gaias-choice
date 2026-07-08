@@ -53,7 +53,10 @@ services:
       # ANTHROPIC_MODEL optionally overrides the default (claude-sonnet-5).
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-}
-      GIN_MODE: debug
+      # DEBUG drives gin's debug mode AND the request logger's per-endpoint
+      # response-description + body echo (RESPONSE_LOG_LINES caps the body,
+      # default 3). On in dev; off (unset) in prod.
+      DEBUG: "1"
     ports:
       - "8787:8787"
     links:

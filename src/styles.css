@@ -1,20 +1,25 @@
 :root {
-    /* Fallback = the default palette (periwinkle) in content/themes.yaml, used for
-     the first paint before theme.ts applies the stored/default palette. */
-    --sage: #7c6cc4;
-    --sage-dark: #5f4fa8;
+    /* Fallback = the light default palette (citrus) in content/themes.yaml, used
+     for the first paint before theme.ts applies the stored/default palette. */
+    --sage: #bf6a2e;
+    --sage-dark: #9c521f;
     --on-accent: #ffffff; /* contrast-safe text on the accent, per palette */
-    --clay: #8f6fc7;
-    --sand: #f7f5ff;
-    --sand-2: #ebe7fb;
+    --clay: #cf8a2f;
+    --sand: #fffaf0;
+    --sand-2: #f5ecd8;
     /* three pastel background slots, themeable per palette */
-    --mint: #e0dcfb;
-    --peach: #dbe7fb;
-    --lilac: #f0dcf7;
+    --mint: #fdf0c4;
+    --peach: #ffe0c2;
+    --lilac: #dcefc7;
     --ink: #2f2c27;
     --muted: #6f6a60;
-    --line: #e2dcf7;
+    --line: #eee0c4;
     --white: #ffffff;
+    --panel-tint: transparent; /* faint lift on sidebar/rail cards; set in dark palettes */
+    /* "greyed" muted card surfaces (upcoming/epic/field rows) — a dark-ink wash
+       in light, flipped to a white wash in dark (see theme.ts). */
+    --surface-muted: rgba(47, 44, 39, 0.05);
+    --surface-muted-strong: rgba(47, 44, 39, 0.09);
     --radius: 22px; /* round-ish: cards, hero, images, bands */
     --radius-sm: 14px; /* smaller inner elements (menus, option rows) */
     --shadow: 0 8px 28px rgba(44, 42, 38, 0.1);
@@ -881,7 +886,8 @@ h1 {
     gap: 8px;
     width: 100%;
     padding: 13px 16px;
-    background: var(--white);
+    background-color: var(--white);
+    background-image: linear-gradient(var(--panel-tint), var(--panel-tint));
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
     font: inherit;
@@ -903,6 +909,7 @@ h1 {
     flex-direction: column;
     gap: 14px;
     padding: 14px;
+    background: var(--panel-tint);
     border: 1px solid var(--line);
     border-top: none;
     border-radius: 0 0 var(--radius-sm) var(--radius-sm);
@@ -1474,7 +1481,7 @@ a.respected-card:hover {
     border-radius: var(--radius);
     overflow: hidden;
     border: 1px solid var(--line);
-    color: var(--white);
+    color: #fff; /* text sits over the always-dark art, not a themed surface */
     text-decoration: none;
     transition:
         transform 0.15s ease,
@@ -1521,7 +1528,7 @@ a.respected-card:hover {
    excerpts stay legible over any busy AI-art thumbnail. */
 .guide-row-title,
 .guide-row-excerpt {
-    color: var(--white);
+    color: #fff; /* over the always-dark art — not the themed card surface */
     text-shadow:
         -1px -1px 0 #000,
         1px -1px 0 #000,
@@ -1570,7 +1577,7 @@ a.respected-card:hover {
 .tag {
     align-self: flex-start;
     background: var(--lilac);
-    color: var(--sage-dark);
+    color: var(--ink);
     font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -1599,7 +1606,8 @@ a.respected-card:hover {
 }
 .chip {
     border: 1px solid var(--line);
-    background: var(--white);
+    background-color: var(--white);
+    background-image: linear-gradient(var(--panel-tint), var(--panel-tint));
     border-radius: 999px;
     padding: 7px 15px;
     font-size: 0.9rem;
@@ -1710,7 +1718,7 @@ a.respected-card:hover {
     gap: 12px;
     padding: 13px 16px;
     /* faintly greyed vs the white review cards — these aren't live reviews yet */
-    background: rgba(47, 44, 39, 0.05);
+    background: var(--surface-muted);
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
     color: var(--ink);
@@ -1735,7 +1743,7 @@ a.respected-card:hover {
     gap: 12px;
     width: 100%;
     padding: 8px 14px 8px 8px;
-    background: rgba(47, 44, 39, 0.05);
+    background: var(--surface-muted);
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
     color: var(--ink);
@@ -1748,7 +1756,7 @@ a.respected-card:hover {
         border-color 0.15s ease;
 }
 .epic-row:hover {
-    background: rgba(47, 44, 39, 0.09);
+    background: var(--surface-muted-strong);
     border-color: var(--sage);
 }
 .epic-row.is-active {
@@ -1846,7 +1854,7 @@ a.respected-card:hover {
     flex-direction: column;
     gap: 4px;
     padding: 10px 14px;
-    background: rgba(47, 44, 39, 0.05);
+    background: var(--surface-muted);
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
 }
@@ -2045,7 +2053,12 @@ a.respected-card:hover {
     padding-right: 4px;
 }
 .image-picker-item {
+    position: relative;
     aspect-ratio: 1;
+}
+.image-picker-pick {
+    width: 100%;
+    height: 100%;
     padding: 0;
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
@@ -2053,14 +2066,42 @@ a.respected-card:hover {
     cursor: pointer;
     overflow: hidden;
 }
-.image-picker-item:hover {
+.image-picker-item:hover .image-picker-pick {
     border-color: var(--sage);
 }
-.image-picker-item img {
+.image-picker-pick img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+}
+/* Per-image delete: top-right ×, revealed on hover/focus (removes the file). */
+.image-picker-del {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: rgba(47, 44, 39, 0.82);
+    color: #fff;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.12s;
+}
+.image-picker-item:hover .image-picker-del,
+.image-picker-del:focus-visible {
+    opacity: 1;
+}
+.image-picker-del:hover {
+    background: var(--clay);
 }
 /* Header actions: the "from your device" upload button + the close ×. */
 .image-picker-head-actions {
@@ -2157,7 +2198,8 @@ a.respected-card:hover {
     padding: 14px;
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
-    background: var(--white);
+    background-color: var(--white);
+    background-image: linear-gradient(var(--panel-tint), var(--panel-tint));
     max-height: calc(100vh - 116px);
     overflow-y: auto;
 }
@@ -2726,7 +2768,7 @@ a.respected-card:hover {
 }
 .btn-danger {
     background: #b3423a;
-    color: var(--white);
+    color: #fff; /* on the fixed red bg — not a themed surface */
 }
 .btn-danger:hover {
     background: #8f342d;
@@ -3089,7 +3131,11 @@ a.respected-card:hover {
 }
 .content-editor-md {
     display: flex;
+    flex: 1;
     gap: 4px;
+    /* Centered in the space before the tabs; `safe` keeps the group left-aligned
+       (nothing clips off the left edge) once it no longer fits. */
+    justify-content: safe center;
 }
 .content-editor-md[aria-hidden="true"] {
     visibility: hidden;

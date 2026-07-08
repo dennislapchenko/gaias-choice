@@ -125,6 +125,7 @@ function headingIdRenderer(): Renderer {
 // Palettes are shared across locales — not translated.
 export const themes = parseYaml(themesRaw) as Theme[]
 export const defaultTheme = themes.find((t) => t.default) ?? themes[0]
+export const defaultDarkTheme = themes.find((t) => t.defaultDark) ?? defaultTheme
 
 /** Split `---`-delimited yaml frontmatter from the markdown body. */
 function parseFrontmatter(raw: string): { data: Record<string, unknown>; body: string } {

@@ -21,7 +21,15 @@
 // Mounted once at the app root (see App.tsx), above <Routes> — never
 // unmounted by client-side navigation, so an open draft survives following
 // a link and coming back.
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type ReactNode,
+} from 'react'
 import { marked } from 'marked'
 import { Composer, CST, isScalar, Parser, parseDocument } from 'yaml'
 import CopyButton from '../components/CopyButton'
@@ -306,17 +314,14 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
   // whole pane. Default open on desktop (room for both); collapsed on mobile,
   // where the stacked chrome would otherwise leave the textarea a few lines tall.
   const [fieldsOpen, setFieldsOpen] = useState(() => window.innerWidth > 720)
-  // Which target an open ImagePicker fills: the frontmatter cover, an appended
-  // gallery image, or an inline ![]() at the caret. null = closed.
-  const [picker, setPicker] = useState<null | 'cover' | 'inline' | 'gallery'>(null)
+  // Which target an open ImagePicker fills: the frontmatter cover or an appended
+  // gallery image. null = closed.
+  const [picker, setPicker] = useState<null | 'cover' | 'gallery'>(null)
   // Which image the frameless ImageFrame viewer/frame-editor is open on: the
   // cover, or a gallery entry by index. null = closed.
   const [framing, setFraming] = useState<null | { kind: 'cover' } | { kind: 'gallery'; index: number }>(null)
   const taRef = useRef<HTMLTextAreaElement>(null)
   const pendingSel = useRef<[number, number] | null>(null)
-  // The textarea selection captured when the inline image picker opened (the
-  // modal steals focus, so we can't read it back on pick).
-  const inlineAt = useRef<[number, number] | null>(null)
   const { token } = useEditMode()
   const { t, locale } = useI18n()
 
@@ -378,6 +383,55 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     setState({ ...state, value: writeActive(next.text) })
   }
 
+  // IDE-style Tab in the textareas. A selection spanning newlines indents/outdents
+  // every touched line as a block; otherwise Tab inserts two spaces at the caret
+  // and Shift+Tab drops up to two spaces before it. Splices into the active text
+  // and re-flows via writeActive, same as the toolbar edits.
+  const onTabIndent = (e: ReactKeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key !== 'Tab' || e.metaKey || e.ctrlKey || e.altKey) return
+    const ta = taRef.current
+    if (!ta || !state) return
+    e.preventDefault()
+    const { selectionStart: a, selectionEnd: b, value } = ta
+    const commit = (text: string, sel: [number, number]) => {
+      pendingSel.current = sel
+      setState({ ...state, value: writeActive(text) })
+    }
+
+    if (value.slice(a, b).includes('\n')) {
+      // Block mode: operate on every line from the start of the first selected
+      // line through the caret end, keeping the whole block selected after.
+      const from = value.lastIndexOf('\n', a - 1) + 1
+      const lines = value.slice(from, b).split('\n')
+      if (e.shiftKey) {
+        let first = 0
+        let total = 0
+        const out = lines
+          .map((l, i) => {
+            const rm = (l.match(/^ {1,2}/)?.[0].length) ?? 0
+            if (i === 0) first = rm
+            total += rm
+            return l.slice(rm)
+          })
+          .join('\n')
+        if (!total) return
+        commit(value.slice(0, from) + out + value.slice(b), [Math.max(from, a - first), b - total])
+      } else {
+        const out = lines.map((l) => '  ' + l).join('\n')
+        commit(value.slice(0, from) + out + value.slice(b), [a + 2, b + 2 * lines.length])
+      }
+      return
+    }
+
+    if (e.shiftKey) {
+      const strip = a - value.slice(0, a).replace(/ {1,2}$/, '').length
+      if (!strip) return
+      commit(value.slice(0, a - strip) + value.slice(a), [a - strip, b - strip])
+    } else {
+      commit(value.slice(0, a) + '  ' + value.slice(b), [a + 2, a + 2])
+    }
+  }
+
   // A structured frontmatter-field edit (Fields view): rewrite the one key via
   // setField, keeping comments + body intact. A malformed source surfaces.
   const onField = (key: string, next: FrontmatterField['value']) => {
@@ -410,23 +464,26 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     return commitImageBase64(dataUrl.split(',')[1] ?? '')
   }
 
+  // Delete an image file from the repo (the picker's per-image ×). `path` is the
+  // display path (/images/x.webp); the file lives at public/images/x.webp. Posts
+  // still pointing at it fall back to the leaf placeholder — acknowledged.
+  const deleteImage = async (path: string): Promise<void> => {
+    await apiDelete<DeleteResponse>(
+      '/content/file',
+      { paths: [path.replace(/^\/images\//, 'public/images/')] },
+      { token: token ?? undefined },
+    )
+  }
+
   // Put a chosen/uploaded image path where the picker was aimed: the cover sets
-  // the frontmatter `image:` scalar (inserted if absent); inline splices an
-  // ![](path) at the caret captured when the picker opened.
-  const applyImage = (path: string, target: 'cover' | 'inline' | 'gallery') => {
+  // the frontmatter `image:` scalar (inserted if absent); gallery appends it.
+  const applyImage = (path: string, target: 'cover' | 'gallery') => {
     if (!state) return
     try {
       if (target === 'cover') {
         setState({ ...state, value: applyScalarEdit(state.value, { file: '', path: ['image'] }, path) })
-      } else if (target === 'gallery') {
-        setState({ ...state, value: setField(state.value, 'gallery', [...fmList(state.value, 'gallery'), path]) })
       } else {
-        // Splice into whichever text the active textarea shows (body vs whole).
-        const base = view === 'raw' ? state.value : mdBody(state.value)
-        const [a, b] = inlineAt.current ?? [base.length, base.length]
-        const spliced = base.slice(0, a) + `![](${path})` + base.slice(b)
-        pendingSel.current = [a + 2, a + 2] // caret inside the alt brackets
-        setState({ ...state, value: writeActive(spliced) })
+        setState({ ...state, value: setField(state.value, 'gallery', [...fmList(state.value, 'gallery'), path]) })
       }
     } catch (err) {
       setState({ ...state, status: 'error', errorText: err instanceof Error ? err.message : String(err) })
@@ -463,12 +520,6 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     setFraming(null)
   }
 
-  const openInlinePicker = () => {
-    const ta = taRef.current
-    inlineAt.current = ta ? [ta.selectionStart, ta.selectionEnd] : null
-    setPicker('inline')
-  }
-
   const close = () => setState(null)
 
   // Backdrop / × close: confirm when there are unsaved edits, so a stray click
@@ -478,6 +529,19 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     if (dirty && !window.confirm(t('editor.discardConfirm'))) return
     close()
   }
+
+  // Esc closes the editor with the same discard-confirm as the × button — but
+  // only when nothing sits on top of it (an open ImagePicker/ImageFrame owns Esc
+  // and closes itself first).
+  useEffect(() => {
+    if (!state || picker || framing) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') attemptClose()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, picker, framing, dirty])
 
   // Drop a recovered autosave and fall back to the pristine fetched/template
   // text (the "discard draft" link on the restored banner).
@@ -883,9 +947,6 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                 <button type="button" onClick={() => applyMd('link')} title={t('editor.mdLink')}>
                   🔗
                 </button>
-                <button type="button" onClick={openInlinePicker} title={t('editor.mdImage')}>
-                  🖼
-                </button>
               </div>
               <div className="content-editor-tabs">
                 <button
@@ -895,13 +956,15 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                 >
                   {t('editor.fields')}
                 </button>
-                <button
-                  type="button"
-                  className={view === 'raw' ? 'is-active' : ''}
-                  onClick={() => setView('raw')}
-                >
-                  {t('editor.raw')}
-                </button>
+                {DEBUG && (
+                  <button
+                    type="button"
+                    className={view === 'raw' ? 'is-active' : ''}
+                    onClick={() => setView('raw')}
+                  >
+                    {t('editor.raw')}
+                  </button>
+                )}
                 <button
                   type="button"
                   className={view === 'preview' ? 'is-active' : ''}
@@ -978,6 +1041,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                   value={state.value}
                   spellCheck={false}
                   disabled={busy || state.status === 'published'}
+                  onKeyDown={onTabIndent}
                   onChange={(e) => setState({ ...state, value: e.target.value })}
                 />
               ) : (
@@ -1013,6 +1077,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                     // Focusing the body collapses fields+images so the text owns
                     // the pane (fields default open on desktop; reopen via toggle).
                     onFocus={() => setFieldsOpen(false)}
+                    onKeyDown={onTabIndent}
                     onChange={(e) => setState({ ...state, value: withBody(state.value, e.target.value) })}
                   />
                 </div>
@@ -1058,6 +1123,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
           onPick={(p) => applyImage(p, picker)}
           onClose={() => setPicker(null)}
           onUpload={uploadFile}
+          onDelete={deleteImage}
         />
       )}
       {state && framing && (() => {

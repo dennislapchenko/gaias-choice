@@ -126,6 +126,8 @@ const en = {
   "imagePicker.title": "Pick an image",
   "imagePicker.browse": "Browse",
   "imagePicker.close": "Close",
+  "imagePicker.delete": "Delete image",
+  "imagePicker.deleteConfirm": "Delete this image from the site? Anything still pointing at it falls back to the leaf placeholder.",
 
   "astro.prevMonth": "Previous month",
   "astro.nextMonth": "Next month",
@@ -201,7 +203,6 @@ const en = {
   "editor.mdHeading": "Heading",
   "editor.mdList": "Bullet list",
   "editor.mdLink": "Link",
-  "editor.mdImage": "Image",
   "editor.enriching": "Tuning the template to your title…",
   "editor.cover": "Cover image",
   "editor.coverSet": "Set image",

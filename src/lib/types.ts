@@ -151,12 +151,18 @@ export interface ThemeColors {
   mint: string // pastel slot 1
   peach: string // pastel slot 2
   lilac: string // pastel slot 3
+  // Text + card-surface slots. Omitted by light palettes (they inherit the
+  // light :root defaults); dark palettes set them to flip text/cards dark.
+  ink?: string // primary text
+  muted?: string // secondary text
+  white?: string // card / raised surface
 }
 
 export interface Theme {
   tag: string // stable identifier, persisted + shown in the switcher
   label: string // human-facing name
-  default?: boolean // the palette used when nothing is stored
+  default?: boolean // the light palette used when nothing is stored (system = light)
+  defaultDark?: boolean // the palette used when nothing is stored AND system = dark
   colors: ThemeColors
 }
 

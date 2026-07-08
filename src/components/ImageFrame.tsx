@@ -46,6 +46,18 @@ export default function ImageFrame({
   const pointers = useRef(new Map<number, { x: number; y: number }>())
   const pinchDist = useRef(0)
 
+  // Esc closes the frame (matches the backdrop click).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation()
+        onClose()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
+
   // Load the (same-origin) image so the canvas stays untainted and exportable.
   useEffect(() => {
     const im = new Image()
