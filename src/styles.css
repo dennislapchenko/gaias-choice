@@ -2153,7 +2153,29 @@ a.respected-card:hover {
 }
 .review-header {
     grid-area: header;
-    max-width: 760px; /* match the reading column, don't stretch full-width */
+    /* spans both columns → fills the exact grid width at every breakpoint, so
+       the flex-end tools pin to the rail's right edge (not the reading column's)
+       without a magic number; the title stays left via its 16ch cap. Mobile
+       re-caps it to 760px in the media query below. */
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px 20px;
+}
+.review-header-main {
+    flex: 1 1 auto;
+    min-width: 0; /* let a long title wrap instead of shoving the tools off */
+}
+/* Long multi-word titles read better halved onto 2 lines than one wide line;
+   the ch cap only bites titles longer than ~16 chars, balance evens the split. */
+.review-header-main h1 {
+    max-width: 16ch;
+    text-wrap: balance;
+}
+/* Edit tools sit top-right, on the title's line (desktop). */
+.review-header .detail-nav-tools {
+    justify-content: flex-end;
+    flex-shrink: 0; /* the title column shrinks + wraps; the tools never do */
 }
 .review-layout .detail {
     grid-area: main;
@@ -2224,12 +2246,22 @@ a.respected-card:hover {
         display: flex;
         flex-direction: column;
         align-items: stretch;
+        /* grid gap was `0 32px` (row-gap 0) — restore vertical rhythm between the
+           stacked sections (nav → header → rail → article) once single-column */
+        gap: 16px 0;
     }
     .review-layout .detail-nav {
         order: -3;
     }
     .review-header {
         order: -2;
+        /* stack: edit tools above the title on phones */
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .review-header .detail-nav-tools {
+        order: -1;
+        justify-content: flex-start;
     }
     /* facts rail rides above the article, under the header, on phones */
     .review-aside {
@@ -2435,11 +2467,16 @@ a.respected-card:hover {
    reading column with it, now that there's real room. .reviews-layout's main
    column is already `1fr` so it grows for free once the container does. */
 @media (min-width: 1300px) {
-    .layout-grid:has(.toc, .upcoming, .epic-rail, .account-fields) {
+    .layout-grid:has(.toc, .upcoming, .epic-rail, .account-fields, .review-aside) {
         max-width: 1600px;
     }
     .detail-layout:has(.toc) {
         grid-template-columns: minmax(0, 960px) 220px;
+    }
+    /* Same widening as .detail-layout above — the double-railed review page was
+       stuck at the 1180 shell, squeezing the reading column. */
+    .review-layout {
+        grid-template-columns: minmax(0, 960px) 240px;
     }
 }
 .detail h1,

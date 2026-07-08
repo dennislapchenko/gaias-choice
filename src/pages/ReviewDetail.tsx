@@ -38,6 +38,20 @@ export default function ReviewDetail() {
           <span className="tag">{product.category}</span>
           {state === 'upcoming' && <span className="tag">{t('detail.wip')}</span>}
         </div>
+      </div>
+      <div className="review-header">
+        <div className="review-header-main">
+          <h1>{product.title}</h1>
+          <div className="detail-meta">
+            <span className="muted">{product.date}</span>
+            {product.translatedFrom && (
+              <span className="muted translated-mark">
+                {t(`detail.translatedFrom.${product.translatedFrom}`)}
+              </span>
+            )}
+          </div>
+        </div>
+        {/* Edit tools ride the title's line on desktop, above it on mobile. */}
         {editModeOn && (
           <div className="detail-nav-tools">
             <StateToggle
@@ -56,17 +70,6 @@ export default function ReviewDetail() {
             <DeleteButton path={getProductFile(locale, slug!)} redirectTo="/reviews" />
           </div>
         )}
-      </div>
-      <div className="review-header">
-        <h1>{product.title}</h1>
-        <div className="detail-meta">
-          <span className="muted">{product.date}</span>
-          {product.translatedFrom && (
-            <span className="muted translated-mark">
-              {t(`detail.translatedFrom.${product.translatedFrom}`)}
-            </span>
-          )}
-        </div>
       </div>
 
       <article className="detail review-main">
