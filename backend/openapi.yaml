@@ -652,6 +652,65 @@ paths:
         '503':
           $ref: '#/components/responses/NotConfigured'
 
+  /content/image:
+    post:
+      operationId: uploadImage
+      summary: Commit one uploaded image to public/images/ (a git commit in prod)
+      description: >
+        Writes a browser-downscaled WebP into public/images/ as its own commit,
+        so a post can reference it by /images/<name>. Path must be
+        public/images/*.webp; body is the file's base64. No sha guard (unique
+        filenames, admin-only).
+      tags: [content]
+      security:
+        - session: [editor]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [path, contentBase64]
+              properties:
+                path:
+                  type: string
+                  maxLength: 512
+                  description: Repo-relative target; must be public/images/*.webp.
+                contentBase64:
+                  type: string
+                  description: The image bytes, base64-encoded; decoded size capped server-side.
+      responses:
+        '200':
+          description: Committed. `commit` is the git commit sha in prod, "local" in dev.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [path, commit]
+                properties:
+                  path: { type: string }
+                  commit: { type: string }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          description: A file already exists at that path.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '413':
+          description: Image empty or over the size cap.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '502':
+          $ref: '#/components/responses/Upstream'
+        '503':
+          $ref: '#/components/responses/NotConfigured'
+
   /content/template:
     post:
       operationId: enrichTemplate

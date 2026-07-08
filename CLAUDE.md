@@ -117,7 +117,8 @@ src/
                          # LanguageSwitcher, UserButton, LoginDialog, ProductCard,
                          # CompassCard, CompassRow, JournalRow, Upcoming, Markdown,
                          # Rating, GaiaScore, TableOfContents, CopyButton, EditButton, BackendBadge,
-                         # AccountFields, ImagePicker (bundled-image chooser — parked for post covers)
+                         # AccountFields, ImagePicker (image chooser — bundled-image grid +
+                         # an optional "from your device" upload button; the editor's cover control + inline 🖼)
   pages/                 # Home, Reviews, ReviewDetail, Compass, Journal,
                          # EntryDetail (shared Compass+Journal detail w/ TOC),
                          # MarkdownPage (about/contact/etc), Support,
@@ -210,8 +211,8 @@ computer-assisted** section, disclosed by the `compass.provenance` banner
   frontmatter orders chapters ascending within an epic (un-chaptered entries
   keep date-desc). Existing epics: `founder-guide` (5, complete — the founder
   playbooks as the course «Честный сайт с нуля»), `herbalism` (11, complete,
-  en+ru), `homeopathy` (11, chapters 1–3 live, rest pending — a mid-write
-  course's last "next" link stays text-only until the next chapter ships),
+  en+ru), `homeopathy` (11, complete, en+ru — a mid-write course's last
+  "next" link stays text-only until the next chapter ships),
   `trophology` (5, complete, en+ru), `inside-websites` (5, complete, **English-only by owner
   decision** — absent from `ru/site.yaml`, its diagrams are expected EN-only
   parity-check asymmetries). Outlines live in `context/course-plan-*.md`; the
@@ -238,7 +239,8 @@ contract: SKILL.md #6). Frontmatter `title`, `excerpt`, `date`, optional
 title-only in the "in the works" rail; idea titles are localized by giving the
 ru stub the same slug); no per-entry wiring. The listing page shares the
 Reviews shell (same layout, year chips where Reviews has category chips via
-`?year=`); entries list as plain text rows and open through
+`?year=`); entries list as rows with a left-quarter thumbnail (frontmatter
+`image`, else a leaf placeholder) and open through
 `EntryDetail`. The landing page
 surfaces the section too: a hero "Read the Journal" button and a "Fresh from the
 Journal" section (latest 3 rows) in `Home.tsx`. The seed
@@ -523,7 +525,11 @@ VM is down the live site silently degrades to the static baseline.
   post's ru+en files together: a state flip + its translation, or a draft + its
   sibling skeleton), `DELETE /api/content/file` (delete one or more
   content files — `{paths:[…]}` — in a SINGLE commit; the FE passes a post's
-  ru+en paths together to wipe both at once), `POST /api/content/template` (the draft
+  ru+en paths together to wipe both at once),
+  `POST /api/content/image` (commit one browser-downscaled WebP to
+  `public/images/*.webp` — `{path,contentBase64}`, its own commit, reuses the
+  base64-native Contents API `Save`; the FE's cover/inline image uploads),
+  `POST /api/content/template` (the draft
   composer's title→prompts enrichment — `session: [editor]`, 503 when no
   model configured), `POST /api/content/translate` (translate a whole content
   file's prose into another locale — `session: [editor]`, 503 when no model;
@@ -588,7 +594,8 @@ VM is down the live site silently degrades to the static baseline.
   `editing: false` (it also reports false for viewers — `editing` = storage
   configured ∧ admin/editor role), so the FE keeps edit chrome off unless a
   save could actually land. Validation stays dumb and stateless: `content/`-only path allowlist
-  (traversal ⇒ 400), 256 KB size cap, and a sha handle for conflict safety
+  (traversal ⇒ 400; `ValidImagePath` is the parallel allowlist for image
+  uploads — `public/images/*.webp` only, decoded ≤ `MaxImageBytes` 1 MB), 256 KB size cap, and a sha handle for conflict safety
   (mismatch ⇒ 409; the FE re-fetches, re-applies, retries once) — GitHub's
   blob sha in prod, a content hash locally. **The single-file `save` (sha-guarded)
   is only for lone edits; multi-file writes go through the batch pair
@@ -665,10 +672,23 @@ VM is down the live site silently degrades to the static baseline.
   `enriching`, spinner overlay) and swaps the LLM-retuned template in when it
   lands — degrades silently to the static scaffold when enrichment is
   off/unreachable). The dialog has a **markdown toolbar**
-  (bold/heading/list/link/image — pure textarea surgery, no dep) and a
+  (bold/heading/list — pure textarea surgery, no dep; the 🖼 button opens the
+  `ImagePicker` instead) and a
   **Write/Preview** tab that renders the body with the bundled `marked` — the
   instant-feedback answer to the ~2-min publish lag (the editor sees their
-  markdown rendered before it ever deploys). New drafts get an **English slug**
+  markdown rendered before it ever deploys).
+  **Images (reviews/journal):** the editor shows a **cover strip** (thumb +
+  "Set image", editing frontmatter `image:`) and the 🖼 toolbar button for
+  inline images; both open the shared `ImagePicker`, which offers two sources
+  side by side: the site's image library (grid) and a "from your device"
+  upload button (header). Upload path:
+  `lib/image.ts` `downscaleToWebP` (shared with avatars) shrinks the pick to a
+  ≤1400px WebP in-browser, then `uploadImage` (`POST /content/image`) commits it
+  to `public/images/<slug-of-title>-<base36ts>.webp` as its own commit and hands
+  back the `/images/<name>` path — the cover control sets the `image:` scalar
+  (`applyScalarEdit`), inline splices `![](path)` at the caret. So covers are
+  real optimized files (not data-URI bundle bloat), matching `ProductCard`.
+  New drafts get an **English slug**
   regardless of authoring locale: `Upcoming.tsx`'s ＋ button prompts for the
   slug (defaulting to `slugify(title)`) so RU-authored posts still get nice
   URLs. **Translation is driven by the state toggle, not a button**
@@ -774,8 +794,8 @@ The owners are first-time site builders learning the affiliate-content business
 in public. Where things stand (keep this section current *and short* — it
 describes the phase, not the history):
 
-- **Compass courses:** founder course, `trophology`, `inside-websites`, and
-  `herbalism` complete; `homeopathy` at chapters 1–3 of 11. The founder
+- **Compass courses:** all five complete — founder course, `trophology`,
+  `inside-websites`, `herbalism`, and `homeopathy`. The founder
   guides are internal playbooks deliberately published as a course — don't
   "fix" them into consumer content; retelling them from lived experience is a
   roadmap milestone. The launch checklist carries an open item to label each

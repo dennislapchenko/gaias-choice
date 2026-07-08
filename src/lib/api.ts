@@ -211,6 +211,22 @@ export function commitFiles(
   return apiPost<CommitResponse>('/content/commit', { files, message }, { token })
 }
 
+/** POST /api/content/image — commit one browser-downscaled WebP into
+ *  public/images/ as its own commit. `path` must be public/images/*.webp;
+ *  `contentBase64` is the raw file bytes base64-encoded. */
+export interface ImageUploadResponse {
+  path: string
+  commit: string
+}
+
+export function uploadImage(
+  path: string,
+  contentBase64: string,
+  token?: string,
+): Promise<ImageUploadResponse> {
+  return apiPost<ImageUploadResponse>('/content/image', { path, contentBase64 }, { token })
+}
+
 /** POST /api/content/template — re-tune a blank template's guiding prompts to a
  *  post title via the backend LLM (the draft composer). 503 when no model is
  *  configured; callers fall back to the static template. */

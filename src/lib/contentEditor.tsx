@@ -25,6 +25,8 @@ import { createContext, useContext, useEffect, useRef, useState, type ReactNode 
 import { marked } from 'marked'
 import { Composer, CST, isScalar, Parser, parseDocument } from 'yaml'
 import CopyButton from '../components/CopyButton'
+import ImagePicker from '../components/ImagePicker'
+import { withBase } from './asset'
 import {
   apiDelete,
   apiGet,
@@ -33,12 +35,14 @@ import {
   commitFiles,
   enrichTemplate,
   translateContent,
+  uploadImage,
   type ContentFile,
   type DeleteResponse,
   type SaveResponse,
 } from './api'
 import { useEditMode } from './editMode'
 import { useI18n } from './i18n'
+import { downscaleToWebP } from './image'
 import type { EditRef, PostState } from './types'
 
 type EditorMode =
@@ -201,8 +205,14 @@ function applyMdAction(
 export function ContentEditorProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<EditorState | null>(null)
   const [view, setView] = useState<'write' | 'preview'>('write')
+  // Which target an open ImagePicker fills: the frontmatter cover, or an inline
+  // ![]() at the caret. null = closed.
+  const [picker, setPicker] = useState<null | 'cover' | 'inline'>(null)
   const taRef = useRef<HTMLTextAreaElement>(null)
   const pendingSel = useRef<[number, number] | null>(null)
+  // The textarea selection captured when the inline image picker opened (the
+  // modal steals focus, so we can't read it back on pick).
+  const inlineAt = useRef<[number, number] | null>(null)
   const { token } = useEditMode()
   const { t } = useI18n()
 
@@ -223,6 +233,45 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     const next = applyMdAction(action, ta.value, ta.selectionStart, ta.selectionEnd)
     pendingSel.current = [next.selStart, next.selEnd]
     setState({ ...state, value: next.text })
+  }
+
+  // Downscale a picked file in-browser and commit it to public/images/ as its
+  // own git commit (POST /content/image), returning the /images/<name> path a
+  // post references. Names carry a base36 timestamp so uploads never collide.
+  const uploadFile = async (file: File): Promise<string> => {
+    const dataUrl = await downscaleToWebP(file, 1400)
+    const base64 = dataUrl.split(',')[1] ?? ''
+    const base =
+      (state?.title ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') ||
+      'image'
+    const name = `${base}-${Date.now().toString(36)}.webp`
+    await uploadImage(`public/images/${name}`, base64, token ?? undefined)
+    return '/images/' + name
+  }
+
+  // Put a chosen/uploaded image path where the picker was aimed: the cover sets
+  // the frontmatter `image:` scalar (inserted if absent); inline splices an
+  // ![](path) at the caret captured when the picker opened.
+  const applyImage = (path: string, target: 'cover' | 'inline') => {
+    if (!state) return
+    try {
+      if (target === 'cover') {
+        setState({ ...state, value: applyScalarEdit(state.value, { file: '', path: ['image'] }, path) })
+      } else {
+        const [a, b] = inlineAt.current ?? [state.value.length, state.value.length]
+        const text = state.value.slice(0, a) + `![](${path})` + state.value.slice(b)
+        pendingSel.current = [a + 2, a + 2] // caret inside the alt brackets
+        setState({ ...state, value: text })
+      }
+    } catch (err) {
+      setState({ ...state, status: 'error', errorText: err instanceof Error ? err.message : String(err) })
+    }
+  }
+
+  const openInlinePicker = () => {
+    const ta = taRef.current
+    inlineAt.current = ta ? [ta.selectionStart, ta.selectionEnd] : null
+    setPicker('inline')
   }
 
   const close = () => setState(null)
@@ -483,6 +532,10 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     state?.status === 'loading' ||
     state?.status === 'saving' ||
     state?.status === 'enriching'
+  // The cover control only makes sense for the two post types (reviews/journal
+  // have an `image:` cover); compass/pages/site.yaml don't get it.
+  const isPost = !!state?.mode && /\/(products|journal)\//.test(state.mode.path)
+  const cover = state ? fmScalar(state.value, 'image') : undefined
 
   return (
     <ContentEditorContext.Provider value={api}>
@@ -520,7 +573,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                 <button type="button" onClick={() => applyMd('link')} title={t('editor.mdLink')}>
                   🔗
                 </button>
-                <button type="button" onClick={() => applyMd('image')} title={t('editor.mdImage')}>
+                <button type="button" onClick={openInlinePicker} title={t('editor.mdImage')}>
                   🖼
                 </button>
               </div>
@@ -541,6 +594,30 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                 </button>
               </div>
             </div>
+            {isPost && (
+              <div className="content-editor-cover">
+                <div className="content-editor-cover-thumb">
+                  {cover ? (
+                    <img src={withBase(cover)} alt="" />
+                  ) : (
+                    <span aria-hidden="true">🌿</span>
+                  )}
+                </div>
+                <div className="content-editor-cover-actions">
+                  <span className="side-label">{t('editor.cover')}</span>
+                  <div>
+                    <button
+                      type="button"
+                      className="btn btn-ghost"
+                      disabled={busy || state.status === 'published'}
+                      onClick={() => setPicker('cover')}
+                    >
+                      {t('editor.coverSet')}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
             <div className="content-editor-body">
               {view === 'write' ? (
                 <textarea
@@ -591,6 +668,15 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
             </div>
           </div>
         </div>
+      )}
+      {state && picker && (
+        // Sibling of the overlay (not a child) so its backdrop click closes
+        // only the picker, never the editor beneath it.
+        <ImagePicker
+          onPick={(p) => applyImage(p, picker)}
+          onClose={() => setPicker(null)}
+          onUpload={uploadFile}
+        />
       )}
     </ContentEditorContext.Provider>
   )

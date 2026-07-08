@@ -8,35 +8,13 @@ import {
   type Role,
 } from '../lib/api'
 import { withBase } from '../lib/asset'
+import { downscaleToWebP } from '../lib/image'
 import { useI18n } from '../lib/i18n'
 import { useSession } from '../lib/session'
 
-// Downscale a picked image file to a small WebP `data:` URI, entirely in the
-// browser — no upload endpoint, no blob store. The result is stored verbatim in
-// avatar_url, so the avatar survives the source file going away (self-contained,
-// not a remote reference). Capped at `max` px on the long edge to keep the data
-// URI small enough for the users row / campfire payload (backend caps ~200 KB).
-function downscale(file: File, max: number): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.onload = () => {
-      const scale = Math.min(1, max / Math.max(img.width, img.height))
-      const w = Math.round(img.width * scale)
-      const h = Math.round(img.height * scale)
-      const canvas = document.createElement('canvas')
-      canvas.width = w
-      canvas.height = h
-      const ctx = canvas.getContext('2d')
-      if (!ctx) return reject(new Error('no 2d context'))
-      ctx.drawImage(img, 0, 0, w, h)
-      URL.revokeObjectURL(img.src)
-      resolve(canvas.toDataURL('image/webp', 0.85))
-    }
-    img.onerror = reject
-    img.src = URL.createObjectURL(file)
-  })
-}
-
+// The avatar is stored verbatim as the data: URI (self-contained, survives the
+// source file going away); 256 px keeps the campfire payload small (backend caps
+// ~200 KB).
 const ROLES: Role[] = ['admin', 'editor', 'viewer']
 
 // The account page's field-edit panel. Two modes, one component:
@@ -89,7 +67,7 @@ export default function AccountFields({
     e.target.value = '' // reset so re-picking the same file still fires onChange
     if (!file) return
     try {
-      setAvatarUrl(await downscale(file, 256))
+      setAvatarUrl(await downscaleToWebP(file, 256))
     } catch {
       setError(true)
     }

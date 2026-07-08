@@ -194,6 +194,10 @@ const ru: Record<keyof typeof en, string> = {
   "editor.mdLink": "Ссылка",
   "editor.mdImage": "Картинка",
   "editor.enriching": "Подгоняем шаблон под заголовок…",
+  "editor.cover": "Обложка",
+  "editor.coverSet": "Выбрать",
+  "editor.imageUploading": "Загружаем…",
+  "imagePicker.upload": "С устройства",
 };
 
 export default ru;

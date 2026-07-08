@@ -165,6 +165,15 @@ type GetContentFileParams struct {
 	Path string `form:"path" json:"path"`
 }
 
+// UploadImageJSONBody defines parameters for UploadImage.
+type UploadImageJSONBody struct {
+	// ContentBase64 The image bytes, base64-encoded; decoded size capped server-side.
+	ContentBase64 string `json:"contentBase64"`
+
+	// Path Repo-relative target; must be public/images/*.webp.
+	Path string `json:"path"`
+}
+
 // SaveContentJSONBody defines parameters for SaveContent.
 type SaveContentJSONBody struct {
 	// Content Whole-file text; capped at 256 KiB server-side.
@@ -242,6 +251,9 @@ type CommitContentJSONRequestBody CommitContentJSONBody
 // DeleteContentJSONRequestBody defines body for DeleteContent for application/json ContentType.
 type DeleteContentJSONRequestBody DeleteContentJSONBody
 
+// UploadImageJSONRequestBody defines body for UploadImage for application/json ContentType.
+type UploadImageJSONRequestBody UploadImageJSONBody
+
 // SaveContentJSONRequestBody defines body for SaveContent for application/json ContentType.
 type SaveContentJSONRequestBody SaveContentJSONBody
 
@@ -292,6 +304,9 @@ type ServerInterface interface {
 	// Read one content/ file (text + opaque sha for concurrency)
 	// (GET /content/file)
 	GetContentFile(c *gin.Context, params GetContentFileParams)
+	// Commit one uploaded image to public/images/ (a git commit in prod)
+	// (POST /content/image)
+	UploadImage(c *gin.Context)
 	// Write one content/ file (a git commit in prod, a working-tree write in dev)
 	// (POST /content/save)
 	SaveContent(c *gin.Context)
@@ -494,6 +509,21 @@ func (siw *ServerInterfaceWrapper) GetContentFile(c *gin.Context) {
 	siw.Handler.GetContentFile(c, params)
 }
 
+// UploadImage operation middleware
+func (siw *ServerInterfaceWrapper) UploadImage(c *gin.Context) {
+
+	c.Set(string(SessionScopes), []string{"editor"})
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.UploadImage(c)
+}
+
 // SaveContent operation middleware
 func (siw *ServerInterfaceWrapper) SaveContent(c *gin.Context) {
 
@@ -660,6 +690,7 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.POST(options.BaseURL+"/content/commit", wrapper.CommitContent)
 	router.DELETE(options.BaseURL+"/content/file", wrapper.DeleteContent)
 	router.GET(options.BaseURL+"/content/file", wrapper.GetContentFile)
+	router.POST(options.BaseURL+"/content/image", wrapper.UploadImage)
 	router.POST(options.BaseURL+"/content/save", wrapper.SaveContent)
 	router.POST(options.BaseURL+"/content/template", wrapper.EnrichTemplate)
 	router.POST(options.BaseURL+"/content/translate", wrapper.TranslateContent)
@@ -1478,6 +1509,129 @@ func (response GetContentFile503JSONResponse) VisitGetContentFileResponse(w http
 	return err
 }
 
+type UploadImageRequestObject struct {
+	Body *UploadImageJSONRequestBody
+}
+
+type UploadImageResponseObject interface {
+	VisitUploadImageResponse(w http.ResponseWriter) error
+}
+
+type UploadImage200JSONResponse struct {
+	Commit string `json:"commit"`
+	Path   string `json:"path"`
+}
+
+func (response UploadImage200JSONResponse) VisitUploadImageResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type UploadImage400JSONResponse struct{ BadRequestJSONResponse }
+
+func (response UploadImage400JSONResponse) VisitUploadImageResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type UploadImage401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response UploadImage401JSONResponse) VisitUploadImageResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type UploadImage403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response UploadImage403JSONResponse) VisitUploadImageResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type UploadImage409JSONResponse Error
+
+func (response UploadImage409JSONResponse) VisitUploadImageResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(409)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type UploadImage413JSONResponse Error
+
+func (response UploadImage413JSONResponse) VisitUploadImageResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(413)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type UploadImage502JSONResponse struct{ UpstreamJSONResponse }
+
+func (response UploadImage502JSONResponse) VisitUploadImageResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(502)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type UploadImage503JSONResponse struct{ NotConfiguredJSONResponse }
+
+func (response UploadImage503JSONResponse) VisitUploadImageResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(503)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
 type SaveContentRequestObject struct {
 	Body *SaveContentJSONRequestBody
 }
@@ -2082,6 +2236,9 @@ type StrictServerInterface interface {
 	// Read one content/ file (text + opaque sha for concurrency)
 	// (GET /content/file)
 	GetContentFile(ctx context.Context, request GetContentFileRequestObject) (GetContentFileResponseObject, error)
+	// Commit one uploaded image to public/images/ (a git commit in prod)
+	// (POST /content/image)
+	UploadImage(ctx context.Context, request UploadImageRequestObject) (UploadImageResponseObject, error)
 	// Write one content/ file (a git commit in prod, a working-tree write in dev)
 	// (POST /content/save)
 	SaveContent(ctx context.Context, request SaveContentRequestObject) (SaveContentResponseObject, error)
@@ -2480,6 +2637,37 @@ func (sh *strictHandler) GetContentFile(ctx *gin.Context, params GetContentFileP
 		sh.options.HandlerErrorFunc(ctx, err)
 	} else if validResponse, ok := response.(GetContentFileResponseObject); ok {
 		if err := validResponse.VisitGetContentFileResponse(ctx.Writer); err != nil {
+			sh.options.ResponseErrorHandlerFunc(ctx, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(ctx, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// UploadImage operation middleware
+func (sh *strictHandler) UploadImage(ctx *gin.Context) {
+	var request UploadImageRequestObject
+
+	var body UploadImageJSONRequestBody
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(ctx, err)
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx *gin.Context, request interface{}) (interface{}, error) {
+		return sh.ssi.UploadImage(ctx, request.(UploadImageRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "UploadImage")
+	}
+
+	response, err := handler(ctx, request)
+
+	if err != nil {
+		sh.options.HandlerErrorFunc(ctx, err)
+	} else if validResponse, ok := response.(UploadImageResponseObject); ok {
+		if err := validResponse.VisitUploadImageResponse(ctx.Writer); err != nil {
 			sh.options.ResponseErrorHandlerFunc(ctx, err)
 		}
 	} else if response != nil {

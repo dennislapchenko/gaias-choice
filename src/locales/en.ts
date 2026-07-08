@@ -194,6 +194,10 @@ const en = {
   "editor.mdLink": "Link",
   "editor.mdImage": "Image",
   "editor.enriching": "Tuning the template to your title…",
+  "editor.cover": "Cover image",
+  "editor.coverSet": "Set image",
+  "editor.imageUploading": "Uploading…",
+  "imagePicker.upload": "From your device",
 } satisfies Record<string, string>;
 
 export default en;

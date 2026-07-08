@@ -1929,7 +1929,8 @@ a.respected-card:hover {
 .image-picker-backdrop {
     position: fixed;
     inset: 0;
-    z-index: 100;
+    /* Above the content editor (100) — the picker opens on top of it. */
+    z-index: 110;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1986,6 +1987,31 @@ a.respected-card:hover {
     height: 100%;
     object-fit: cover;
     display: block;
+}
+/* Header actions: the "from your device" upload button + the close ×. */
+.image-picker-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+/* The local-machine upload — a pill sitting beside the title, the twin of the
+   grid below (site library). */
+.image-picker-upload {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--on-accent);
+    background: var(--sage);
+    border: 1px solid var(--sage);
+    border-radius: 999px;
+    cursor: pointer;
+}
+.image-picker-upload:disabled {
+    opacity: 0.6;
+    cursor: default;
 }
 
 /* ---------- Page + detail ---------- */
@@ -2693,6 +2719,41 @@ a.respected-card:hover {
     border-bottom: 1px solid var(--line);
     background: var(--white);
 }
+/* Cover-image strip between the toolbar and the editor body (posts only). */
+.content-editor-cover {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+    background: var(--white);
+}
+.content-editor-cover-thumb {
+    flex: 0 0 auto;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--sand2);
+}
+.content-editor-cover-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.content-editor-cover-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.content-editor-cover-actions > div {
+    display: flex;
+    gap: 8px;
+}
 .content-editor-md {
     display: flex;
     gap: 4px;
@@ -2862,9 +2923,11 @@ a.respected-card:hover {
     gap: 12px;
 }
 
-/* A plain text entry row — no thumbnail. The whole row is the link. */
+/* An entry row with a left-quarter thumbnail. The whole row is the link. */
 .journal-row {
-    display: block;
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
     padding: 16px 18px;
     background: var(--white);
     border: 1px solid var(--line);
@@ -2878,6 +2941,28 @@ a.respected-card:hover {
 .journal-row:hover {
     border-color: var(--sage);
     transform: translateY(-1px);
+}
+.journal-row-media {
+    flex: 0 0 25%;
+    align-self: stretch;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--sand2);
+}
+.journal-row-media img,
+.journal-row-media .placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 84px;
+    object-fit: cover;
+    font-size: 1.6rem;
+}
+.journal-row-text {
+    flex: 1;
+    min-width: 0;
 }
 .journal-row-date {
     display: block;

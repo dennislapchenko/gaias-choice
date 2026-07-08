@@ -23,6 +23,10 @@ import (
 // MaxBytes is the per-file cap on saved content.
 const MaxBytes = 256 * 1024
 
+// MaxImageBytes caps a decoded uploaded image (a browser-downscaled ~1400px
+// WebP lands well under this). Bigger than MaxBytes because a photo isn't text.
+const MaxImageBytes = 1024 * 1024
+
 // Store is the storage backend behind the seam. Get returns a file's text
 // plus an opaque sha handle (optimistic concurrency); Save writes one file
 // (empty sha = create, sha-guarded — the single-file edit path); SaveMany and
@@ -67,10 +71,10 @@ type DeleteResult struct {
 	NotFound bool     // none of the requested paths existed
 }
 
-// ValidPath allows only clean, relative, content/-rooted paths.
+// cleanRel is the shared traversal guard: a clean, relative, non-escaping path.
 // path.Clean(p) != p rejects every traversal/normalization trick in one move
 // (`..`, `.`, `//`, trailing `/`); the segment loop is belt and braces.
-func ValidPath(p string) bool {
+func cleanRel(p string) bool {
 	if p == "" || len(p) > 512 {
 		return false
 	}
@@ -85,5 +89,16 @@ func ValidPath(p string) bool {
 			return false
 		}
 	}
-	return strings.HasPrefix(p, "content/")
+	return true
+}
+
+// ValidPath allows only clean, content/-rooted paths (the editable content).
+func ValidPath(p string) bool {
+	return cleanRel(p) && strings.HasPrefix(p, "content/")
+}
+
+// ValidImagePath allows only clean public/images/*.webp paths — the one place
+// portal image uploads may land (the FE downscales everything to WebP).
+func ValidImagePath(p string) bool {
+	return cleanRel(p) && strings.HasPrefix(p, "public/images/") && strings.HasSuffix(p, ".webp")
 }

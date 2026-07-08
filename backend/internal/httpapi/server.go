@@ -6,6 +6,7 @@ package httpapi
 
 import (
 	"context"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"log"
@@ -45,10 +46,10 @@ func NewRouter(d Deps) *gin.Engine {
 	// otherwise a client could spoof its IP past the login rate limit.
 	_ = r.SetTrustedProxies([]string{"10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"})
 	r.Use(requestLogger(), gin.Recovery(), corsMiddleware(d.CORSOrigins))
-	// One global body cap (content cap + JSON envelope headroom) — nothing
-	// this API accepts is legitimately bigger.
+	// One global body cap. Sized for the largest legitimate body: an image
+	// upload (base64 inflates the decoded cap ~4/3) plus JSON envelope headroom.
 	r.Use(func(c *gin.Context) {
-		c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, content.MaxBytes+128*1024)
+		c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, content.MaxImageBytes*2)
 	})
 
 	srv := &server{
@@ -518,6 +519,37 @@ func (s *server) CommitContent(_ context.Context, req CommitContentRequestObject
 		return CommitContent502JSONResponse{UpstreamJSONResponse{Error: err.Error()}}, nil
 	}
 	return CommitContent200JSONResponse{Paths: res.Paths, Commit: res.Commit}, nil
+}
+
+// UploadImage commits one browser-downscaled WebP into public/images/ as its
+// own commit, so a post can reference it by /images/<name>. Reuses the plain
+// single-file Save (the Contents API is base64-native) — create-only, so a
+// name collision surfaces as 409.
+func (s *server) UploadImage(_ context.Context, req UploadImageRequestObject) (UploadImageResponseObject, error) {
+	if s.content == nil {
+		return UploadImage503JSONResponse{NotConfiguredJSONResponse{Error: "editing not configured"}}, nil
+	}
+	if req.Body == nil || req.Body.Path == "" || req.Body.ContentBase64 == "" {
+		return UploadImage400JSONResponse{BadRequestJSONResponse{Error: "path and image required"}}, nil
+	}
+	if !content.ValidImagePath(req.Body.Path) {
+		return UploadImage400JSONResponse{BadRequestJSONResponse{Error: "invalid image path"}}, nil
+	}
+	data, err := base64.StdEncoding.DecodeString(req.Body.ContentBase64)
+	if err != nil {
+		return UploadImage400JSONResponse{BadRequestJSONResponse{Error: "bad base64"}}, nil
+	}
+	if len(data) == 0 || len(data) > content.MaxImageBytes {
+		return UploadImage413JSONResponse(Error{Error: "image empty or too large"}), nil
+	}
+	res, err := s.content.Save(req.Body.Path, string(data), "", fmt.Sprintf("content: add image %s via portal", req.Body.Path))
+	if err != nil {
+		return UploadImage502JSONResponse{UpstreamJSONResponse{Error: err.Error()}}, nil
+	}
+	if res.Conflict {
+		return UploadImage409JSONResponse(Error{Error: "an image already exists at that path"}), nil
+	}
+	return UploadImage200JSONResponse{Path: req.Body.Path, Commit: res.Commit}, nil
 }
 
 // EnrichTemplate re-tunes a blank template's prompts to a post title via the

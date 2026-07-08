@@ -104,6 +104,7 @@ func TestSpecDrivenAuth(t *testing.T) {
 		{http.MethodGet, "/api/content/file?path=content/locales/en/site.yaml"},
 		{http.MethodPost, "/api/content/save"},
 		{http.MethodPost, "/api/content/commit"},
+		{http.MethodPost, "/api/content/image"},
 		{http.MethodDelete, "/api/content/file?path=content/locales/en/site.yaml&sha=x"},
 	}
 	for _, req := range secured {
@@ -225,6 +226,7 @@ func TestViewerForbiddenFromContent(t *testing.T) {
 		{http.MethodGet, "/api/content/file?path=content/locales/en/site.yaml"},
 		{http.MethodPost, "/api/content/save"},
 		{http.MethodPost, "/api/content/commit"},
+		{http.MethodPost, "/api/content/image"},
 		{http.MethodDelete, "/api/content/file?path=content/locales/en/site.yaml&sha=x"},
 	} {
 		body := ""
@@ -383,6 +385,7 @@ func TestNotConfigured(t *testing.T) {
 		{http.MethodGet, "/api/content/file?path=content/locales/en/site.yaml"},
 		{http.MethodPost, "/api/content/save"},
 		{http.MethodPost, "/api/content/commit"},
+		{http.MethodPost, "/api/content/image"},
 		{http.MethodDelete, "/api/content/file"},
 	} {
 		// POST/DELETE carry a body — 503 is checked in-handler, after the strict
@@ -568,6 +571,53 @@ func TestSaveUpdateAndCreate(t *testing.T) {
 	}
 	if got.Message != "content: draft new-thing via portal" {
 		t.Errorf("custom message: %q", got.Message)
+	}
+}
+
+func TestUploadImage(t *testing.T) {
+	var got struct {
+		Content string  `json:"content"`
+		SHA     *string `json:"sha"`
+		Message string  `json:"message"`
+	}
+	up := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		json.NewDecoder(r.Body).Decode(&got)
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, `{"content":{"sha":"blob"},"commit":{"sha":"imgcommit"}}`)
+	}))
+	defer up.Close()
+	r, token := testEnv(t, githubSeam(up.URL))
+
+	raw := []byte("\x00\x01\x02not-really-webp-but-bytes")
+	b64 := base64.StdEncoding.EncodeToString(raw)
+	body, _ := json.Marshal(map[string]string{"path": "public/images/hero-abc.webp", "contentBase64": b64})
+	w := do(r, http.MethodPost, "/api/content/image", token, string(body))
+	if w.Code != http.StatusOK {
+		t.Fatalf("upload: got %d: %s", w.Code, w.Body.String())
+	}
+	// The Contents API is base64-native, so what GitHub receives is exactly the
+	// base64 we sent (decode→re-encode round-trips), created (no sha).
+	if got.Content != b64 {
+		t.Errorf("upstream content: %q want %q", got.Content, b64)
+	}
+	if got.SHA != nil {
+		t.Errorf("image create must omit sha, got %v", *got.SHA)
+	}
+	if got.Message != "content: add image public/images/hero-abc.webp via portal" {
+		t.Errorf("message: %q", got.Message)
+	}
+	var resp struct{ Path, Commit string }
+	json.Unmarshal(w.Body.Bytes(), &resp)
+	if resp.Path != "public/images/hero-abc.webp" || resp.Commit != "imgcommit" {
+		t.Errorf("response: %+v", resp)
+	}
+
+	// Path outside public/images or not .webp ⇒ 400 (never reaches upstream).
+	for _, bad := range []string{"content/x.md", "public/images/x.png", "public/other/x.webp"} {
+		body, _ := json.Marshal(map[string]string{"path": bad, "contentBase64": b64})
+		if w := do(r, http.MethodPost, "/api/content/image", token, string(body)); w.Code != http.StatusBadRequest {
+			t.Errorf("bad path %q: got %d, want 400", bad, w.Code)
+		}
 	}
 }
 
