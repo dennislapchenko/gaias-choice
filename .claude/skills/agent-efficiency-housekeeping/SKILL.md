@@ -1,13 +1,11 @@
 ---
 name: agent-efficiency-housekeeping
 description: >-
-  Audit and tune this repo's agent knowledge system — CLAUDE.md, the skills in
-  .claude/skills/, references/, context/, MEMORY.md, and the settings allowlist —
-  so a fresh agent executes repo work quickly and correctly, and so the docs keep
-  matching reality. Use when asked to "do housekeeping", "review/audit the skills
-  or docs", "improve agent efficiency", or when a trigger fires: docs caught
-  contradicting reality or each other, a code/workflow change merged without doc
-  sync, knowledge stranded on unmerged branches, or the same friction hit ≥2 runs.
+  Audit and tune this repo's agent knowledge system — CLAUDE.md, skills,
+  references/, context/, MEMORY.md, settings — for correctness and token
+  cost. Use when asked to "do housekeeping", "audit the skills/docs",
+  "improve agent efficiency", or when docs contradict reality or each other,
+  a merged change left docs stale, or the same friction hit ≥2 runs.
 ---
 
 # Agent-efficiency housekeeping

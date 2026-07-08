@@ -1,12 +1,11 @@
 ---
 name: deep-questions
 description: >
-  The practice of asking the owners (Denis & Lida) ULTRA-deep, many-layered
-  questions about how they see the world, and recording their verbatim answers,
-  to keep the site's persona-identity alive and growing. Invoke when the owner
-  asks for "deep questions", "ask me something", "get to know us", wants to feed
-  the persona file, or to record an answer they just gave. Also the source of
-  the OPTIONAL single closing question at the end of a content-working session.
+  Ask the owners (Denis & Lida) ultra-deep, many-layered questions about how
+  they see the world and record their verbatim answers, feeding the site's
+  persona identity. Invoke when the owner asks for "deep questions", "ask me
+  something", "get to know us", or wants an answer recorded. Also the source
+  of the OPTIONAL single closing question after a content session.
 ---
 
 # Deep questions — deepening the owners' persona-identity

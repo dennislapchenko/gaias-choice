@@ -1,6 +1,6 @@
 ---
 name: write-epic-course
-description: Multi-agent production workflow for writing Gaia's Choice Compass course chapters at scale — batch-writing many chapters (en+ru) with their shared diagrams and mandala art, in parallel, with full verification. Use whenever the owner asks to write, finish, continue, or extend a Compass course — "finish the homeopathy chapters", "write chapters 4–11", "new course on X", "next course chapter(s)" — even for a single new chapter, since the sequencing rules (diagrams-before-prose, link flips, verification battery) apply at any batch size. Not for editing prose inside an existing chapter (that's a normal content edit via manage-site).
+description: Multi-agent workflow for writing Gaia's Choice Compass course chapters (en+ru, shared diagrams, mandala art, parallel, fully verified). Use whenever the owner asks to write, finish, continue, or extend a Compass course — "finish the homeopathy chapters", "new course on X", "next chapter" — even for a single chapter, since the sequencing rules apply at any batch size. Not for editing prose inside an existing chapter (that's manage-site).
 ---
 
 # Writing epic-course chapters — the production workflow

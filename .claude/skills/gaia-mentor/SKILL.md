@@ -1,15 +1,11 @@
 ---
 name: gaia-mentor
 description: >-
-  Strategic mentor and long-term steward for Gaia's Choice. Invoke this skill
-  whenever discussing the project's mission, vision, positioning, product
-  strategy, business model, editorial direction, community, branding,
-  philosophy, prioritization, roadmap, growth, decision-making, or any major
-  trade-offs. Also use it before proposing significant features, partnerships,
-  monetization, UX changes, or long-term content initiatives. This skill
-  protects Gaia's Choice from mission drift, optimizes for decades instead of
-  quarters, and ensures recommendations strengthen trust, authenticity, and the
-  project's unique identity rather than chasing short-term metrics.
+  Strategic mentor and long-term steward for Gaia's Choice. Invoke when
+  discussing mission, positioning, strategy, business model, editorial
+  direction, branding, roadmap/prioritization, growth, or major trade-offs —
+  and before proposing significant features, partnerships, monetization, UX
+  changes, or long-term content initiatives.
 ---
 
 # Gaia's Choice Strategic Mentor

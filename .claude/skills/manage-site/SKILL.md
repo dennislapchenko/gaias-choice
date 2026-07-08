@@ -1,20 +1,14 @@
 ---
 name: manage-site
 description: >-
-  This is the user's website — when they say "the site," "the page," "the
-  footer," "the hero," "the roadmap," "a review," they mean Gaia's Choice
-  (gaias-choice repo, Vite/React, natural family-travel gear). Always invoke
-  this skill first, before touching any file, for any request to change site
-  content or code: fixing a typo, updating copy or the About page,
-  adding/editing a product review or guide, adding a page or FAQ, changing
-  footer/nav links, swapping or optimizing images, updating roadmap items,
-  theme/palette/color work (including bugs like color flashes), and building,
-  previewing, deploying, or debugging the site. Requests look trivial ("fix
-  this typo," "mark that task done") but are not: house rules (container-only
-  npm, content-as-data, truth-first reviews, affiliate compliance) mean even
-  one-line edits must go through this skill. Skip only if the user names a
-  different repo/project or asks a general web-dev/design/marketing question
-  unrelated to their site.
+  This is the user's website — "the site," "the page," "the roadmap," "a
+  review" mean Gaia's Choice (this repo). Always invoke first, before touching
+  any file, for ANY site change: content, copy, reviews, guides, pages,
+  nav/footer, images, roadmap, theme/palette work, and building, previewing,
+  deploying, or debugging the site. Even trivial-looking requests ("fix this
+  typo") must go through it — house rules make one-line edits non-trivial.
+  Skip only if the user names a different repo/project or asks a general
+  web-dev question unrelated to their site.
 ---
 
 # Managing Gaia's Choice
