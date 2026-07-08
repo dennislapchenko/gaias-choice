@@ -28,8 +28,10 @@ touching, many-layered questions, and want every answer preserved verbatim.
   idea against the owner's lived experience.
 - **Denis's raw material:** his digital garden at
   `/Users/dlapcenko/dev/dlapcenko/garden-of-atlantis` (*Garden of Atlantis*) —
-  skip business/food-business plans; mine the metaphysics, meanings, quests, and
-  the blank/`WIP`/"will elaborate later" headings.
+  already read in full and distilled into `persona-context.md`; do **NOT**
+  re-read it when composing questions. The owner will say when the garden has
+  new material worth a fresh pass (then: skip business/food-business plans;
+  mine the metaphysics, meanings, quests, and blank/`WIP` headings).
 
 ## Non-negotiables (this is the whole point)
 

@@ -34,17 +34,20 @@ export default function Reviews() {
       <header className="page-head">
         <div className="page-head-row">
           <h1>{t('reviews.title')}</h1>
-          {upcoming.length > 0 && (
-            <button
-              type="button"
-              className={`user-toggle rail-toggle${upcomingOpen ? ' is-open' : ''}`}
-              aria-expanded={upcomingOpen}
-              aria-label={t('reviews.upcomingTitle')}
-              onClick={() => setUpcomingOpen((o) => !o)}
-            >
-              <UpcomingIcon />
-            </button>
-          )}
+          <div className="head-toggles">
+            {upcoming.length > 0 && (
+              <button
+                type="button"
+                className={`user-toggle rail-toggle${upcomingOpen ? ' is-open' : ''}`}
+                aria-expanded={upcomingOpen}
+                aria-label={t('reviews.upcomingTitle')}
+                onClick={() => setUpcomingOpen((o) => !o)}
+              >
+                <UpcomingIcon />
+                <span className="rail-toggle-label">{t('reviews.upcomingTitle')}</span>
+              </button>
+            )}
+          </div>
         </div>
         <p className="lead">{t('reviews.lead')}</p>
       </header>

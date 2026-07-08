@@ -35,17 +35,20 @@ export default function Journal() {
       <header className="page-head">
         <div className="page-head-row">
           <h1>{t('journal.title')}</h1>
-          {upcoming.length > 0 && (
-            <button
-              type="button"
-              className={`user-toggle rail-toggle${upcomingOpen ? ' is-open' : ''}`}
-              aria-expanded={upcomingOpen}
-              aria-label={t('journal.upcomingTitle')}
-              onClick={() => setUpcomingOpen((o) => !o)}
-            >
-              <UpcomingIcon />
-            </button>
-          )}
+          <div className="head-toggles">
+            {upcoming.length > 0 && (
+              <button
+                type="button"
+                className={`user-toggle rail-toggle${upcomingOpen ? ' is-open' : ''}`}
+                aria-expanded={upcomingOpen}
+                aria-label={t('journal.upcomingTitle')}
+                onClick={() => setUpcomingOpen((o) => !o)}
+              >
+                <UpcomingIcon />
+                <span className="rail-toggle-label">{t('journal.upcomingTitle')}</span>
+              </button>
+            )}
+          </div>
         </div>
         <p className="lead">{t('journal.lead')}</p>
       </header>

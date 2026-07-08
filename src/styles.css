@@ -68,13 +68,17 @@ summary,
 }
 
 /* iOS Safari auto-zooms the page whenever a focused form control's font is
-   under 16px. Floor every editable control at 16px on touch devices so focus
-   never triggers a zoom (desktop keeps the smaller sizes). */
+   under 16px — and a zoomed page makes every position:fixed overlay (editor,
+   login) overflow the shrunken visual viewport, clipping its header/actions.
+   Floor every editable control at 16px on touch devices so focus never zooms.
+   !important is load-bearing: component classes like .content-editor-textarea
+   set a smaller size and their 0,1,0 specificity would otherwise win over this
+   element-selector floor. Desktop (fine pointer) keeps the smaller sizes. */
 @media (pointer: coarse) {
     input,
     textarea,
     select {
-        font-size: max(16px, 1em);
+        font-size: max(16px, 1em) !important;
     }
 }
 
@@ -377,6 +381,12 @@ h1 {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+/* Two-or-more toggle buttons sharing this row (e.g. Account's campfire-edit +
+   fields toggles) would crowd a phone-width header with labels — collapse
+   back to icon-only, same :has() pattern as the sidebar/TOC dimming above. */
+.head-toggles:has(.rail-toggle ~ .rail-toggle) .rail-toggle-label {
+    display: none;
 }
 .user-toggle:hover {
     background: var(--sand-2);
@@ -772,6 +782,28 @@ h1 {
     max-height: calc(100vh - 108px);
     overflow-y: auto;
     overscroll-behavior: contain;
+    /* Overlay scrollbar: thin, transparent until hovered/focused, so it
+       doesn't reserve layout width or sit visible at rest. */
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 999px;
+}
+.sidebar:hover,
+.sidebar:focus-within {
+    scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
+}
+.sidebar:hover::-webkit-scrollbar-thumb,
+.sidebar:focus-within::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.25);
 }
 /* When a second rail is present beside the site-wide left Sidebar — the
    entry-detail TOC or the Reviews/Journal "in the works" rail — dim the
@@ -2768,6 +2800,13 @@ a.respected-card:hover {
     .content-editor {
         width: 100%;
         height: 100%;
+    }
+    /* Longer RU labels (Поля/Исходный/Просмотр, ✓ Сохранить) overflow a phone
+       row and the modal's overflow:hidden clips them — let both rows wrap. */
+    .content-editor-toolbar,
+    .content-editor-actions {
+        flex-wrap: wrap;
+        row-gap: 6px;
     }
     /* Short visible viewport (keyboard up): let the textareas shrink with the
        modal instead of forcing overflow from a tall min-height. */
