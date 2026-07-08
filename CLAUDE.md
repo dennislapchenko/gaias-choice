@@ -177,15 +177,21 @@ Authoring procedures (frontmatter schemas, voice rules, step-by-steps) live in
 review follows the universal six-section body structure whose canonical source
 is `content/shared/review-template.<locale>.md` — the scaffold an editor's ＋
 button (on the `Upcoming` rail, edit mode only — see the Live-edit row of
-`development.md`) seeds a new draft from.
+`development.md`) seeds a new draft from. **Layout:** `ReviewDetail` is a
+centered two-column grid (`.review-layout`, mirroring `.detail-layout`) — the
+reading column plus a sticky right rail (`.review-aside`) that holds the
+product facts (price + the Gaia Score bars, and whatever facts get added
+later); on mobile (`≤900px`) the rail stacks above the article.
 
 **Gaia Score (review rating).** Reviews are not rated with a single star.
 `site.yaml` `ratingCriteria` defines one shared set of criteria (`{title, items}`,
 localized; names currently **provisional** — owner to finalize), and each
 review's frontmatter `scores:` is an array of 0–5 numbers **aligned to `items`
-by index**. `components/GaiaScore.tsx` renders the per-criterion breakdown on
-the review detail page; `ProductCard` shows the rolled-up average (its
-`scoreAverage` helper) as the old single star row. Adding/renaming a criterion
+by index**. `components/GaiaScore.tsx` renders the per-criterion breakdown as a
+row of **vertical fill bars** (one column per criterion; fill height = score/5)
+in `ReviewDetail`'s sticky right rail (`.review-aside` — see below); `ProductCard`
+shows the rolled-up average (its `scoreAverage` helper) as the old single star
+row. Adding/renaming a criterion
 is a one-line `site.yaml` edit that relabels every review at once — content-as-data,
 no per-file churn.
 

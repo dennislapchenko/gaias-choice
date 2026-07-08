@@ -55,6 +55,7 @@ const ru: Record<keyof typeof en, string> = {
 
   "reviewDetail.backLink": "← Все обзоры",
   "reviewDetail.checkPrice": "Узнать текущую цену →",
+  "reviewDetail.priceLabel": "Цена",
 
   "compassDetail.backLink": "← К пути",
   "journalDetail.backLink": "← К заметкам",

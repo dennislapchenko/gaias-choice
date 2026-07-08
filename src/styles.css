@@ -2137,6 +2137,75 @@ a.respected-card:hover {
     max-width: 760px;
     margin: 0 auto;
 }
+/* Review detail = reading column + a sticky right rail of product facts
+   (price, rating, and whatever gets added later). Mirrors .detail-layout's
+   centered two-column grid. */
+.review-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 760px) 240px;
+    grid-template-areas:
+        "nav nav"
+        "main aside";
+    justify-content: center;
+    align-items: start;
+    gap: 32px;
+}
+.review-layout .detail {
+    grid-area: main;
+    max-width: none;
+    margin: 0;
+}
+.review-aside {
+    grid-area: aside;
+    position: sticky;
+    top: 84px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background-color: var(--white);
+    background-image: linear-gradient(var(--panel-tint), var(--panel-tint));
+}
+.review-fact {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.review-fact-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--sage-dark);
+}
+.review-price {
+    font-size: 1.3rem;
+}
+@media (max-width: 900px) {
+    .review-layout {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .review-layout .detail-nav {
+        order: -3;
+    }
+    /* facts rail rides above the article on phones */
+    .review-aside {
+        order: -1;
+        position: static;
+    }
+    .review-layout .detail,
+    .review-layout .detail-nav,
+    .review-aside {
+        max-width: 760px;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
 /* Detail pages (Compass chapters + Journal entries, via pages/EntryDetail.tsx)
    wrap the article with a page-local table of contents (see
    components/TableOfContents.tsx). It's a second, page-local nav — the
@@ -3491,7 +3560,7 @@ a.respected-card:hover {
 /* Gaia Score — criteria-based review rating (replaces the single star row on
    the review detail page; the card still shows the rolled-up average). */
 .gaia-score {
-    margin: 0.9rem 0 1.1rem;
+    margin: 0;
 }
 .gaia-score-title {
     display: block;
@@ -3502,20 +3571,52 @@ a.respected-card:hover {
     color: var(--sage-dark);
     margin-bottom: 0.4rem;
 }
-.gaia-score-list {
+/* Score criteria as one row of vertical fill bars, split N-up (one per
+   criterion). Fill height = score/5 (see GaiaScore.tsx). */
+.gaia-score-bars {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: grid;
-    gap: 0.3rem;
-    max-width: 340px;
-}
-.gaia-score-list li {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    align-items: flex-end;
+    gap: 12px;
 }
-.gaia-score-crit {
-    color: var(--ink);
+.gaia-bar {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+}
+.gaia-bar-track {
+    position: relative;
+    width: 100%;
+    max-width: 44px;
+    height: 78px;
+    border-radius: 999px;
+    background: var(--surface-muted-strong);
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+}
+.gaia-bar-fill {
+    width: 100%;
+    min-height: 4px;
+    background: var(--clay);
+    border-radius: 999px;
+    transition: height 0.4s ease;
+}
+.gaia-bar-value {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--clay);
+}
+.gaia-bar-crit {
+    font-size: 0.72rem;
+    line-height: 1.2;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+    hyphens: auto;
 }

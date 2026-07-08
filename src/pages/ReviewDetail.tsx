@@ -28,7 +28,7 @@ export default function ReviewDetail() {
   if (!product) return <NotFound />
 
   return (
-    <article className="detail">
+    <div className="review-layout">
       <PageHead title={product.title} description={product.excerpt} />
       <div className="detail-nav">
         <Link to="/reviews" className="back-link">
@@ -57,42 +57,53 @@ export default function ReviewDetail() {
           </div>
         )}
       </div>
-      <h1>{product.title}</h1>
-      <div className="detail-meta">
-        {product.price && <span className="price">{product.price}</span>}
-        <span className="muted">{product.date}</span>
-        {product.translatedFrom && (
-          <span className="muted translated-mark">
-            {t(`detail.translatedFrom.${product.translatedFrom}`)}
-          </span>
+      <article className="detail review-main">
+        <h1>{product.title}</h1>
+        <div className="detail-meta">
+          <span className="muted">{product.date}</span>
+          {product.translatedFrom && (
+            <span className="muted translated-mark">
+              {t(`detail.translatedFrom.${product.translatedFrom}`)}
+            </span>
+          )}
+        </div>
+
+        {product.image && (
+          <img className="detail-image" src={withBase(product.image)} alt={product.title} />
         )}
-      </div>
-      {site.ratingCriteria && (
-        <GaiaScore
-          title={site.ratingCriteria.title}
-          criteria={site.ratingCriteria.items}
-          scores={product.scores}
-        />
-      )}
 
-      {product.image && (
-        <img className="detail-image" src={withBase(product.image)} alt={product.title} />
-      )}
+        <Markdown html={product.html} />
 
-      <Markdown html={product.html} />
+        {product.affiliateUrl && (
+          <p className="cta-row">
+            <a
+              className="btn btn-primary"
+              href={product.affiliateUrl}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+            >
+              {t('reviewDetail.checkPrice')}
+            </a>
+          </p>
+        )}
+      </article>
 
-      {product.affiliateUrl && (
-        <p className="cta-row">
-          <a
-            className="btn btn-primary"
-            href={product.affiliateUrl}
-            target="_blank"
-            rel="noopener noreferrer sponsored"
-          >
-            {t('reviewDetail.checkPrice')}
-          </a>
-        </p>
-      )}
-    </article>
+      {/* Right rail — facts about the product. Grows as more get added. */}
+      <aside className="review-aside">
+        {product.price && (
+          <div className="review-fact">
+            <span className="review-fact-label">{t('reviewDetail.priceLabel')}</span>
+            <span className="price review-price">{product.price}</span>
+          </div>
+        )}
+        {site.ratingCriteria && (
+          <GaiaScore
+            title={site.ratingCriteria.title}
+            criteria={site.ratingCriteria.items}
+            scores={product.scores}
+          />
+        )}
+      </aside>
+    </div>
   )
 }

@@ -54,6 +54,7 @@ const en = {
 
   "reviewDetail.backLink": "← All reviews",
   "reviewDetail.checkPrice": "Check current price →",
+  "reviewDetail.priceLabel": "Price",
 
   "compassDetail.backLink": "← Back to the Compass",
   "journalDetail.backLink": "← Back to the Journal",
