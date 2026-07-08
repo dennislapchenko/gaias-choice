@@ -8,9 +8,11 @@ description: Multi-agent production workflow for writing Gaia's Choice Compass c
 How to manufacture Compass course chapters without losing the qualities that
 make them worth reading. The **authoring blueprint** (chapter anatomy, Thread,
 artifact, sizing) is `context/epic-writing-context.md`; the **house rules**
-(truth-first, provenance, container-only npm) are `manage-site` SKILL.md.
-This skill is only the *production process* — proven on the herbalism course
-(chapters 4–11, 16 files, one session).
+(truth-first, provenance, container-only npm) are `manage-site` SKILL.md; the
+**editorial/strategic lens** (does this course serve the mission, positioning,
+and long-term trust) is the `gaia-mentor` skill — invoke it too, on top of all
+contexts. This skill is only the *production process* — proven on the herbalism
+course (chapters 4–11, 16 files, one session).
 
 ## Why this shape
 
@@ -32,6 +34,9 @@ way.
 Read: the course plan (`context/course-plan-<slug>.md`), the blueprint, ALL
 existing chapters of the course in BOTH locales, `persona-context.md`,
 `ideology-context.md`, and content-editing.md's "Visuals inside guides".
+**Invoke the `gaia-mentor` skill** before freezing the brief — pressure-test
+the course's angle, scope, and framing against the mission so the whole batch
+is aligned before any prose is written (cheaper here than in Phase 3).
 
 Then write the **master brief** to the session scratchpad — the single
 document every agent works from. Template with the non-obvious parts marked:
