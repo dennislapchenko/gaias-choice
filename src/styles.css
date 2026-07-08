@@ -1608,6 +1608,9 @@ a.respected-card:hover {
     border: 1px solid var(--line);
     background-color: var(--white);
     background-image: linear-gradient(var(--panel-tint), var(--panel-tint));
+    /* Follow the theme's text color (light in dark palettes) instead of the
+       UA button default, which stayed dark-on-dark and unreadable. */
+    color: var(--ink);
     border-radius: 999px;
     padding: 7px 15px;
     font-size: 0.9rem;
@@ -1698,6 +1701,28 @@ a.respected-card:hover {
        pushing the rail's height around as more items queue up. */
     max-height: 480px;
     overflow-y: auto;
+    /* Same overlay scrollbar as .sidebar: thin, transparent at rest, only
+       tinting the thumb on hover/focus so it never sits bright over the rail. */
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+.upcoming-list::-webkit-scrollbar {
+    width: 6px;
+}
+.upcoming-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.upcoming-list::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 999px;
+}
+.upcoming-list:hover,
+.upcoming-list:focus-within {
+    scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
+}
+.upcoming-list:hover::-webkit-scrollbar-thumb,
+.upcoming-list:focus-within::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.25);
 }
 .upcoming-item {
     margin: 0;

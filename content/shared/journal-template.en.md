@@ -1,6 +1,6 @@
 ---
 title: "<one honest, specific title — what this note is really about>"
-state: upcoming     # queued "in the works" — delete this line (or set active) when the entry is finished
+state: upcoming
 excerpt: "<the single sentence a friend would text you about this>"
 date: 2026-07-05    # the day it happened (or you wrote it) — this controls order
 tags: []            # optional, e.g. [travel, sleep, gear]
@@ -24,7 +24,9 @@ tags: []            # optional, e.g. [travel, sleep, gear]
     hundred times instead of once.
 
   Either way, the headings are scaffolding to think against, not sections
-  you must keep. Keep what serves the note, delete the rest.
+  you must keep. Keep what serves the note, delete the rest — and retitle
+  what you keep in this note's own words; the default headings name a
+  section's job, not its final wording.
 -->
 
 <!-- ————— Shape 1: a story ————— -->

@@ -50,16 +50,19 @@ currently provisional) — renaming there relabels every review; see CLAUDE.md
 "Gaia Score".
 
 The six body sections are **the universal structure of every review** — keep
-them all, in this order:
+them all, in this order. The template headings name each section's **job**,
+not its final wording: every review retitles them in its own words (the
+enrich endpoint does this for drafted stubs), so no two reviews share
+headings — only roles:
 
 1. `**Verdict:** …` — the answer first
-2. `## Why we bought it` — the real problem it had to solve in the family's
+2. why we bought it — the real problem it had to solve in the family's
    day (emotional problem first — nobody wakes up wanting a review)
-3. `## How it lived with us` — duration, conditions, bought vs gifted (gifted
+3. how it lived with us — duration, conditions, bought vs gifted (gifted
    must be disclosed here)
-4. `## What's genuinely good`
-5. `## What we'd change` — every review names a flaw
-6. `## Who it's for` — and who should skip it
+4. what's genuinely good
+5. what we'd change — every review names a flaw
+6. who it's for — and who should skip it
 
 To change the structure, edit the template files themselves (keep en + ru in
 lockstep) — don't improvise per review. Ask for real testing notes if the

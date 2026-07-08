@@ -330,9 +330,10 @@ The owner wants the npm surface kept off the host and minimal.
   in the prod Pages build. It's a Vite env gate, **not** a `site.yaml` field
   (`site.yaml` ships to the visitor bundle). The backend's DEBUG is a separate
   env — `references/backend.md` "Toolchain".
-- **Verifying visually:** `task build`, then serve `dist/` with any static
-  server — deep links only resolve via the nginx fallback, so load `/` and
-  navigate by clicking.
+- **Verifying visually:** `task build`, then serve `dist/` with
+  `scripts/preview-spa.py` (the `dist` launch config) — it does prod's SPA
+  fallback so deep links resolve. A plain `python -m http.server` 404s on
+  them, forcing you to load `/` and click through.
 - More (ngrok allowedHosts, YAML quoting traps, BASE_PATH, TTY, nginx
   envsubst): "Known gotchas" in `references/development.md`.
 

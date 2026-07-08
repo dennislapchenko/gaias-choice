@@ -1,6 +1,6 @@
 ---
 title: "<the product, plainly — brand + what it is>"
-state: upcoming            # queued "in the works" — delete this line (or set active) when the review is finished
+state: upcoming
 category: Sleep            # Sleep | Feeding | Care | Kitchen | Travel — the filter chip on /reviews
 scores: [4, 4, 4]          # Gaia Score — one 0–5 number per criterion in en/site.yaml `ratingCriteria`, IN THAT ORDER. A 5 must survive the "no flaws at all?" test
 price: "€00"               # what you actually paid; always quote it
@@ -24,7 +24,9 @@ tags: []                   # optional, e.g. [organic, cotton]
   durability, repairability) is not a gut feeling: earn each number in the body.
 
   These five sections are the house structure — keep them all, fill them
-  honestly, cut the prompts before you ship.
+  honestly, cut the prompts before you ship. The headings below name each
+  section's JOB, not its final wording: retitle every one in this review's
+  own words (keep the roles and their order) so no two reviews read alike.
 -->
 
 **Verdict:** the answer in one or two sentences, for the reader who leaves after
