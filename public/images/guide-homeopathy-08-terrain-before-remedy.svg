@@ -1,0 +1,40 @@
+<svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="46%" r="72%">
+      <stop offset="0%" stop-color="#3a1548"/>
+      <stop offset="55%" stop-color="#61227a"/>
+      <stop offset="100%" stop-color="#100617"/>
+    </radialGradient>
+    <path id="petal" d="M400,220 Q448,145.0 400,70 Q352,145.0 400,220 Z" fill="none" stroke="#dfa8f0" stroke-width="1.6" opacity="0.4"/>
+  </defs>
+  <rect width="800" height="800" fill="url(#bg)"/>
+  <circle cx="400" cy="400" r="350" fill="none" stroke="#dfa8f0" stroke-width="1" opacity="0.28"/>
+  <circle cx="400" cy="400" r="270" fill="none" stroke="#dfa8f0" stroke-width="1" opacity="0.28"/>
+  <use href="#petal" transform="rotate(0 400 400)"/>
+  <use href="#petal" transform="rotate(22.5 400 400)"/>
+  <use href="#petal" transform="rotate(45 400 400)"/>
+  <use href="#petal" transform="rotate(67.5 400 400)"/>
+  <use href="#petal" transform="rotate(90 400 400)"/>
+  <use href="#petal" transform="rotate(112.5 400 400)"/>
+  <use href="#petal" transform="rotate(135 400 400)"/>
+  <use href="#petal" transform="rotate(157.5 400 400)"/>
+  <use href="#petal" transform="rotate(180 400 400)"/>
+  <use href="#petal" transform="rotate(202.5 400 400)"/>
+  <use href="#petal" transform="rotate(225 400 400)"/>
+  <use href="#petal" transform="rotate(247.5 400 400)"/>
+  <use href="#petal" transform="rotate(270 400 400)"/>
+  <use href="#petal" transform="rotate(292.5 400 400)"/>
+  <use href="#petal" transform="rotate(315 400 400)"/>
+  <use href="#petal" transform="rotate(337.5 400 400)"/>
+  <g transform="translate(400,400)">
+<g stroke-linecap="round">
+  <path d="M-70,10 L70,10" stroke="#dfa8f0" stroke-width="10" opacity="0.95"/>
+  <path d="M-66,34 L66,34" stroke="#b06ad0" stroke-width="10" opacity="0.85"/>
+  <path d="M-60,58 L60,58" stroke="#8a4aa8" stroke-width="10" opacity="0.8"/>
+  <path d="M-52,82 L52,82" stroke="#6b3585" stroke-width="10" opacity="0.75"/>
+</g>
+<path d="M0,4 L0,-38" stroke="#dfa8f0" stroke-width="5" stroke-linecap="round"/>
+<path d="M0,-38 C-22,-42 -30,-62 -18,-76 C-6,-64 -2,-50 0,-38 Z" fill="#e6cdf7" opacity="0.95"/>
+<path d="M0,-30 C22,-34 30,-54 18,-68 C6,-56 2,-42 0,-30 Z" fill="#c98ae8" opacity="0.95"/>
+  </g>
+</svg>

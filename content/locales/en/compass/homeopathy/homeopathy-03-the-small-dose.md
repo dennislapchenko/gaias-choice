@@ -7,7 +7,7 @@ chapter: 3
 tags: [homeopathy]
 ---
 
-> **Chapter 3 of 11 · The Path** — [← Chapter 2: The language of symptoms](/compass/homeopathy-02-language-of-symptoms) · Chapter 4: The first ten — *in preparation*
+> **Chapter 3 of 11 · The Path** — [← Chapter 2: The language of symptoms](/compass/homeopathy-02-language-of-symptoms) · [Chapter 4: The first ten →](/compass/homeopathy-04-first-ten-remedies)
 > *You already can:* record a full picture — modalities, generals, mind — and underline the peculiar.
 > *This chapter adds:* the ability to read a remedy label, the tradition's dosing logic, and the first vial in your kit box.
 
@@ -138,4 +138,6 @@ From memory:
 
 ## Next
 
-One vial, nine empty slots. Chapter 4 fills them: the **first ten** — the tradition's great home polychrests, each drawn as a portrait vivid enough to recognize at 3 a.m.: the shock-and-bruise one, the teething-fury one, the sudden-midnight-fever one, the weepy-clingy one you already glimpsed in chapter 2's toddler… By its end, your kit is complete and every remedy in it is someone you've properly met. *Chapter 4 is in preparation — the Trail will link it here the moment it ships.*
+One vial, nine empty slots. Chapter 4 fills them: the **first ten** — the tradition's great home polychrests, each drawn as a portrait vivid enough to recognize at 3 a.m.: the shock-and-bruise one, the teething-fury one, the sudden-midnight-fever one, the weepy-clingy one you already glimpsed in chapter 2's toddler… By its end, your kit is complete and every remedy in it is someone you've properly met.
+
+**[Chapter 4: The first ten →](/compass/homeopathy-04-first-ten-remedies)**

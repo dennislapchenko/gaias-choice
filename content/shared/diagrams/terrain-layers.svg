@@ -1,0 +1,15 @@
+<svg viewBox="0 0 640 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<rect x="176" y="40" width="32" height="12" rx="3" fill="var(--sage)"/>
+<rect x="182" y="52" width="20" height="72" rx="6" fill="var(--sage)"/>
+<text x="222" y="72" font-size="13.5" font-weight="700" fill="var(--ink)">{{vial}}</text>
+<text x="222" y="91" font-size="11.5" fill="var(--muted)">{{vialsub}}</text>
+<rect x="16" y="124" width="608" height="42" rx="8" fill="var(--mint)"/>
+<text x="320" y="150" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">{{layer1}}</text>
+<rect x="16" y="170" width="608" height="42" rx="8" fill="var(--peach)"/>
+<text x="320" y="196" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">{{layer2}}</text>
+<rect x="16" y="216" width="608" height="42" rx="8" fill="var(--lilac)"/>
+<text x="320" y="242" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">{{layer3}}</text>
+<rect x="16" y="262" width="608" height="42" rx="8" fill="var(--sand-2)"/>
+<text x="320" y="288" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--ink)">{{layer4}}</text>
+<text x="320" y="324" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{moral}}</text>
+</svg>

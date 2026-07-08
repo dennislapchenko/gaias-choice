@@ -69,7 +69,9 @@ belonging is harder to copy than content.
 - [ ] 10 reviews + 2–3 guides drawn from lived travel experience
 - [x] Herbalism Compass course finished (all 11 chapters, both languages) —
       real content that isn't reviews
-- [ ] "Maybe Homeopathy" Compass course finished (chapters 4–11, both languages)
+- [x] "Maybe Homeopathy" Compass course finished (all 11 chapters, both
+      languages) — with a situation table for real family nights (teething,
+      bumps, fevers, colds) and the red flags ahead of everything else
 - [ ] Pick one recurring ritual and hold it — a monthly almanac letter, a
       season-opening Journal note — something readers learn to expect. Trust
       comes from consistency, not expertise alone

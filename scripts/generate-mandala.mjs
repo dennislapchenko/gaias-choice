@@ -338,6 +338,118 @@ const SETS = {
 <path d="M36,-50 C12,-54 4,-76 18,-90 C32,-78 36,-62 36,-50 Z" fill="#57cf94" opacity="0.95"/>
 <path d="M36,-40 C60,-44 68,-64 56,-78 C44,-66 38,-52 36,-40 Z" fill="#8ff2c9" opacity="0.95"/>`,
       },
+
+      // «Может, гомеопатия» / "Maybe Homeopathy" (homeopathy), chapters 4–11.
+      // Shared purple/violet family (ch. 1's hand-authored art uses
+      // ['#341a5c','#4a1f7a','#0c0618'] / stroke '#c9a8f7') — one hue step per
+      // chapter. Chapters 1–3 keep their original hand-authored one-off SVGs.
+      {
+        // ch. 4 — the first ten: a 2×5 grid of vial dots inside the kit box.
+        slug: 'homeopathy-04-first-ten-remedies',
+        petalCount: 10,
+        bg: ['#341a5c', '#4a1f7a', '#0c0618'],
+        stroke: '#c9a8f7',
+        centerIcon: `
+<rect x="-78" y="-56" width="156" height="112" rx="14" fill="none" stroke="#c9a8f7" stroke-width="4"/>
+<g fill="#e6cdf7" opacity="0.92">
+  <circle cx="-56" cy="-24" r="12"/><circle cx="-28" cy="-24" r="12"/><circle cx="0" cy="-24" r="12"/><circle cx="28" cy="-24" r="12"/><circle cx="56" cy="-24" r="12"/>
+  <circle cx="-56" cy="24" r="12"/><circle cx="-28" cy="24" r="12"/><circle cx="0" cy="24" r="12"/><circle cx="28" cy="24" r="12"/><circle cx="56" cy="24" r="12"/>
+</g>`,
+      },
+      {
+        // ch. 5 — matching the picture: two overlapping circles (a venn —
+        // the remedy's picture meeting the patient's).
+        slug: 'homeopathy-05-matching-the-picture',
+        petalCount: 12,
+        bg: ['#2f1650', '#55238a', '#0b0616'],
+        stroke: '#cbaaf5',
+        centerIcon: `
+<circle cx="-26" cy="0" r="56" fill="#a06de0" opacity="0.5"/>
+<circle cx="26" cy="0" r="56" fill="#e6cdf7" opacity="0.5"/>
+<circle cx="-26" cy="0" r="56" fill="none" stroke="#cbaaf5" stroke-width="4"/>
+<circle cx="26" cy="0" r="56" fill="none" stroke="#cbaaf5" stroke-width="4"/>`,
+      },
+      {
+        // ch. 6 — acute care at home: a house outline with a crescent moon
+        // (the night watch).
+        slug: 'homeopathy-06-acute-care-at-home',
+        petalCount: 8,
+        bg: ['#38175a', '#5c2a86', '#0d0718'],
+        stroke: '#d4b2f7',
+        centerIcon: `
+<path d="M-58,10 L0,-44 L58,10 L58,66 L-58,66 Z" fill="none" stroke="#d4b2f7" stroke-width="5" stroke-linejoin="round"/>
+<path d="M-14,66 L-14,28 L14,28 L14,66" fill="none" stroke="#d4b2f7" stroke-width="4" stroke-linejoin="round"/>
+<g transform="translate(46,-56)"><path d="M0,-34 A26,26 0 1 0 0,18 A32,32 0 0 1 0,-34 Z" fill="#e6cdf7" opacity="0.92"/></g>`,
+      },
+      {
+        // ch. 7 — watch and wait: an hourglass.
+        slug: 'homeopathy-07-watch-and-wait',
+        petalCount: 14,
+        bg: ['#2c1a54', '#472a8a', '#0a0716'],
+        stroke: '#b8a8f5',
+        centerIcon: `
+<path d="M-40,-64 L40,-64 L40,-48 C40,-24 12,-12 12,0 C12,12 40,24 40,48 L40,64 L-40,64 L-40,48 C-40,24 -12,12 -12,0 C-12,-12 -40,-24 -40,-48 Z" fill="none" stroke="#b8a8f5" stroke-width="5" stroke-linejoin="round"/>
+<path d="M-46,-70 L46,-70 M-46,70 L46,70" stroke="#b8a8f5" stroke-width="7" stroke-linecap="round"/>
+<path d="M-22,-48 L22,-48 L2,-16 L-2,-16 Z" fill="#e6cdf7" opacity="0.9"/>
+<path d="M-26,56 L26,56 L0,28 Z" fill="#e6cdf7" opacity="0.9"/>
+<line x1="0" y1="-14" x2="0" y2="26" stroke="#e6cdf7" stroke-width="3" stroke-dasharray="2 6"/>`,
+      },
+      {
+        // ch. 8 — the terrain: layered soil strata with a sprout on top.
+        slug: 'homeopathy-08-terrain-before-remedy',
+        petalCount: 16,
+        bg: ['#3a1548', '#61227a', '#100617'],
+        stroke: '#dfa8f0',
+        centerIcon: `
+<g stroke-linecap="round">
+  <path d="M-70,10 L70,10" stroke="#dfa8f0" stroke-width="10" opacity="0.95"/>
+  <path d="M-66,34 L66,34" stroke="#b06ad0" stroke-width="10" opacity="0.85"/>
+  <path d="M-60,58 L60,58" stroke="#8a4aa8" stroke-width="10" opacity="0.8"/>
+  <path d="M-52,82 L52,82" stroke="#6b3585" stroke-width="10" opacity="0.75"/>
+</g>
+<path d="M0,4 L0,-38" stroke="#dfa8f0" stroke-width="5" stroke-linecap="round"/>
+<path d="M0,-38 C-22,-42 -30,-62 -18,-76 C-6,-64 -2,-50 0,-38 Z" fill="#e6cdf7" opacity="0.95"/>
+<path d="M0,-30 C22,-34 30,-54 18,-68 C6,-56 2,-42 0,-30 Z" fill="#c98ae8" opacity="0.95"/>`,
+      },
+      {
+        // ch. 9 — the family system: a ring of small dots around a hearth-like
+        // flame at the center.
+        slug: 'homeopathy-09-the-family-system',
+        petalCount: 12,
+        bg: ['#33184f', '#532687', '#0c0714'],
+        stroke: '#c9a8f0',
+        centerIcon: `
+<g fill="#c9a8f0" opacity="0.9">
+  <circle cx="64" cy="0" r="9"/><circle cx="45.3" cy="45.3" r="9"/><circle cx="0" cy="64" r="9"/><circle cx="-45.3" cy="45.3" r="9"/>
+  <circle cx="-64" cy="0" r="9"/><circle cx="-45.3" cy="-45.3" r="9"/><circle cx="0" cy="-64" r="9"/><circle cx="45.3" cy="-45.3" r="9"/>
+</g>
+<path d="M0,-34 C10,-20 20,-10 20,2 A20,20 0 1 1 -20,2 C-20,-10 -10,-20 0,-34 Z" fill="#e6cdf7" opacity="0.95"/>
+<path d="M0,-12 C5,-5 9,0 9,7 A9,9 0 1 1 -9,7 C-9,0 -5,-5 0,-12 Z" fill="#532687" opacity="0.9"/>
+<path d="M-26,28 L26,28" stroke="#c9a8f0" stroke-width="6" stroke-linecap="round"/>`,
+      },
+      {
+        // ch. 10 — messy cases: a tangled thread resolving into a straight line.
+        slug: 'homeopathy-10-messy-cases',
+        petalCount: 10,
+        bg: ['#2e155c', '#4b2394', '#090612'],
+        stroke: '#b9a5f7',
+        centerIcon: `
+<path d="M-84,0 C-70,-34 -52,30 -36,-6 C-24,-32 -18,26 -4,10 C4,0 -12,-18 2,-22 C16,-26 12,2 24,4 C40,6 56,4 84,4" fill="none" stroke="#e6cdf7" stroke-width="5" stroke-linecap="round"/>
+<circle cx="84" cy="4" r="7" fill="#b9a5f7"/>`,
+      },
+      {
+        // ch. 11 — learning the rest yourself: an open book with a path
+        // rising from it.
+        slug: 'homeopathy-11-learning-the-rest',
+        petalCount: 14,
+        bg: ['#3c1a52', '#66307e', '#100818'],
+        stroke: '#e0b5f2',
+        centerIcon: `
+<path d="M-76,30 C-50,18 -24,18 0,30 C24,18 50,18 76,30 L76,46 C50,34 24,34 0,46 C-24,34 -50,34 -76,46 Z" fill="#e6cdf7" opacity="0.92"/>
+<path d="M0,30 L0,46" stroke="#66307e" stroke-width="3"/>
+<path d="M0,26 C-8,2 10,-14 -2,-36 C-10,-52 6,-64 2,-78" fill="none" stroke="#e0b5f2" stroke-width="5" stroke-linecap="round"/>
+<circle cx="2" cy="-84" r="6" fill="#e6cdf7"/>`,
+      },
     ],
   },
 

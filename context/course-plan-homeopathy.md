@@ -1,8 +1,8 @@
 # Course plan — «Гомеопатия дома» / "Homeopathy at home"
 
 Authoring plan per [epic-writing-context.md](epic-writing-context.md) §7 (outline
-+ spine artifact + concept-reuse map before chapter 1). **Status: chapters 1–3
-written 2026-07-05 (en+ru); chapters 4–11 pending owner feedback.**
++ spine artifact + concept-reuse map before chapter 1). **Status: complete —
+all 11 chapters written, en+ru.**
 
 ## Course meta
 

@@ -107,8 +107,8 @@ editing any course chapter**; its skeleton headings feed the chapter TOC
 sidebar, so don't rename them casually. Courses that exist: the founder
 course and `inside-websites` (both 5 chapters, complete), `trophology` (5
 chapters, complete, en+ru — `context/course-plan-trophology.md`), and two
-reader-facing 11-chapter courses: `herbalism` (complete, en+ru) and
-`homeopathy` (ch. 1–3 live, ch. 4–11 pending). Every course has an outline — chapter
+reader-facing 11-chapter courses: `herbalism` and `homeopathy` (both
+complete, en+ru). Every course has an outline — chapter
 one-liners, named concepts, seeds, reuse maps — in
 `context/course-plan-<slug>.md`; follow the plan when writing the next
 chapter. Writing chapters in batch (finishing a course, starting a new one):

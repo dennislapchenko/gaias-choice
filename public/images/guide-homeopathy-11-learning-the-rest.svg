@@ -1,0 +1,33 @@
+<svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="46%" r="72%">
+      <stop offset="0%" stop-color="#3c1a52"/>
+      <stop offset="55%" stop-color="#66307e"/>
+      <stop offset="100%" stop-color="#100818"/>
+    </radialGradient>
+    <path id="petal" d="M400,220 Q448,145.0 400,70 Q352,145.0 400,220 Z" fill="none" stroke="#e0b5f2" stroke-width="1.6" opacity="0.4"/>
+  </defs>
+  <rect width="800" height="800" fill="url(#bg)"/>
+  <circle cx="400" cy="400" r="350" fill="none" stroke="#e0b5f2" stroke-width="1" opacity="0.28"/>
+  <circle cx="400" cy="400" r="270" fill="none" stroke="#e0b5f2" stroke-width="1" opacity="0.28"/>
+  <use href="#petal" transform="rotate(0 400 400)"/>
+  <use href="#petal" transform="rotate(25.714285714285715 400 400)"/>
+  <use href="#petal" transform="rotate(51.42857142857143 400 400)"/>
+  <use href="#petal" transform="rotate(77.14285714285714 400 400)"/>
+  <use href="#petal" transform="rotate(102.85714285714286 400 400)"/>
+  <use href="#petal" transform="rotate(128.57142857142858 400 400)"/>
+  <use href="#petal" transform="rotate(154.28571428571428 400 400)"/>
+  <use href="#petal" transform="rotate(180 400 400)"/>
+  <use href="#petal" transform="rotate(205.71428571428572 400 400)"/>
+  <use href="#petal" transform="rotate(231.42857142857144 400 400)"/>
+  <use href="#petal" transform="rotate(257.14285714285717 400 400)"/>
+  <use href="#petal" transform="rotate(282.8571428571429 400 400)"/>
+  <use href="#petal" transform="rotate(308.57142857142856 400 400)"/>
+  <use href="#petal" transform="rotate(334.2857142857143 400 400)"/>
+  <g transform="translate(400,400)">
+<path d="M-76,30 C-50,18 -24,18 0,30 C24,18 50,18 76,30 L76,46 C50,34 24,34 0,46 C-24,34 -50,34 -76,46 Z" fill="#e6cdf7" opacity="0.92"/>
+<path d="M0,30 L0,46" stroke="#66307e" stroke-width="3"/>
+<path d="M0,26 C-8,2 10,-14 -2,-36 C-10,-52 6,-64 2,-78" fill="none" stroke="#e0b5f2" stroke-width="5" stroke-linecap="round"/>
+<circle cx="2" cy="-84" r="6" fill="#e6cdf7"/>
+  </g>
+</svg>

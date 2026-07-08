@@ -1,0 +1,19 @@
+<svg viewBox="0 0 640 272" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs><marker id="arr-rsp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<rect x="16" y="96" width="150" height="64" rx="12" fill="var(--sage)"/>
+<text x="91" y="121" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--on-accent)">{{start}}</text>
+<text x="91" y="140" text-anchor="middle" font-size="11.5" fill="var(--on-accent)">{{startsub}}</text>
+<line x1="166" y1="118" x2="232" y2="50" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-rsp)"/>
+<line x1="166" y1="128" x2="232" y2="128" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-rsp)"/>
+<line x1="166" y1="138" x2="232" y2="206" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-rsp)"/>
+<rect x="240" y="16" width="384" height="64" rx="12" fill="var(--mint)"/>
+<text x="432" y="42" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{path1}}</text>
+<text x="432" y="61" text-anchor="middle" font-size="12" fill="var(--muted)">{{path1act}}</text>
+<rect x="240" y="96" width="384" height="64" rx="12" fill="var(--peach)"/>
+<text x="432" y="122" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{path2}}</text>
+<text x="432" y="141" text-anchor="middle" font-size="12" fill="var(--muted)">{{path2act}}</text>
+<rect x="240" y="176" width="384" height="64" rx="12" fill="var(--sand-2)"/>
+<text x="432" y="202" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{path3}}</text>
+<text x="432" y="221" text-anchor="middle" font-size="12" fill="var(--muted)">{{path3act}}</text>
+<text x="16" y="264" font-size="12" font-style="italic" fill="var(--muted)">{{note}}</text>
+</svg>

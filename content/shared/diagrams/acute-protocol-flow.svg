@@ -1,0 +1,28 @@
+<svg viewBox="0 0 640 192" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs>
+<marker id="arr-acp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker>
+<marker id="arr-acp-clay" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--clay)"/></marker>
+</defs>
+<rect x="16" y="16" width="170" height="60" rx="12" fill="var(--sand-2)" stroke="var(--clay)" stroke-width="2"/>
+<text x="101" y="51" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--clay)">{{gate}}</text>
+<line x1="186" y1="46" x2="462" y2="46" stroke="var(--clay)" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arr-acp-clay)"/>
+<rect x="470" y="16" width="154" height="60" rx="12" fill="var(--sand-2)" stroke="var(--clay)" stroke-width="2.5"/>
+<text x="547" y="51" text-anchor="middle" font-size="13" font-weight="700" fill="var(--clay)">{{gateexit}}</text>
+<text x="624" y="98" text-anchor="end" font-size="12" font-style="italic" fill="var(--clay)">{{exitnote}}</text>
+<line x1="101" y1="76" x2="101" y2="104" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-acp)"/>
+<rect x="16" y="112" width="134" height="64" rx="12" fill="var(--mint)"/>
+<text x="83" y="138" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{step1}}</text>
+<text x="83" y="157" text-anchor="middle" font-size="11.5" fill="var(--muted)">{{step1sub}}</text>
+<line x1="150" y1="144" x2="164" y2="144" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-acp)"/>
+<rect x="168" y="112" width="134" height="64" rx="12" fill="var(--peach)"/>
+<text x="235" y="138" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{step2}}</text>
+<text x="235" y="157" text-anchor="middle" font-size="11.5" fill="var(--muted)">{{step2sub}}</text>
+<line x1="302" y1="144" x2="316" y2="144" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-acp)"/>
+<rect x="320" y="112" width="134" height="64" rx="12" fill="var(--sage)"/>
+<text x="387" y="138" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--on-accent)">{{step3}}</text>
+<text x="387" y="157" text-anchor="middle" font-size="11.5" fill="var(--on-accent)">{{step3sub}}</text>
+<line x1="454" y1="144" x2="468" y2="144" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-acp)"/>
+<rect x="472" y="112" width="134" height="64" rx="12" fill="var(--lilac)"/>
+<text x="539" y="138" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{step4}}</text>
+<text x="539" y="157" text-anchor="middle" font-size="11.5" fill="var(--muted)">{{step4sub}}</text>
+</svg>
