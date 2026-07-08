@@ -2876,6 +2876,131 @@ a.respected-card:hover {
 .content-editor-textarea:focus {
     outline: none;
 }
+/* Fields view (src/components/FrontmatterFields.tsx): structured frontmatter
+   inputs above a body-only textarea; the whole view scrolls. */
+.content-editor-fields {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+}
+.content-editor-fields.is-dimmed {
+    opacity: 0.4;
+    pointer-events: none;
+}
+/* Collapse bar for the frontmatter fields (gives the body the whole pane). */
+.ce-fields-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 20px;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--sand);
+    border: none;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+}
+.ce-fields-chevron {
+    font-size: 0.7rem;
+}
+/* The fields grid scrolls in a capped area so the body textarea keeps its room. */
+.ce-fields {
+    display: grid;
+    gap: 12px;
+    padding: 16px 20px;
+    max-height: 40vh;
+    overflow: auto;
+    flex: none;
+}
+.ce-field {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    align-items: center;
+    gap: 12px;
+}
+.ce-field-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+}
+.ce-field input[type="text"],
+.ce-field input[type="number"],
+.ce-field input[type="date"],
+.ce-field textarea {
+    width: 100%;
+    padding: 8px 10px;
+    font: inherit;
+    font-size: 0.9rem;
+    color: var(--ink);
+    background: var(--sand2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+}
+.ce-field textarea {
+    resize: vertical;
+}
+.ce-field input:focus,
+.ce-field textarea:focus {
+    outline: none;
+    border-color: var(--sage);
+}
+.ce-field input:disabled,
+.ce-field textarea:disabled {
+    opacity: 0.6;
+}
+/* scores: label above a wrapping row of small 0–5 number inputs */
+.ce-field-block {
+    display: block;
+}
+.ce-field-block .ce-field-label {
+    display: block;
+    margin-bottom: 6px;
+}
+.ce-scores {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.ce-score {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 0.72rem;
+    color: var(--muted);
+}
+.ce-score input {
+    width: 66px;
+    padding: 6px 8px;
+    font: inherit;
+    color: var(--ink);
+    background: var(--sand2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+}
+/* body-only textarea below the fields: fills the remaining pane height. */
+.ce-body-label {
+    padding: 8px 20px 0;
+}
+.content-editor-body-textarea {
+    flex: 1;
+    min-height: 140px;
+    margin: 6px 16px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+}
+@media (max-width: 480px) {
+    .ce-field {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+}
 .content-editor-actions {
     display: flex;
     align-items: center;

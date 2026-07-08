@@ -665,20 +665,27 @@ VM is down the live site silently degrades to the static baseline.
   `editing` flag. `#edit` in any URL stays as the deliberate shortcut —
   signed out it opens the login dialog, signed in it's a no-op.
   `src/lib/contentEditor.tsx` is the editor: two dialog flows (`openFile` —
-  edit a content file's whole raw text, frontmatter + body, in a textarea;
-  `openDraft` — the draft composer, creates a new content file, save without
-  sha; on open it fires `enrichTemplate(title, template)` (api.ts →
-  `POST /content/template`) with the editor **dimmed + locked** (status
-  `enriching`, spinner overlay) and swaps the LLM-retuned template in when it
-  lands — degrades silently to the static scaffold when enrichment is
-  off/unreachable). The dialog has a **markdown toolbar**
-  (bold/heading/list — pure textarea surgery, no dep; the 🖼 button opens the
-  `ImagePicker` instead) and a
-  **Write/Preview** tab that renders the body with the bundled `marked` — the
-  instant-feedback answer to the ~2-min publish lag (the editor sees their
-  markdown rendered before it ever deploys). **Save is YAML-guarded** — the
-  frontmatter block is parse-checked (`frontmatterError`) before any commit, so
-  a broken `---` block is refused inline instead of blanking the built SPA.
+  edit a content file; `openDraft` — the draft composer, creates a new content
+  file, save without sha; on open it fires `enrichTemplate(title, template)`
+  (api.ts → `POST /content/template`) with the editor **dimmed + locked**
+  (status `enriching`, spinner overlay) and swaps the LLM-retuned template in
+  when it lands — degrades silently to the static scaffold when enrichment is
+  off/unreachable). The dialog has **three tabs — Fields | Raw | Preview**
+  (default Fields). **Fields** edits the frontmatter as structured inputs —
+  `components/FrontmatterFields.tsx` renders one control per key present in the
+  `---` block (dynamic; widget by value type — date picker, per-criterion
+  `scores`, `tags` chips-as-comma-input, `excerpt` textarea; `state` +
+  `translatedFrom` read-only since `state` must flow through the toggle) — plus
+  a body-only markdown textarea below. Edits round-trip through
+  `lib/frontmatter.ts` `setField` (parse block → `yaml` Document `set` → re-emit
+  → splice body), preserving comments; the whole-file text stays the single
+  source of truth. **Raw** is the whole-file textarea escape hatch;
+  **Preview** renders the body with the bundled `marked`. A **markdown toolbar**
+  (bold/heading/list/link, 🖼 → `ImagePicker`) targets the active textarea.
+  **Save is YAML-guarded** — the frontmatter block is parse-checked
+  (`frontmatterError`) before any commit, so a broken `---` block is refused
+  inline instead of blanking the built SPA (the Fields tab makes this near-
+  impossible; the Raw tab still can).
   **The editor autosaves** every dirty keystroke to
   `localStorage['gc-draft:<path>']`; reopening restores it (a banner with a
   discard link), a dirty close confirms, and a dirty editor arms a
@@ -694,6 +701,9 @@ VM is down the live site silently degrades to the static baseline.
   back the `/images/<name>` path — the cover control sets the `image:` scalar
   (`applyScalarEdit`), inline splices `![](path)` at the caret. So covers are
   real optimized files (not data-URI bundle bloat), matching `ProductCard`.
+  **Saving an RU post mirrors the cover (`image:`) to its EN sibling** in the
+  same commit (`enCoverMirror` — the cover is shared media, RU is its source;
+  inline body images stay per-locale, EN edits don't push back).
   New drafts get an **English slug**
   regardless of authoring locale: `Upcoming.tsx`'s ＋ button opens a small
   create dialog (title + slug + live URL preview; slug defaults to

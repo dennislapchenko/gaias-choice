@@ -26,7 +26,10 @@ import { marked } from 'marked'
 import { Composer, CST, isScalar, Parser, parseDocument } from 'yaml'
 import CopyButton from '../components/CopyButton'
 import ImagePicker from '../components/ImagePicker'
+import FrontmatterFields from '../components/FrontmatterFields'
 import { withBase } from './asset'
+import { getSite } from './content'
+import { FRONTMATTER_RE, setField, type FrontmatterField } from './frontmatter'
 import {
   apiDelete,
   apiGet,
@@ -84,12 +87,8 @@ export function useContentEditor(): ContentEditorApi {
   return ctx
 }
 
-// Splits `---`-delimited frontmatter from a markdown file's body, keeping the
-// delimiters themselves so the edited YAML can be spliced back byte-for-byte
-// (content.ts's own parseFrontmatter discards them — it only needs the parsed
-// data, never reconstructs the file). Files with no frontmatter (site.yaml,
-// themes.yaml) don't match, and are treated as one whole YAML document.
-const FRONTMATTER_RE = /^(---\r?\n)([\s\S]*?)(\r?\n---\r?\n?)([\s\S]*)$/
+// FRONTMATTER_RE (splits the `---` block from the body, delimiters kept so the
+// body splices back byte-for-byte) lives in ./frontmatter now — imported above.
 
 /**
  * Parse+edit ONE scalar in a standalone YAML string via CST-level surgery
@@ -202,6 +201,14 @@ const mdBody = (raw: string): string => {
   return m ? m[4] : raw
 }
 
+// Inverse of mdBody: splice a new body back onto a file, keeping its `---`
+// frontmatter block byte-for-byte. Lets the Fields view edit the body in a
+// body-only textarea while the whole-file text stays the source of truth.
+const withBody = (raw: string, body: string): string => {
+  const m = FRONTMATTER_RE.exec(raw)
+  return m ? `${m[1]}${m[2]}${m[3]}${body}` : body
+}
+
 type MdAction = 'bold' | 'h2' | 'ul' | 'link' | 'image'
 
 /**
@@ -242,7 +249,11 @@ function applyMdAction(
 
 export function ContentEditorProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<EditorState | null>(null)
-  const [view, setView] = useState<'write' | 'preview'>('write')
+  // Fields = structured frontmatter + body textarea (the friendly default);
+  // raw = whole-file textarea (escape hatch); preview = rendered body.
+  const [view, setView] = useState<'fields' | 'raw' | 'preview'>('fields')
+  // Collapse the frontmatter fields to give the body textarea the whole pane.
+  const [fieldsOpen, setFieldsOpen] = useState(true)
   // Which target an open ImagePicker fills: the frontmatter cover, or an inline
   // ![]() at the caret. null = closed.
   const [picker, setPicker] = useState<null | 'cover' | 'inline'>(null)
@@ -252,7 +263,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
   // modal steals focus, so we can't read it back on pick).
   const inlineAt = useRef<[number, number] | null>(null)
   const { token } = useEditMode()
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
 
   // Dirty = the user has unsaved edits. Only meaningful while the editor is
   // interactive (idle/error) — a loading/saving/enriching/published editor is
@@ -294,12 +305,29 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     }
   })
 
+  // The active textarea holds the body (Fields view) or the whole file (Raw
+  // view); both toolbar surgery and inline-image splicing operate on its text
+  // and re-splice via `writeActive`.
+  const writeActive = (nextText: string): string =>
+    view === 'raw' ? nextText : withBody(state!.value, nextText)
+
   const applyMd = (action: MdAction) => {
     const ta = taRef.current
     if (!ta || !state) return
     const next = applyMdAction(action, ta.value, ta.selectionStart, ta.selectionEnd)
     pendingSel.current = [next.selStart, next.selEnd]
-    setState({ ...state, value: next.text })
+    setState({ ...state, value: writeActive(next.text) })
+  }
+
+  // A structured frontmatter-field edit (Fields view): rewrite the one key via
+  // setField, keeping comments + body intact. A malformed source surfaces.
+  const onField = (key: string, next: FrontmatterField['value']) => {
+    if (!state) return
+    try {
+      setState({ ...state, value: setField(state.value, key, next) })
+    } catch (err) {
+      setState({ ...state, status: 'error', errorText: err instanceof Error ? err.message : String(err) })
+    }
   }
 
   // Downscale a picked file in-browser and commit it to public/images/ as its
@@ -325,10 +353,12 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       if (target === 'cover') {
         setState({ ...state, value: applyScalarEdit(state.value, { file: '', path: ['image'] }, path) })
       } else {
-        const [a, b] = inlineAt.current ?? [state.value.length, state.value.length]
-        const text = state.value.slice(0, a) + `![](${path})` + state.value.slice(b)
+        // Splice into whichever text the active textarea shows (body vs whole).
+        const base = view === 'raw' ? state.value : mdBody(state.value)
+        const [a, b] = inlineAt.current ?? [base.length, base.length]
+        const spliced = base.slice(0, a) + `![](${path})` + base.slice(b)
         pendingSel.current = [a + 2, a + 2] // caret inside the alt brackets
-        setState({ ...state, value: text })
+        setState({ ...state, value: writeActive(spliced) })
       }
     } catch (err) {
       setState({ ...state, status: 'error', errorText: err instanceof Error ? err.message : String(err) })
@@ -360,7 +390,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
   }
 
   const openFile: ContentEditorApi['openFile'] = ({ title, path }) => {
-    setView('write')
+    setView('fields')
     setState({ title, value: '', baseline: '', mode: null, status: 'loading' })
     apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(path)}`, {
       token: token ?? undefined,
@@ -391,7 +421,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
   }
 
   const openDraft: ContentEditorApi['openDraft'] = ({ title, path, initialValue, message }) => {
-    setView('write')
+    setView('fields')
     // A recovered autosave wins: skip enrichment (they already have their own
     // text) and reopen it dirty for saving. Baseline stays the blank template
     // so autosave/close-guard keep treating it as unsaved work.
@@ -470,7 +500,42 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     await apiDelete<DeleteResponse>('/content/file', { paths }, { token: token ?? undefined })
   }
 
+  // RU→EN cover mirror: a review/journal `image:` is shared media, and RU is
+  // its source (SKILL.md #6). On saving an RU post, return the EN sibling with
+  // its cover set to RU's — or null when there's nothing to mirror (not an RU
+  // post, no cover set, no EN sibling yet, or already in sync). Inline body
+  // images are per-locale (the EN body is a separate translation) and never
+  // mirror; only the frontmatter `image:` scalar does.
+  const enCoverMirror = async (
+    ruPath: string,
+    ruValue: string,
+  ): Promise<{ path: string; content: string } | null> => {
+    if (!/\/locales\/ru\/(products|journal)\//.test(ruPath)) return null
+    const ruImage = fmScalar(ruValue, 'image')
+    if (ruImage == null) return null
+    const enPath = ruPath.replace('/locales/ru/', '/locales/en/')
+    let en: ContentFile
+    try {
+      en = await apiGet<ContentFile>(`/content/file?path=${encodeURIComponent(enPath)}`, {
+        token: token ?? undefined,
+      })
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 404) return null // no sibling yet; Active flip seeds it
+      throw err
+    }
+    if (fmScalar(en.content, 'image') === ruImage) return null
+    return { path: enPath, content: applyScalarEdit(en.content, { file: enPath, path: ['image'] }, ruImage) }
+  }
+
   const saveFile = async (mode: Extract<EditorMode, { kind: 'file' }>, value: string) => {
+    // If the cover changed on an RU post, land it + the EN sibling's mirrored
+    // cover in ONE commit (unguarded batch, like setPostState). Otherwise the
+    // normal sha-guarded single save.
+    const mirror = await enCoverMirror(mode.path, value)
+    if (mirror) {
+      await commitFiles([{ path: mode.path, content: value }, mirror], undefined, token ?? undefined)
+      return
+    }
     const attempt = (sha: string) =>
       apiPost<SaveResponse>(
         '/content/save',
@@ -498,8 +563,9 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
         throw err
       }
     }
-    // Editing does NOT auto-translate — the RU→EN sync happens when a post is
-    // flipped Active (setPostState), not on every content save.
+    // Editing does NOT auto-translate — the RU→EN prose sync happens when a post
+    // is flipped Active (setPostState), not on every save. (The cover is the one
+    // exception, mirrored above, since it's shared media not prose.)
   }
 
   const saveDraft = async (mode: Extract<EditorMode, { kind: 'create' }>, value: string) => {
@@ -656,6 +722,8 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
   // have an `image:` cover); compass/pages/site.yaml don't get it.
   const isPost = !!state?.mode && /\/(products|journal)\//.test(state.mode.path)
   const cover = state ? fmScalar(state.value, 'image') : undefined
+  // Labels for the `scores` field row (aligned to a review's scores by index).
+  const scoreLabels = getSite(locale).ratingCriteria?.items ?? []
 
   return (
     <ContentEditorContext.Provider value={api}>
@@ -688,7 +756,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
               </p>
             )}
             <div className="content-editor-toolbar">
-              <div className="content-editor-md" aria-hidden={view !== 'write'}>
+              <div className="content-editor-md" aria-hidden={view === 'preview'}>
                 <button type="button" onClick={() => applyMd('bold')} title={t('editor.mdBold')}>
                   <b>B</b>
                 </button>
@@ -708,10 +776,17 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
               <div className="content-editor-tabs">
                 <button
                   type="button"
-                  className={view === 'write' ? 'is-active' : ''}
-                  onClick={() => setView('write')}
+                  className={view === 'fields' ? 'is-active' : ''}
+                  onClick={() => setView('fields')}
                 >
-                  {t('editor.write')}
+                  {t('editor.fields')}
+                </button>
+                <button
+                  type="button"
+                  className={view === 'raw' ? 'is-active' : ''}
+                  onClick={() => setView('raw')}
+                >
+                  {t('editor.raw')}
                 </button>
                 <button
                   type="button"
@@ -747,7 +822,13 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
               </div>
             )}
             <div className="content-editor-body">
-              {view === 'write' ? (
+              {view === 'preview' ? (
+                // Author-controlled content, same trust model as Markdown.tsx.
+                <div
+                  className="content-editor-preview prose"
+                  dangerouslySetInnerHTML={{ __html: marked.parse(mdBody(state.value)) as string }}
+                />
+              ) : view === 'raw' ? (
                 <textarea
                   ref={taRef}
                   className={`content-editor-textarea${state.status === 'enriching' ? ' is-dimmed' : ''}`}
@@ -757,11 +838,40 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                   onChange={(e) => setState({ ...state, value: e.target.value })}
                 />
               ) : (
-                // Author-controlled content, same trust model as Markdown.tsx.
-                <div
-                  className="content-editor-preview prose"
-                  dangerouslySetInnerHTML={{ __html: marked.parse(mdBody(state.value)) as string }}
-                />
+                // Fields: structured frontmatter + a body-only textarea. Both
+                // write back into the whole-file `value` (setField / withBody).
+                // The fields section collapses so the body can own the pane.
+                <div className={`content-editor-fields${state.status === 'enriching' ? ' is-dimmed' : ''}`}>
+                  <button
+                    type="button"
+                    className="ce-fields-toggle"
+                    aria-expanded={fieldsOpen}
+                    onClick={() => setFieldsOpen((o) => !o)}
+                  >
+                    <span className="ce-fields-chevron" aria-hidden="true">
+                      {fieldsOpen ? '▾' : '▸'}
+                    </span>
+                    {t('editor.fields')}
+                  </button>
+                  {fieldsOpen && (
+                    <FrontmatterFields
+                      value={state.value}
+                      scoreLabels={scoreLabels}
+                      disabled={busy || state.status === 'published'}
+                      hide={isPost ? ['image'] : undefined}
+                      onEdit={onField}
+                    />
+                  )}
+                  <span className="side-label ce-body-label">{t('editor.body')}</span>
+                  <textarea
+                    ref={taRef}
+                    className="content-editor-textarea content-editor-body-textarea"
+                    value={mdBody(state.value)}
+                    spellCheck={false}
+                    disabled={busy || state.status === 'published'}
+                    onChange={(e) => setState({ ...state, value: withBody(state.value, e.target.value) })}
+                  />
+                </div>
               )}
               {state.status === 'enriching' && (
                 <div className="content-editor-enriching" aria-live="polite">
