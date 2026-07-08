@@ -1,4 +1,5 @@
 ---
+state: upcoming
 title: Пелёнка-муслин из органического хлопка
 category: Сон
 scores: [5, 5, 5] # Gaia Score — one 0–5 per criterion in site.yaml ratingCriteria, in order

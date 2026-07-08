@@ -1,4 +1,5 @@
 ---
+state: upcoming
 translatedFrom: ru
 title: Organic Cotton Muslin Swaddle
 category: Sleep
