@@ -459,29 +459,11 @@ rise/set/houses/planetary-hours. All wording is in `lib/astroText.ts`;
 
 ## Commands (Taskfile)
 
-`task` lists everything. All npm-based tasks run in a container with deps in the
-`gaias-choice-node-modules` volume.
-
-| Command | What |
-| --- | --- |
-| `task dev` | FE + BE together (Vite HMR :5173 + backend air hot-reload :8787) via `compose.dev.yaml` (needs a TTY — see development.md) |
-| `task be:dev` | backend only, `go run .` on :8787 |
-| `task be:test` / `be:tidy` / `be:gen` / `be:image` / `be:run` / `be:verify` / `be:tunnel` | backend: vet+test / tidy+verify / regen OpenAPI server code / build image / run prod image / spec-drift+test+image gate / `ngrok http 8787` |
-| `task be:deploy` | ship the latest CI-built backend image to the VM (owner-invoked, manual; resolves the sha from GitHub Actions, rebuilds `deploy.env`, scps compose+Caddyfile+env, pulls + recreates). Temporary until doco-cd — see `deploy/release.sh` + `deploy/infra-log.md` |
-| `task typecheck` | strict `tsc --noEmit` (Vite build does NOT type-check) |
-| `task build` | build SPA to `dist/` |
-| `task images` | optimize `public/images` to WebP |
-| `task mandalas SET=<name>` | generate mandala SVG art for a config set |
-| `task lock` | regenerate `package-lock.json` (no scripts) |
-| `task audit` | `npm audit` |
-| `task image` | build the production Docker image |
-| `task run` | build image + run on :8080 |
-| `task verify` | audit + typecheck + image build |
-| `task deploy` | `gcloud run deploy --source .` (not the current live path) |
-| `task clean` | remove dist, deps volume, task cache, image |
-
-`task dev` regenerates deps only when `package.json`/`package-lock.json` change
-(tracked via `.task/`). To reset deps entirely: `task clean`.
+`task` lists everything. **All npm/Go tooling runs in containers** (deps in the
+`gaias-choice-node-modules` / `gaias-choice-go-cache` volumes) — never host npm.
+`task typecheck` is separate from `task build` (Vite build does NOT type-check).
+The full command table — FE, the `be:*` backend tasks, deploy, and `clean` — is
+in `references/development.md` "Commands".
 
 ## Container & deploy
 

@@ -58,13 +58,19 @@ Keep this table current — when you add/rename/change a component, update the r
 | `task be:dev` | backend only, `go run .` on :8787 (`-it`) |
 | `task be:test` / `be:tidy` / `be:gen` / `be:image` / `be:run` / `be:verify` | vet+test / `go mod tidy && verify` / regenerate `internal/httpapi/gen.go` from `openapi.yaml` / build distroless image / run prod image :8787 / spec-drift check + test + image gate — all containerized (`golang:1.25-alpine`, cache in `gaias-choice-go-cache` volume) |
 | `task be:tunnel` | `ngrok http 8787` (host ngrok, as with FE dev) |
+| `task be:deploy` | ship the latest CI-built backend image to the VM (owner-invoked, manual; resolves the sha from GitHub Actions, rebuilds `deploy.env`, scps compose+Caddyfile+env, pulls + recreates). Temporary until doco-cd — see `deploy/release.sh` + `deploy/infra-log.md` |
 | `task images` | optimize `public/images` → WebP |
 | `task mandalas SET=<name>` | generate mandala SVG art for a config set (`guides`, `reviews`); optional `ONLY=slug1,slug2` |
 | `task audit` | `npm audit` — must stay at 0 vulns |
 | `task lock` | regenerate lockfile (no scripts) |
+| `task image` | build the production Docker image (static site) |
 | `task verify` | audit + typecheck + image build |
-| `task run` | production image on :8080 |
+| `task run` | build image + run on :8080 |
 | `task deploy` | `gcloud run deploy --source .` (Cloud Run — not the current live path) |
+| `task clean` | remove dist, deps volume, task cache, image |
+
+`task dev` regenerates deps only when `package.json`/`package-lock.json` change
+(tracked via `.task/`); `task clean` resets deps entirely.
 
 **Live deploy is GitHub Pages, triggered by pushing `main`** (`.github/workflows/deploy-pages.yml`),
 not `task deploy`. Treat a push to `main` as shipping to production. `task deploy`
