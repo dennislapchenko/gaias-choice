@@ -3571,52 +3571,65 @@ a.respected-card:hover {
     color: var(--sage-dark);
     margin-bottom: 0.4rem;
 }
-/* Score criteria as one row of vertical fill bars, split N-up (one per
-   criterion). Fill height = score/5 (see GaiaScore.tsx). */
+/* Score criteria as one row of fill bars, split N-up (one per criterion). Each
+   bar = a vertical (rotated) label + a fixed-height track whose fill height =
+   score/5 (see GaiaScore.tsx). The label runs vertically so bars stay aligned
+   across languages (a wrapping horizontal label pushed baselines around), and
+   the score sits inside the fill. */
 .gaia-score-bars {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
-    align-items: flex-end;
-    gap: 12px;
+    align-items: stretch;
+    justify-content: center;
+    gap: 8px;
 }
 .gaia-bar {
     flex: 1;
     min-width: 0;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    gap: 4px;
+}
+.gaia-bar-crit {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg); /* reads bottom-to-top on the left */
+    max-height: 132px;
+    font-size: 0.72rem;
+    line-height: 1.1;
+    color: var(--muted);
     text-align: center;
 }
 .gaia-bar-track {
     position: relative;
+    flex: none;
     width: 100%;
-    max-width: 44px;
-    height: 78px;
+    max-width: 42px;
+    height: 132px;
     border-radius: 999px;
     background: var(--surface-muted-strong);
     overflow: hidden;
-    display: flex;
-    align-items: flex-end;
 }
 .gaia-bar-fill {
-    width: 100%;
-    min-height: 4px;
+    position: absolute;
+    inset: auto 0 0 0; /* pinned to the bottom */
+    min-height: 34px; /* always room for the number */
     background: var(--clay);
     border-radius: 999px;
     transition: height 0.4s ease;
 }
 .gaia-bar-value {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 7px;
+    text-align: center;
     font-weight: 700;
-    font-size: 0.85rem;
-    color: var(--clay);
-}
-.gaia-bar-crit {
-    font-size: 0.72rem;
-    line-height: 1.2;
-    color: var(--muted);
-    overflow-wrap: anywhere;
-    hyphens: auto;
+    font-size: 0.95rem;
+    /* fixed dark alpha: legible on the amber fill in every palette, where
+       --ink would flip light (invisible) under dark themes */
+    color: rgba(0, 0, 0, 0.72);
 }

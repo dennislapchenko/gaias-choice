@@ -29,11 +29,11 @@ export default function GaiaScore({
           const pct = Math.max(0, Math.min(100, (value / 5) * 100))
           return (
             <li key={label} className="gaia-bar" title={`${label}: ${value}/5`}>
+              <span className="gaia-bar-crit">{label}</span>
               <span className="gaia-bar-track" aria-hidden="true">
                 <span className="gaia-bar-fill" style={{ height: `${pct}%` }} />
+                <span className="gaia-bar-value">{value}</span>
               </span>
-              <span className="gaia-bar-value">{value}</span>
-              <span className="gaia-bar-crit">{label}</span>
             </li>
           )
         })}
