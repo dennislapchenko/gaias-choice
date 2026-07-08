@@ -178,10 +178,12 @@ review follows the universal six-section body structure whose canonical source
 is `content/shared/review-template.<locale>.md` — the scaffold an editor's ＋
 button (on the `Upcoming` rail, edit mode only — see the Live-edit row of
 `development.md`) seeds a new draft from. **Layout:** `ReviewDetail` is a
-centered two-column grid (`.review-layout`, mirroring `.detail-layout`) — the
-reading column plus a sticky right rail (`.review-aside`) that holds the
-product facts (price + the Gaia Score bars, and whatever facts get added
-later); on mobile (`≤900px`) the rail stacks above the article.
+centered grid (`.review-layout`) — a full-width `.review-header` (title + date)
+spanning the top, then the reading column and a sticky right rail
+(`.review-aside`) below it. The rail holds the product facts (price + the Gaia
+Score bars) plus the buy CTA (`.review-cta`, the `affiliateUrl` button), and
+grows as more facts get added. On mobile (`≤900px`) it all stacks:
+nav → header → rail → body.
 
 **Gaia Score (review rating).** Reviews are not rated with a single star.
 `site.yaml` `ratingCriteria` defines one shared set of criteria (`{title, items}`,

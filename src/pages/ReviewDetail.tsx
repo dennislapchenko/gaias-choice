@@ -57,7 +57,7 @@ export default function ReviewDetail() {
           </div>
         )}
       </div>
-      <article className="detail review-main">
+      <div className="review-header">
         <h1>{product.title}</h1>
         <div className="detail-meta">
           <span className="muted">{product.date}</span>
@@ -67,28 +67,17 @@ export default function ReviewDetail() {
             </span>
           )}
         </div>
+      </div>
 
+      <article className="detail review-main">
         {product.image && (
           <img className="detail-image" src={withBase(product.image)} alt={product.title} />
         )}
 
         <Markdown html={product.html} />
-
-        {product.affiliateUrl && (
-          <p className="cta-row">
-            <a
-              className="btn btn-primary"
-              href={product.affiliateUrl}
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-            >
-              {t('reviewDetail.checkPrice')}
-            </a>
-          </p>
-        )}
       </article>
 
-      {/* Right rail — facts about the product. Grows as more get added. */}
+      {/* Right rail — facts + the buy action. Grows as more get added. */}
       <aside className="review-aside">
         {product.price && (
           <div className="review-fact">
@@ -102,6 +91,16 @@ export default function ReviewDetail() {
             criteria={site.ratingCriteria.items}
             scores={product.scores}
           />
+        )}
+        {product.affiliateUrl && (
+          <a
+            className="btn btn-primary review-cta"
+            href={product.affiliateUrl}
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+          >
+            {t('reviewDetail.checkPrice')}
+          </a>
         )}
       </aside>
     </div>

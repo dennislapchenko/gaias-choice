@@ -2145,10 +2145,15 @@ a.respected-card:hover {
     grid-template-columns: minmax(0, 760px) 240px;
     grid-template-areas:
         "nav nav"
+        "header header"
         "main aside";
     justify-content: center;
     align-items: start;
-    gap: 32px;
+    gap: 0 32px;
+}
+.review-header {
+    grid-area: header;
+    max-width: 760px; /* match the reading column, don't stretch full-width */
 }
 .review-layout .detail {
     grid-area: main;
@@ -2183,6 +2188,12 @@ a.respected-card:hover {
 .review-price {
     font-size: 1.3rem;
 }
+/* The buy CTA lives in the rail now (under price + rating) — full-width there. */
+.review-cta {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
 @media (max-width: 900px) {
     .review-layout {
         display: flex;
@@ -2192,13 +2203,17 @@ a.respected-card:hover {
     .review-layout .detail-nav {
         order: -3;
     }
-    /* facts rail rides above the article on phones */
+    .review-header {
+        order: -2;
+    }
+    /* facts rail rides above the article, under the header, on phones */
     .review-aside {
         order: -1;
         position: static;
     }
     .review-layout .detail,
     .review-layout .detail-nav,
+    .review-header,
     .review-aside {
         max-width: 760px;
         width: 100%;
