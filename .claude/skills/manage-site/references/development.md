@@ -101,6 +101,22 @@ OrbStack: `open -a OrbStack`, wait ~15s, retry.
 
 ## Common dev tasks
 
+- **UI fix from a marked screenshot** (the owner's most common request — a
+  screenshot with a circle/arrow/note + "fix this"; the `frontend-fluffer`
+  skill is the thin entry point to this recipe): (1) **Locate** — read the
+  route off the screenshot's chrome (nav state, page title), find the
+  component + class in "Where things live" above, then grep that class /
+  section banner in `styles.css` — never read it whole. (2) **Inspect, don't
+  guess** — serve the site (Verification recipe above; the shared dev stack
+  on :5173 is fair game if already running) and read the element's computed
+  styles with `preview_inspect`; the mark says *where*, the DOM says *what*.
+  (3) **Fix in the system** — palette CSS vars (never hardcoded colors),
+  existing radii/breakpoints; anything with a dark-mode surface minds
+  `--panel-tint`/`--surface-muted` (see the "New palette" task below).
+  (4) **Verify like the request arrived** — re-screenshot the fixed element
+  in both default palettes (citrus light + midnight dark) and across the
+  900px stack point, and show the proof: the task began as a picture, close
+  it with one.
 - **New palette:** append to `content/themes.yaml` (tag, label, 10 color keys —
   see `ThemeColors` in `src/lib/types.ts`). No code change. **Dark palettes**
   add three optional slots — `ink` (primary text), `muted` (secondary text),

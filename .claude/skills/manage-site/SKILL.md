@@ -26,6 +26,7 @@ for architecture; this skill is the operating manual on top of it.
 | Reviews, Compass courses, Journal entries, pages, site copy, images, roadmap, voice/tone | Read `references/content-editing.md` |
 | Writing/finishing Compass course chapters (any batch size) | Also invoke the `write-epic-course` skill — the production workflow |
 | Build, verify, preview, deploy (the static site), routes, themes, components, CSS | Read `references/development.md` |
+| A marked screenshot + "fix this UI element" | The four-step recipe: `references/development.md` "UI fix from a marked screenshot" (the `frontend-fluffer` skill routes here too) |
 | The Go API, login/auth, the live-edit portal, LLM enrich/translate, backend deploy, `be:*` tasks | Read `references/backend.md` — backend detail is out of `CLAUDE.md` and loads only here |
 | Both (e.g. "add a page" = content + route) | Read both — page wiring spans them |
 
