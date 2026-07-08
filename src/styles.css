@@ -55,6 +55,29 @@ img {
     display: block;
 }
 
+/* iOS Safari flashes a grey box on tap of any interactive element; kill it so
+   taps feel native (focus/hover styling still conveys state). */
+a,
+button,
+input,
+textarea,
+select,
+summary,
+[role="button"] {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* iOS Safari auto-zooms the page whenever a focused form control's font is
+   under 16px. Floor every editable control at 16px on touch devices so focus
+   never triggers a zoom (desktop keeps the smaller sizes). */
+@media (pointer: coarse) {
+    input,
+    textarea,
+    select {
+        font-size: max(16px, 1em);
+    }
+}
+
 h1,
 h2,
 h3 {
@@ -389,9 +412,14 @@ h1 {
     transform: scale(2);
 }
 
+/* Pinned to the visible viewport (--vv-* from useVisibleViewportVars) so the
+   auto-focused input's mobile keyboard shrinks the box, not buries it. */
 .login-overlay {
     position: fixed;
-    inset: 0;
+    left: 0;
+    right: 0;
+    top: var(--vv-t, 0);
+    height: var(--vv-h, 100vh);
     z-index: 60;
     display: grid;
     place-items: center;
@@ -399,10 +427,13 @@ h1 {
     background: rgba(43, 42, 38, 0.35);
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
+    overscroll-behavior: contain;
 }
 .login-dialog {
     position: relative;
     width: min(380px, 100%);
+    max-height: 100%;
+    overflow-y: auto;
     padding: 28px;
     background: var(--white);
     border: 1px solid var(--line);
@@ -848,7 +879,8 @@ h1 {
     margin-bottom: 3px;
 }
 .side-panel.is-open .side-chevron,
-.side-tab.is-open .side-chevron {
+.side-tab.is-open .side-chevron,
+.ce-fields-toggle.is-open .side-chevron {
     transform: rotate(-135deg);
     margin-bottom: -3px;
 }
@@ -1968,6 +2000,7 @@ a.respected-card:hover {
     grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
     gap: 10px;
     overflow-y: auto;
+    overscroll-behavior: contain;
     padding-right: 4px;
 }
 .image-picker-item {
@@ -2690,18 +2723,27 @@ a.respected-card:hover {
    the change back to the content/ file in git via the backend's
    /api/content/save seam — every save is a commit, published by the next
    Pages deploy (~2 min). Readers never see any of this. */
+/* Overlay is pinned to the *visible* viewport (top/height driven by the shared
+   --vv-h/--vv-t vars useVisibleViewportVars mirrors from visualViewport), so an
+   open mobile keyboard shrinks the box instead of burying the modal. Vars unset
+   (older desktop) ⇒ falls back to a full-height overlay. */
 .content-editor-overlay {
     position: fixed;
-    inset: 0;
+    left: 0;
+    right: 0;
+    top: var(--vv-t, 0);
+    height: var(--vv-h, 100vh);
     background: rgba(47, 44, 39, 0.45);
     display: grid;
     place-items: center;
     padding: 24px;
     z-index: 100;
+    overscroll-behavior: contain;
 }
 .content-editor {
     width: min(78vw, 1100px);
     height: 80vh;
+    max-height: 100%;
     display: flex;
     flex-direction: column;
     background: var(--white);
@@ -2716,7 +2758,13 @@ a.respected-card:hover {
     }
     .content-editor {
         width: 100%;
-        height: 90vh;
+        height: 100%;
+    }
+    /* Short visible viewport (keyboard up): let the textareas shrink with the
+       modal instead of forcing overflow from a tall min-height. */
+    .content-editor-preview,
+    .content-editor-textarea {
+        min-height: 120px;
     }
 }
 .content-editor-head {
@@ -2858,6 +2906,7 @@ a.respected-card:hover {
     margin: 0;
     padding: 16px 20px;
     overflow: auto;
+    overscroll-behavior: contain;
     background: var(--white);
 }
 .content-editor-textarea {
@@ -2867,6 +2916,7 @@ a.respected-card:hover {
     padding: 16px;
     border: none;
     resize: vertical;
+    overscroll-behavior: contain;
     font-family: "Courier New", Courier, monospace;
     font-size: 0.85rem;
     line-height: 1.5;
@@ -2901,14 +2951,11 @@ a.respected-card:hover {
     font-weight: 700;
     letter-spacing: 0.02em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--ink);
     background: var(--sand);
     border: none;
     border-bottom: 1px solid var(--line);
     cursor: pointer;
-}
-.ce-fields-chevron {
-    font-size: 0.7rem;
 }
 /* The fields grid scrolls in a capped area so the body textarea keeps its room. */
 .ce-fields {
@@ -2917,6 +2964,7 @@ a.respected-card:hover {
     padding: 16px 20px;
     max-height: 40vh;
     overflow: auto;
+    overscroll-behavior: contain;
     flex: none;
 }
 .ce-field {

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { ApiError, type TelegramChallenge } from '../lib/api'
 import { useI18n } from '../lib/i18n'
 import { useSession } from '../lib/session'
+import { useVisibleViewportVars } from '../lib/viewport'
 
 // The centered sign-in dialog over a blurred backdrop, rendered by
 // SessionProvider whenever `loginOpen` is true. Telegram-username sign-in is
@@ -22,6 +23,10 @@ export default function LoginDialog() {
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const firstRef = useRef<HTMLInputElement>(null)
+
+  // Mounted only while open — size the dialog to the visible viewport so the
+  // auto-focused input's keyboard can't bury it on mobile (see the hook).
+  useVisibleViewportVars(true)
 
   useEffect(() => {
     firstRef.current?.focus()

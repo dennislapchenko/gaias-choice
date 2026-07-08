@@ -46,6 +46,7 @@ import {
 import { useEditMode } from './editMode'
 import { useI18n } from './i18n'
 import { downscaleToWebP } from './image'
+import { useVisibleViewportVars } from './viewport'
 import type { EditRef, PostState } from './types'
 
 type EditorMode =
@@ -293,6 +294,10 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     window.addEventListener('beforeunload', warn)
     return () => window.removeEventListener('beforeunload', warn)
   }, [dirty])
+
+  // Keep the editor sized to the visible viewport (above the mobile keyboard) —
+  // see useVisibleViewportVars. Keyed on open/closed, not on every keystroke.
+  useVisibleViewportVars(!!state)
 
   // Restore the caret/selection after a toolbar action re-renders the textarea
   // with new text (React controls the value, so the browser can't keep it).
@@ -844,13 +849,11 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                 <div className={`content-editor-fields${state.status === 'enriching' ? ' is-dimmed' : ''}`}>
                   <button
                     type="button"
-                    className="ce-fields-toggle"
+                    className={`ce-fields-toggle${fieldsOpen ? ' is-open' : ''}`}
                     aria-expanded={fieldsOpen}
                     onClick={() => setFieldsOpen((o) => !o)}
                   >
-                    <span className="ce-fields-chevron" aria-hidden="true">
-                      {fieldsOpen ? '▾' : '▸'}
-                    </span>
+                    <span className="side-chevron" aria-hidden="true" />
                     {t('editor.fields')}
                   </button>
                   {fieldsOpen && (
