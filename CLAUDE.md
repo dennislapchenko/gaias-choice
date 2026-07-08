@@ -379,7 +379,9 @@ via `useI18n()`.
 
 `components/Layout.tsx` wraps every page in a two-column shell
 (`.layout-grid`): a left `Sidebar` + the routed content. On desktop the sidebar
-is a sticky vertical stack of **collapsible panels**; on phones
+is a sticky vertical stack of **collapsible panels** (capped to
+`calc(100vh - 108px)` with its own `overflow-y` so a tall rail scrolls
+independently of the central column); on phones
 (`@media (max-width: 900px)`) it rides **above** the content and renders as a
 `SidebarMobile` tab-row (one open at a time). `Sidebar.tsx`'s `PANELS` registry
 defines the panel types (`about`, `missionValues`, `respected`, `almanac`); the

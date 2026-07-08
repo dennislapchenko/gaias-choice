@@ -412,13 +412,14 @@ h1 {
     transform: scale(2);
 }
 
-/* Pinned to the visible viewport (--vv-* from useVisibleViewportVars) so the
-   auto-focused input's mobile keyboard shrinks the box, not buries it. */
+/* Height tracks the visible viewport (--vv-h from useVisibleViewportVars, which
+   also scroll-locks the body) so the auto-focused input's mobile keyboard
+   shrinks the box, not buries it. */
 .login-overlay {
     position: fixed;
     left: 0;
     right: 0;
-    top: var(--vv-t, 0);
+    top: 0;
     height: var(--vv-h, 100vh);
     z-index: 60;
     display: grid;
@@ -765,6 +766,12 @@ h1 {
     position: sticky;
     top: 84px;
     align-self: start;
+    /* Cap to the space below the sticky offset so a tall rail scrolls on its
+       own instead of only revealing its overflow when the page (and the central
+       column with it) scrolls. */
+    max-height: calc(100vh - 108px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 /* When a second rail is present beside the site-wide left Sidebar — the
    entry-detail TOC or the Reviews/Journal "in the works" rail — dim the
@@ -789,6 +796,8 @@ h1 {
     .sidebar {
         position: static;
         order: 0; /* rail rides up under the header instead of sinking to the bottom */
+        max-height: none;
+        overflow: visible;
     }
     .content {
         order: 1;
@@ -2723,15 +2732,15 @@ a.respected-card:hover {
    the change back to the content/ file in git via the backend's
    /api/content/save seam — every save is a commit, published by the next
    Pages deploy (~2 min). Readers never see any of this. */
-/* Overlay is pinned to the *visible* viewport (top/height driven by the shared
-   --vv-h/--vv-t vars useVisibleViewportVars mirrors from visualViewport), so an
-   open mobile keyboard shrinks the box instead of burying the modal. Vars unset
-   (older desktop) ⇒ falls back to a full-height overlay. */
+/* Height tracks the *visible* viewport (--vv-h from useVisibleViewportVars,
+   which also scroll-locks the body) so an open mobile keyboard shrinks the box
+   to the space above it instead of burying the modal. Var unset (older desktop)
+   ⇒ falls back to a full-height overlay. */
 .content-editor-overlay {
     position: fixed;
     left: 0;
     right: 0;
-    top: var(--vv-t, 0);
+    top: 0;
     height: var(--vv-h, 100vh);
     background: rgba(47, 44, 39, 0.45);
     display: grid;
