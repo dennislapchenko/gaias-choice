@@ -196,17 +196,36 @@ FE/framework idioms, skip explaining infra basics.
 
 **The done-message format.** The final "work is done" message of a task (not
 intermediate replies or questions) follows a fixed pattern — everything,
-without miss, but skimmable, never one dense blob:
+without miss, but skimmable, never one dense blob. Read it like a good MR
+description written for a busy reviewer deciding **"safe to ship?" in under a
+minute**: the diff already shows *what* changed — the message carries only
+**what the diff can't** (why, blast radius, risk, proof, non-obvious calls).
+**Never narrate the diff back.** One line per dimension; **drop a dimension
+entirely rather than pad it with "N/A".**
 
 - Start the message with ✅ and end it with ✅.
-- Body structured for skimming: short paragraphs or bullets grouped by
-  concern (what changed, why, proof), key nouns bold, one idea per line.
+- Body, grouped for skimming (short lines/bullets, key nouns bold, one idea
+  per line), covering only the diff-can't-tell dimensions that apply:
+  - **what + why** — the headline, ≤2 sentences.
+  - `💥 <blast radius>` — what re-renders, redeploys, or changes behavior; the
+    #1 question on a deploy-on-push site, so **lead with it whenever it's
+    non-trivial**. Say `💥 zero render impact` when nothing user-facing moves.
+    Skip the line entirely for obviously self-contained changes (a typo, a doc).
+  - **risk / rollback** and **proof** — proof is the claim + a pointer (build
+    green, a screenshot, the compare) — **never the transcript**.
+  - non-obvious **decisions**, as *"X over Y because Z"*.
+- **Tiny diffs unfolded:** when the body names a file whose change is **≤3
+  lines**, show that diff inline in a fenced ` ```diff ` block right there —
+  it's small enough that seeing it beats describing it and saves the reader
+  opening the file. Larger changes stay described, not pasted.
 - Then one line per step still left: `🚀 <step that is left>` (commit
   pending, deploy pending, follow-up work…).
-- Then, if something remains open to think on: `⚖️ <the open question>`.
+- Then, per open question **or** forward-looking tradeoff worth flagging:
+  `⚖️ <the thing to weigh>` — also the place to offer a "when you're ready, the
+  move is…" next step the owner hasn't asked for yet.
 - Unrelated dirty files / a contaminated worktree get their own part
   starting with the line `🪨 Dirty Worktree:`.
-- Omit the 🚀/⚖️/🪨 parts entirely when there's nothing for them.
+- Omit the 💥/🚀/⚖️/🪨 parts entirely when there's nothing for them.
 
 If Docker is down: `open -a OrbStack` and wait ~15s. For visual checks, serve
 `dist/` statically (`task dev` needs a TTY and fails under preview harnesses) —
