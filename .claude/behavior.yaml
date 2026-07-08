@@ -4,5 +4,5 @@
 # these flags). Keep semantics there, not here — this file is read to change a
 # value, not to learn the procedure. Booleans only for now; more added over time.
 
-AUTO_COMMIT_PUSH: true        # true = commit+push without asking; false = ask first
+AUTO_COMMIT_PUSH: false        # true = commit+push without asking; false = ask first
 COMMIT_PUSH_FOLLOWING: false   # true = after push, follow the deploy through (+ task be:deploy when backend/** changed)
