@@ -13,20 +13,10 @@ tags: []                   # optional, e.g. [organic, cotton]
 ---
 
 <!--
-  A review is written by hand, from real use — no invented durations, scenes,
-  or test results. We test gear because we live on the road looking for the
-  land we'll put down roots on, and the family that depends on every one of
-  these decisions is us — so write to the family who depends on theirs.
-
-  Depth is the whole point: a shallow honest review helps no one. Go where a
-  paid review can't — the flaw, the repair, the day we changed our mind. The
-  Gaia Score in the frontmatter (whatever site.yaml names the criteria — safety,
-  durability, repairability) is not a gut feeling: earn each number in the body.
-
-  These five sections are the house structure — keep them all, fill them
-  honestly, cut the prompts before you ship. The headings below name each
-  section's JOB, not its final wording: retitle every one in this review's
-  own words (keep the roles and their order) so no two reviews read alike.
+  Written by hand, from real use — no invented durations or results, and earn
+  every Gaia Score number in the body. Keep all five sections, fill them
+  honestly, retitle each heading in this review's own words (the defaults name
+  the section's job, not its wording), and delete the prompts before you ship.
 -->
 
 **Verdict:** the answer in one or two sentences, for the reader who leaves after

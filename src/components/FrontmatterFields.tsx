@@ -1,6 +1,8 @@
 // Structured frontmatter editing (Path C — see context/editor-fields/). Renders
 // one control per key ACTUALLY present in the file's `---` block (dynamic: a new
-// key shows up as a new input, no code change), widget inferred from the parsed
+// key shows up as a new input, no code change) plus any `extraKeys` prop keys
+// (known-optional fields surfaced blank so the owner can ADD them — e.g. a
+// review's `boughtAt`), widget inferred from the parsed
 // value's type with a few key-specific niceties (date picker, per-criterion
 // scores, excerpt textarea). Edits round-trip through `setField`, so the whole
 // file text (owned by contentEditor) stays the single source of truth and the
@@ -62,16 +64,26 @@ export default function FrontmatterFields({
   scoreLabels,
   disabled,
   hide,
+  extraKeys,
   onEdit,
 }: {
   value: string
   scoreLabels: string[]
   disabled?: boolean
   hide?: string[] // keys edited elsewhere (e.g. `image` via the cover strip)
+  // Optional keys to surface even when absent from the file, so the owner can
+  // ADD them (e.g. a review's `boughtAt` — the editor otherwise only renders
+  // keys already present). Rendered as blank text inputs after the real fields;
+  // untouched ones stay out of the file (setField only writes on edit).
+  extraKeys?: string[]
   onEdit: (key: string, next: FrontmatterField['value']) => void
 }) {
-  const fields = parseFields(value).filter((f) => !hide?.includes(f.key))
-  if (fields.length === 0) return null // malformed / no frontmatter — caller keeps the Raw tab
+  const present = parseFields(value).filter((f) => !hide?.includes(f.key))
+  if (present.length === 0) return null // malformed / no frontmatter — caller keeps the Raw tab
+  const fields = [...present]
+  for (const key of extraKeys ?? []) {
+    if (!present.some((f) => f.key === key)) fields.push({ key, type: 'string', value: '' })
+  }
 
   return (
     <div className="ce-fields">

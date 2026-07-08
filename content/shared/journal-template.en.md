@@ -7,26 +7,11 @@ tags: []            # optional, e.g. [travel, sleep, gear]
 ---
 
 <!--
-  A Journal entry is a real note, written by hand — no course polish, no
-  upsell. We're a family on the road looking for the land to put down roots on;
-  the Journal is the honest record of that search. Write it like a voice message
-  to a friend who lives the same life: the story first, the lesson after.
-  Stories spread; methodologies don't. And it's allowed to be a change of mind —
-  what we stopped believing this month reads truer than what we're certain of.
-
-  Two shapes of entry fit here — keep the scaffold that matches, delete the
-  other, and cut the prompts before you ship:
-
-  · A STORY — something that happened once: a drive, a night, a rescue.
-  · A WAY WE LIVE — a practice, an approach, a piece of worldview, or how a
-    whole category of things earns its place with us (wool, glass jars,
-    screen-free days). Still first-hand, still lived — it just happened a
-    hundred times instead of once.
-
-  Either way, the headings are scaffolding to think against, not sections
-  you must keep. Keep what serves the note, delete the rest — and retitle
-  what you keep in this note's own words; the default headings name a
-  section's job, not its final wording.
+  A real note, written by hand — story first, lesson after, like a voice
+  message to a friend. Two shapes below: a story (happened once) or a way we
+  live (happens always) — keep the one that fits, delete the other. The
+  headings are scaffolding: keep what serves the note, retitle it in this
+  note's own words, and cut the prompts before you ship.
 -->
 
 <!-- ————— Shape 1: a story ————— -->

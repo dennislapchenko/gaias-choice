@@ -894,6 +894,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
   // The cover control only makes sense for the two post types (reviews/journal
   // have an `image:` cover); compass/pages/site.yaml don't get it.
   const isPost = !!state?.mode && /\/(products|journal)\//.test(state.mode.path)
+  const isReview = !!state?.mode && /\/products\//.test(state.mode.path)
   const cover = state ? fmScalar(state.value, 'image') : undefined
   const gallery = state ? fmList(state.value, 'gallery') : []
   // The post's own title (frontmatter `title:`), shown greyed on the collapsed
@@ -1064,6 +1065,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                       scoreLabels={scoreLabels}
                       disabled={busy || state.status === 'published'}
                       hide={isPost ? ['image'] : undefined}
+                      extraKeys={isReview ? ['boughtAt'] : undefined}
                       onEdit={onField}
                     />
                   )}

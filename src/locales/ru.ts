@@ -173,7 +173,7 @@ const ru: Record<keyof typeof en, string> = {
   "editor.badFrontmatter": "Ошибка в YAML-заголовке — исправьте перед сохранением:",
   "editor.discardConfirm": "Закрыть редактор? Правки сохранятся как черновик и вернутся при следующем открытии.",
   "editor.draftRestored": "Найдена старая работка, восстановили!",
-  "editor.draftDiscard": "Отменить его",
+  "editor.draftDiscard": "Спасибо, не надо",
   "editor.createTitle": "Добавить запись в очередь",
   "editor.createSubmit": "Создать черновик",
   "editor.conflict": "Файл изменился, пока вы спали — откройте заново и пропердитесь.",

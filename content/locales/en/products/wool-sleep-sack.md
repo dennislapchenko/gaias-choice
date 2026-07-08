@@ -8,10 +8,11 @@ excerpt: A temperature-regulating merino sack that keeps a baby comfortable from
 image: /images/review-wool-sleep-sack.svg
 date: 2026-06-28
 tags: [wool, sleep, temperature]
+boughtAt: Deschmann
 ---
 
 Sleep is the thing that makes or breaks a trip, and temperature is usually why
-it breaks. Merino solved that for us better than anything synthetic ever did.
+it breaks. Merino solved that for us better than anythidang synthetic ever did.
 
 Natural **merino wool** regulates temperature both ways — it holds warmth on a
 cold night and breathes when a room (or a car, or a tent) heats up. No damp
@@ -25,7 +26,7 @@ polyester feeling, no overheating.
 - **Odor** — wool resists smell, which matters when laundry day is unpredictable.
 
 ## What to know
-
+ds
 Merino is a hand-wash-friendly fiber but not indestructible — follow the wool
 cycle and skip the tumble dryer. In return it lasts season after season.
 
