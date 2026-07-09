@@ -976,7 +976,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                 </button>
               </div>
             </div>
-            {isPost && (view !== 'fields' || fieldsOpen) && (
+            {isPost && view !== 'preview' && (view !== 'fields' || fieldsOpen) && (
               // Image row: the cover is the special first slot («Обложка»); the
               // rest are gallery images. A filled slot opens the frame editor
               // (view/reframe/delete); a ＋ slot opens the picker (library +

@@ -3464,11 +3464,14 @@ a.respected-card:hover {
 .ce-scores {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 10px;
 }
 .ce-score {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
     gap: 3px;
     font-size: 0.72rem;
     color: var(--muted);
@@ -3492,6 +3495,17 @@ a.respected-card:hover {
     margin: 6px 16px 16px;
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
+}
+/* Desktop: pack the fields into two columns; wide controls (scores, any
+   textarea like excerpt) span the full width. Mobile keeps one column. */
+@media (min-width: 721px) {
+    .ce-fields {
+        grid-template-columns: 1fr 1fr;
+    }
+    .ce-field-block,
+    .ce-field:has(textarea) {
+        grid-column: 1 / -1;
+    }
 }
 @media (max-width: 480px) {
     .ce-field {
