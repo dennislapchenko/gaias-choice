@@ -116,12 +116,18 @@ classify-and-do as usual.
    write land in ONE commit. Editing content never auto-translates the **prose** —
    the next Active flip carries the edits over — with **one exception: the shared
    media (cover `image:` + `gallery:`) mirrors RU→EN on save** (it's shared media,
-   not prose; inline body images stay per-locale). A **brand-new RU draft
-   auto-seeds its EN sibling in the same create commit** — a **frontmatter-only**
-   translation (just the title/excerpt, so the "in the works" rail entry reads in
-   English; the body stays skeletal until the first Active flip), or a verbatim
-   copy when the model is offline. **EN posts never push back to RU**
-   (hand-written RU is never overwritten by AI). Every machine-translated file
+   not prose; inline body images stay per-locale). A **brand-new draft auto-seeds
+   a frontmatter-only stub of its sibling locale in the same create commit** (just
+   the title/excerpt, so the other locale's "in the works" rail entry is readable;
+   the body stays skeletal), or a verbatim copy when the model is offline. The two
+   directions are deliberately asymmetric: a **RU draft's EN stub** is a permanent
+   machine export — stamped `translatedFrom: ru`, its body fully translated on the
+   first Active flip. An **EN draft's RU stub** is scaffolding the owner
+   **hand-finishes into the human source** — left *unmarked* (RU never carries an
+   AI-translation mark), its body written by hand before the RU post goes Active.
+   Seeding never overwrites an existing sibling, and **editing an EN post never
+   pushes prose to RU** — so hand-written RU is never overwritten by AI. Every
+   machine-translated file
    carries a `translatedFrom:` frontmatter mark, rendered on the page ("Translated
    from Russian" / etc.), so the assist is disclosed. This is allowed because it
    *translates* existing human content — it invents nothing. Authoring (not
@@ -133,8 +139,8 @@ classify-and-do as usual.
 
    | Section | Human original | Auto RU→EN | EN→RU |
    | --- | --- | --- | --- |
-   | **Reviews** (`products/`) | RU | New RU draft seeds an EN frontmatter skeleton (same commit); Active-flip (re)translates body + carries scores/price/tags, title/excerpt pinned; Upcoming-flip mirrors state; cover + gallery mirror on **save** | never |
-   | **Journal** | RU | Same as reviews, minus scores | never |
+   | **Reviews** (`products/`) | RU | New RU draft seeds an EN frontmatter skeleton (same commit); Active-flip (re)translates body + carries scores/price/tags, title/excerpt pinned; Upcoming-flip mirrors state; cover + gallery mirror on **save** | New EN draft seeds an **unmarked** RU stub (owner hand-finishes it into the human source); never overwrites an existing RU post, never auto-translates prose |
+   | **Journal** | RU | Same as reviews, minus scores | Same as reviews |
    | **Compass** chapters | EN (AI-drafted + edited) | None — both locales produced together by `write-epic-course`; diagrams are one shared template filled per locale (`inside-websites` is EN-only) | n/a |
    | **`site.yaml`** non-localized (name, support, social, sidebar…) | EN | Inherited via `getSite` shallow-merge — authored once in `en/` | n/a |
    | **`site.yaml`** localized (nav, values…) + **pages** (about, contact, legal, **roadmap**) | per-locale, hand-written | None — roadmap is ticked in **both** locales by hand | never |

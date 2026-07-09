@@ -777,36 +777,47 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       if (!(err instanceof ApiError && err.status === 404)) throw err
     }
     if (exists) throw new Error(t('editor.exists', { path: mode.path }))
-    // A new RU draft + its EN sibling skeleton land in ONE commit: the sibling
-    // exists from the start (so the EN "in the works" rail shows it), with only
-    // its title/excerpt translated — the body is fully translated later, when
-    // the post is first flipped Active. See siblingSkeleton.
+    // A new draft + its sibling-locale skeleton land in ONE commit: the sibling
+    // exists from the start (so the other locale's "in the works" rail shows it),
+    // with only its title/excerpt translated — the body is filled later (a RU→EN
+    // sibling on the first Active flip; an EN→RU sibling by hand). See
+    // siblingSkeleton.
     const files = [{ path: mode.path, content: value }]
     const skeleton = await siblingSkeleton(mode.path, value)
     if (skeleton) files.push(skeleton)
     await commitFiles(files, mode.message, token ?? undefined)
   }
 
-  // Build the EN sibling skeleton for a brand-new RU draft: translate the
-  // FRONTMATTER ONLY (title/excerpt — one cheap call) so the rail entry reads in
-  // English, leaving the body skeletal (the real body translation lands on the
-  // first Active flip). Stamped translatedFrom, state forced upcoming. Translator
-  // offline ⇒ a verbatim copy so the stub still exists. Only RU→EN (EN never
-  // drives RU); null for a non-RU path. Committed together with the RU draft.
+  // Build the sibling skeleton for a brand-new draft in either locale: translate
+  // the FRONTMATTER ONLY (title/excerpt — one cheap call) so the other locale's
+  // rail entry reads in its language, leaving the body skeletal. State forced
+  // upcoming; translator offline ⇒ a verbatim copy so the stub still exists. Null
+  // for a path outside products/journal. Committed together with the draft.
+  //
+  // The two directions are deliberately asymmetric (SKILL.md #6): a RU draft's EN
+  // sibling is a permanent machine EXPORT, so it's stamped `translatedFrom: ru`
+  // (and its body is fully translated on the first Active flip). An EN draft's RU
+  // sibling is only SCAFFOLDING the owner hand-finishes into the human source, so
+  // it's left unmarked — RU never carries an AI-translation mark. Seeding never
+  // overwrites an existing sibling (saveDraft's pre-flight refuses that), so
+  // hand-written RU is safe.
   const siblingSkeleton = async (
     path: string,
     value: string,
   ): Promise<{ path: string; content: string } | null> => {
-    if (!/\/locales\/ru\/(products|journal)\//.test(path)) return null
-    const siblingPath = path.replace('/locales/ru/', '/locales/en/')
+    const m = /\/locales\/(ru|en)\/(products|journal)\//.exec(path)
+    if (!m) return null
+    const from = m[1] as 'ru' | 'en'
+    const to = from === 'ru' ? 'en' : 'ru'
+    const siblingPath = path.replace(`/locales/${from}/`, `/locales/${to}/`)
     const fm = FRONTMATTER_RE.exec(value)
     let content: string
     try {
       if (!fm) throw new Error('draft has no frontmatter')
       // Translate just the `---`-delimited frontmatter block (no body).
-      let out = await translateContent(`${fm[1]}${fm[2]}${fm[3]}`, 'en', token ?? undefined)
+      let out = await translateContent(`${fm[1]}${fm[2]}${fm[3]}`, to, token ?? undefined)
       if (!FRONTMATTER_RE.test(out)) throw new Error('translation returned no frontmatter')
-      out = applyScalarEdit(out, { file: siblingPath, path: ['translatedFrom'] }, 'ru')
+      if (to === 'en') out = applyScalarEdit(out, { file: siblingPath, path: ['translatedFrom'] }, 'ru')
       out = applyScalarEdit(out, { file: siblingPath, path: ['state'] }, 'upcoming')
       content = out
     } catch {
