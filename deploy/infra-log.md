@@ -13,8 +13,8 @@
 ## Facts (current)
 
 - **VM:** Hetzner Cloud, Helsinki (hel1), AlmaLinux 10.1 (Heliotrope Lion),
-  x86_64. Public IP `95.216.215.95`.
-- **Domain:** `gaias-choice.gardenofatlantis.com` → A record → `95.216.215.95`
+  x86_64. Public IP in `.env` as `SERVER_IP` (kept out of the public repo).
+- **Domain:** `gaias-choice.gardenofatlantis.com` → A record → the VM IP (`SERVER_IP`)
   (registrar: Namecheap). This is the API host Caddy terminates TLS for
   (`API_DOMAIN`). The static site stays on GitHub Pages
   (`https://dennislapchenko.github.io`) and does not move.
@@ -24,13 +24,13 @@
 ## Timeline
 
 ### 1. DNS
-- Created an A record `gaias-choice.gardenofatlantis.com → 95.216.215.95` on
+- Created an A record `gaias-choice.gardenofatlantis.com → <VM IP>` on
   Namecheap. (Owner action.)
 
 ### 2. VM rental
 - Rented a Hetzner Cloud VM in Helsinki, AlmaLinux 10. (Owner action.)
 - Verified reachable over SSH; confirmed OS `AlmaLinux 10.1`, arch `x86_64`,
-  egress IP `95.216.215.95`. Docker/compose not yet installed.
+  egress IP matched the VM's public IP (`SERVER_IP`). Docker/compose not yet installed.
 
 ### 3. VM base setup (over SSH, as root)
 - Installed Docker from the official CE repo:
