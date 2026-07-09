@@ -3435,9 +3435,8 @@ a.respected-card:hover {
 }
 .ce-field {
     display: grid;
-    grid-template-columns: 140px 1fr;
-    align-items: center;
-    gap: 12px;
+    grid-template-columns: 1fr;
+    gap: 4px;
 }
 .ce-field-label {
     font-size: 0.8rem;
@@ -3521,12 +3520,6 @@ a.respected-card:hover {
     .ce-field-block,
     .ce-field:has(textarea) {
         grid-column: 1 / -1;
-    }
-}
-@media (max-width: 480px) {
-    .ce-field {
-        grid-template-columns: 1fr;
-        gap: 4px;
     }
 }
 .content-editor-actions {
