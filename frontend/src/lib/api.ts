@@ -84,8 +84,13 @@ async function apiSend<T>(
   body?: unknown,
   opts?: { token?: string },
 ): Promise<T> {
-  // Track content writes only (not auth, not the auto-enrich on composer open).
+  // Busy pill: any content write (not auth, not the auto-enrich on composer open).
   const track = path.startsWith('/content/') && path !== '/content/template'
+  // Deploy watch: only a *publish* moment (save / state-flip / draft / delete) —
+  // NOT an intermediate image upload or the translate step, which would pop a
+  // "publishing…" pill mid-edit. save/commit/DELETE-file are the commit endpoints.
+  const publishes =
+    path === '/content/save' || path === '/content/commit' || path === '/content/file'
   if (track) setMutationCount(activeMutations + 1)
   try {
     const res = await fetch(apiUrl(path), {
@@ -94,7 +99,7 @@ async function apiSend<T>(
       body: body === undefined ? undefined : JSON.stringify(body),
     })
     const data = await parseJson<T>(res)
-    if (track) void watchDeploy() // committed → watch for the deploy going live
+    if (publishes) void watchDeploy() // committed → watch for the deploy going live
     return data
   } finally {
     if (track) setMutationCount(activeMutations - 1)

@@ -168,6 +168,7 @@ const en = {
   "editor.saving": "Saving…",
   "editor.loading": "Fetching current version…",
   "editor.published": "Published — live in ~2 min",
+  "editor.publishing": "Publishing… live in ~2 min",
   "editor.deployLive": "Your change is now live on the site",
   "editor.error": "Save failed:",
   "editor.badFrontmatter": "Front-matter has a YAML error — fix it before saving:",

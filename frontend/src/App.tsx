@@ -1,7 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
-import BusyIndicator from './components/BusyIndicator'
-import DeployToast from './components/DeployToast'
 import Layout from './components/Layout'
+import StatusPill from './components/StatusPill'
 import { ContentEditorProvider } from './lib/contentEditor'
 import { EditModeProvider } from './lib/editMode'
 import { SessionProvider } from './lib/session'
@@ -40,8 +39,7 @@ export default function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>
-          <BusyIndicator />
-          <DeployToast />
+          <StatusPill />
         </ContentEditorProvider>
       </EditModeProvider>
     </SessionProvider>
