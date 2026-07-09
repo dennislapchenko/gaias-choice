@@ -3439,6 +3439,32 @@ a.respected-card:hover {
     .ce-field:has(textarea) {
         grid-column: 1 / -1;
     }
+    /* Fields + body scroll as ONE column instead of two nested scroll regions
+       (the 40vh-capped fields grid fighting the textarea's own scroll — the
+       "scroll between themselves" pain). The grid uncaps and flows into the
+       single .content-editor-fields scroll; the body textarea grows to its
+       content (field-sizing) so it never opens a second scrollbar; the collapse
+       bar sticks to the top so it stays reachable.
+       ponytail: field-sizing is Chromium-only — Safari/Firefox fall back to the
+       min-height + the textarea's own scroll (≈ the prior behavior). */
+    .content-editor-fields {
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+    .ce-fields-toggle {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+    .ce-fields {
+        max-height: none;
+        overflow-y: visible;
+    }
+    .content-editor-body-textarea {
+        flex: none;
+        field-sizing: content;
+        min-height: 40vh;
+    }
 }
 .content-editor-actions {
     display: flex;
