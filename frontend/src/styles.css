@@ -3260,6 +3260,23 @@ a.respected-card:hover {
     font-weight: 400;
     color: var(--muted);
 }
+@media (max-width: 720px) {
+    /* Phone width can't fit the pill on one row, and the long RU labels wrap it
+       into a tall block that floated over the middle of the image. Anchor it to
+       the backdrop's (visual-viewport) bottom as a full-width toolbar instead:
+       .image-frame goes static so the absolute pill resolves against the fixed
+       backdrop, not the centered image. */
+    .image-frame {
+        position: static;
+    }
+    .image-frame-controls {
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        transform: none;
+        max-width: none;
+    }
+}
 .content-editor-md {
     display: flex;
     flex: 1;
