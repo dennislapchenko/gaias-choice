@@ -395,6 +395,16 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     }
   })
 
+  // Auto-grow the Fields body textarea to its content on desktop, so the fields
+  // and body scroll as ONE column (no second scrollbar). Cross-browser stand-in
+  // for CSS field-sizing (Chromium-only). Mobile keeps the flex-filled textarea.
+  useEffect(() => {
+    const el = taRef.current
+    if (!el || view !== 'fields' || window.innerWidth <= 720) return
+    el.style.height = 'auto'
+    el.style.height = `${el.scrollHeight}px`
+  }, [state?.value, view, fieldsOpen])
+
   // The active textarea holds the body (Fields view) or the whole file (Raw
   // view); both toolbar surgery and inline-image splicing operate on its text
   // and re-splice via `writeActive`.
@@ -966,7 +976,19 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="content-editor-head">
-              <p className="content-editor-title">{noteTitle ?? state.title}</p>
+              {noteTitle !== undefined ? (
+                // Edit the post/page title right here (it's the frontmatter
+                // `title:`); no separate Title field in the grid below.
+                <input
+                  className="content-editor-title-input"
+                  value={noteTitle}
+                  disabled={busy || state.status === 'published'}
+                  aria-label={t('editor.field.title')}
+                  onChange={(e) => onField('title', e.target.value)}
+                />
+              ) : (
+                <p className="content-editor-title">{state.title}</p>
+              )}
               <button
                 type="button"
                 className="content-editor-close"
@@ -1114,7 +1136,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                       value={state.value}
                       scoreLabels={scoreLabels}
                       disabled={busy || state.status === 'published'}
-                      hide={isPost ? ['image'] : undefined}
+                      hide={['title', 'state', ...(isPost ? ['image'] : [])]}
                       extraKeys={isReview ? ['boughtAt'] : undefined}
                       onEdit={onField}
                     />

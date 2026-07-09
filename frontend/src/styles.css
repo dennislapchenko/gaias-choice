@@ -3035,6 +3035,29 @@ a.respected-card:hover {
     font-weight: 700;
     font-size: 0.95rem;
 }
+/* The title as an inline editable field in the header (posts/pages with a
+   `title:`): looks like the heading text until hovered/focused. */
+.content-editor-title-input {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    padding: 3px 7px;
+    font: inherit;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+}
+.content-editor-title-input:hover:not(:disabled) {
+    border-color: var(--line);
+}
+.content-editor-title-input:focus {
+    outline: none;
+    border-color: var(--sage);
+    background: var(--sand2);
+}
 .content-editor-close {
     display: inline-flex;
     align-items: center;
@@ -3442,11 +3465,10 @@ a.respected-card:hover {
     /* Fields + body scroll as ONE column instead of two nested scroll regions
        (the 40vh-capped fields grid fighting the textarea's own scroll — the
        "scroll between themselves" pain). The grid uncaps and flows into the
-       single .content-editor-fields scroll; the body textarea grows to its
-       content (field-sizing) so it never opens a second scrollbar; the collapse
-       bar sticks to the top so it stays reachable.
-       ponytail: field-sizing is Chromium-only — Safari/Firefox fall back to the
-       min-height + the textarea's own scroll (≈ the prior behavior). */
+       single .content-editor-fields scroll; the body textarea is auto-grown to
+       its content by JS (contentEditor's autoGrow effect) so it never opens a
+       second scrollbar — works in Safari/Firefox, not just Chromium's
+       field-sizing. 40vh is the floor for a short body. */
     .content-editor-fields {
         overflow-y: auto;
         overscroll-behavior: contain;
@@ -3462,7 +3484,6 @@ a.respected-card:hover {
     }
     .content-editor-body-textarea {
         flex: none;
-        field-sizing: content;
         min-height: 40vh;
     }
 }
