@@ -475,20 +475,22 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
   // path a post references. Names carry a base36 timestamp so writes never
   // collide (a reframe writes a fresh file, leaving the old one orphaned — cheap
   // vs. sha-guarded overwrite). Shared by file uploads and ImageFrame reframes.
-  const commitImageBase64 = async (base64: string): Promise<string> => {
+  // Takes a full `data:` URI — extension follows the encoded mime (jpg on the
+  // mobile-WebKit WebP fallback, else webp — see lib/image encodeLossy).
+  const commitImageBase64 = async (dataUrl: string): Promise<string> => {
     const base =
       (fmScalar(state?.value ?? '', 'title') ?? state?.title ?? '')
         .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'image'
-    const name = `${base}-${Date.now().toString(36)}.webp`
-    await uploadImage(`frontend/public/images/${name}`, base64, token ?? undefined)
+    const ext = dataUrl.startsWith('data:image/jpeg') ? 'jpg' : 'webp'
+    const name = `${base}-${Date.now().toString(36)}.${ext}`
+    await uploadImage(`frontend/public/images/${name}`, dataUrl.split(',')[1] ?? '', token ?? undefined)
     return '/images/' + name
   }
 
   // Downscale a picked file in-browser, then commit it (the whole-frame path —
   // ImagePicker's "from your device" upload).
   const uploadFile = async (file: File): Promise<string> => {
-    const dataUrl = await downscaleToWebP(file, 1400)
-    return commitImageBase64(dataUrl.split(',')[1] ?? '')
+    return commitImageBase64(await downscaleToWebP(file, 1400))
   }
 
   // Delete an image file from the repo (the picker's per-image ×). `path` is the
@@ -541,9 +543,9 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
 
   // ImageFrame Save: commit the reframed crop as a fresh file, then repoint the
   // reference at it (the old file is orphaned — see commitImageBase64).
-  const saveFraming = async (base64: string) => {
+  const saveFraming = async (dataUrl: string) => {
     if (!framing) return
-    setImageRef(framing, await commitImageBase64(base64))
+    setImageRef(framing, await commitImageBase64(dataUrl))
     setFraming(null)
   }
 

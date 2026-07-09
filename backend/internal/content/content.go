@@ -97,10 +97,13 @@ func ValidPath(p string) bool {
 	return cleanRel(p) && strings.HasPrefix(p, "content/")
 }
 
-// ValidImagePath allows only clean frontend/public/images/*.webp paths — the one
-// place portal image uploads may land (the FE downscales everything to WebP).
-// The prefix is the real repo layout since the SPA moved under frontend/; the
-// display URL stays /images/x.webp (Vite/nginx serve public/ at the web root).
+// ValidImagePath allows only clean frontend/public/images/*.{webp,jpg,jpeg}
+// paths — the one place portal image uploads may land. The FE prefers WebP but
+// falls back to JPEG where mobile WebKit can't encode WebP from a canvas (see
+// the FE lib/image encodeLossy). The prefix is the real repo layout since the
+// SPA moved under frontend/; the display URL stays /images/x (Vite/nginx serve
+// public/ at the web root).
 func ValidImagePath(p string) bool {
-	return cleanRel(p) && strings.HasPrefix(p, "frontend/public/images/") && strings.HasSuffix(p, ".webp")
+	return cleanRel(p) && strings.HasPrefix(p, "frontend/public/images/") &&
+		(strings.HasSuffix(p, ".webp") || strings.HasSuffix(p, ".jpg") || strings.HasSuffix(p, ".jpeg"))
 }

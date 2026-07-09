@@ -1,8 +1,21 @@
-// Downscale a picked image file to a WebP `data:` URI, entirely in the browser
-// — no upload endpoint needed for the encode step. Capped at `max` px on the
-// long edge. Two callers: avatars (small, stored verbatim as the data: URI) and
-// post covers (larger, base64 split off and committed as a real file — see
-// contentEditor's image upload).
+// Encode a canvas to a compact lossy `data:` URI. Prefer WebP, fall back to
+// JPEG: mobile WebKit (older iOS, in-app WebViews) can't encode WebP from a
+// canvas and silently returns a *large lossless PNG* for
+// toDataURL('image/webp') — which blows the upload/avatar size caps, so uploads
+// just failed on phones. JPEG canvas-encode is universal and comparably small
+// for photos. The mime stays in the returned data URI so callers pick the right
+// file extension.
+function encodeLossy(canvas: HTMLCanvasElement): string {
+  const webp = canvas.toDataURL('image/webp', 0.85)
+  return webp.startsWith('data:image/webp') ? webp : canvas.toDataURL('image/jpeg', 0.85)
+}
+
+// Downscale a picked image file to a lossy `data:` URI (WebP, or JPEG where WebP
+// encode is unsupported — see encodeLossy), entirely in the browser — no upload
+// endpoint needed for the encode step. Capped at `max` px on the long edge. Two
+// callers: avatars (small, stored verbatim as the data: URI) and post covers
+// (larger, base64 split off and committed as a real file — see contentEditor's
+// image upload).
 export function downscaleToWebP(file: File, max: number): Promise<string> {
   return new Promise((resolve, reject) => {
     const img = new Image()
@@ -17,7 +30,7 @@ export function downscaleToWebP(file: File, max: number): Promise<string> {
       if (!ctx) return reject(new Error('no 2d context'))
       ctx.drawImage(img, 0, 0, w, h)
       URL.revokeObjectURL(img.src)
-      resolve(canvas.toDataURL('image/webp', 0.85))
+      resolve(encodeLossy(canvas))
     }
     img.onerror = reject
     img.src = URL.createObjectURL(file)
@@ -41,5 +54,5 @@ export function cropToWebP(
   const ctx = canvas.getContext('2d')
   if (!ctx) throw new Error('no 2d context')
   ctx.drawImage(img, src.x, src.y, src.w, src.h, 0, 0, canvas.width, canvas.height)
-  return canvas.toDataURL('image/webp', 0.85)
+  return encodeLossy(canvas)
 }

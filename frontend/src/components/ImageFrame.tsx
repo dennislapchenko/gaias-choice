@@ -21,7 +21,7 @@ const clamp = (v: number, lo: number, hi: number) => (lo > hi ? (lo + hi) / 2 : 
 // image itself (no card chrome — #9); a floating control pill sits over it.
 // Pan (drag), zoom (wheel + two-finger pinch), aspect cycle. The canvas shows
 // exactly the crop that Save bakes (WYSIWYG). Save commits the reframed WebP via
-// `onSave(base64)`; delete confirms then `onDelete`; the backdrop closes (#6).
+// `onSave(dataUrl)`; delete confirms then `onDelete`; the backdrop closes (#6).
 export default function ImageFrame({
   src,
   onSave,
@@ -29,7 +29,7 @@ export default function ImageFrame({
   onClose,
 }: {
   src: string
-  onSave: (base64: string) => Promise<void>
+  onSave: (dataUrl: string) => Promise<void>
   onDelete: () => void
   onClose: () => void
 }) {
@@ -206,8 +206,7 @@ export default function ImageFrame({
     try {
       const r = srcRect()
       const outW = Math.min(1400, r.vwBase / zoom)
-      const dataUrl = cropToWebP(img, r, outW, outW / A)
-      await onSave(dataUrl.split(',')[1] ?? '')
+      await onSave(cropToWebP(img, r, outW, outW / A))
     } finally {
       setSaving(false)
     }

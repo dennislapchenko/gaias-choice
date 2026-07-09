@@ -60,9 +60,10 @@ static-site build work.
   sibling skeleton), `DELETE /api/content/file` (delete one or more
   content files — `{paths:[…]}` — in a SINGLE commit; the FE passes a post's
   ru+en paths together to wipe both at once),
-  `POST /api/content/image` (commit one browser-downscaled WebP to
-  `frontend/public/images/*.webp` — `{path,contentBase64}`, its own commit, reuses the
-  base64-native Contents API `Save`; the FE's cover/inline image uploads),
+  `POST /api/content/image` (commit one browser-downscaled image to
+  `frontend/public/images/*.{webp,jpg,jpeg}` — `{path,contentBase64}`, its own commit,
+  reuses the base64-native Contents API `Save`; the FE's cover/inline image
+  uploads; WebP normally, JPEG on the mobile-WebKit WebP-encode fallback),
   `POST /api/content/template` (the draft
   composer's title→prompts enrichment — `session: [editor]`, 503 when no
   model configured), `POST /api/content/translate` (translate a whole content
@@ -242,9 +243,13 @@ inline images; both open the shared `ImagePicker`, which offers two sources
 side by side: the site's image library (grid) and a "from your device"
 upload button (header). Upload path:
 `lib/image.ts` `downscaleToWebP` (shared with avatars) shrinks the pick to a
-≤1400px WebP in-browser, then `uploadImage` (`POST /content/image`) commits it
-to `frontend/public/images/<slug-of-title>-<base36ts>.webp` as its own commit and hands
-back the `/images/<name>` path — the cover control sets the `image:` scalar
+≤1400px WebP in-browser — **or JPEG where the browser can't encode WebP from a
+canvas** (older iOS / in-app WebViews silently return a huge lossless PNG for
+`toDataURL('image/webp')`, which blew the size caps; that was the "mobile upload
+does nothing" bug — `encodeLossy` detects it and falls back to JPEG) — then
+`uploadImage` (`POST /content/image`) commits it to
+`frontend/public/images/<slug-of-title>-<base36ts>.<webp|jpg>` (extension follows
+the encoded mime) as its own commit and hands back the `/images/<name>` path — the cover control sets the `image:` scalar
 (`applyScalarEdit`), inline splices `![](path)` at the caret. So covers are
 real optimized files (not data-URI bundle bloat), matching `ProductCard`.
 **Saving an RU post mirrors the cover (`image:`) to its EN sibling** in the

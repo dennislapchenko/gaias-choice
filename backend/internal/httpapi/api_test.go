@@ -612,8 +612,14 @@ func TestUploadImage(t *testing.T) {
 		t.Errorf("response: %+v", resp)
 	}
 
-	// Path outside public/images or not .webp ⇒ 400 (never reaches upstream).
-	for _, bad := range []string{"content/x.md", "public/images/x.png", "public/other/x.webp"} {
+	// JPEG is allowed too (mobile-WebKit WebP-encode fallback).
+	jpg, _ := json.Marshal(map[string]string{"path": "frontend/public/images/hero-abc.jpg", "contentBase64": b64})
+	if w := do(r, http.MethodPost, "/api/content/image", token, string(jpg)); w.Code != http.StatusOK {
+		t.Errorf("jpg upload: got %d, want 200", w.Code)
+	}
+
+	// Path outside public/images or an unsupported type ⇒ 400 (never reaches upstream).
+	for _, bad := range []string{"content/x.md", "public/images/x.png", "public/other/x.webp", "frontend/public/images/x.png"} {
 		body, _ := json.Marshal(map[string]string{"path": bad, "contentBase64": b64})
 		if w := do(r, http.MethodPost, "/api/content/image", token, string(body)); w.Code != http.StatusBadRequest {
 			t.Errorf("bad path %q: got %d, want 400", bad, w.Code)
