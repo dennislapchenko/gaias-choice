@@ -24,7 +24,22 @@ import { useEffect } from 'react'
 export function useVisibleViewportVars(open: boolean): void {
   useEffect(() => {
     if (!open) return
+    const body = document.body
     const rootStyle = document.documentElement.style
+
+    // Scroll-lock the page behind the overlay: without it a vertical swipe on any
+    // non-scrollable part of the modal (e.g. the image strip) scroll-chains to
+    // the page underneath. position:fixed (not overflow:hidden) is what iOS
+    // actually respects; scrollY is captured and restored exactly on cleanup.
+    // Orthogonal to --vv-top below (that handles the iOS keyboard VISUAL-viewport
+    // pan, which a body lock does NOT prevent).
+    const scrollY = window.scrollY
+    body.style.position = 'fixed'
+    body.style.top = `-${scrollY}px`
+    body.style.left = '0'
+    body.style.right = '0'
+    body.style.width = '100%'
+
     const vv = window.visualViewport
     const apply = () => {
       if (!vv) return
@@ -52,6 +67,12 @@ export function useVisibleViewportVars(open: boolean): void {
       vv?.removeEventListener('scroll', apply)
       rootStyle.removeProperty('--vv-h')
       rootStyle.removeProperty('--vv-top')
+      body.style.position = ''
+      body.style.top = ''
+      body.style.left = ''
+      body.style.right = ''
+      body.style.width = ''
+      window.scrollTo(0, scrollY)
     }
   }, [open])
 }

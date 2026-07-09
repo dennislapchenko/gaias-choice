@@ -3425,9 +3425,13 @@ a.respected-card:hover {
     gap: 12px;
     padding: 16px 20px;
     max-height: 40vh;
-    overflow: auto;
+    /* Vertical scroll only — a field slightly wider than the column (number/date
+       inputs, the scores row) must never let the grid drift sideways. */
+    overflow-x: hidden;
+    overflow-y: auto;
     overscroll-behavior: contain;
     flex: none;
+    min-width: 0;
 }
 .ce-field {
     display: grid;
