@@ -276,7 +276,11 @@ translation stamped `translatedFrom:` so the EN "in the works" rail entry reads
 in English while the body stays skeletal, or a verbatim copy when the
 translator is offline; the real body translation lands on the first Active
 flip); the EN title/excerpt this establishes is what later Active flips pin to.
-**EN posts never drive RU — Russian stays
+The reverse seed is asymmetric: a **brand-new EN draft auto-seeds its RU sibling
+as the WHOLE enriched file translated** (`siblingSkeleton` again) — a real
+skeleton the owner hand-finishes into the human source, left **unmarked** (no
+`translatedFrom:` — RU never carries an AI mark), since create-time is RU's only
+machine assist. **After that, EN posts never drive RU — Russian stays
 human-authored** (the RU-is-source-of-truth rule, see SKILL.md #6).
 `setPostState` is the public action on
 `components/StateToggle.tsx` (the iPhone-style switch on

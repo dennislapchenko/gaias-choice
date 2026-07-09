@@ -783,30 +783,34 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       if (!(err instanceof ApiError && err.status === 404)) throw err
     }
     if (exists) throw new Error(t('editor.exists', { path: mode.path }))
-    // A new draft + its sibling-locale skeleton land in ONE commit: the sibling
-    // exists from the start (so the other locale's "in the works" rail shows it),
-    // with only its title/excerpt translated — the body is filled later (a RU→EN
-    // sibling on the first Active flip; an EN→RU sibling by hand). See
-    // siblingSkeleton.
+    // A new draft + its sibling-locale skeleton land in ONE commit, so the other
+    // locale's "in the works" rail shows it from the start. What the sibling
+    // carries is asymmetric (see siblingSkeleton): a RU→EN sibling is
+    // frontmatter-only (its body lands on the first Active flip); an EN→RU
+    // sibling is the whole file translated — a real skeleton the owner refines
+    // into the human source.
     const files = [{ path: mode.path, content: value }]
     const skeleton = await siblingSkeleton(mode.path, value)
     if (skeleton) files.push(skeleton)
     await commitFiles(files, mode.message, token ?? undefined)
   }
 
-  // Build the sibling skeleton for a brand-new draft in either locale: translate
-  // the FRONTMATTER ONLY (title/excerpt — one cheap call) so the other locale's
-  // rail entry reads in its language, leaving the body skeletal. State forced
-  // upcoming; translator offline ⇒ a verbatim copy so the stub still exists. Null
-  // for a path outside products/journal. Committed together with the draft.
-  //
-  // The two directions are deliberately asymmetric (SKILL.md #6): a RU draft's EN
-  // sibling is a permanent machine EXPORT, so it's stamped `translatedFrom: ru`
-  // (and its body is fully translated on the first Active flip). An EN draft's RU
-  // sibling is only SCAFFOLDING the owner hand-finishes into the human source, so
-  // it's left unmarked — RU never carries an AI-translation mark. Seeding never
-  // overwrites an existing sibling (saveDraft's pre-flight refuses that), so
-  // hand-written RU is safe.
+  // Build the sibling skeleton for a brand-new draft, committed with it. State
+  // forced upcoming; translator offline ⇒ a verbatim copy so the stub still
+  // exists. Null for a path outside products/journal. The two directions are
+  // deliberately asymmetric in BOTH what they translate and how they're marked
+  // (SKILL.md #6):
+  //   RU→EN — a permanent machine EXPORT: FRONTMATTER ONLY (title/excerpt, one
+  //     cheap call) so the EN rail entry reads in English; stamped
+  //     `translatedFrom: ru`. The body is (re)translated on the first Active
+  //     flip, so translating it now would just be thrown away.
+  //   EN→RU — SCAFFOLDING the owner hand-finishes into the human source: the
+  //     WHOLE enriched file, translated, so RU has a real draft to refine (a
+  //     title-only stub left them nothing). Left unmarked — RU never carries an
+  //     AI-translation mark. This is RU's ONLY machine assist: nothing else ever
+  //     pushes EN prose into RU.
+  // Seeding never overwrites an existing sibling (saveDraft's pre-flight refuses
+  // that), so hand-written RU is safe.
   const siblingSkeleton = async (
     path: string,
     value: string,
@@ -820,8 +824,10 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     let content: string
     try {
       if (!fm) throw new Error('draft has no frontmatter')
-      // Translate just the `---`-delimited frontmatter block (no body).
-      let out = await translateContent(`${fm[1]}${fm[2]}${fm[3]}`, to, token ?? undefined)
+      // EN→RU translates the whole file (full skeleton); RU→EN just the
+      // `---`-delimited frontmatter block (the body lands on the Active flip).
+      const source = to === 'ru' ? value : `${fm[1]}${fm[2]}${fm[3]}`
+      let out = await translateContent(source, to, token ?? undefined)
       if (!FRONTMATTER_RE.test(out)) throw new Error('translation returned no frontmatter')
       if (to === 'en') out = applyScalarEdit(out, { file: siblingPath, path: ['translatedFrom'] }, 'ru')
       out = applyScalarEdit(out, { file: siblingPath, path: ['state'] }, 'upcoming')
