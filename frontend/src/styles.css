@@ -3615,9 +3615,14 @@ a.respected-card:hover {
    the strip above it is only ~130px — too short to stack header + toolbar +
    field + actions. Drop the flex column that shrinks everything to nothing and
    scroll the whole modal as ONE column instead, so the focused field (iOS
-   scrolls it into view) and the Save row are both reachable. (Portrait phones
-   have innerHeight ~800+, so this never touches them.) */
-@media (max-height: 430px) {
+   scrolls it into view) and the Save row are both reachable.
+   MUST be `orientation: landscape`: Brave/Chrome/Firefox on iOS SHRINK
+   window.innerHeight when the keyboard opens (measured 401px in portrait), so a
+   bare `max-height:430` also matches portrait-with-keyboard there and wrongly
+   switched the sheet to block layout (content packed to the top, big gap below
+   Save). In that state width<height ⇒ portrait, so the orientation guard
+   excludes it; Safari keeps innerHeight ~800 and never tripped this. */
+@media (max-height: 430px) and (orientation: landscape) {
     .content-editor-overlay {
         padding: 0;
         display: block;
