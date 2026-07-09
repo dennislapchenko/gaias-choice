@@ -8,7 +8,3 @@ dist/
 !.env.example
 .secrets
 .vite/
-
-# Local-only content sandbox: reviews/journals that show on localhost (task dev)
-# but never ship. Overlays content/ by same-slug; see frontend/src/lib/content.ts.
-content-local/

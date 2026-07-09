@@ -1,7 +1,6 @@
 import { parse as parseYaml } from 'yaml'
 import { marked, Renderer } from 'marked'
 import { withBaseHtml } from './asset'
-import { DEBUG } from './debug'
 import themesRaw from '../../../content/themes.yaml?raw'
 import type { CompassEntry, Entry, JournalEntry, Page, PostState, Product, SiteConfig, Theme } from './types'
 import type { Locale } from './i18n'
@@ -267,44 +266,15 @@ const templateModules = import.meta.glob('../../../content/shared/*-template.*.m
   eager: true,
 }) as Record<string, string>
 
-// --- Local sandbox overlay (dev only) -----------------------------------
-// A gitignored content-local/ mirror lets localhost carry its own
-// reviews/journals without them ever shipping. Same folder layout
-// (content-local/locales/<lng>/{products,journal}/*.md); a file here overrides
-// the same-slug file in content/, and new slugs are added. DEBUG-gated, so the
-// prod Pages build tree-shakes it away. Extend to compass/pages by adding a
-// glob + a withLocalOverlay() call. Missing dir = zero matches (no error).
-const localProductModules = import.meta.glob('../../../content-local/locales/*/products/*.md', {
-  query: '?raw', import: 'default', eager: true,
-}) as Record<string, string>
-
-const localJournalModules = import.meta.glob('../../../content-local/locales/*/journal/*.md', {
-  query: '?raw', import: 'default', eager: true,
-}) as Record<string, string>
-
-// Rewrite content-local/ keys to their content/ equivalent so a same-slug file
-// overrides in place (identical key) and localeAndSlugFromPath still parses.
-function withLocalOverlay(
-  base: Record<string, string>,
-  overlay: Record<string, string>,
-): Record<string, string> {
-  if (!DEBUG) return base
-  const merged = { ...base }
-  for (const [path, raw] of Object.entries(overlay)) {
-    merged[path.replace('/content-local/', '/content/')] = raw
-  }
-  return merged
-}
-
 const siteByLocale: Partial<Record<Locale, SiteConfig>> = {}
 for (const [path, raw] of Object.entries(siteModules)) {
   const match = /content\/locales\/([^/]+)\/site\.yaml$/.exec(path)
   siteByLocale[(match?.[1] ?? 'en') as Locale] = parseYaml(raw) as SiteConfig
 }
 
-const productsByLocale = loadCollection<Product>(withLocalOverlay(productModules, localProductModules), 'products')
+const productsByLocale = loadCollection<Product>(productModules, 'products')
 const compassByLocale = loadCollection<CompassEntry>(compassModules, 'compass')
-const journalByLocale = loadCollection<JournalEntry>(withLocalOverlay(journalModules, localJournalModules), 'journal')
+const journalByLocale = loadCollection<JournalEntry>(journalModules, 'journal')
 const pagesByLocale = loadCollection<Page>(pageModules, 'pages')
 sortByDate(productsByLocale)
 sortByDate(compassByLocale)

@@ -165,13 +165,6 @@ OrbStack: `open -a OrbStack`, wait ~15s, retry.
   is **human-written** (unlike Compass) — real notes only, no fabricated trips; the
   seed `driving-with-a-toddler.md` is an explicit fill-in template. The reusable
   scaffold behind the page's "copy template" button is `content/shared/journal-template.<locale>.md`.
-- **Local-only reviews/journals (dev sandbox):** drop `.md` files under the
-  gitignored `content-local/locales/<lng>/{products,journal}/` (same frontmatter
-  as the real ones). `content.ts`'s `withLocalOverlay` merges them over `content/`
-  by same-slug (a local file overrides that slug; new slugs are added) — but only
-  when `DEBUG`, so they show on `task dev` and are tree-shaken out of the prod
-  Pages build. Never commit, never ship. Extend to compass/pages by adding a glob
-  + `withLocalOverlay()` call in `content.ts`.
 - **Sidebar composition is content-driven:** the left-rail panels + their
   order come from `site.yaml`'s `sidebar:` list (per locale), each entry a
   `type` mapped to an entry in `src/components/Sidebar.tsx`'s `PANELS`
