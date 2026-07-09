@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 // SPA build. Content is pulled in at build time via import.meta.glob (see src/lib/content.ts).
 export default defineConfig({
-  // "/" for local dev and the Cloud Run/nginx container; the GitHub Pages
+  // "/" for local dev and the nginx container; the GitHub Pages
   // workflow sets BASE_PATH=/gaias-choice/ for the project-page subpath.
   base: process.env.BASE_PATH || '/',
   plugins: [react()],

@@ -13,10 +13,12 @@ COPY content /app/content
 COPY frontend /app/frontend
 RUN npm run build
 
-# ---- Runtime stage: static files served by nginx on Cloud Run's $PORT ----
+# ---- Runtime stage: static files served by nginx on $PORT ----
 FROM nginx:1.27-alpine AS runtime
 
-# Cloud Run injects PORT (default 8080); the nginx image envsubst's this template at boot.
+# PORT (default 8080) is envsubst'd into the nginx template at boot; a container
+# host can override it. GitHub Pages is the live target — this image is for
+# `task run` (local prod check) and any future container deploy.
 ENV PORT=8080
 COPY frontend/nginx/default.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build /app/frontend/dist /usr/share/nginx/html

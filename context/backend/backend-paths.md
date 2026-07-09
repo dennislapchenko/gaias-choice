@@ -43,8 +43,8 @@ Everything below is the analysis the decision was based on.
    computes in-browser). This means the FE↔BE seam is greenfield.
 2. **Live deploy is GitHub Pages** (push to `main` → static publish). Pages
    cannot host a backend, so any BE is a *second origin* until the owner
-   moves hosting. The existing `Dockerfile` (node build → nginx runtime) is
-   the dormant Cloud Run path.
+   moves hosting. The `frontend/Dockerfile` (node build → nginx runtime) is a
+   portable static-serving image, not tied to any host.
 3. **All tooling is containerized** — npm runs in `node:22-alpine` with deps
    in the `gaias-choice-node-modules` volume (`Taskfile.yml` `NODE_RUN`).
    A backend toolchain must follow the same stance: nothing installed on the

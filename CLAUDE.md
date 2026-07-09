@@ -36,7 +36,8 @@ and the **Journal** (the handwritten record of the road). It is a
   runtime content fetching. An **optional** Go API sidecar (`backend/`, off by
   default) adds progressive-enhancement features (see "Backend" below).
 - **Serving:** static build via nginx in a container. Live deploy is GitHub
-  Pages (push to `main`); Cloud Run remains a supported target.
+  Pages (push to `main`). The nginx image (`frontend/Dockerfile`, `task run`)
+  is the local prod check and works on any container host if ever needed.
 
 ## Golden rules
 
@@ -296,13 +297,13 @@ type-check). The full command table — FE, the `be:*` backend tasks, deploy,
 
 Multi-stage `frontend/Dockerfile` (built from repo root so it can bundle
 `content/`): `node:22-alpine` builds, `nginx:1.27-alpine` serves the SPA on
-`$PORT` (default 8080; Cloud Run injects it). **SPA fallback:**
+`$PORT` (default 8080, overridable by a container host). **SPA fallback:**
 unknown paths return `index.html` so client routing works (nginx template +
 asset-404 nuances: development.md gotchas). **Live deploy is GitHub Pages:**
 every push to `main` triggers `.github/workflows/deploy-pages.yml`
-(`BASE_PATH` drives the Vite base). Cloud Run (`task deploy`) remains
-available but is not the current default. Commit/push rules: SKILL.md
-"Committing & shipping".
+(`BASE_PATH` drives the Vite base). The nginx image (`task run`) is the local
+prod check and a fallback for any future container host. Commit/push rules:
+SKILL.md "Committing & shipping".
 
 ## Backend (optional Go/gin API sidecar)
 

@@ -10,10 +10,8 @@ version: '3'
 vars:
   NODE_IMAGE: node:22-alpine
   IMAGE: gaias-choice
-  PORT: '8080' # Cloud Run runtime port (nginx)
+  PORT: '8080' # nginx serve port for the local prod image (task run)
   DEV_PORT: '5173' # Vite dev server
-  REGION: europe-west1
-  SERVICE: gaias-choice
   VOLUME: gaias-choice-node-modules
   # Backend (Go) settings — same containerized-toolchain stance as the FE.
   GO_IMAGE: golang:1.25-alpine
@@ -190,17 +188,6 @@ tasks:
     deps: [image]
     cmds:
       - docker run --rm -p {{.PORT}}:{{.PORT}} {{.IMAGE}}
-
-  deploy:
-    desc: Deploy to Google Cloud Run from source (override with REGION=... SERVICE=...)
-    cmds:
-      # ponytail: --source . no longer autodetects a Dockerfile (it moved to
-      # frontend/Dockerfile). Pages is the live target; if Cloud Run is ever
-      # revived, build+push the image (task image) and `gcloud run deploy
-      # --image ...`, or add a root cloudbuild.yaml pointing at frontend/Dockerfile.
-      - >-
-        gcloud run deploy {{.SERVICE}} --source . --region {{.REGION}}
-        --allow-unauthenticated --port {{.PORT}}
 
   verify:
     desc: Full local check — audit, typecheck, and a production image build

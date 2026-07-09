@@ -16,9 +16,9 @@ public by a real camper family.
   `node_modules` in a Docker volume — nothing touches the host, and
   [`.npmrc`](frontend/.npmrc) sets `ignore-scripts=true`. Six runtime dependencies.
 - **Deploy:** GitHub Pages on every push to `main`
-  ([`deploy-pages.yml`](.github/workflows/deploy-pages.yml)); the
-  [`frontend/Dockerfile`](frontend/Dockerfile) (nginx, `$PORT`-aware) keeps
-  Cloud Run as an alternate target.
+  ([`deploy-pages.yml`](.github/workflows/deploy-pages.yml)). The
+  [`frontend/Dockerfile`](frontend/Dockerfile) (nginx, `$PORT`-aware) builds a
+  local prod image (`task run`) and stays portable to any container host.
 
 ```bash
 task dev        # FE (Vite :5173) + optional Go backend (:8787) together

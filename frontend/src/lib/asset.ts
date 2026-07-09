@@ -1,5 +1,5 @@
 // Resolve root-absolute asset paths against Vite's base URL so images work
-// whether the site is served at "/" (local dev, Cloud Run/nginx) or under a
+// whether the site is served at "/" (local dev, nginx image) or under a
 // subpath like "/gaias-choice/" (GitHub Pages project page). BASE_URL always
 // ends with a trailing slash.
 const BASE = import.meta.env.BASE_URL

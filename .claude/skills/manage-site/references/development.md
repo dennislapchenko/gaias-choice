@@ -71,16 +71,16 @@ Keep this table current — when you add/rename/change a component, update the r
 | `task lock` | regenerate lockfile (no scripts) |
 | `task image` | build the production Docker image (static site) |
 | `task verify` | audit + typecheck + image build |
-| `task run` | build image + run on :8080 |
-| `task deploy` | `gcloud run deploy --source .` (Cloud Run — not the current live path) |
+| `task run` | build image + run on :8080 (local prod check — nginx SPA fallback) |
 | `task clean` | remove dist, deps volume, task cache, image |
 
 `task dev` regenerates deps only when `package.json`/`package-lock.json` change
 (tracked via `.task/`); `task clean` resets deps entirely.
 
-**Live deploy is GitHub Pages, triggered by pushing `main`** (`.github/workflows/deploy-pages.yml`),
-not `task deploy`. Treat a push to `main` as shipping to production. `task deploy`
-(Cloud Run) remains available but isn't the current default.
+**Live deploy is GitHub Pages, triggered by pushing `main`** (`.github/workflows/deploy-pages.yml`).
+Treat a push to `main` as shipping to production. The nginx image (`task run`,
+`frontend/Dockerfile`) is the local prod check and a fallback for any future
+container host — there is no active non-Pages deploy path.
 
 Docker daemon down (`Cannot connect to the Docker daemon`)? This machine uses
 OrbStack: `open -a OrbStack`, wait ~15s, retry.

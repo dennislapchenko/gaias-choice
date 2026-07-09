@@ -50,7 +50,7 @@ jobs:
         run: npm run build
         env:
           # Project page lives under /gaias-choice/. vite.config.ts reads this;
-          # local/Cloud Run builds leave it unset and serve from "/".
+          # local/container builds leave it unset and serve from "/".
           BASE_PATH: /gaias-choice/
           # Point the SPA at the backend on the VM (Caddy-terminated TLS). Not a
           # secret — just the public API base. api.ts falls back to same-origin
