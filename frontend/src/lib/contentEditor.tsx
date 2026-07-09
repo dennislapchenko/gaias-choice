@@ -284,6 +284,10 @@ function VvDebug() {
   }, [])
   const vv = window.visualViewport
   const cssVar = getComputedStyle(document.documentElement).getPropertyValue('--vv-h')
+  const modal = document.querySelector('.content-editor')?.getBoundingClientRect()
+  const actions = document.querySelector('.content-editor-actions')?.getBoundingClientRect()
+  const ta = document.querySelector('.content-editor-body-textarea')?.getBoundingClientRect()
+  const r = (n?: number) => (n == null ? '-' : Math.round(n))
   return (
     <div
       style={{
@@ -300,7 +304,11 @@ function VvDebug() {
         whiteSpace: 'pre',
       }}
     >
-      {`vv.h=${vv ? Math.round(vv.height) : 'none'} vv.top=${vv ? Math.round(vv.offsetTop) : '-'}\ninnerH=${window.innerHeight} scrollY=${Math.round(window.scrollY)}\n--vv-h=${cssVar.trim() || 'unset'}`}
+      {`vv.h=${vv ? r(vv.height) : 'none'} vv.top=${vv ? r(vv.offsetTop) : '-'}\n` +
+        `innerH=${window.innerHeight} scrollY=${r(window.scrollY)}\n` +
+        `--vv-h=${cssVar.trim() || 'unset'}\n` +
+        `modal top=${r(modal?.top)} bot=${r(modal?.bottom)} h=${r(modal?.height)}\n` +
+        `ta bot=${r(ta?.bottom)}  actions top=${r(actions?.top)} bot=${r(actions?.bottom)}`}
     </div>
   )
 }
@@ -909,7 +917,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       {children}
       {state && (
         <div className="content-editor-overlay" onClick={attemptClose}>
-          {DEBUG && <VvDebug />}
+          {(DEBUG || location.search.includes('vvd')) && <VvDebug />}
           <div
             className="content-editor"
             role="dialog"
