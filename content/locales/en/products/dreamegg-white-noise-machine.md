@@ -1,14 +1,16 @@
 ---
+image: /images/dreamegg-white-noise-machine-mrctcfee.webp
 title: "Dreamegg White Noise Machine"
-state: upcoming            # queued "in the works" — delete this line (or set active) when the review is finished
-category: Sleep            # Sleep | Feeding | Care | Kitchen | Travel — the filter chip on /reviews
-scores: [4, 4, 4]  # Gaia Score — one 0–5 per criterion in site.yaml ratingCriteria, in order
-price: "€00"               # what you actually paid; always quote it
+state: upcoming # queued "in the works" — delete this line (or set active) when the review is finished
+category: Sleep # Sleep | Feeding | Care | Kitchen | Travel — the filter chip on /reviews
+scores: [4, 4, 4] # Gaia Score — one 0–5 per criterion in site.yaml ratingCriteria, in order
+price: "€00" # what you actually paid; always quote it
 # affiliateUrl: "https://www.amazon.de/-/en/dp/B0B156917Z?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1&th=1"  # ONLY once enrolled in the program — never a placeholder
 excerpt: "<one honest sentence a friend would text you about it>"
 # image: /images/review-<slug>.webp   # real photo (run `task images`) or mandala SVG
-date: 2026-07-06           # today; controls list order
-tags: []                   # optional, e.g. [organic, cotton]
+date: 2026-07-06 # today; controls list order
+tags: [] # optional, e.g. [organic, cotton]
+gallery: [/images/review-beeswax-food-wraps.svg, /images/dreamegg-white-noise-machine-mrctcxwn.webp]
 ---
 
 <!--
@@ -17,7 +19,7 @@ tags: []                   # optional, e.g. [organic, cotton]
   every review: keep them all, fill them honestly, and cut the prompts before
   you ship.
 -->
-
+![biletos](/images/dreamegg-white-noise-machine-mrctcxwn.webp)
 **Verdict:** the answer in one or two sentences, for the reader who leaves
 after ten seconds. Would you buy it again?
 
