@@ -7,8 +7,8 @@ Method: agent-efficiency-housekeeping audit, 2026-07-09 measurements.
 (−41%, ≈ −3.9k tokens/session — the 16–17 KB estimate below proved optimistic
 once every invariant was kept; the remainder is load-bearing); the five skill
 descriptions 3.6 KB → 2.3 KB. Repo total ≈ −4.2k tokens/session. Phase 3
-(ponytail per-repo toggle, chrome/computer-use disconnect) is the owner's
-call and still open; phase 4 untouched.
+resolved: **computer-use disconnected** for this project; **ponytail kept on**
+(owner's call — the plugin stays active here). Phase 4 untouched.
 
 ## Where the 50k actually goes (measured/estimated)
 

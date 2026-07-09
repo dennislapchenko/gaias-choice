@@ -40,7 +40,12 @@ Run when the user asks, or **proactively suggest it** when any of these is true:
   recent runs (git history shows repeated small fixes to the same doc section).
 - **Context bloat** — CLAUDE.md, a SKILL.md, or a reference has grown a section
   that duplicates another doc, keeps changelog/history framing, or restates the
-  code. Loaded-every-run prose that isn't pulling weight is a token tax.
+  code. Loaded-every-run prose that isn't pulling weight is a token tax. Root
+  cause to watch: `feat:` commits routing component/CSS/flow prose into the
+  always-loaded CLAUDE.md instead of an on-demand `references/` row — the guard
+  is CLAUDE.md's doc-layout rule (one sentence + pointer; mechanics to a
+  development.md row). A run of small CLAUDE.md growth across recent feature
+  commits is the tell.
 
 ## Evidence to gather (read before judging)
 
@@ -60,6 +65,21 @@ Run when the user asks, or **proactively suggest it** when any of these is true:
   stranded.
 - Outside the repo: `~/.claude/skills/` (duplicate/drifted copies of repo
   skills), personal auto-memory holding **shared** process knowledge.
+
+**Measuring the token win (before proposing cuts).** Size by owner, because the
+repo only controls part of the fresh load — chasing a total-context target the
+repo can't reach wastes the pass. Rough buckets of a ~50k fresh session: harness
+system prompt + core tool schemas ~13–15k and built-in skill descriptions ~5–6k
+(**not touchable**); desktop-app MCP schemas (Claude_Preview/visualize/ccd) +
+their instructions ~7k (**app-UI toggle only**, ~10k floor in the desktop app);
+**the repo owns only ~10.5k** — CLAUDE.md (~9.5k) + the repo skill descriptions
+(~0.9k) — plus user-level toggles (ponytail hook+descriptions ~2k, chrome/
+computer-use ~2.5k). So repo work alone lands the total ~44k; the 20–30k range is
+only reachable in a plain CLI session (no app MCP layer). Set the target against
+the bucket you can actually move. Estimate tokens as bytes ÷ ~3.8 for prose (path-
+/JSON-dense text skews higher); verify with `wc -c` byte targets per file and
+`/context` before/after in a fresh session. Full worked example:
+`context/token-budget/action-plan.md`.
 
 ## Defect taxonomy (hunt in priority order)
 
