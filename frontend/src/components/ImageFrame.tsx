@@ -46,6 +46,8 @@ export default function ImageFrame({
   const [caption, setCaption] = useState('')
   const pointers = useRef(new Map<number, { x: number; y: number }>())
   const pinchDist = useRef(0)
+  const pinchMid = useRef({ x: 0, y: 0 }) // last two-finger midpoint (client px)
+  const frameRect = useRef<DOMRect | null>(null) // canvas rect, cached per gesture
   const [hintOn, setHintOn] = useState(true) // gesture hint fades out after 2s
 
   useEffect(() => {
@@ -120,12 +122,17 @@ export default function ImageFrame({
     const canvas = canvasRef.current
     if (!canvas || !img || box.w === 0) return
     const dpr = window.devicePixelRatio || 1
-    canvas.width = Math.round(box.w * dpr)
-    canvas.height = Math.round(box.h * dpr)
+    const w = Math.round(box.w * dpr)
+    const h = Math.round(box.h * dpr)
+    // Only resize the backing store when the box actually changes — reallocating
+    // it every pan/zoom frame is what made dragging/pinching lurch on iOS.
+    if (canvas.width !== w) canvas.width = w
+    if (canvas.height !== h) canvas.height = h
     const ctx = canvas.getContext('2d')
     if (!ctx) return
     const r = srcRect()
-    ctx.drawImage(img, r.x, r.y, r.w, r.h, 0, 0, canvas.width, canvas.height)
+    ctx.clearRect(0, 0, w, h)
+    ctx.drawImage(img, r.x, r.y, r.w, r.h, 0, 0, w, h)
   }, [img, box, srcRect])
 
   // Non-passive wheel so preventDefault sticks (page must not scroll while zooming).
@@ -167,12 +174,37 @@ export default function ImageFrame({
     setDirty(true)
   }
 
+  // Pinch: zoom by `factor` about the finger midpoint AND follow the midpoint as
+  // it drags, so the pinched content tracks your fingers. Zooming about a fixed
+  // stored center (the old behaviour) made the image slide away from the pinch —
+  // the "unbearable" part on touch. Anchors the source point that was under the
+  // *previous* midpoint to the *current* one at the new zoom.
+  const pinchZoom = (factor: number, mid: { x: number; y: number }) => {
+    const rect = frameRect.current
+    if (!rect || box.w === 0) return
+    const r = srcRect()
+    const vwBase = Math.min(nat.w, nat.h * A)
+    const z1 = clamp(zoom * factor, 1, 8)
+    const vw1 = vwBase / z1
+    const vh1 = vwBase / A / z1
+    const pm = pinchMid.current
+    const fx = r.x + ((pm.x - rect.left) / box.w) * r.w // source under prev midpoint
+    const fy = r.y + ((pm.y - rect.top) / box.h) * r.h
+    const px = (mid.x - rect.left) / box.w // current midpoint, normalized to the box
+    const py = (mid.y - rect.top) / box.h
+    setZoom(z1)
+    setCenter({ x: (fx - px * vw1 + vw1 / 2) / nat.w, y: (fy - py * vh1 + vh1 / 2) / nat.h })
+    setDirty(true)
+  }
+
   const onPointerDown = (e: React.PointerEvent) => {
     ;(e.target as Element).setPointerCapture(e.pointerId)
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
     if (pointers.current.size === 2) {
       const [a, b] = [...pointers.current.values()]
       pinchDist.current = Math.hypot(a.x - b.x, a.y - b.y)
+      pinchMid.current = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }
+      frameRect.current = canvasRef.current?.getBoundingClientRect() ?? null
     }
   }
   const onPointerMove = (e: React.PointerEvent) => {
@@ -182,11 +214,10 @@ export default function ImageFrame({
     if (pointers.current.size === 2) {
       const [a, b] = [...pointers.current.values()]
       const d = Math.hypot(a.x - b.x, a.y - b.y)
-      if (pinchDist.current > 0) {
-        setZoom((z) => clamp(z * (d / pinchDist.current), 1, 8))
-        setDirty(true)
-      }
+      const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }
+      if (pinchDist.current > 0) pinchZoom(d / pinchDist.current, mid)
       pinchDist.current = d
+      pinchMid.current = mid
     } else if (pointers.current.size === 1) {
       panBy(e.clientX - prev.x, e.clientY - prev.y)
     }
