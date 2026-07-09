@@ -1,13 +1,14 @@
 ---
 title: Спальный мешок из мериносовой шерсти
 category: Сон
-scores: [5, 5, 5]  # Gaia Score — one 0–5 per criterion in site.yaml ratingCriteria, in order
+scores: [5, 5, 5] # Gaia Score — one 0–5 per criterion in site.yaml ratingCriteria, in order
 price: "€46"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE4?tag=gaiaschoice-20"
 excerpt: Спальный мешок из мериноса с терморегуляцией, который обеспечивает комфорт малышу и в прохладные ночи, и в тёплые дни.
 image: /images/review-wool-sleep-sack.svg
 date: 2026-06-28
 tags: [wool, sleep, temperature]
+boughtAt: "У 3инки"
 ---
 
 Сон — это то, что делает поездку удачной или проваливает её, и обычно
