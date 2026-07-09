@@ -155,7 +155,7 @@ type DeleteContentJSONBody struct {
 	// Message Commit message; defaulted when omitted.
 	Message *string `json:"message,omitempty"`
 
-	// Paths Repo-relative paths; each must live under content/ or be a public/images/*.webp file.
+	// Paths Repo-relative paths; each must live under content/ or be a frontend/public/images/*.webp file.
 	Paths []string `json:"paths"`
 }
 
@@ -170,7 +170,7 @@ type UploadImageJSONBody struct {
 	// ContentBase64 The image bytes, base64-encoded; decoded size capped server-side.
 	ContentBase64 string `json:"contentBase64"`
 
-	// Path Repo-relative target; must be public/images/*.webp.
+	// Path Repo-relative target; must be frontend/public/images/*.webp.
 	Path string `json:"path"`
 }
 
@@ -304,7 +304,7 @@ type ServerInterface interface {
 	// Read one content/ file (text + opaque sha for concurrency)
 	// (GET /content/file)
 	GetContentFile(c *gin.Context, params GetContentFileParams)
-	// Commit one uploaded image to public/images/ (a git commit in prod)
+	// Commit one uploaded image to frontend/public/images/ (a git commit in prod)
 	// (POST /content/image)
 	UploadImage(c *gin.Context)
 	// Write one content/ file (a git commit in prod, a working-tree write in dev)
@@ -2236,7 +2236,7 @@ type StrictServerInterface interface {
 	// Read one content/ file (text + opaque sha for concurrency)
 	// (GET /content/file)
 	GetContentFile(ctx context.Context, request GetContentFileRequestObject) (GetContentFileResponseObject, error)
-	// Commit one uploaded image to public/images/ (a git commit in prod)
+	// Commit one uploaded image to frontend/public/images/ (a git commit in prod)
 	// (POST /content/image)
 	UploadImage(ctx context.Context, request UploadImageRequestObject) (UploadImageResponseObject, error)
 	// Write one content/ file (a git commit in prod, a working-tree write in dev)

@@ -508,7 +508,7 @@ paths:
                   minItems: 1
                   maxItems: 10
                   items: { type: string, maxLength: 512 }
-                  description: Repo-relative paths; each must live under content/ or be a public/images/*.webp file.
+                  description: Repo-relative paths; each must live under content/ or be a frontend/public/images/*.webp file.
                 message:
                   type: string
                   description: Commit message; defaulted when omitted.
@@ -655,12 +655,12 @@ paths:
   /content/image:
     post:
       operationId: uploadImage
-      summary: Commit one uploaded image to public/images/ (a git commit in prod)
+      summary: Commit one uploaded image to frontend/public/images/ (a git commit in prod)
       description: >
-        Writes a browser-downscaled WebP into public/images/ as its own commit,
-        so a post can reference it by /images/<name>. Path must be
-        public/images/*.webp; body is the file's base64. No sha guard (unique
-        filenames, admin-only).
+        Writes a browser-downscaled WebP into frontend/public/images/ as its own
+        commit, so a post can reference it by /images/<name>. Path must be
+        frontend/public/images/*.webp; body is the file's base64. No sha guard
+        (unique filenames, admin-only).
       tags: [content]
       security:
         - session: [editor]
@@ -675,7 +675,7 @@ paths:
                 path:
                   type: string
                   maxLength: 512
-                  description: Repo-relative target; must be public/images/*.webp.
+                  description: Repo-relative target; must be frontend/public/images/*.webp.
                 contentBase64:
                   type: string
                   description: The image bytes, base64-encoded; decoded size capped server-side.

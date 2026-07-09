@@ -467,7 +467,7 @@ func (s *server) DeleteContent(_ context.Context, req DeleteContentRequestObject
 		return DeleteContent400JSONResponse{BadRequestJSONResponse{Error: "no paths"}}, nil
 	}
 	for _, p := range req.Body.Paths {
-		// content/ files (posts) or public/images/*.webp (the picker's delete).
+		// content/ files (posts) or frontend/public/images/*.webp (picker delete).
 		if !content.ValidPath(p) && !content.ValidImagePath(p) {
 			return DeleteContent400JSONResponse{BadRequestJSONResponse{Error: "invalid path"}}, nil
 		}
@@ -530,7 +530,7 @@ func (s *server) CommitContent(_ context.Context, req CommitContentRequestObject
 	return CommitContent200JSONResponse{Paths: res.Paths, Commit: res.Commit}, nil
 }
 
-// UploadImage commits one browser-downscaled WebP into public/images/ as its
+// UploadImage commits one browser-downscaled WebP into frontend/public/images/ as its
 // own commit, so a post can reference it by /images/<name>. Reuses the plain
 // single-file Save (the Contents API is base64-native) — create-only, so a
 // name collision surfaces as 409.

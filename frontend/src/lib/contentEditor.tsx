@@ -443,8 +443,9 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  // Commit one already-encoded WebP (base64, no data: prefix) to public/images/
-  // as its own git commit (POST /content/image), returning the /images/<name>
+  // Commit one already-encoded WebP (base64, no data: prefix) to
+  // frontend/public/images/ as its own git commit (POST /content/image),
+  // returning the /images/<name>
   // path a post references. Names carry a base36 timestamp so writes never
   // collide (a reframe writes a fresh file, leaving the old one orphaned — cheap
   // vs. sha-guarded overwrite). Shared by file uploads and ImageFrame reframes.
@@ -453,7 +454,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       (fmScalar(state?.value ?? '', 'title') ?? state?.title ?? '')
         .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'image'
     const name = `${base}-${Date.now().toString(36)}.webp`
-    await uploadImage(`public/images/${name}`, base64, token ?? undefined)
+    await uploadImage(`frontend/public/images/${name}`, base64, token ?? undefined)
     return '/images/' + name
   }
 
@@ -465,12 +466,12 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
   }
 
   // Delete an image file from the repo (the picker's per-image ×). `path` is the
-  // display path (/images/x.webp); the file lives at public/images/x.webp. Posts
-  // still pointing at it fall back to the leaf placeholder — acknowledged.
+  // display path (/images/x.webp); the file lives at frontend/public/images/x.webp.
+  // Posts still pointing at it fall back to the leaf placeholder — acknowledged.
   const deleteImage = async (path: string): Promise<void> => {
     await apiDelete<DeleteResponse>(
       '/content/file',
-      { paths: [path.replace(/^\/images\//, 'public/images/')] },
+      { paths: [path.replace(/^\/images\//, 'frontend/public/images/')] },
       { token: token ?? undefined },
     )
   }

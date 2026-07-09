@@ -590,7 +590,7 @@ func TestUploadImage(t *testing.T) {
 
 	raw := []byte("\x00\x01\x02not-really-webp-but-bytes")
 	b64 := base64.StdEncoding.EncodeToString(raw)
-	body, _ := json.Marshal(map[string]string{"path": "public/images/hero-abc.webp", "contentBase64": b64})
+	body, _ := json.Marshal(map[string]string{"path": "frontend/public/images/hero-abc.webp", "contentBase64": b64})
 	w := do(r, http.MethodPost, "/api/content/image", token, string(body))
 	if w.Code != http.StatusOK {
 		t.Fatalf("upload: got %d: %s", w.Code, w.Body.String())
@@ -603,12 +603,12 @@ func TestUploadImage(t *testing.T) {
 	if got.SHA != nil {
 		t.Errorf("image create must omit sha, got %v", *got.SHA)
 	}
-	if got.Message != "content: add image public/images/hero-abc.webp via portal" {
+	if got.Message != "content: add image frontend/public/images/hero-abc.webp via portal" {
 		t.Errorf("message: %q", got.Message)
 	}
 	var resp struct{ Path, Commit string }
 	json.Unmarshal(w.Body.Bytes(), &resp)
-	if resp.Path != "public/images/hero-abc.webp" || resp.Commit != "imgcommit" {
+	if resp.Path != "frontend/public/images/hero-abc.webp" || resp.Commit != "imgcommit" {
 		t.Errorf("response: %+v", resp)
 	}
 

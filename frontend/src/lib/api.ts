@@ -212,7 +212,8 @@ export function commitFiles(
 }
 
 /** POST /api/content/image — commit one browser-downscaled WebP into
- *  public/images/ as its own commit. `path` must be public/images/*.webp;
+ *  frontend/public/images/ as its own commit. `path` must be
+ *  frontend/public/images/*.webp;
  *  `contentBase64` is the raw file bytes base64-encoded. */
 export interface ImageUploadResponse {
   path: string
