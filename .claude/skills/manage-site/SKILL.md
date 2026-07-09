@@ -162,6 +162,28 @@ check the roadmap so your change moves the current phase forward instead of
 polishing something scheduled for deletion. (Ticking the roadmap when a change
 lands is part of the "Update the docs" loop below.)
 
+## Thinking budget — proportional
+
+Match reasoning effort to the task; don't burn extended thinking on mechanical
+work, and don't skip it where a wrong call is expensive.
+
+- **Think** (keep reasoning on) for: the *first* step of anything ambiguous or
+  architectural — planning a change, choosing between paths, writing an options
+  doc/action plan (see "Big tasks"), a git-history/commit-split decision,
+  debugging a non-obvious failure, or any content/legal/provenance judgment
+  where truth-first or the non-negotiables are in play.
+- **Don't think** (fast, low-effort replies) for: a *batch* of known,
+  mechanical executions once the plan is set — applying agreed edits across
+  files, path/string renames, copy-paste-shaped edits, running the verify
+  commands, staging/committing/pushing a decided change, status checks. The
+  decision was already made; execution just needs to be correct, not reasoned.
+- **The switch:** decide the approach with thinking on, then drop to fast
+  execution for the run of steps that follow. If a "mechanical" step surprises
+  you (an edit doesn't apply, a check fails, reality diverges from the plan),
+  turn thinking back on for that step before continuing.
+- The owner may force either mode per-prompt ("no thinking, fast replies" /
+  "think about this"); that override wins for that prompt.
+
 ## Verify before declaring done — proportionally
 
 ```bash
@@ -312,11 +334,18 @@ Then, in either case:
    commit. Examples: `feat: default site language to Russian`,
    `docs: add do-not-translate glossary for translations`. End the message with
    the `Co-Authored-By: Claude ...` trailer.
-2. **Current phase — direct to `main`, shipped by a background agent.** Compose
-   the commit message in the main session, then hand the whole ship to a
-   **background agent** (Agent tool, `run_in_background: true`) so the owner's
-   flow never blocks. The agent commits on `main` and runs `git push origin
-   main`, then follows the deploy per `COMMIT_PUSH_FOLLOWING`:
+2. **Current phase — direct to `main`.** Commit on `main` and `git push origin
+   main`, then follow the deploy per `COMMIT_PUSH_FOLLOWING`.
+
+   **Do it inline by default — don't spawn a background ship agent for a simple
+   push.** A commit + push (even a two-commit split) is mechanical; run it in
+   the main session and background only the single deploy-conclusion check (a
+   `run_in_background` bash `sleep && gh run list`) so the owner isn't blocked
+   waiting on CI. **Reserve the background *agent*** (Agent tool,
+   `run_in_background: true`) for a genuinely long follow-through that would
+   otherwise stall the owner — chiefly `COMMIT_PUSH_FOLLOWING: true` with a
+   `backend/**` change (poll image build → `task be:deploy`). Whoever ships,
+   the sequence is the same:
    - **`false` (single check):** wait ~60s and check the "Deploy to Pages" run's
      **conclusion once** (`gh run list`). No `gh run watch`, no curl. Never
      touches the backend.
@@ -329,8 +358,8 @@ Then, in either case:
      guessing — see `references/backend.md`.)
 
    Either way: GitHub Pages fails transiently on its own side ("Deployment
-   failed, try again later" while the build is green) — on that failure the
-   agent recovers with `gh workflow run "Deploy to Pages" --ref main` (after
+   failed, try again later" while the build is green) — on that failure
+   recover with `gh workflow run "Deploy to Pages" --ref main` (after
    confirming remote `main` HEAD is still the pushed commit), up to 2 fresh
    runs, re-checking each. **Never `gh run rerun`** — build+deploy are one job,
    so a rerun re-uploads the `github-pages` artifact into the same run and
