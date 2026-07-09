@@ -43,19 +43,11 @@ export function useVisibleViewportVars(open: boolean): void {
     const vv = window.visualViewport
     const apply = () => {
       if (!vv) return
-      // iOS's form-assistant accessory bar (~44pt: the Done + prev/next strip)
-      // sits above the keyboard but is NOT excluded from visualViewport.height,
-      // so a modal sized to the full height hides its bottom row (Save) behind
-      // it. Reserve it while the keyboard is up (height shrunk well below
-      // innerHeight). ponytail: 48 is the standard bar height; bump if a future
-      // iOS grows it.
-      // ...but only when there's height to spare. On a landscape phone the
-      // strip above the keyboard is already ~130px; spending 48 of it makes the
-      // modal (which scrolls in that case — see the max-height:430px CSS) worse,
-      // not better, so skip the reserve when the visible viewport is that short.
-      const keyboardUp = window.innerHeight - vv.height > 120
-      const reserve = keyboardUp && vv.height > 200 ? 48 : 0
-      rootStyle.setProperty('--vv-h', `${vv.height - reserve}px`)
+      // visualViewport.height on iOS already excludes the keyboard AND its
+      // form-assistant accessory bar (the Done + prev/next strip), so the modal
+      // sized to it lands flush above that bar — no reserve needed. (An earlier
+      // 48px reserve double-counted the bar and left a dead band below Save.)
+      rootStyle.setProperty('--vv-h', `${vv.height}px`)
       rootStyle.setProperty('--vv-top', `${vv.offsetTop}px`)
     }
     apply()

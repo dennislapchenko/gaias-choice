@@ -3042,7 +3042,17 @@ a.respected-card:hover {
        wrapping) toolbar so the longer RU tab labels never cost a second row,
        and a compact cover strip. */
     .content-editor-head {
-        padding: 10px 14px;
+        padding: 7px 14px;
+    }
+    /* One slim line — the note title can be long; ellipsis it rather than let it
+       wrap to two rows and eat vertical budget the keyboard-shrunk modal needs. */
+    .content-editor-title {
+        flex: 1;
+        min-width: 0;
+        font-size: 0.82rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .content-editor-toolbar {
         flex-wrap: nowrap;
@@ -3060,6 +3070,7 @@ a.respected-card:hover {
     .content-editor-actions {
         flex-wrap: wrap;
         row-gap: 6px;
+        padding: 8px 14px;
     }
     /* Short visible viewport (keyboard up): let the textareas shrink with the
        modal instead of forcing overflow from a tall min-height. */
