@@ -366,19 +366,22 @@ Then, in either case:
    `run_in_background` bash `sleep && gh run list`) so the owner isn't blocked
    waiting on CI. **Reserve the background *agent*** (Agent tool,
    `run_in_background: true`) for a genuinely long follow-through that would
-   otherwise stall the owner — chiefly `COMMIT_PUSH_FOLLOWING: true` with a
-   `backend/**` change (poll image build → `task be:deploy`). Whoever ships,
-   the sequence is the same:
-   - **`false` (single check):** wait ~60s and check the "Deploy to Pages" run's
-     **conclusion once** (`gh run list`). No `gh run watch`, no curl. Never
-     touches the backend.
-   - **`true` (follow through):** poll "Deploy to Pages" to its conclusion; and
-     **if the pushed diff touched `backend/**`** (so the "Build backend image"
-     CI run fired — it's `paths`-filtered to `backend/**`), wait for that image
-     build to go **green**, then run `task be:deploy` to ship it to the VM, and
-     report both results. (`be:deploy` needs the owner's local `.env` +
-     VM secrets and Docker; if they're absent it reports that instead of
-     guessing — see `references/backend.md`.)
+   otherwise stall the owner — chiefly any `backend/**` change (poll image
+   build → `task be:deploy`). Whoever ships, the sequence is the same:
+   - **`COMMIT_PUSH_FOLLOWING` governs the *Pages* watch only:** `false` ⇒ wait
+     ~60s and check the "Deploy to Pages" run's **conclusion once**
+     (`gh run list`; no `gh run watch`, no curl); `true` ⇒ poll "Deploy to
+     Pages" to its conclusion.
+   - **Backend deploy is automatic on a `backend/**` change — regardless of the
+     flag.** If the pushed diff touched `backend/**` (so the "Build backend
+     image" CI run fired — it's `paths`-filtered to `backend/**`), wait for that
+     image build to go **green**, then run `task be:deploy` to ship it to the VM
+     and report the result. FE and BE must ship together, so a backend change is
+     never left un-deployed just because Pages-watching is set to the single
+     check. (`be:deploy` needs the owner's local `.env` + VM secrets and Docker;
+     if they're absent it reports that instead of guessing — see
+     `references/backend.md`.) Because this is a long follow-through, run it via
+     the background *agent* so the owner isn't blocked.
 
    Either way: GitHub Pages fails transiently on its own side ("Deployment
    failed, try again later" while the build is green) — on that failure
