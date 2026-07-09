@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
+import BusyIndicator from './components/BusyIndicator'
 import Layout from './components/Layout'
 import { ContentEditorProvider } from './lib/contentEditor'
 import { EditModeProvider } from './lib/editMode'
@@ -38,6 +39,7 @@ export default function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>
+          <BusyIndicator />
         </ContentEditorProvider>
       </EditModeProvider>
     </SessionProvider>

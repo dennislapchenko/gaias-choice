@@ -6,6 +6,30 @@
 // never an error page. See `useApi` and the SPA-fallback guard below.
 import { useEffect, useState } from 'react'
 
+// Global in-flight counter for content mutations, so ONE floating indicator can
+// say "working…" for any editor write (save / commit / delete / image / state
+// flip's translate) — actions that otherwise commit silently with no obvious UI
+// feedback. Reads and auth are excluded; the draft-composer enrich
+// (/content/template) has its own in-dialog dimming, so it's excluded too.
+let activeMutations = 0
+const busyListeners = new Set<(n: number) => void>()
+function setMutationCount(n: number) {
+  activeMutations = n
+  busyListeners.forEach((fn) => fn(n))
+}
+/** Subscribe to the in-flight content-mutation count; returns an unsubscribe. */
+export function onBusyChange(fn: (n: number) => void): () => void {
+  busyListeners.add(fn)
+  fn(activeMutations)
+  return () => void busyListeners.delete(fn)
+}
+/** True while ≥1 content mutation is in flight (drives the floating indicator). */
+export function useBusy(): boolean {
+  const [busy, setBusy] = useState(false)
+  useEffect(() => onBusyChange((n) => setBusy(n > 0)), [])
+  return busy
+}
+
 // Base URL resolution, the single rule:
 //   - VITE_API_URL if set at build time (dev/ngrok, and the compose dev loop
 //     sets it to http://localhost:8787/api).
@@ -59,12 +83,19 @@ async function apiSend<T>(
   body?: unknown,
   opts?: { token?: string },
 ): Promise<T> {
-  const res = await fetch(apiUrl(path), {
-    method,
-    headers: { ...headers(opts?.token), 'Content-Type': 'application/json' },
-    body: body === undefined ? undefined : JSON.stringify(body),
-  })
-  return parseJson<T>(res)
+  // Track content writes only (not auth, not the auto-enrich on composer open).
+  const track = path.startsWith('/content/') && path !== '/content/template'
+  if (track) setMutationCount(activeMutations + 1)
+  try {
+    const res = await fetch(apiUrl(path), {
+      method,
+      headers: { ...headers(opts?.token), 'Content-Type': 'application/json' },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    })
+    return await parseJson<T>(res)
+  } finally {
+    if (track) setMutationCount(activeMutations - 1)
+  }
 }
 
 export function apiPost<T>(path: string, body?: unknown, opts?: { token?: string }): Promise<T> {

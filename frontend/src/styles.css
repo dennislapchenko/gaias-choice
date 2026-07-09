@@ -3496,6 +3496,41 @@ a.respected-card:hover {
         transform: rotate(360deg);
     }
 }
+/* Light floating "working…" pill shown while any content mutation is in flight
+   (BusyIndicator + api.ts useBusy). Bottom-right, above everything, never
+   blocks clicks. */
+.busy-indicator {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--white) 88%, transparent);
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+    color: var(--ink);
+    font-size: 0.85rem;
+    pointer-events: none;
+    animation: busy-fade-in 0.15s ease-out;
+}
+.busy-indicator-spinner {
+    width: 15px;
+    height: 15px;
+    border: 2px solid var(--line);
+    border-top-color: var(--sage);
+    border-radius: 999px;
+    animation: ce-spin 0.7s linear infinite;
+}
+@keyframes busy-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+}
 /* Disclosure that an entry is a machine translation of another locale. */
 .translated-mark {
     font-style: italic;
