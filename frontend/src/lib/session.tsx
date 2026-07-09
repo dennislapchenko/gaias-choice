@@ -7,7 +7,7 @@
 // be reached — every consumer (header button, account page, edit chrome)
 // renders nothing in that case, so the static site stays identical for
 // readers when the backend is absent.
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, lazy, Suspense, useContext, useEffect, useState, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   apiGet,
@@ -18,7 +18,9 @@ import {
   type MeResponse,
   type TelegramChallenge,
 } from './api'
-import LoginDialog from '../components/LoginDialog'
+// Lazy: the dialog (and its viewport helpers) load only when someone actually
+// opens the sign-in flow — it's not part of the reader path.
+const LoginDialog = lazy(() => import('../components/LoginDialog'))
 
 const SESSION_KEY = 'gc-session'
 const LEGACY_TOKEN_KEY = 'gc-edit-token' // pre-login static token; cleared on sight
@@ -211,7 +213,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       }}
     >
       {children}
-      {loginOpen && <LoginDialog />}
+      {loginOpen && (
+        <Suspense fallback={null}>
+          <LoginDialog />
+        </Suspense>
+      )}
     </SessionContext.Provider>
   )
 }
