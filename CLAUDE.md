@@ -78,28 +78,42 @@ context/                 # authoring context (NOT bundled into the site)
   course-plan-*.md       # one outline per course
   <topic>/               # active big-task plan dirs (SKILL.md "Big tasks");
   archive/               # completed plans — not live context
-public/images/           # optimized WebP photos + generated mandala SVG art
-scripts/generate-mandala.mjs  # mandala art generator (see Images)
-src/
-  main.tsx               # React root + BrowserRouter + I18nProvider
-  App.tsx                # route table
-  locales/{en,ru}.ts     # UI chrome strings (nav, buttons) — NOT page content
-  lib/                   # content.ts (the core loader), i18n.tsx, theme.ts,
-                         # head.tsx (per-route <title>), astro.ts + astroText.ts
-                         # (almanac), asset.ts (BASE_PATH), api.ts (FE↔BE
-                         # contract), session.tsx (login seam), editMode.tsx +
-                         # contentEditor.tsx (live-edit), types.ts
-  components/, pages/    # per-component map: development.md "Where things live"
-  styles.css             # single hand-written stylesheet (no CSS framework)
+frontend/                # the Vite SPA (all app code + its build config)
+  index.html  vite.config.ts  tsconfig.json  package*.json  .npmrc
+  public/images/         # optimized WebP photos + generated mandala SVG art
+  scripts/generate-mandala.mjs  # mandala art generator (see Images)
+  Dockerfile             # multi-stage: node build → nginx runtime (built with
+                         # `-f frontend/Dockerfile .` — root context, so it can
+                         # COPY the root-level content/ tree)
+  nginx/default.conf.template  # $PORT + SPA fallback
+  src/
+    main.tsx             # React root + BrowserRouter + I18nProvider
+    App.tsx              # route table
+    locales/{en,ru}.ts   # UI chrome strings (nav, buttons) — NOT page content
+    lib/                 # content.ts (the core loader; globs ../../../content),
+                         # i18n.tsx, theme.ts, head.tsx (per-route <title>),
+                         # astro.ts + astroText.ts (almanac), asset.ts
+                         # (BASE_PATH), api.ts (FE↔BE contract), session.tsx
+                         # (login seam), editMode.tsx + contentEditor.tsx
+                         # (live-edit), types.ts
+    components/, pages/  # per-component map: development.md "Where things live"
+    styles.css           # single hand-written stylesheet (no CSS framework)
 backend/                 # optional Go/gin API sidecar; openapi.yaml is THE
                          # endpoint contract (see "Backend")
 compose.dev.yaml         # `task dev` stack: web (Vite HMR) + api (air reload)
 deploy/                  # live VM stack (api + Caddy) + infra-log.md record
 .doco-cd.yml             # doco-cd GitOps for the VM — deferred
-Dockerfile               # multi-stage: node build → nginx runtime
-nginx/default.conf.template  # $PORT + SPA fallback
 Taskfile.yml             # all common commands
 ```
+
+`content/` and `backend/` stay at the repo root — `content/` is shared (the FE
+globs it at build time; the BE live-edit seam writes it), and each app dir owns
+its own build. Room for a future `infra/` (Terraform) / `ansible/` alongside.
+
+**Path convention:** bare `src/…`, `public/…`, `scripts/…`, `vite.config.ts`,
+`package.json` in these docs are relative to `frontend/` (e.g. `src/lib/api.ts`
+= `frontend/src/lib/api.ts`). `content/`, `backend/`, `deploy/`, `Taskfile.yml`
+and `compose.dev.yaml` are repo-root. All `task` commands run from the root.
 
 ## How content loading works (`src/lib/content.ts`)
 
@@ -280,8 +294,9 @@ type-check). The full command table — FE, the `be:*` backend tasks, deploy,
 
 ## Container & deploy
 
-Multi-stage Dockerfile: `node:22-alpine` builds, `nginx:1.27-alpine` serves
-`dist/` on `$PORT` (default 8080; Cloud Run injects it). **SPA fallback:**
+Multi-stage `frontend/Dockerfile` (built from repo root so it can bundle
+`content/`): `node:22-alpine` builds, `nginx:1.27-alpine` serves the SPA on
+`$PORT` (default 8080; Cloud Run injects it). **SPA fallback:**
 unknown paths return `index.html` so client routing works (nginx template +
 asset-404 nuances: development.md gotchas). **Live deploy is GitHub Pages:**
 every push to `main` triggers `.github/workflows/deploy-pages.yml`

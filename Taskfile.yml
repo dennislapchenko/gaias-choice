@@ -20,10 +20,11 @@ vars:
   BE_PORT: '8787'
   BE_IMAGE: gaias-choice-be
   GO_VOLUME: gaias-choice-go-cache
-  # Reusable "npm in a container" prefix: source mounted read-write, deps in a volume.
+  # Reusable "npm in a container" prefix: repo mounted, workdir frontend/, deps
+  # in a volume. content/ stays at repo root (/app/content), reachable from the app.
   NODE_RUN: >-
-    docker run --rm -v {{.ROOT_DIR}}:/app -w /app
-    -v {{.VOLUME}}:/app/node_modules {{.NODE_IMAGE}}
+    docker run --rm -v {{.ROOT_DIR}}:/app -w /app/frontend
+    -v {{.VOLUME}}:/app/frontend/node_modules {{.NODE_IMAGE}}
   # Reusable "go in a container" prefix: repo mounted, workdir backend/, module
   # + build cache in a named volume (mirrors NODE_RUN). -buildvcs=false because
   # the container workdir isn't the git root.
@@ -42,8 +43,8 @@ tasks:
     desc: Install dependencies into the isolated volume (skipped when lockfile is unchanged)
     internal: true
     sources:
-      - package.json
-      - package-lock.json
+      - frontend/package.json
+      - frontend/package-lock.json
     generates:
       - .task/deps.done
     cmds:
@@ -147,14 +148,14 @@ tasks:
     desc: Regenerate package-lock.json (isolated, no scripts run)
     cmds:
       - >-
-        docker run --rm -v {{.ROOT_DIR}}:/app -w /app {{.NODE_IMAGE}}
+        docker run --rm -v {{.ROOT_DIR}}:/app -w /app/frontend {{.NODE_IMAGE}}
         npm install --package-lock-only --ignore-scripts --no-fund
 
   audit:
     desc: Audit dependencies for known vulnerabilities
     cmds:
       - >-
-        docker run --rm -v {{.ROOT_DIR}}:/app -w /app {{.NODE_IMAGE}}
+        docker run --rm -v {{.ROOT_DIR}}:/app -w /app/frontend {{.NODE_IMAGE}}
         npm audit --audit-level=low
 
   images:
@@ -165,7 +166,7 @@ tasks:
       QUALITY: '80'
     cmds:
       - >-
-        docker run --rm --entrypoint sh -v {{.ROOT_DIR}}/public/images:/imgs -w /imgs {{.MAGICK}}
+        docker run --rm --entrypoint sh -v {{.ROOT_DIR}}/frontend/public/images:/imgs -w /imgs {{.MAGICK}}
         -c 'for f in *.png *.jpg *.jpeg; do [ -e "$f" ] || continue;
         magick "$f" -resize "{{.MAX_DIM}}x{{.MAX_DIM}}>" -quality {{.QUALITY}}
         -define webp:method=6 "${f%.*}.webp" && rm "$f"; done'
@@ -181,7 +182,8 @@ tasks:
   image:
     desc: Build the production Docker image (nginx)
     cmds:
-      - docker build -t {{.IMAGE}} .
+      # Build context is the repo root so the SPA can COPY root-level content/.
+      - docker build -f frontend/Dockerfile -t {{.IMAGE}} .
 
   run:
     desc: Build the image and run it locally (http://localhost:8080)
@@ -192,6 +194,10 @@ tasks:
   deploy:
     desc: Deploy to Google Cloud Run from source (override with REGION=... SERVICE=...)
     cmds:
+      # ponytail: --source . no longer autodetects a Dockerfile (it moved to
+      # frontend/Dockerfile). Pages is the live target; if Cloud Run is ever
+      # revived, build+push the image (task image) and `gcloud run deploy
+      # --image ...`, or add a root cloudbuild.yaml pointing at frontend/Dockerfile.
       - >-
         gcloud run deploy {{.SERVICE}} --source . --region {{.REGION}}
         --allow-unauthenticated --port {{.PORT}}
@@ -206,7 +212,7 @@ tasks:
   clean:
     desc: Remove build output, deps volume, task cache, and the local image
     cmds:
-      - rm -rf dist .task
+      - rm -rf frontend/dist .task
       - docker volume rm {{.VOLUME}} 2>/dev/null || true
       - docker volume rm {{.GO_VOLUME}} 2>/dev/null || true
       - docker image rm {{.IMAGE}} 2>/dev/null || true

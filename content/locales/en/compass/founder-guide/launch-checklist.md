@@ -62,7 +62,8 @@ caption: "Six sections, one exam. A page that fails the stranger test gets fixed
 
 ## 3. Domain & plumbing
 
-- [ ] Buy the domain; set up Cloud Run domain mapping (steps in README).
+- [ ] Buy the domain; point it at GitHub Pages (a DNS record plus the custom
+      domain in the repo's Pages settings).
 - [ ] Real mailbox on the domain (`hello@…`) — affiliate programs check this.
 - [ ] Favicon, and a proper social-preview image once prerendering exists.
 

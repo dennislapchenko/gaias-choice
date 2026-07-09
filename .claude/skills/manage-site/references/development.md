@@ -8,6 +8,12 @@ features, but the static site works identically when it's absent (which is
 most of the time). Architecture details live in the repo `CLAUDE.md` — read it
 before structural changes.
 
+**The SPA lives in `frontend/`.** Bare `src/…`, `public/…`, `scripts/…` and the
+app config (`vite.config.ts`, `package.json`) in this doc are relative to it
+(`src/lib/content.ts` = `frontend/src/lib/content.ts`). `content/`, `backend/`,
+`Taskfile.yml`, `compose.dev.yaml` are repo-root; all `task` commands run from
+the root. Content is globbed from `../../../content` (root) at build time.
+
 ## Where things live (change X → edit Y)
 
 Keep this table current — when you add/rename/change a component, update the row
@@ -53,13 +59,13 @@ Keep this table current — when you add/rename/change a component, update the r
 | Command | What |
 | --- | --- |
 | `task typecheck` | strict `tsc --noEmit` — **`task build` does NOT type-check** |
-| `task build` | build SPA to `dist/` |
+| `task build` | build SPA to `frontend/dist/` |
 | `task dev` | **FE + BE together** via `compose.dev.yaml`: Vite HMR :5173 + backend with air hot-reload :8787 — **needs a TTY** (foreground compose); Ctrl-C stops both |
 | `task be:dev` | backend only, `go run .` on :8787 (`-it`) |
 | `task be:test` / `be:tidy` / `be:gen` / `be:image` / `be:run` / `be:verify` | vet+test / `go mod tidy && verify` / regenerate `internal/httpapi/gen.go` from `openapi.yaml` / build distroless image / run prod image :8787 / spec-drift check + test + image gate — all containerized (`golang:1.25-alpine`, cache in `gaias-choice-go-cache` volume) |
 | `task be:tunnel` | `ngrok http 8787` (host ngrok, as with FE dev) |
 | `task be:deploy` | ship the latest CI-built backend image to the VM (owner-invoked, manual; resolves the sha from GitHub Actions, rebuilds `deploy.env`, scps compose+Caddyfile+env, pulls + recreates). Temporary until doco-cd — see `deploy/release.sh` + `deploy/infra-log.md` |
-| `task images` | optimize `public/images` → WebP |
+| `task images` | optimize `frontend/public/images` → WebP |
 | `task mandalas SET=<name>` | generate mandala SVG art for a config set (`guides`, `reviews`); optional `ONLY=slug1,slug2` |
 | `task audit` | `npm audit` — must stay at 0 vulns |
 | `task lock` | regenerate lockfile (no scripts) |
@@ -90,7 +96,7 @@ OrbStack: `open -a OrbStack`, wait ~15s, retry.
    { "version": "0.0.1", "configurations": [{
        "name": "dist",
        "runtimeExecutable": "python3",
-       "runtimeArgs": ["-m", "http.server", "5180", "-d", "gaias-choice/dist"],
+       "runtimeArgs": ["-m", "http.server", "5180", "-d", "gaias-choice/frontend/dist"],
        "port": 5180 }] }
    ```
 

@@ -17,9 +17,13 @@ permissions:
   pages: write
   id-token: write
 
+# A newer push supersedes an in-flight run: cancel it so rapid content edits
+# don't stack N sequential builds (each ~2 min). Safe here because every deploy
+# publishes the FULL current build — a cancelled/failed run is fully recovered
+# by the next one; there's no partial-state to worry about.
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -27,6 +31,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    # The SPA lives in frontend/; content/ stays at repo root (globbed via
+    # ../../../content at build time). npm steps run inside frontend/.
+    defaults:
+      run:
+        working-directory: frontend
     steps:
       - name: Checkout
         uses: actions/checkout@v7.0.0
@@ -34,6 +43,7 @@ jobs:
         with:
           node-version: 22.11.0
           cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
       - name: Install dependencies
         run: npm ci
       - name: Build
@@ -57,7 +67,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5.0.0
         with:
-          path: dist
+          # `with:` ignores defaults.run.working-directory — needs the full path.
+          path: frontend/dist
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5.0.0

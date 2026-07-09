@@ -4,7 +4,7 @@
     {
       "name": "dist",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["scripts/preview-spa.py", "4173", "dist"],
+      "runtimeArgs": ["frontend/scripts/preview-spa.py", "4173", "frontend/dist"],
       "port": 4173
     },
     {

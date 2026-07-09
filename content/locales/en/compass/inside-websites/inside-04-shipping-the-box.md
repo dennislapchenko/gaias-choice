@@ -67,21 +67,22 @@ know this pattern; what's worth noticing is how *far* it goes here — the
 production box contains no JavaScript runtime at all. There is nothing to
 patch but nginx itself.
 
-One Cloud Run–ism: the container can't hardcode a port, because the
-platform injects one. The base image runs `envsubst` on the template at
-boot, substituting `${PORT}` and nothing else — nginx's own `$uri`
+One portability detail: the container can't hardcode a port, because a host
+may hand it one at boot. The base image runs `envsubst` on the template at
+startup, substituting `${PORT}` and nothing else — nginx's own `$uri`
 variables pass through untouched. Twelve-factor's "config from the
-environment," in its smallest possible form.
+environment," in its smallest possible form — the reason this same box runs
+unchanged whether a platform injects a port or you pick one yourself.
 
 ## The deploy: a push is a release
 
 There is no deploy ceremony. `.github/workflows/deploy-pages.yml` watches
 `main`; every push builds the site and publishes the bundle to GitHub
 Pages. Pushing `main` *is* deploying to production — the repo's docs say it
-in bold, because the fact changes how you treat the button. The same
-artifact can go to Cloud Run instead (`task deploy` builds the image and
-ships it); the bundle doesn't care who serves it — that's what being a
-folder of files buys.
+in bold, because the fact changes how you treat the button. And the same
+bundle drops straight into the nginx box from earlier this chapter —
+`task run` serves it locally exactly as any container host would; the bundle
+doesn't care who serves it, which is what being a folder of files buys.
 
 ```diagram delivery-pipeline
 aria: "The delivery pipeline: a push to main triggers the workflow, a container runs the pinned install and build, the bundle comes out, nginx or GitHub Pages serves it, and the reader receives static files"
@@ -140,7 +141,7 @@ install Node: the machine is built so the host never needs it.
 
 Gluing the layers together is `Taskfile.yml` — the repo's only entry point.
 `task dev`, `task build`, `task typecheck`, `task audit`, `task image`,
-`task run`, `task deploy`: every command already wrapped in the container
+`task run`: every command already wrapped in the container
 dance, so doing it the safe way and doing it the easy way are the same
 action. One habit-forming detail: `vite build` does **not** type-check —
 `task verify` (audit + typecheck + image build) exists so the strict

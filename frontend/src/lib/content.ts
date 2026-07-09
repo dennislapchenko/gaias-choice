@@ -1,7 +1,7 @@
 import { parse as parseYaml } from 'yaml'
 import { marked, Renderer } from 'marked'
 import { withBaseHtml } from './asset'
-import themesRaw from '../../content/themes.yaml?raw'
+import themesRaw from '../../../content/themes.yaml?raw'
 import type { CompassEntry, Entry, JournalEntry, Page, PostState, Product, SiteConfig, Theme } from './types'
 import type { Locale } from './i18n'
 
@@ -38,7 +38,7 @@ const escapeHtml = (s: string): string =>
 // with {{slot}} tokens where locale text goes. Guides embed them via a
 // ```diagram <name> fenced block whose YAML body supplies the slot values
 // (including `aria` and `caption`) — so geometry lives once for all locales.
-const diagramModules = import.meta.glob('../../content/shared/diagrams/*.svg', {
+const diagramModules = import.meta.glob('../../../content/shared/diagrams/*.svg', {
   query: '?raw',
   import: 'default',
   eager: true,
@@ -224,33 +224,33 @@ function upcomingFor<T extends Entry & { state?: PostState; date?: string }>(
 
 // Eager glob = content is bundled at build time; no runtime fetch, no server needed.
 // The locale segment is a wildcard so adding content/locales/<lng>/... needs no code change.
-const siteModules = import.meta.glob('../../content/locales/*/site.yaml', {
+const siteModules = import.meta.glob('../../../content/locales/*/site.yaml', {
   query: '?raw',
   import: 'default',
   eager: true,
 }) as Record<string, string>
 
-const productModules = import.meta.glob('../../content/locales/*/products/*.md', {
+const productModules = import.meta.glob('../../../content/locales/*/products/*.md', {
   query: '?raw',
   import: 'default',
   eager: true,
 }) as Record<string, string>
 
 // Compass chapters (courses) — grouped in per-epic subfolders on disk.
-const compassModules = import.meta.glob('../../content/locales/*/compass/**/*.md', {
+const compassModules = import.meta.glob('../../../content/locales/*/compass/**/*.md', {
   query: '?raw',
   import: 'default',
   eager: true,
 }) as Record<string, string>
 
 // Journal — a flat, date-ordered blog (no subfolders).
-const journalModules = import.meta.glob('../../content/locales/*/journal/*.md', {
+const journalModules = import.meta.glob('../../../content/locales/*/journal/*.md', {
   query: '?raw',
   import: 'default',
   eager: true,
 }) as Record<string, string>
 
-const pageModules = import.meta.glob('../../content/locales/*/pages/*.md', {
+const pageModules = import.meta.glob('../../../content/locales/*/pages/*.md', {
   query: '?raw',
   import: 'default',
   eager: true,
@@ -260,7 +260,7 @@ const pageModules = import.meta.glob('../../content/locales/*/pages/*.md', {
 // raw markdown scaffold per kind and locale
 // (content/shared/<kind>-template.<locale>.md), single source of truth — see
 // getJournalTemplate / getReviewTemplate.
-const templateModules = import.meta.glob('../../content/shared/*-template.*.md', {
+const templateModules = import.meta.glob('../../../content/shared/*-template.*.md', {
   query: '?raw',
   import: 'default',
   eager: true,
