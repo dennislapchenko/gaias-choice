@@ -267,70 +267,6 @@ function applyMdAction(
   return { text, selStart: bodyAt, selEnd: bodyAt + body.length }
 }
 
-// Temp diagnostic flag: `?vvd` in the URL persists to localStorage so it
-// survives SPA navigation (opening a post drops the query), letting a phone
-// capture the viewport readout across browsers. ponytail: remove with VvDebug.
-if (typeof location !== 'undefined' && location.search.includes('vvd')) {
-  try {
-    localStorage.setItem('vvd', '1')
-  } catch {
-    /* private mode — flag just won't persist */
-  }
-}
-function vvdOn(): boolean {
-  try {
-    return localStorage.getItem('vvd') === '1'
-  } catch {
-    return false
-  }
-}
-
-// DEBUG-gated: live-report the viewport numbers driving the mobile modal height
-// (iOS keyboard pan/visual-viewport). Rendered only when `DEBUG` is on.
-function VvDebug() {
-  const [, force] = useState(0)
-  useEffect(() => {
-    const on = () => force((n) => n + 1)
-    window.visualViewport?.addEventListener('resize', on)
-    window.visualViewport?.addEventListener('scroll', on)
-    const id = window.setInterval(on, 500)
-    return () => {
-      window.visualViewport?.removeEventListener('resize', on)
-      window.visualViewport?.removeEventListener('scroll', on)
-      window.clearInterval(id)
-    }
-  }, [])
-  const vv = window.visualViewport
-  const cssVar = getComputedStyle(document.documentElement).getPropertyValue('--vv-h')
-  const modal = document.querySelector('.content-editor')?.getBoundingClientRect()
-  const actions = document.querySelector('.content-editor-actions')?.getBoundingClientRect()
-  const ta = document.querySelector('.content-editor-body-textarea')?.getBoundingClientRect()
-  const r = (n?: number) => (n == null ? '-' : Math.round(n))
-  return (
-    <div
-      style={{
-        position: 'fixed',
-        // Pin to the VISIBLE viewport top so an iOS keyboard pan can't hide it.
-        top: vv ? vv.offsetTop : 0,
-        left: vv ? vv.offsetLeft : 0,
-        zIndex: 9999,
-        background: 'rgba(0,0,0,0.85)',
-        color: '#0f0',
-        font: '12px monospace',
-        padding: '4px 6px',
-        pointerEvents: 'none',
-        whiteSpace: 'pre',
-      }}
-    >
-      {`vv.h=${vv ? r(vv.height) : 'none'} vv.top=${vv ? r(vv.offsetTop) : '-'}\n` +
-        `innerH=${window.innerHeight} scrollY=${r(window.scrollY)}\n` +
-        `--vv-h=${cssVar.trim() || 'unset'}\n` +
-        `modal top=${r(modal?.top)} bot=${r(modal?.bottom)} h=${r(modal?.height)}\n` +
-        `ta bot=${r(ta?.bottom)}  actions top=${r(actions?.top)} bot=${r(actions?.bottom)}`}
-    </div>
-  )
-}
-
 export function ContentEditorProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<EditorState | null>(null)
   // Fields = structured frontmatter + body textarea (the friendly default);
@@ -1049,7 +985,6 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       {children}
       {state && (
         <div className="content-editor-overlay" onClick={attemptClose}>
-          {(DEBUG || vvdOn()) && <VvDebug />}
           <div
             className="content-editor"
             role="dialog"
