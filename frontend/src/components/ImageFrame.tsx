@@ -46,6 +46,12 @@ export default function ImageFrame({
   const [caption, setCaption] = useState('')
   const pointers = useRef(new Map<number, { x: number; y: number }>())
   const pinchDist = useRef(0)
+  const [hintOn, setHintOn] = useState(true) // gesture hint fades out after 2s
+
+  useEffect(() => {
+    const id = setTimeout(() => setHintOn(false), 2000)
+    return () => clearTimeout(id)
+  }, [])
 
   // Esc closes the frame (matches the backdrop click).
   useEffect(() => {
@@ -233,7 +239,7 @@ export default function ImageFrame({
   return (
     <div className="image-frame-backdrop" onClick={onClose}>
       <div className="image-frame" onClick={(e) => e.stopPropagation()}>
-        <div className="image-frame-hint">
+        <div className={`image-frame-hint${hintOn ? '' : ' is-faded'}`}>
           <span>✥ {t('imageFrame.hintMove')}</span>
           <span>⤢ {t('imageFrame.hintZoom')}</span>
         </div>

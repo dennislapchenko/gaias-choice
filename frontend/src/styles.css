@@ -3059,6 +3059,11 @@ a.respected-card:hover {
     background: var(--sand2);
 }
 .content-editor-close {
+    /* flex:0 0 auto + z-index so the flex row never shrinks the tap target and
+       nothing in the header can paint over it (the × felt "layered/dead"). */
+    flex: 0 0 auto;
+    position: relative;
+    z-index: 1;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -3081,6 +3086,10 @@ a.respected-card:hover {
 /* Banner shown when the editor reopened a recovered localStorage autosave
    (contentEditor.tsx, state.restored) — with an inline "discard it" link. */
 .content-editor-restored {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
     margin: 0;
     padding: 8px 16px;
     font-size: 0.85rem;
@@ -3283,6 +3292,10 @@ a.respected-card:hover {
     background: color-mix(in srgb, var(--white) 82%, transparent);
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
     pointer-events: none;
+    transition: opacity 0.6s ease;
+}
+.image-frame-hint.is-faded {
+    opacity: 0;
 }
 .content-editor-md {
     display: flex;
@@ -3676,6 +3689,15 @@ a.respected-card:hover {
        close button (≈37px). */
     .content-editor-head {
         padding: 4px 14px;
+    }
+    /* Bigger hit area for the × on the slim (~37px) mobile header, without
+       growing the header itself — the negative margins let it bleed into the
+       header padding so it's an easy 40px touch target. */
+    .content-editor-close {
+        width: 40px;
+        height: 40px;
+        margin: -6px -10px -6px 0;
+        font-size: 1.4rem;
     }
     /* One slim line — the note title can be long; ellipsis it rather than let it
        wrap to two rows and eat vertical budget the keyboard-shrunk modal needs. */

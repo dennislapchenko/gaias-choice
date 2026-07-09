@@ -524,9 +524,14 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
 
   // Backdrop / × close: confirm when there are unsaved edits, so a stray click
   // can't yank the editor away mid-thought. The draft is autosaved regardless,
-  // so the copy reassures rather than threatens.
+  // so the copy reassures rather than threatens — which is why we SKIP the
+  // confirm on touch: a coarse-pointer tap on × is deliberate, native confirm
+  // is unreliable there (window.prompt is already a no-op in iOS standalone),
+  // and a suppressed confirm returning false made the × feel dead. Nothing is
+  // lost — the draft is restored next open.
   const attemptClose = () => {
-    if (dirty && !window.confirm(t('editor.discardConfirm'))) return
+    const touch = window.matchMedia('(pointer: coarse)').matches
+    if (dirty && !touch && !window.confirm(t('editor.discardConfirm'))) return
     close()
   }
 
@@ -550,6 +555,9 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     clearDraft(state.mode.path)
     setState({ ...state, value: state.baseline, restored: false })
   }
+
+  // Dismiss the banner (×) but KEEP the recovered draft — just stop reminding.
+  const dismissRestored = () => state && setState({ ...state, restored: false })
 
   const openFile: ContentEditorApi['openFile'] = ({ title, path }) => {
     setView('fields')
@@ -1016,9 +1024,19 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
             </div>
             {state.restored && (
               <p className="content-editor-restored" role="status">
-                {t('editor.draftRestored')}{' '}
-                <button type="button" className="linklike" onClick={discardRestored}>
-                  {t('editor.draftDiscard')}
+                <span>
+                  {t('editor.draftRestored')}{' '}
+                  <button type="button" className="linklike" onClick={discardRestored}>
+                    {t('editor.draftDiscard')}
+                  </button>
+                </span>
+                <button
+                  type="button"
+                  className="content-editor-close"
+                  aria-label={t('editor.close')}
+                  onClick={dismissRestored}
+                >
+                  ×
                 </button>
               </p>
             )}
