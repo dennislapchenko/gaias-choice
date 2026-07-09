@@ -4,7 +4,7 @@ title: "Как накручивать километры с малышом"
 excerpt: "Рабочий шаблон для честной версии долгой дороги с маленьким ребёнком — реальный дневной запас хода, трудный час и выходы из него."
 date: 2026-07-05
 tags: []
-gallery: [/images/image-mrcfd8h7.webp, /images/image-mrcfdi9j.webp]
+gallery: [/images/image-mrcfd8h7.webp]
 ---
 privetik
 ![](/images/image-mrcfd8h7.webp)
