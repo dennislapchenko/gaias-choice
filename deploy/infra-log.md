@@ -192,16 +192,23 @@ firewall entirely. Host firewalld would give false confidence for exactly the
 failure mode above. (This refines step 3's "no host firewall needed" note: true
 for the current state, but host firewalld is the wrong tool regardless.)
 
-**The right control — Hetzner Cloud Firewall (owner action, not yet applied).**
-It filters at the network edge, *before* packets reach the VM's NIC and before
-Docker's iptables run, so it also catches accidental container port-publishes.
-Free, declarative, and Terraform-able later (`hcloud_firewall`). In the Hetzner
-Cloud console (or `hcloud firewall create`), attach a firewall to the VM with:
-- **Inbound allow:** `22/tcp`, `80/tcp`, `443/tcp` (source `0.0.0.0/0` +
-  `::/0`; tighten 22 to the owner's IP later if it becomes static).
-- **Inbound:** drop everything else (default).
-- **Outbound:** allow all (the API needs egress to GHCR, Postmark, Telegram,
-  Anthropic, Let's Encrypt).
+**The right control — Hetzner Cloud Firewall (applied).** It filters at the
+network edge, *before* packets reach the VM's NIC and before Docker's iptables
+run, so it also catches accidental container port-publishes. Free, declarative,
+and Terraform-able later (`hcloud_firewall`). Applied to the VM as firewall
+**`gaias-choice-edge`**:
+- **Inbound allow:** `22/tcp` (SSH), `80/tcp` (Caddy ACME + redirect),
+  `443/tcp` (Caddy HTTPS) — each `0.0.0.0/0` + `::/0`. Tighten 22 to the
+  owner's IP later if it becomes static.
+- **Inbound:** everything else dropped (Hetzner default-deny for unlisted
+  inbound). Verified: `8787` from off-VM is now filtered.
+- **Outbound:** allow all — no outbound rules added, which Hetzner treats as
+  unrestricted egress (the API needs GHCR, Postmark, Telegram, Anthropic,
+  Let's Encrypt).
+- Created with `hcloud firewall create/add-rule/apply-to-resource` (token from
+  the `GAIA_HETZNER_TOKEN` keychain env var). To reproduce/automate: three
+  `--direction in --protocol tcp --port <22|80|443> --source-ips 0.0.0.0/0
+  --source-ips ::/0` rules, then `apply-to-resource --type server`.
 
 **Optional host-side SSH hardening (defense in depth, over SSH):** in
 `/etc/ssh/sshd_config` set `PermitRootLogin prohibit-password` +
@@ -211,8 +218,8 @@ touches live sshd and risks lockout, so apply deliberately with console access
 as a fallback.
 
 ## Deferred (not done yet, by design)
-- **Hetzner Cloud Firewall** — the edge all/deny above; owner applies in the
-  console. Automate later via Terraform (`hcloud_firewall` + attachment).
+- **Terraform the edge firewall** — `gaias-choice-edge` is live but was created
+  imperatively via `hcloud`; codify it later as `hcloud_firewall` + attachment.
 - **doco-cd GitOps** auto-redeploy (its server compose + webhook/poll + token
   files) — first deploy was intentionally manual to prove the stack.
 - **DB backup cron** — dirs exist (`/srv/gaias-choice/backups`); the host cron
