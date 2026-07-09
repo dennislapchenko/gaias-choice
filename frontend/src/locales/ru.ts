@@ -203,7 +203,6 @@ const ru: Record<keyof typeof en, string> = {
   "editor.fields": "Контент",
   "editor.fieldsAndImages": "Поля и картинки",
   "editor.raw": "Исходник",
-  "editor.body": "Текст",
   "editor.field.title": "Заголовок",
   "editor.field.category": "Категория",
   "editor.field.scores": "Оценки",

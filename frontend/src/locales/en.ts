@@ -202,7 +202,6 @@ const en = {
   "editor.fields": "Content",
   "editor.fieldsAndImages": "Fields & images",
   "editor.raw": "Raw",
-  "editor.body": "Body",
   "editor.field.title": "Title",
   "editor.field.category": "Category",
   "editor.field.scores": "Scores",

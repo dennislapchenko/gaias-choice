@@ -3330,20 +3330,31 @@ a.respected-card:hover {
     outline: none;
 }
 /* Fields view (src/components/FrontmatterFields.tsx): structured frontmatter
-   inputs above a body-only textarea; the whole view scrolls. */
+   inputs above a body-only textarea. The whole view scrolls as ONE column
+   (all widths) — .content-editor-fields is the single scroller, the grid
+   uncaps and flows into it, and the body textarea is auto-grown by JS
+   (contentEditor's autoGrow effect) so it never opens a second scroll region.
+   overflow-x:hidden clips any field slightly wider than its column. */
 .content-editor-fields {
     flex: 1;
     min-height: 0;
     display: flex;
     flex-direction: column;
     background: var(--white);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 .content-editor-fields.is-dimmed {
     opacity: 0.4;
     pointer-events: none;
 }
-/* Collapse bar for the frontmatter fields (gives the body the whole pane). */
+/* Collapse bar for the frontmatter fields (gives the body the whole pane).
+   Sticky so it stays as the header while the single fields column scrolls. */
 .ce-fields-toggle {
+    position: sticky;
+    top: 0;
+    z-index: 1;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -3360,17 +3371,15 @@ a.respected-card:hover {
     border-bottom: 1px solid var(--line);
     cursor: pointer;
 }
-/* The fields grid scrolls in a capped area so the body textarea keeps its room. */
+/* The grid flows into the single .content-editor-fields scroll — NOT its own
+   scroll container. overflow MUST be fully `visible` (not overflow-y:visible —
+   with an overflow-x that computes back to auto, re-making it a scroll trap
+   that swallows the wheel at its boundary instead of chaining up). */
 .ce-fields {
     display: grid;
     gap: 12px;
     padding: 16px 20px;
-    max-height: 40vh;
-    /* Vertical scroll only — a field slightly wider than the column (number/date
-       inputs, the scores row) must never let the grid drift sideways. */
-    overflow-x: hidden;
-    overflow-y: auto;
-    overscroll-behavior: contain;
+    overflow: visible;
     flex: none;
     min-width: 0;
 }
@@ -3441,19 +3450,23 @@ a.respected-card:hover {
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
 }
-/* body-only textarea below the fields: fills the remaining pane height. */
-.ce-body-label {
-    padding: 8px 20px 0;
-}
+/* body-only textarea below the fields. NOT its own scroll region: it's
+   auto-grown to its content (JS autoGrow) so it never scrolls internally, and
+   overscroll:auto (base is `contain`) lets the wheel chain to the fields
+   scroller. Blink still latches the wheel onto a textarea even with zero scroll
+   room, so contentEditor also forwards the wheel by hand on desktop. */
 .content-editor-body-textarea {
-    flex: 1;
-    min-height: 140px;
+    flex: none;
+    min-height: 40vh;
     margin: 6px 16px 16px;
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
+    overscroll-behavior: auto;
+    resize: none;
 }
 /* Desktop: pack the fields into two columns; wide controls (scores, any
-   textarea like excerpt) span the full width. Mobile keeps one column. */
+   textarea like excerpt) span the full width. Mobile keeps one column. The
+   single-column scroll itself is a base rule (all widths) now. */
 @media (min-width: 721px) {
     .ce-fields {
         grid-template-columns: 1fr 1fr;
@@ -3461,30 +3474,6 @@ a.respected-card:hover {
     .ce-field-block,
     .ce-field:has(textarea) {
         grid-column: 1 / -1;
-    }
-    /* Fields + body scroll as ONE column instead of two nested scroll regions
-       (the 40vh-capped fields grid fighting the textarea's own scroll — the
-       "scroll between themselves" pain). The grid uncaps and flows into the
-       single .content-editor-fields scroll; the body textarea is auto-grown to
-       its content by JS (contentEditor's autoGrow effect) so it never opens a
-       second scrollbar — works in Safari/Firefox, not just Chromium's
-       field-sizing. 40vh is the floor for a short body. */
-    .content-editor-fields {
-        overflow-y: auto;
-        overscroll-behavior: contain;
-    }
-    .ce-fields-toggle {
-        position: sticky;
-        top: 0;
-        z-index: 1;
-    }
-    .ce-fields {
-        max-height: none;
-        overflow-y: visible;
-    }
-    .content-editor-body-textarea {
-        flex: none;
-        min-height: 40vh;
     }
 }
 .content-editor-actions {
@@ -3708,11 +3697,6 @@ a.respected-card:hover {
     .content-editor-body-textarea {
         min-height: 96px;
     }
-    /* Redundant next to the folded ПОЛЯ bar (which shows the note title) — the
-       textarea is obviously the body. Reclaim the row. */
-    .ce-body-label {
-        display: none;
-    }
 }
 /* Landscape phone: layout viewport height ~390–430px, and with the keyboard up
    the strip above it is only ~130px — too short to stack header + toolbar +
@@ -3772,9 +3756,6 @@ a.respected-card:hover {
         flex-wrap: nowrap;
         overflow-x: auto;
         overscroll-behavior-x: contain;
-    }
-    .ce-body-label {
-        display: none;
     }
 }
 

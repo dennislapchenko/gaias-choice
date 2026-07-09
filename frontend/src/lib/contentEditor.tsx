@@ -395,15 +395,40 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     }
   })
 
-  // Auto-grow the Fields body textarea to its content on desktop, so the fields
-  // and body scroll as ONE column (no second scrollbar). Cross-browser stand-in
-  // for CSS field-sizing (Chromium-only). Mobile keeps the flex-filled textarea.
+  // Auto-grow the Fields body textarea to its content (all widths), so the
+  // fields and body scroll as ONE column (no second scrollbar) — on touch this
+  // is what lets the drag chain to the fields scroller instead of scrolling the
+  // textarea. Cross-browser stand-in for CSS field-sizing (Chromium-only).
+  // Height = scrollHeight + borders: the textarea is border-box, so a bare
+  // scrollHeight would leave ~2px (its 1px borders) of residual scroll —
+  // enough for `overflow:hidden` to CAPTURE the wheel at the boundary instead of
+  // chaining it to the fields scroller (the "stuck at the bottom over the body"
+  // bug). offsetHeight-clientHeight is exactly those borders.
   useEffect(() => {
     const el = taRef.current
-    if (!el || view !== 'fields' || window.innerWidth <= 720) return
+    if (!el || view !== 'fields') return
     el.style.height = 'auto'
-    el.style.height = `${el.scrollHeight}px`
+    el.style.height = `${el.scrollHeight + el.offsetHeight - el.clientHeight}px`
   }, [state?.value, view, fieldsOpen])
+
+  // Chain the wheel from the auto-grown body textarea up to the fields scroller.
+  // Blink latches the wheel onto a textarea even when it has zero scroll room and
+  // whatever overscroll-behavior we set, so CSS alone can't stop the "sticks over
+  // the body" effect — forward it by hand. preventDefault only when we actually
+  // moved, so the true top/bottom of the whole scroller still behaves natively.
+  useEffect(() => {
+    const el = taRef.current
+    if (!el || view !== 'fields') return
+    const scroller = el.closest('.content-editor-fields') as HTMLElement | null
+    if (!scroller) return
+    const onWheel = (e: WheelEvent) => {
+      const before = scroller.scrollTop
+      scroller.scrollTop += e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY
+      if (scroller.scrollTop !== before) e.preventDefault()
+    }
+    el.addEventListener('wheel', onWheel, { passive: false })
+    return () => el.removeEventListener('wheel', onWheel)
+  }, [view, fieldsOpen, state?.mode])
 
   // The active textarea holds the body (Fields view) or the whole file (Raw
   // view); both toolbar surgery and inline-image splicing operate on its text
@@ -1147,16 +1172,12 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                       />
                     </>
                   )}
-                  <span className="side-label ce-body-label">{t('editor.body')}</span>
                   <textarea
                     ref={taRef}
                     className="content-editor-textarea content-editor-body-textarea"
                     value={mdBody(state.value)}
                     spellCheck={false}
                     disabled={busy || state.status === 'published'}
-                    // Focusing the body collapses fields+images so the text owns
-                    // the pane (fields default open on desktop; reopen via toggle).
-                    onFocus={() => setFieldsOpen(false)}
                     onKeyDown={onTabIndent}
                     onChange={(e) => setState({ ...state, value: withBody(state.value, e.target.value) })}
                   />
