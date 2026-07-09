@@ -3041,15 +3041,17 @@ a.respected-card:hover {
        modal can't spare, so trim them: tighter header, a scrolling (not
        wrapping) toolbar so the longer RU tab labels never cost a second row,
        and a compact cover strip. */
+    /* Ultra-slim header: 4px padding puts the row ~1/3 taller than the 28px
+       close button (≈37px). */
     .content-editor-head {
-        padding: 7px 14px;
+        padding: 4px 14px;
     }
     /* One slim line — the note title can be long; ellipsis it rather than let it
        wrap to two rows and eat vertical budget the keyboard-shrunk modal needs. */
     .content-editor-title {
         flex: 1;
         min-width: 0;
-        font-size: 0.82rem;
+        font-size: 0.78rem;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -3077,6 +3079,13 @@ a.respected-card:hover {
     .content-editor-preview,
     .content-editor-textarea {
         min-height: 96px;
+    }
+    /* Safari won't flex-grow a textarea whose `resize` isn't `none` — it pins it
+       to its min-height and the leftover modal height pools as an empty white
+       band below (that's the "padding around Save"). A resize handle is useless
+       on touch anyway, so drop it on mobile and let flex own the height. */
+    .content-editor-textarea {
+        resize: none;
     }
     .content-editor-body-textarea {
         min-height: 96px;
