@@ -1,5 +1,5 @@
 ---
-image: /images/image-mrcfcpyy.webp
+image: /images/how-to-rack-up-kilometers-with-a-baby-da-mrdtdzt4.webp
 translatedFrom: ru
 title: "How to rack up kilometers with a baby da"
 excerpt: "A working template for the honest version of a long road trip with a small child — the real daily range, the hard hour, and the ways out of it."
