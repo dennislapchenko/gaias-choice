@@ -43,6 +43,7 @@ export default function ImageFrame({
   const [box, setBox] = useState({ w: 0, h: 0 }) // on-screen preview size (CSS px)
   const [dirty, setDirty] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [caption, setCaption] = useState('')
   const pointers = useRef(new Map<number, { x: number; y: number }>())
   const pinchDist = useRef(0)
 
@@ -134,6 +135,23 @@ export default function ImageFrame({
     return () => canvas.removeEventListener('wheel', onWheel)
   }, [])
 
+  // iOS Safari fires its own gesture* events on a two-finger pinch and zooms the
+  // whole page even with touch-action:none — swallow them over the canvas so the
+  // pinch drives our zoom, not Safari's page zoom.
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const stop = (e: Event) => e.preventDefault()
+    canvas.addEventListener('gesturestart', stop)
+    canvas.addEventListener('gesturechange', stop)
+    canvas.addEventListener('gestureend', stop)
+    return () => {
+      canvas.removeEventListener('gesturestart', stop)
+      canvas.removeEventListener('gesturechange', stop)
+      canvas.removeEventListener('gestureend', stop)
+    }
+  }, [])
+
   const panBy = (dx: number, dy: number) => {
     const r = srcRect()
     setCenter((c) => ({
@@ -201,13 +219,13 @@ export default function ImageFrame({
 
   useCmdEnter(save, dirty && !saving)
 
-  // Ask for a caption (may be empty), copy a ready-to-paste markdown image tag
-  // with it, then close the frame — the editor pastes it onto the target line.
-  // The caption renders as the faint centered subtitle under the image.
+  // Copy a ready-to-paste markdown image tag with the caption from the inline
+  // field, then close the frame — the editor pastes it onto the target line. The
+  // caption renders as the faint centered subtitle under the image. The write is
+  // synchronous inside the tap: window.prompt is a no-op in iOS standalone mode
+  // and the blocking dialog also drops the transient activation clipboard needs.
   const copyMd = async () => {
-    const caption = window.prompt(t('imageFrame.captionPrompt'), '')
-    if (caption === null) return // cancelled
-    await navigator.clipboard.writeText(`![${caption}](${src})`)
+    await navigator.clipboard.writeText(`![${caption.trim()}](${src})`)
     onClose()
   }
 
@@ -230,6 +248,14 @@ export default function ImageFrame({
             <span className="image-frame-aspect-label">{t('imageFrame.aspect')}</span>
             {aspectLabel}
           </button>
+          <input
+            type="text"
+            className="image-frame-caption"
+            placeholder={t('imageFrame.captionPrompt')}
+            value={caption}
+            onChange={(e) => setCaption(e.target.value)}
+            disabled={saving}
+          />
           <button type="button" className="btn btn-ghost" onClick={copyMd} disabled={saving}>
             {t('imageFrame.copyMd')}
           </button>

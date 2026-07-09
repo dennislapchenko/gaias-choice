@@ -227,7 +227,7 @@ const en = {
   "imageFrame.original": "Original",
   "imageFrame.save": "Save",
   "imageFrame.copyMd": "Copy for text",
-  "imageFrame.captionPrompt": "Caption (can be empty):",
+  "imageFrame.captionPrompt": "Caption (optional)",
   "imageFrame.deleteConfirm": "Remove this image?",
 } satisfies Record<string, string>;
 

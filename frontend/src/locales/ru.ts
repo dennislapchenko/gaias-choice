@@ -228,7 +228,7 @@ const ru: Record<keyof typeof en, string> = {
   "imageFrame.original": "Оригинал",
   "imageFrame.save": "Сохранить",
   "imageFrame.copyMd": "Скопировать для текста",
-  "imageFrame.captionPrompt": "Подпись (пусто ок тоже):",
+  "imageFrame.captionPrompt": "Подпись (необязательно)",
   "imageFrame.deleteConfirm": "Сжигаем?",
 };
 

@@ -3282,14 +3282,26 @@ a.respected-card:hover {
     bottom: 12px;
     transform: translateX(-50%);
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: calc(100vw - 24px);
     gap: 8px;
     padding: 6px;
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     /* Pill flips with the palette (via --white → dark card surface on dark
        themes) so the ghost buttons' themed text stays legible on it — a fixed
        white pill left the flipped-light text invisible in dark mode. */
     background: color-mix(in srgb, var(--white) 92%, transparent);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+.image-frame-caption {
+    min-width: 0;
+    flex: 1 1 8rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 4px 12px;
+    background: var(--sand);
+    color: var(--ink);
 }
 .image-frame-del {
     padding-inline: 12px;
