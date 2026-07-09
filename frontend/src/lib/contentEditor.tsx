@@ -40,7 +40,7 @@ import { withBase } from './asset'
 import { getSite } from './content'
 import { useCmdEnter } from './cmdEnter'
 import { DEBUG } from './debug'
-import { FRONTMATTER_RE, removeField, setField, type FrontmatterField } from './frontmatter'
+import { dedupeFrontmatter, FRONTMATTER_RE, removeField, setField, type FrontmatterField } from './frontmatter'
 import {
   apiDelete,
   apiGet,
@@ -642,7 +642,11 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
     const stillEnriching = (s: EditorState | null) =>
       s && s.mode?.kind === 'create' && s.mode.path === path && s.status === 'enriching'
     enrichTemplate(title, initialValue, token ?? undefined)
-      .then((body) => {
+      .then((raw) => {
+        // Guard against a duplicated frontmatter key in the model output (a
+        // second `tags:` line has shown up) — invalid YAML would blank the
+        // Fields tab and block saving. dedupeFrontmatter is a no-op on clean text.
+        const body = dedupeFrontmatter(raw)
         // Baseline tracks the enriched template too, so an untouched enrichment
         // isn't treated as a dirty draft (it'll just re-enrich next open).
         setState((s) => (stillEnriching(s) ? { ...s!, value: body, baseline: body, status: 'idle' } : s))

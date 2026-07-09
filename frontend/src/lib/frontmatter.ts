@@ -90,6 +90,33 @@ export function setField(text: string, key: string, newValue: FrontmatterField['
   return fm ? `${fm.open}${block}${fm.close}${fm.body}` : block
 }
 
+// Untrusted model output (the enrich composer) occasionally emits a key TWICE —
+// e.g. a duplicated `tags:` line, sometimes in a stray language — which is
+// invalid YAML: it blanks the Fields tab (parseFields errors → []), blocks
+// saving (badFrontmatter), and would break the build loader if ever committed.
+// Collapse duplicate keys to their LAST occurrence and re-emit. No-op (byte
+// identical) when the block already parses clean, so healthy templates keep
+// their comments/formatting untouched.
+export function dedupeFrontmatter(text: string): string {
+  const fm = splitFrontmatter(text)
+  const source = fm ? fm.yaml : text
+  if (parseDocument(source).errors.length === 0) return text // healthy → untouched
+  const doc = parseDocument(source, { uniqueKeys: false })
+  if (doc.errors.length > 0 || !isMap(doc.contents)) return text // not a dup-key problem — leave it
+  const seen = new Set<string>()
+  doc.contents.items = [...doc.contents.items]
+    .reverse()
+    .filter((item) => {
+      const k = String(item.key)
+      if (seen.has(k)) return false
+      seen.add(k)
+      return true
+    })
+    .reverse()
+  const block = doc.toString({ lineWidth: 0, flowCollectionPadding: false }).replace(/\n$/, '')
+  return fm ? `${fm.open}${block}${fm.close}${fm.body}` : block
+}
+
 // Whole-file text with ONE frontmatter key removed entirely (no-op if absent).
 // Used when clearing the cover or emptying the gallery so the block stays clean
 // (`image: ''` / `gallery: []` left behind would be ugly). Same block-only
