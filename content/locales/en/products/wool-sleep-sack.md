@@ -9,6 +9,7 @@ image: /images/review-wool-sleep-sack.svg
 date: 2026-06-28
 tags: [wool, sleep, temperature]
 boughtAt: Deschmann
+gallery: [/images/image-mrdvhgqc.jpg]
 ---
 
 Sleep is the thing that makes or breaks a trip, and temperature is usually why
