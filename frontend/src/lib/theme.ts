@@ -42,6 +42,9 @@ export function applyTheme(theme: Theme): void {
   root.style.setProperty('--panel-tint', dark ? 'rgba(255, 255, 255, 0.05)' : 'transparent')
   root.style.setProperty('--surface-muted', dark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(47, 44, 39, 0.05)')
   root.style.setProperty('--surface-muted-strong', dark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(47, 44, 39, 0.09)')
+  // Danger red lightens on dark palettes so error text/borders stay legible on
+  // dark surfaces (the :root default #b3423a is tuned for light backgrounds).
+  root.style.setProperty('--danger', dark ? '#e08079' : '#b3423a')
   root.dataset.theme = theme.tag
 }
 

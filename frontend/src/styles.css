@@ -20,6 +20,11 @@
        in light, flipped to a white wash in dark (see theme.ts). */
     --surface-muted: rgba(47, 44, 39, 0.05);
     --surface-muted-strong: rgba(47, 44, 39, 0.09);
+    /* Danger red for error text / destructive hovers. Flipped lighter on dark
+       palettes (see theme.ts) so it stays legible on dark surfaces. The solid
+       .btn-danger surface keeps its own literal — it carries white text and
+       reads the same in every theme. */
+    --danger: #b3423a;
     --radius: 22px; /* round-ish: cards, hero, images, bands */
     --radius-sm: 14px; /* smaller inner elements (menus, option rows) */
     --shadow: 0 8px 28px rgba(44, 42, 38, 0.1);
@@ -36,6 +41,39 @@
 
 * {
     box-sizing: border-box;
+}
+
+/* Overlay scrollbars site-wide: thin, transparent at rest, thumb tinted only
+   while the scroll container (or a descendant) is hovered/focused — so no
+   scrollbar ever reserves layout width or sits bright over the UI. The thumb
+   is derived from --muted so it flips with the palette (dark thumb on light
+   themes, light thumb on dark ones). Opt out per-element by re-setting
+   scrollbar-color if a visible bar is ever wanted. */
+:root {
+    --scrollbar-thumb: color-mix(in srgb, var(--muted) 55%, transparent);
+}
+* {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+*::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 999px;
+}
+*:hover,
+*:focus-within {
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+*:hover::-webkit-scrollbar-thumb,
+*:focus-within::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
 }
 
 html,
@@ -495,7 +533,7 @@ h1 {
 }
 .login-error {
     margin: 0 0 12px;
-    color: #b3423f;
+    color: var(--danger);
     font-size: 0.9rem;
 }
 .login-submit {
@@ -787,28 +825,8 @@ h1 {
     max-height: calc(100vh - 108px);
     overflow-y: auto;
     overscroll-behavior: contain;
-    /* Overlay scrollbar: thin, transparent until hovered/focused, so it
-       doesn't reserve layout width or sit visible at rest. */
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-}
-.sidebar::-webkit-scrollbar {
-    width: 6px;
-}
-.sidebar::-webkit-scrollbar-track {
-    background: transparent;
-}
-.sidebar::-webkit-scrollbar-thumb {
-    background: transparent;
-    border-radius: 999px;
-}
-.sidebar:hover,
-.sidebar:focus-within {
-    scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
-}
-.sidebar:hover::-webkit-scrollbar-thumb,
-.sidebar:focus-within::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.25);
+    /* Overlay scrollbar (thin, transparent-until-hovered) comes from the
+       site-wide * rule near the top of this file. */
 }
 /* When a second rail is present beside the site-wide left Sidebar — the
    entry-detail TOC or the Reviews/Journal "in the works" rail — dim the
@@ -1001,7 +1019,9 @@ h1 {
     display: grid;
     place-items: center;
     border-radius: 11px;
-    background: rgba(255, 255, 255, 0.55);
+    /* Chip lifts off the pastel badge via --white, so it flips to the palette's
+       dark card surface on dark themes instead of a bright white square. */
+    background: color-mix(in srgb, var(--white) 55%, transparent);
     color: var(--sage-dark);
 }
 .value-badge-icon svg {
@@ -1701,28 +1721,7 @@ a.respected-card:hover {
        pushing the rail's height around as more items queue up. */
     max-height: 480px;
     overflow-y: auto;
-    /* Same overlay scrollbar as .sidebar: thin, transparent at rest, only
-       tinting the thumb on hover/focus so it never sits bright over the rail. */
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-}
-.upcoming-list::-webkit-scrollbar {
-    width: 6px;
-}
-.upcoming-list::-webkit-scrollbar-track {
-    background: transparent;
-}
-.upcoming-list::-webkit-scrollbar-thumb {
-    background: transparent;
-    border-radius: 999px;
-}
-.upcoming-list:hover,
-.upcoming-list:focus-within {
-    scrollbar-color: rgba(0, 0, 0, 0.25) transparent;
-}
-.upcoming-list:hover::-webkit-scrollbar-thumb,
-.upcoming-list:focus-within::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.25);
+    /* Overlay scrollbar inherited from the site-wide * rule (top of file). */
 }
 .upcoming-item {
     margin: 0;
@@ -2087,7 +2086,10 @@ a.respected-card:hover {
     padding: 0;
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
-    background: rgba(47, 44, 39, 0.04);
+    /* Faint placeholder wash behind the tile image — the shared greyed-surface
+       token, so it flips to a light wash on dark themes instead of a dark-on-
+       dark smudge. */
+    background: var(--surface-muted);
     cursor: pointer;
     overflow: hidden;
 }
@@ -2837,8 +2839,8 @@ a.respected-card:hover {
 /* Same look as .edit-btn but tips red on hover — a destructive action, not
    a neutral one. */
 .delete-btn:hover {
-    color: #b3423a;
-    border-color: #b3423a;
+    color: var(--danger);
+    border-color: var(--danger);
 }
 /* iPhone-style switch (src/components/StateToggle.tsx) that flips a post's
    `state` directly — no dialog. ON (sage, knob right) = active/published;
@@ -2893,7 +2895,7 @@ a.respected-card:hover {
 }
 .state-toggle-error {
     font-size: 0.78rem;
-    color: #b3423a;
+    color: var(--danger);
 }
 .state-toggle-saved {
     font-size: 0.78rem;
@@ -2929,7 +2931,7 @@ a.respected-card:hover {
 .confirm-dialog-error {
     margin: 10px 0 0;
     font-size: 0.85rem;
-    color: #b3423a;
+    color: var(--danger);
 }
 .confirm-dialog-actions {
     display: flex;
@@ -3131,7 +3133,9 @@ a.respected-card:hover {
 }
 .content-editor-close:hover {
     color: var(--ink);
-    background: rgba(47, 44, 39, 0.08);
+    /* Shared greyed-surface token so the hover wash shows on dark themes (a
+       fixed dark wash vanished on the dark editor). */
+    background: var(--surface-muted-strong);
 }
 /* Banner shown when the editor reopened a recovered localStorage autosave
    (contentEditor.tsx, state.restored) — with an inline "discard it" link. */
@@ -3281,7 +3285,10 @@ a.respected-card:hover {
     gap: 8px;
     padding: 6px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.92);
+    /* Pill flips with the palette (via --white → dark card surface on dark
+       themes) so the ghost buttons' themed text stays legible on it — a fixed
+       white pill left the flipped-light text invisible in dark mode. */
+    background: color-mix(in srgb, var(--white) 92%, transparent);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 }
 .image-frame-del {
@@ -3507,7 +3514,7 @@ a.respected-card:hover {
     color: var(--muted);
 }
 .content-editor-error {
-    color: #b3423a;
+    color: var(--danger);
 }
 /* Editor body wrapper — hosts the textarea/preview plus the enriching overlay. */
 .content-editor-body {
@@ -3530,7 +3537,9 @@ a.respected-card:hover {
     gap: 10px;
     font-size: 0.85rem;
     color: var(--sage-dark);
-    background: rgba(255, 255, 255, 0.35);
+    /* Frost veil while enriching — flips with --white so it mutes the textarea
+       in dark themes instead of dropping a bright patch over it. */
+    background: color-mix(in srgb, var(--white) 35%, transparent);
     pointer-events: none;
 }
 .content-editor-spinner {
