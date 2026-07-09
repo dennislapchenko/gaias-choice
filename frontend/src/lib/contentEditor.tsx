@@ -1166,7 +1166,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                         value={state.value}
                         scoreLabels={scoreLabels}
                         disabled={busy || state.status === 'published'}
-                        hide={['title', 'state', ...(isPost ? ['image'] : [])]}
+                        hide={['title', 'state', ...(isPost ? ['image', 'gallery'] : [])]}
                         extraKeys={isReview ? ['boughtAt'] : undefined}
                         onEdit={onField}
                       />
