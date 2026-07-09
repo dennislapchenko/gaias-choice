@@ -170,7 +170,49 @@
   `docker exec deploy-api-1 …` isn't needed — the db is a host file:
   `sqlite3 /srv/gaias-choice/data/gaia.db ".backup '/srv/gaias-choice/backups/gaia-$(date +%F).db'"`.
 
+## Security posture & hardening plan
+
+**Current inbound surface (what's actually reachable):**
+- **22/tcp** — SSH, key-based, root login. Open to the whole internet.
+- **80/443/tcp** — Caddy only. Caddy serves a single site (`{$API_DOMAIN}`)
+  and reverse-proxies it to `api:8787`; requests to the raw IP or any other
+  `Host` get no matching site (and no cert on 443), so they don't proxy
+  through. `api:8787` is **not** host-published — it lives only on the compose
+  network. So the effective surface is 22 + 80/443, nothing else.
+
+**The gap:** nothing at the network edge. There's no Hetzner Cloud Firewall and
+no host firewall. Today that's fine (only Caddy publishes ports), but there's
+no guard against a *future* mistake — the moment any container gets a
+`ports:` mapping (e.g. `8787:8787`), it's world-exposed with no warning.
+
+**Do NOT reach for host `firewalld`/`ufw` for this.** Docker publishes ports by
+writing its own DNAT/filter iptables rules that are evaluated *before*
+firewalld's `INPUT` chain, so a published container port bypasses the host
+firewall entirely. Host firewalld would give false confidence for exactly the
+failure mode above. (This refines step 3's "no host firewall needed" note: true
+for the current state, but host firewalld is the wrong tool regardless.)
+
+**The right control — Hetzner Cloud Firewall (owner action, not yet applied).**
+It filters at the network edge, *before* packets reach the VM's NIC and before
+Docker's iptables run, so it also catches accidental container port-publishes.
+Free, declarative, and Terraform-able later (`hcloud_firewall`). In the Hetzner
+Cloud console (or `hcloud firewall create`), attach a firewall to the VM with:
+- **Inbound allow:** `22/tcp`, `80/tcp`, `443/tcp` (source `0.0.0.0/0` +
+  `::/0`; tighten 22 to the owner's IP later if it becomes static).
+- **Inbound:** drop everything else (default).
+- **Outbound:** allow all (the API needs egress to GHCR, Postmark, Telegram,
+  Anthropic, Let's Encrypt).
+
+**Optional host-side SSH hardening (defense in depth, over SSH):** in
+`/etc/ssh/sshd_config` set `PermitRootLogin prohibit-password` +
+`PasswordAuthentication no` (key auth is already the only working path; this
+just makes it explicit and closes password brute-force noise). Deferred — it
+touches live sshd and risks lockout, so apply deliberately with console access
+as a fallback.
+
 ## Deferred (not done yet, by design)
+- **Hetzner Cloud Firewall** — the edge all/deny above; owner applies in the
+  console. Automate later via Terraform (`hcloud_firewall` + attachment).
 - **doco-cd GitOps** auto-redeploy (its server compose + webhook/poll + token
   files) — first deploy was intentionally manual to prove the stack.
 - **DB backup cron** — dirs exist (`/srv/gaias-choice/backups`); the host cron
