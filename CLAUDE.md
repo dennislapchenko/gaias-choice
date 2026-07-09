@@ -96,7 +96,8 @@ frontend/                # the Vite SPA (all app code + its build config)
                          # astro.ts + astroText.ts (almanac), asset.ts
                          # (BASE_PATH), api.ts (FE↔BE contract), session.tsx
                          # (login seam), editMode.tsx + contentEditor.tsx
-                         # (live-edit), types.ts
+                         # (live-edit shell) + contentEditorImpl.tsx (the
+                         # editor, a lazy chunk only editors load), types.ts
     components/, pages/  # per-component map: development.md "Where things live"
     styles.css           # single hand-written stylesheet (no CSS framework)
 backend/                 # optional Go/gin API sidecar; openapi.yaml is THE
@@ -121,9 +122,12 @@ and `compose.dev.yaml` are repo-root. All `task` commands run from the root.
 The heart of the site — everything is bundled at **build time**
 (`import.meta.glob` over `content/locales/*/…`, raw strings; nothing fetched
 at runtime). Frontmatter is parsed with the `yaml` package (browser-safe —
-deliberately NOT `gray-matter`, which needs Node's `Buffer`); the body renders
-through `marked` (GFM) into `dangerouslySetInnerHTML` — **content is trusted**
-(author-controlled); never feed untrusted markdown through it unsanitized.
+deliberately NOT `gray-matter`, which needs Node's `Buffer`) eagerly at boot
+(listings need it); the body renders through `marked` (GFM) into
+`dangerouslySetInnerHTML` **lazily on first read** (a memoized `html` getter
+per entry — only the detail pages consume it, so boot never parses the
+corpus). **Content is trusted** (author-controlled); never feed untrusted
+markdown through it unsanitized.
 **The filename (minus `.md`) is the slug / URL** — renaming a file changes its
 URL; nothing hardcodes slugs. Collections sort by `date` descending. Custom
 `marked` renderers stamp heading anchor ids (Cyrillic-transliterated, feeds

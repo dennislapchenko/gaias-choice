@@ -1,5 +1,15 @@
 # Repo audit — surgical high-gain tweaks (findings + candidate fixes)
 
+**OUTCOME (2026-07-09):** owner picked 1, 2, 5, 6, 7, 8 — executed and
+verified (see `action-plan.md` for measured results). 3 and 4 (CI gates)
+deliberately skipped: the assistant's local verify gate covers it and CI
+stays fast. Self-hosted runner on the prod VM: recommended against — the
+repo is public, so a self-hosted runner would execute untrusted workflow
+code on the box holding prod data; hosted runners are also simply faster
+than the small VM. Still open for a future pass: the "Nits" below (UTF-8
+commit-message truncation, package.json "RV travel" copy, context/ archive
+sweep).
+
 Produced by a full read of `frontend/src`, `backend/internal`, `deploy/`,
 workflows, Taskfile, Dockerfiles, nginx template — plus one measured
 production build. Per SKILL.md "Big tasks": this is the options doc; the
