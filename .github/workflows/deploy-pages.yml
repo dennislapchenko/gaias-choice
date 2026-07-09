@@ -4,6 +4,19 @@ on:
   push:
     branches:
       - main
+    # Skip rebuilds for pushes that can't change the published site (docs,
+    # backend, deploy config). paths-ignore skips only when EVERY changed file
+    # matches, so a mixed push still deploys. Never list content/** or
+    # frontend/** here.
+    paths-ignore:
+      - "context/**"
+      - ".claude/**"
+      - "backend/**"
+      - "deploy/**"
+      - "CLAUDE.md"
+      - "README.md"
+      - "Taskfile.yml"
+      - ".doco-cd.yml"
   # Lets you manually trigger a clean redeploy from the Actions tab. Prefer
   # this over "re-run failed jobs" on a stuck run — re-running re-uploads the
   # `github-pages` artifact into the SAME run without clearing the old one,
