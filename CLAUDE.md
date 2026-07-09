@@ -131,6 +131,13 @@ the entry TOC) and render <code>```diagram</code> fenced blocks (mechanics:
 development.md "Entry detail TOC" + "Guide tables & SVG diagrams" rows;
 authoring: `content-editing.md`).
 
+**Local sandbox overlay (dev only).** A gitignored `content-local/` mirror lets
+localhost carry its own reviews/journals that never ship: `withLocalOverlay`
+merges `content-local/locales/<lng>/{products,journal}/*.md` over `content/` by
+same-slug, but only when `DEBUG` — so it shows in `task dev` and tree-shakes out
+of the prod build. Mechanics + how to extend: development.md "Local-only
+reviews/journals" task.
+
 ## The content sections
 
 **Reviews** (`/reviews`, `products/*.md`) — frontmatter `title`, `category`
