@@ -3466,7 +3466,7 @@ a.respected-card:hover {
 .ce-scores {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: left;
     gap: 10px;
 }
 .ce-score {
