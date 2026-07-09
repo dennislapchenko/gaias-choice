@@ -14,6 +14,7 @@
 // `translatedFrom` is a provenance mark owned by the translation flow.
 import { useState } from 'react'
 import { parseFields, type FrontmatterField } from '../lib/frontmatter'
+import { useI18n } from '../lib/i18n'
 
 const READONLY = new Set(['state', 'translatedFrom'])
 
@@ -51,9 +52,13 @@ function TagsField({
   )
 }
 
-// title → "Title", affiliateUrl → "Affiliate Url", translatedFrom → "Translated
-// From" — a dynamic label so unknown/new keys still read sensibly (no per-key
-// i18n to keep in sync).
+// Known content-frontmatter keys get a localized label (`editor.field.<key>`);
+// any unknown/new key falls back to humanize (title → "Title", affiliateUrl →
+// "Affiliate Url") so it still reads sensibly without per-key i18n.
+const LABELLED = new Set([
+  'title', 'category', 'scores', 'price', 'boughtAt', 'affiliateUrl',
+  'image', 'tags', 'state', 'excerpt', 'date', 'translatedFrom',
+])
 const humanize = (k: string) =>
   k.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/^./, (c) => c.toUpperCase())
 
@@ -78,6 +83,7 @@ export default function FrontmatterFields({
   extraKeys?: string[]
   onEdit: (key: string, next: FrontmatterField['value']) => void
 }) {
+  const { t } = useI18n()
   const present = parseFields(value).filter((f) => !hide?.includes(f.key))
   if (present.length === 0) return null // malformed / no frontmatter — caller keeps the Raw tab
   const fields = [...present]
@@ -88,7 +94,7 @@ export default function FrontmatterFields({
   return (
     <div className="ce-fields">
       {fields.map((f) => {
-        const label = humanize(f.key)
+        const label = LABELLED.has(f.key) ? t(`editor.field.${f.key}`) : humanize(f.key)
 
         // scores: a labelled 0–5 number per criterion (site.yaml ratingCriteria).
         if (f.type === 'number[]' && f.key === 'scores') {
