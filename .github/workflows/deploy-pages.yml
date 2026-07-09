@@ -61,6 +61,12 @@ jobs:
         # /gaias-choice/reviews/foo) hit 404.html. Serving a copy of index.html
         # there lets the client router take over.
         run: cp dist/index.html dist/404.html
+      - name: Stamp version
+        # Publish the deployed commit at /version.json so the live-edit portal can
+        # poll it after a write and toast "your change is live" once this deploy
+        # lands (src/lib/deployWatch.ts). Only real deploys have it; local/nginx
+        # builds don't, so the toast is simply off there.
+        run: printf '{"commit":"%s"}' "$GITHUB_SHA" > dist/version.json
 
       - name: Setup Pages
         uses: actions/configure-pages@v6.0.0

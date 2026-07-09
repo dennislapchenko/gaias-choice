@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import BusyIndicator from './components/BusyIndicator'
+import DeployToast from './components/DeployToast'
 import Layout from './components/Layout'
 import { ContentEditorProvider } from './lib/contentEditor'
 import { EditModeProvider } from './lib/editMode'
@@ -40,6 +41,7 @@ export default function App() {
             </Routes>
           </Layout>
           <BusyIndicator />
+          <DeployToast />
         </ContentEditorProvider>
       </EditModeProvider>
     </SessionProvider>

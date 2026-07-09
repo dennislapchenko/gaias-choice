@@ -5,6 +5,7 @@
 // URL. So every helper here fails quietly — callers render nothing on error,
 // never an error page. See `useApi` and the SPA-fallback guard below.
 import { useEffect, useState } from 'react'
+import { watchDeploy } from './deployWatch'
 
 // Global in-flight counter for content mutations, so ONE floating indicator can
 // say "working…" for any editor write (save / commit / delete / image / state
@@ -92,7 +93,9 @@ async function apiSend<T>(
       headers: { ...headers(opts?.token), 'Content-Type': 'application/json' },
       body: body === undefined ? undefined : JSON.stringify(body),
     })
-    return await parseJson<T>(res)
+    const data = await parseJson<T>(res)
+    if (track) void watchDeploy() // committed → watch for the deploy going live
+    return data
   } finally {
     if (track) setMutationCount(activeMutations - 1)
   }

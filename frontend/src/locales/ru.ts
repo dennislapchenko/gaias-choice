@@ -169,6 +169,7 @@ const ru: Record<keyof typeof en, string> = {
   "editor.saving": "Сохраняем…",
   "editor.loading": "Получаем текущую версию…",
   "editor.published": "Опубликовано — на сайте через ~2 мин",
+  "editor.deployLive": "Изменение уже на сайте",
   "editor.error": "Не сохранилось:",
   "editor.badFrontmatter": "Ошибка в YAML-заголовке — исправьте перед сохранением:",
   "editor.discardConfirm": "Закрыть редактор? Правки сохранятся как черновик и вернутся при следующем открытии.",
