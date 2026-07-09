@@ -14,6 +14,7 @@ set -euo pipefail
 ROOT_ENV="${ROOT_ENV:-.env}"
 WORKFLOW="${BE_WORKFLOW:-Build backend image}"
 VM_KEY="${VM_KEY/#\~/$HOME}" # ssh -i won't expand ~ inside a quoted var
+VM_PORT="${VM_PORT:-13337}"  # SSH moved off 22; see deploy/infra-log.md
 
 # 1. Image tag — explicit override, else the newest green CI build on main.
 if [ -n "${BE_TAG:-}" ]; then
@@ -49,10 +50,10 @@ trap 'rm -f "$env_file"' EXIT
 
 # 4. Ship + recreate.
 compose="docker compose --env-file deploy.env -f compose.yaml"
-ssh -i "$VM_KEY" "$VM_SSH" "mkdir -p '$VM_DIR'"
-scp -i "$VM_KEY" deploy/compose.yaml deploy/Caddyfile "$VM_SSH:$VM_DIR/"
-scp -i "$VM_KEY" "$env_file" "$VM_SSH:$VM_DIR/deploy.env"
-ssh -i "$VM_KEY" "$VM_SSH" \
+ssh -i "$VM_KEY" -p "$VM_PORT" "$VM_SSH" "mkdir -p '$VM_DIR'"
+scp -i "$VM_KEY" -P "$VM_PORT" deploy/compose.yaml deploy/Caddyfile "$VM_SSH:$VM_DIR/"
+scp -i "$VM_KEY" -P "$VM_PORT" "$env_file" "$VM_SSH:$VM_DIR/deploy.env"
+ssh -i "$VM_KEY" -p "$VM_PORT" "$VM_SSH" \
   "cd '$VM_DIR' && chmod 600 deploy.env && $compose pull && $compose up -d && $compose ps"
 
 echo "✓ released $tag to $VM_SSH"

@@ -18,8 +18,8 @@
   (registrar: Namecheap). This is the API host Caddy terminates TLS for
   (`API_DOMAIN`). The static site stays on GitHub Pages
   (`https://dennislapchenko.github.io`) and does not move.
-- **SSH:** `ssh root@gaias-choice.gardenofatlantis.com -i ~/.ssh/gaia`
-  (root, key-based).
+- **SSH:** `ssh -p 13337 root@gaias-choice.gardenofatlantis.com -i ~/.ssh/gaia`
+  (root, key-based; **port 13337**, moved off 22 — see hardening section).
 
 ## Timeline
 
@@ -173,7 +173,7 @@
 ## Security posture & hardening plan
 
 **Current inbound surface (what's actually reachable):**
-- **22/tcp** — SSH, key-based, root login. Open to the whole internet.
+- **13337/tcp** — SSH, key-based, root login (moved off 22, see below).
 - **80/443/tcp** — Caddy only. Caddy serves a single site (`{$API_DOMAIN}`)
   and reverse-proxies it to `api:8787`; requests to the raw IP or any other
   `Host` get no matching site (and no cert on 443), so they don't proxy
@@ -197,8 +197,8 @@ network edge, *before* packets reach the VM's NIC and before Docker's iptables
 run, so it also catches accidental container port-publishes. Free, declarative,
 and Terraform-able later (`hcloud_firewall`). Applied to the VM as firewall
 **`gaias-choice-edge`**:
-- **Inbound allow:** `22/tcp` (SSH), `80/tcp` (Caddy ACME + redirect),
-  `443/tcp` (Caddy HTTPS) — each `0.0.0.0/0` + `::/0`. Tighten 22 to the
+- **Inbound allow:** `13337/tcp` (SSH), `80/tcp` (Caddy ACME + redirect),
+  `443/tcp` (Caddy HTTPS) — each `0.0.0.0/0` + `::/0`. Tighten SSH to the
   owner's IP later if it becomes static.
 - **Inbound:** everything else dropped (Hetzner default-deny for unlisted
   inbound). Verified: `8787` from off-VM is now filtered.
@@ -210,12 +210,21 @@ and Terraform-able later (`hcloud_firewall`). Applied to the VM as firewall
   `--direction in --protocol tcp --port <22|80|443> --source-ips 0.0.0.0/0
   --source-ips ::/0` rules, then `apply-to-resource --type server`.
 
-**Optional host-side SSH hardening (defense in depth, over SSH):** in
-`/etc/ssh/sshd_config` set `PermitRootLogin prohibit-password` +
-`PasswordAuthentication no` (key auth is already the only working path; this
-just makes it explicit and closes password brute-force noise). Deferred — it
-touches live sshd and risks lockout, so apply deliberately with console access
-as a fallback.
+**SSH moved to port 13337 (done).** Cuts the constant 22 brute-force/scan
+noise. Done as a reversible drop-in `/etc/ssh/sshd_config.d/10-port.conf`
+(`Port 13337`) — the stock `sshd_config` has no `Port` line, so the drop-in is
+the only source; revert = delete the file + `systemctl restart sshd` (and
+re-add the edge rule). SELinux is **Permissive**, so no `semanage port`
+relabel was needed (it would be on Enforcing). Cutover order (to avoid
+lockout): add edge rule 13337 → drop-in `Port 22` + `Port 13337` → verify a
+fresh 13337 login → drop-in `Port 13337` only → remove edge rule 22. The
+deploy tooling was updated to use it: `deploy/release.sh` + `task be:deploy`
+take **`VM_PORT` (default 13337)**, wiring `ssh -p` / `scp -P`.
+
+**Still deferred (defense in depth):** in `sshd_config` set
+`PermitRootLogin prohibit-password` + `PasswordAuthentication no` (key auth is
+already the only working path; makes it explicit). Not done — touches live
+sshd auth; apply with console access as the lockout fallback.
 
 ## Deferred (not done yet, by design)
 - **Terraform the edge firewall** — `gaias-choice-edge` is live but was created
