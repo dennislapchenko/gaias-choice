@@ -3023,19 +3023,30 @@ a.respected-card:hover {
     overflow: hidden;
 }
 @media (max-width: 720px) {
+    /* Bottom sheet on a FULL-SCREEN backdrop. Safari reports --vv-h accurately,
+       so the sheet's bottom lands exactly on the keyboard and it fills the
+       strip. WebKit *wrappers* (Brave/Chrome/Firefox) under-report --vv-h — the
+       sheet then sits a little high, but the shortfall shows as backdrop below
+       it (reads as intentional) instead of a white page-gap. Anchoring the
+       bottom (not filling from the top) is what makes Save always hug the
+       reported keyboard edge regardless of that error. */
     .content-editor-overlay {
-        /* Full-bleed, and NOT the desktop grid-center: a centered grid item's
-           height:100% resolves against the auto row track (its own content), so
-           the modal under-fills the visible viewport and the body textarea can't
-           grow into the empty space (page bleeds above/below the card). Block
-           makes height:100% resolve against the definite --vv-h, filling it. */
+        top: 0;
+        height: 100dvh;
         padding: 0;
-        display: block;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
     }
     .content-editor {
         width: 100%;
-        height: 100%;
+        height: var(--vv-h, 100dvh);
+        max-height: 100dvh;
         border-radius: 0;
+        /* Push the sheet up off the screen bottom by everything below the visible
+           viewport (keyboard + any browser chrome), so its bottom edge = the
+           visible-viewport bottom. Vars unset (keyboard down) ⇒ 0 ⇒ full height. */
+        margin-bottom: calc(100dvh - var(--vv-top, 0px) - var(--vv-h, 100dvh));
     }
     /* Every chrome row above the textarea is vertical budget the keyboard-shrunk
        modal can't spare, so trim them: tighter header, a scrolling (not
