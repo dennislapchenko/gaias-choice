@@ -59,7 +59,7 @@ content/                 # ALL editable content (no code)
   locales/
     README.md            # per-locale layout + do-not-translate glossary +
                          # the en-only inherited site.yaml field list
-    en/                  # English — source of truth, always complete
+    en/                  # English — fallback source of truth, always complete
       site.yaml          # name, nav, values, respected, epics, sidebar, support…
       products/*.md      # reviews → /reviews/<filename-without-.md>
       compass/<epic>/*.md# Compass chapters → /compass/<slug> (subfolder is

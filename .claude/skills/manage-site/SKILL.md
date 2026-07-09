@@ -102,25 +102,42 @@ classify-and-do as usual.
    applies with full force there (no fabricated trips, scenes, or durations).
    Don't blur the line: don't quietly AI-author a Journal entry or review, and
    don't strip Compass's provenance disclosure. **The one allowed machine
-   assist outside Compass is *translation*** (`setPostState` in
+   assist outside Compass is *translation*** (`setPostState`/`saveFile` in
    `contentEditor.tsx` → `POST /content/translate`), governed by one rule:
-   **Russian is the human source of truth; English may be machine-translated,
-   never the reverse.** The sync is driven by the **state toggle**: flipping an
-   RU review/journal post **Active** (re)translates it into its EN sibling
-   (title/excerpt pinned to any existing EN wording so re-runs don't churn;
-   scores/price/tags flow from RU); flipping it **Upcoming** just mirrors the
-   state onto EN (no re-translation). Both the state flip and the EN write land
-   in ONE commit. Editing content never auto-translates — the next Active flip
-   carries the edits over. A **brand-new RU draft auto-seeds its EN sibling in
-   the same create commit** — a **frontmatter-only** translation (just the
-   title/excerpt, so the "in the works" rail entry reads in English; the body
-   stays skeletal until the first Active flip), or a verbatim copy when the model
-   is offline. **EN posts never push back to RU** (hand-written RU is never
-   overwritten by AI). Every machine-translated file carries a
-   `translatedFrom:` frontmatter mark, rendered on the page ("Translated from
-   Russian" / etc.), so the assist is disclosed. This is allowed because it
-   *translates* existing human content — it invents nothing.
-   Authoring (not translating) any Journal/review with an LLM stays forbidden.
+   **for reviews and journal, Russian is the human original; English is
+   machine-translated from it, never the reverse.** This is the *human-authoring*
+   axis — keep it apart from `en/` being the *fallback* source of truth that must
+   stay complete so a missing locale file never breaks the site (the fallback
+   axis lives in `content/locales/README.md`). The sync is driven by the **state
+   toggle**: flipping an RU review/journal post **Active** (re)translates it into
+   its EN sibling (title/excerpt pinned to any existing EN wording so re-runs
+   don't churn; scores/price/tags flow from RU); flipping it **Upcoming** just
+   mirrors the state onto EN (no re-translation). Both the state flip and the EN
+   write land in ONE commit. Editing content never auto-translates the **prose** —
+   the next Active flip carries the edits over — with **one exception: the shared
+   media (cover `image:` + `gallery:`) mirrors RU→EN on save** (it's shared media,
+   not prose; inline body images stay per-locale). A **brand-new RU draft
+   auto-seeds its EN sibling in the same create commit** — a **frontmatter-only**
+   translation (just the title/excerpt, so the "in the works" rail entry reads in
+   English; the body stays skeletal until the first Active flip), or a verbatim
+   copy when the model is offline. **EN posts never push back to RU**
+   (hand-written RU is never overwritten by AI). Every machine-translated file
+   carries a `translatedFrom:` frontmatter mark, rendered on the page ("Translated
+   from Russian" / etc.), so the assist is disclosed. This is allowed because it
+   *translates* existing human content — it invents nothing. Authoring (not
+   translating) any Journal/review with an LLM stays forbidden.
+
+   **Cross-locale mirror contract** — what auto-crosses locales, and which way
+   (the human-authoring axis; every locale still falls back to `en` for a missing
+   file regardless):
+
+   | Section | Human original | Auto RU→EN | EN→RU |
+   | --- | --- | --- | --- |
+   | **Reviews** (`products/`) | RU | New RU draft seeds an EN frontmatter skeleton (same commit); Active-flip (re)translates body + carries scores/price/tags, title/excerpt pinned; Upcoming-flip mirrors state; cover + gallery mirror on **save** | never |
+   | **Journal** | RU | Same as reviews, minus scores | never |
+   | **Compass** chapters | EN (AI-drafted + edited) | None — both locales produced together by `write-epic-course`; diagrams are one shared template filled per locale (`inside-websites` is EN-only) | n/a |
+   | **`site.yaml`** non-localized (name, support, social, sidebar…) | EN | Inherited via `getSite` shallow-merge — authored once in `en/` | n/a |
+   | **`site.yaml`** localized (nav, values…) + **pages** (about, contact, legal, **roadmap**) | per-locale, hand-written | None — roadmap is ticked in **both** locales by hand | never |
 
 ## Coding principles
 

@@ -4,7 +4,7 @@ One directory per language, same shape inside each:
 
 ```
 locales/
-  en/                  # English — the source of truth, always complete
+  en/                  # English — the FALLBACK source of truth, always complete
     site.yaml
     products/*.md
     compass/<epic>/*.md
@@ -14,10 +14,19 @@ locales/
     (same shape)
 ```
 
-`en/` must always be complete — it's the fallback for anything missing elsewhere.
-A locale directory does not need every file: `src/lib/content.ts` falls back to
-`en/` per-collection and per-slug when a locale is missing a file, so the site
-never breaks while a translation is in progress.
+Two different axes both get called "source of truth" — keep them apart:
+
+- **Fallback axis (this file):** `en/` must always be complete — it's the
+  fallback for anything missing elsewhere. A locale directory does not need
+  every file: `src/lib/content.ts` falls back to `en/` per-collection and
+  per-slug when a locale is missing a file, so the site never breaks while a
+  translation is in progress.
+- **Human-authoring axis:** which locale a human writes *first* varies by
+  section, and for reviews/journal the live-edit portal machine-translates
+  **RU→EN** (RU is the human original there). The full cross-locale mirror
+  contract — who auto-translates what, in which direction — lives in the
+  `manage-site` `SKILL.md` non-negotiable #6. Read it before wiring locale
+  content; this file only covers per-locale *layout*.
 
 **`site.yaml` inherits field-by-field from English.** `getSite` shallow-merges
 the locale file over `en/site.yaml` (`{ ...en, ...localized }`), so any
