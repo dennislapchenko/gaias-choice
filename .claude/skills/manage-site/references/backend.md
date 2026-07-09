@@ -61,7 +61,7 @@ static-site build work.
   content files — `{paths:[…]}` — in a SINGLE commit; the FE passes a post's
   ru+en paths together to wipe both at once),
   `POST /api/content/image` (commit one browser-downscaled WebP to
-  `public/images/*.webp` — `{path,contentBase64}`, its own commit, reuses the
+  `frontend/public/images/*.webp` — `{path,contentBase64}`, its own commit, reuses the
   base64-native Contents API `Save`; the FE's cover/inline image uploads),
   `POST /api/content/template` (the draft
   composer's title→prompts enrichment — `session: [editor]`, 503 when no
@@ -135,7 +135,7 @@ answer 503 "editing not configured"** and `/api/auth/me` reports
 configured ∧ admin/editor role), so the FE keeps edit chrome off unless a
 save could actually land. Validation stays dumb and stateless: `content/`-only path allowlist
 (traversal ⇒ 400; `ValidImagePath` is the parallel allowlist for image
-uploads — `public/images/*.webp` only, decoded ≤ `MaxImageBytes` 1 MB), 256 KB size cap, and a sha handle for conflict safety
+uploads — `frontend/public/images/*.webp` only, decoded ≤ `MaxImageBytes` 1 MB), 256 KB size cap, and a sha handle for conflict safety
 (mismatch ⇒ 409; the FE re-fetches, re-applies, retries once) — GitHub's
 blob sha in prod, a content hash locally. **The single-file `save` (sha-guarded)
 is only for lone edits; multi-file writes go through the batch pair
@@ -243,7 +243,7 @@ side by side: the site's image library (grid) and a "from your device"
 upload button (header). Upload path:
 `lib/image.ts` `downscaleToWebP` (shared with avatars) shrinks the pick to a
 ≤1400px WebP in-browser, then `uploadImage` (`POST /content/image`) commits it
-to `public/images/<slug-of-title>-<base36ts>.webp` as its own commit and hands
+to `frontend/public/images/<slug-of-title>-<base36ts>.webp` as its own commit and hands
 back the `/images/<name>` path — the cover control sets the `image:` scalar
 (`applyScalarEdit`), inline splices `![](path)` at the caret. So covers are
 real optimized files (not data-URI bundle bloat), matching `ProductCard`.
