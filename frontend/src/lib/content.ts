@@ -155,8 +155,16 @@ function loadCollection<T extends Entry>(
   for (const [path, raw] of Object.entries(modules)) {
     const { locale, slug } = localeAndSlugFromPath(path, kind)
     const { data, body } = parseFrontmatter(raw)
-    const html = marked.parse(body, { renderer: headingIdRenderer() }) as string
-    const entry = { slug, ...data, html: withBaseHtml(html) } as T
+    const entry = { slug, ...data } as T
+    // Markdown → HTML on first read, memoized. Only the detail pages consume
+    // `html`, so boot skips parsing the whole corpus and each page pays for
+    // itself alone.
+    let html: string | undefined
+    Object.defineProperty(entry, 'html', {
+      enumerable: true,
+      get: () =>
+        (html ??= withBaseHtml(marked.parse(body, { renderer: headingIdRenderer() }) as string)),
+    })
     ;(grouped[locale as Locale] ??= []).push(entry)
   }
   return grouped

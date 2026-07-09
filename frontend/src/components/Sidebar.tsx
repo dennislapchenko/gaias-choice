@@ -1,6 +1,9 @@
-import { useEffect, useState, type ReactElement, type ReactNode } from 'react'
+import { lazy, Suspense, useEffect, useState, type ReactElement, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import AstroCalendar from './AstroCalendar'
+
+// Lazy: pulls astronomy-engine (~150 KB min) + the ephemeris math into its own
+// chunk, off the first-paint path. The panel body pops in a beat later.
+const AstroCalendar = lazy(() => import('./AstroCalendar'))
 import { useI18n, type Locale } from '../lib/i18n'
 import { getPage, getSite } from '../lib/content'
 import { withBase } from '../lib/asset'
@@ -148,7 +151,9 @@ function AlmanacBody({ t }: BodyProps) {
   return (
     <>
       <p className="side-intro-text">{t('sidebar.intro')}</p>
-      <AstroCalendar />
+      <Suspense fallback={null}>
+        <AstroCalendar />
+      </Suspense>
     </>
   )
 }
