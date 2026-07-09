@@ -3203,7 +3203,8 @@ a.respected-card:hover {
     overscroll-behavior: contain;
 }
 .image-frame {
-    position: relative;
+    /* static (not relative) so the pinned controls + hint anchor to the fixed
+       backdrop — screen top/bottom — not the centered image. */
     display: flex;
 }
 .image-frame-canvas {
@@ -3220,12 +3221,15 @@ a.respected-card:hover {
 .image-frame-controls {
     position: absolute;
     left: 50%;
-    bottom: 12px;
+    bottom: 8px;
     transform: translateX(-50%);
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    max-width: calc(100vw - 24px);
+    /* Bottom-pinned toolbar at every width: capped so it stays a tidy ~2-row
+       cluster instead of stretching edge-to-edge on a wide desktop, and never
+       floats over the middle of the image (anchored to the fixed backdrop). */
+    width: min(100% - 16px, 520px);
     gap: 8px;
     padding: 6px;
     border-radius: var(--radius-sm);
@@ -3260,22 +3264,25 @@ a.respected-card:hover {
     font-weight: 400;
     color: var(--muted);
 }
-@media (max-width: 720px) {
-    /* Phone width can't fit the pill on one row, and the long RU labels wrap it
-       into a tall block that floated over the middle of the image. Anchor it to
-       the backdrop's (visual-viewport) bottom as a full-width toolbar instead:
-       .image-frame goes static so the absolute pill resolves against the fixed
-       backdrop, not the centered image. */
-    .image-frame {
-        position: static;
-    }
-    .image-frame-controls {
-        left: 8px;
-        right: 8px;
-        bottom: 8px;
-        transform: none;
-        max-width: none;
-    }
+/* Faint gesture hint pinned to the top of the scene. pointer-events:none so it
+   never swallows a drag/pinch on the canvas underneath it. */
+.image-frame-hint {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 14px;
+    max-width: min(100% - 16px, 520px);
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    color: var(--ink);
+    background: color-mix(in srgb, var(--white) 82%, transparent);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
 }
 .content-editor-md {
     display: flex;

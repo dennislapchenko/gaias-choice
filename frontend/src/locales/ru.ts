@@ -230,6 +230,8 @@ const ru: Record<keyof typeof en, string> = {
   "imageFrame.save": "Сохранить",
   "imageFrame.copyMd": "Скопировать для текста",
   "imageFrame.captionPrompt": "Подпись (необязательно)",
+  "imageFrame.hintMove": "Тащите — двигать",
+  "imageFrame.hintZoom": "Щипок/колесо — зум",
   "imageFrame.deleteConfirm": "Сжигаем?",
 };
 

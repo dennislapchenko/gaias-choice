@@ -233,6 +233,10 @@ export default function ImageFrame({
   return (
     <div className="image-frame-backdrop" onClick={onClose}>
       <div className="image-frame" onClick={(e) => e.stopPropagation()}>
+        <div className="image-frame-hint">
+          <span>✥ {t('imageFrame.hintMove')}</span>
+          <span>⤢ {t('imageFrame.hintZoom')}</span>
+        </div>
         <canvas
           ref={canvasRef}
           className="image-frame-canvas"

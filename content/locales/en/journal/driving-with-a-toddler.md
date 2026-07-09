@@ -1,18 +1,18 @@
 ---
-image: /images/how-to-rack-up-kilometers-with-a-baby-da-mrdtdzt4.webp
+image: /images/image-mrcfcpyy.webp
 translatedFrom: ru
 title: "How to rack up kilometers with a baby da"
 excerpt: "A working template for the honest version of a long road trip with a small child — the real daily range, the hard hour, and the ways out of it."
 date: 2026-07-05
 tags: [travel]
-gallery: [/images/image-mrcfd8h7.webp]
+gallery: [/images/image-mrcfd8h7.webp, /images/image-mrcfdi9j.webp]
 ---
 
 *This is a template — the shape of a road note waiting for a real trip to fill
 it in. We're leaving it open, along with prompts, so that the first real
 entry has a good frame to work with. If you're a parent like us and you're
 reading this before we've written our own — take the questions for yourself.*
-
+[text](url)
 A map shows distance. A child is something else. A long road trip with a small
 child isn't so many kilometers — it's negotiations with a small person who
 doesn't understand why the car seat won't let them go. This note is about
