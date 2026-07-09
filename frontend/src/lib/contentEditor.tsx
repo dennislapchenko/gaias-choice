@@ -963,6 +963,62 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
   // Labels for the `scores` field row (aligned to a review's scores by index).
   const scoreLabels = getSite(locale).ratingCriteria?.items ?? []
 
+  // The cover + gallery image row (reviews/journal only). Rendered INSIDE the
+  // Fields scroll column (under the ПОЛЯ И КАРТИНКИ bar), not as a separate
+  // pinned strip, so images + fields + body scroll as ONE. The cover is the
+  // special first slot («Обложка»); the rest are gallery images. A filled slot
+  // opens the frame editor (view/reframe/delete); a ＋ slot opens the picker
+  // (library + device). The gallery ＋ appears only once a cover exists.
+  const imageRow = isPost ? (
+    <div className="content-editor-cover">
+      <div className="ce-image-row">
+        {cover ? (
+          <button
+            type="button"
+            className="ce-image-slot is-cover"
+            disabled={busy || state?.status === 'published'}
+            onClick={() => setFraming({ kind: 'cover' })}
+          >
+            <img src={withBase(cover)} alt="" />
+            <span className="ce-image-label">{t('editor.cover')}</span>
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="ce-image-slot ce-image-add"
+            disabled={busy || state?.status === 'published'}
+            onClick={() => setPicker('cover')}
+          >
+            <span className="ce-image-plus" aria-hidden="true">＋</span>
+            <span className="ce-image-label">{t('editor.cover')}</span>
+          </button>
+        )}
+        {gallery.map((path, i) => (
+          <button
+            key={path + i}
+            type="button"
+            className="ce-image-slot"
+            disabled={busy || state?.status === 'published'}
+            onClick={() => setFraming({ kind: 'gallery', index: i })}
+          >
+            <img src={withBase(path)} alt="" />
+          </button>
+        ))}
+        {(cover || gallery.length > 0) && (
+          <button
+            type="button"
+            className="ce-image-slot ce-image-add"
+            disabled={busy || state?.status === 'published'}
+            onClick={() => setPicker('gallery')}
+            title={t('editor.galleryAdd')}
+          >
+            <span className="ce-image-plus" aria-hidden="true">＋</span>
+          </button>
+        )}
+      </div>
+    </div>
+  ) : null
+
   return (
     <ContentEditorContext.Provider value={api}>
       {children}
@@ -1047,59 +1103,6 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                 </button>
               </div>
             </div>
-            {isPost && view !== 'preview' && (view !== 'fields' || fieldsOpen) && (
-              // Image row: the cover is the special first slot («Обложка»); the
-              // rest are gallery images. A filled slot opens the frame editor
-              // (view/reframe/delete); a ＋ slot opens the picker (library +
-              // device). The gallery ＋ appears only once a cover exists.
-              <div className="content-editor-cover">
-                <div className="ce-image-row">
-                  {cover ? (
-                    <button
-                      type="button"
-                      className="ce-image-slot is-cover"
-                      disabled={busy || state.status === 'published'}
-                      onClick={() => setFraming({ kind: 'cover' })}
-                    >
-                      <img src={withBase(cover)} alt="" />
-                      <span className="ce-image-label">{t('editor.cover')}</span>
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="ce-image-slot ce-image-add"
-                      disabled={busy || state.status === 'published'}
-                      onClick={() => setPicker('cover')}
-                    >
-                      <span className="ce-image-plus" aria-hidden="true">＋</span>
-                      <span className="ce-image-label">{t('editor.cover')}</span>
-                    </button>
-                  )}
-                  {gallery.map((path, i) => (
-                    <button
-                      key={path + i}
-                      type="button"
-                      className="ce-image-slot"
-                      disabled={busy || state.status === 'published'}
-                      onClick={() => setFraming({ kind: 'gallery', index: i })}
-                    >
-                      <img src={withBase(path)} alt="" />
-                    </button>
-                  ))}
-                  {(cover || gallery.length > 0) && (
-                    <button
-                      type="button"
-                      className="ce-image-slot ce-image-add"
-                      disabled={busy || state.status === 'published'}
-                      onClick={() => setPicker('gallery')}
-                      title={t('editor.galleryAdd')}
-                    >
-                      <span className="ce-image-plus" aria-hidden="true">＋</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-            )}
             <div className="content-editor-body">
               {view === 'preview' ? (
                 // Author-controlled content, same trust model as Markdown.tsx.
@@ -1132,14 +1135,17 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
                     {t('editor.fieldsAndImages')}
                   </button>
                   {fieldsOpen && (
-                    <FrontmatterFields
-                      value={state.value}
-                      scoreLabels={scoreLabels}
-                      disabled={busy || state.status === 'published'}
-                      hide={['title', 'state', ...(isPost ? ['image'] : [])]}
-                      extraKeys={isReview ? ['boughtAt'] : undefined}
-                      onEdit={onField}
-                    />
+                    <>
+                      {imageRow}
+                      <FrontmatterFields
+                        value={state.value}
+                        scoreLabels={scoreLabels}
+                        disabled={busy || state.status === 'published'}
+                        hide={['title', 'state', ...(isPost ? ['image'] : [])]}
+                        extraKeys={isReview ? ['boughtAt'] : undefined}
+                        onEdit={onField}
+                      />
+                    </>
                   )}
                   <span className="side-label ce-body-label">{t('editor.body')}</span>
                   <textarea
