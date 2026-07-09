@@ -3115,6 +3115,36 @@ a.respected-card:hover {
         display: block;
         overflow-y: auto;
     }
+    /* Landscape is wider than 720px, so the portrait mobile rules don't apply:
+       pin the header and Save row to the scroll edges (so both are always
+       reachable while the body scrolls between them) and slim them, and drop
+       the base 260px textarea min-height that otherwise buries the field. */
+    .content-editor-head {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        padding: 6px 14px;
+        background: var(--white);
+    }
+    .content-editor-title {
+        flex: 1;
+        min-width: 0;
+        font-size: 0.82rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .content-editor-actions {
+        position: sticky;
+        bottom: 0;
+        z-index: 2;
+        padding: 8px 14px;
+        background: var(--white);
+    }
+    .content-editor-textarea {
+        min-height: 120px;
+        resize: none;
+    }
     .content-editor-toolbar {
         flex-wrap: nowrap;
         overflow-x: auto;

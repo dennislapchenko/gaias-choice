@@ -267,6 +267,24 @@ function applyMdAction(
   return { text, selStart: bodyAt, selEnd: bodyAt + body.length }
 }
 
+// Temp diagnostic flag: `?vvd` in the URL persists to localStorage so it
+// survives SPA navigation (opening a post drops the query), letting a phone
+// capture the viewport readout across browsers. ponytail: remove with VvDebug.
+if (typeof location !== 'undefined' && location.search.includes('vvd')) {
+  try {
+    localStorage.setItem('vvd', '1')
+  } catch {
+    /* private mode — flag just won't persist */
+  }
+}
+function vvdOn(): boolean {
+  try {
+    return localStorage.getItem('vvd') === '1'
+  } catch {
+    return false
+  }
+}
+
 // DEBUG-gated: live-report the viewport numbers driving the mobile modal height
 // (iOS keyboard pan/visual-viewport). Rendered only when `DEBUG` is on.
 function VvDebug() {
@@ -917,7 +935,7 @@ export function ContentEditorProvider({ children }: { children: ReactNode }) {
       {children}
       {state && (
         <div className="content-editor-overlay" onClick={attemptClose}>
-          {(DEBUG || location.search.includes('vvd')) && <VvDebug />}
+          {(DEBUG || vvdOn()) && <VvDebug />}
           <div
             className="content-editor"
             role="dialog"
