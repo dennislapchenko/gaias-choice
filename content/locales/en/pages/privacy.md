@@ -17,9 +17,12 @@ it that way.**
 
 ## What third parties do
 
-- **Hosting:** the site is served by Google Cloud Run, which (like any web
-  server) processes standard request logs — IP address, user agent, requested
-  page — to deliver the site.
+- **Hosting:** the site is served by **GitHub Pages** (operated by GitHub, a
+  Microsoft company), which — like any web host — processes standard request
+  logs (IP address, user agent, requested page) to deliver the site. A few
+  optional interactive features are backed by our own small server (a Hetzner
+  VM behind a Caddy proxy) that processes the same kind of request data when
+  you use them.
 - **Affiliate links:** when you click a link to a shop (marked per our
   [disclosure](/disclosure)), that shop's own privacy policy applies from the
   moment you land there. Affiliate programs use their own cookies **on the
