@@ -125,6 +125,7 @@ const en = {
   "account.stats.today": "Today",
   "account.stats.7d": "7 days",
   "account.stats.30d": "30 days",
+  "account.stats.alltime": "All-time",
   "account.stats.rangeAriaLabel": "Time window",
   "account.stats.empty": "Quiet so far — no visits in this window yet.",
   "account.stats.error": "Statistics are out of reach right now — try again later.",

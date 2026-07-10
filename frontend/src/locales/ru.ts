@@ -126,6 +126,7 @@ const ru: Record<keyof typeof en, string> = {
   "account.stats.today": "Сегодня",
   "account.stats.7d": "7 дней",
   "account.stats.30d": "30 дней",
+  "account.stats.alltime": "Всё время",
   "account.stats.rangeAriaLabel": "Окно времени",
   "account.stats.empty": "Пока тихо — в этом окне визитов ещё нет.",
   "account.stats.error": "Статистика сейчас недосягаема — загляни позже.",

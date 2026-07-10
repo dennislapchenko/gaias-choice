@@ -3,7 +3,7 @@ import { apiGet, type PathHits, type StatsRange, type StatsResponse } from '../l
 import { useI18n } from '../lib/i18n'
 import { useSession } from '../lib/session'
 
-const RANGES: StatsRange[] = ['today', '7d', '30d']
+const RANGES: StatsRange[] = ['today', '7d', '30d', 'alltime']
 
 // The campfire's Статистика view: frontend + API hit tables for a picked
 // window, straight from GET /api/stats. The toggle that opens this is
@@ -35,7 +35,7 @@ export default function AccountStats() {
           <button
             key={r}
             type="button"
-            className={`chip${range === r ? ' chip-active' : ''}`}
+            className={`stats-range-btn${range === r ? ' is-active' : ''}`}
             aria-pressed={range === r}
             onClick={() => setRange(r)}
           >

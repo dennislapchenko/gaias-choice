@@ -43,14 +43,17 @@ func (e Role) Valid() bool {
 
 // Defines values for GetStatsParamsRange.
 const (
-	N30d  GetStatsParamsRange = "30d"
-	N7d   GetStatsParamsRange = "7d"
-	Today GetStatsParamsRange = "today"
+	Alltime GetStatsParamsRange = "alltime"
+	N30d    GetStatsParamsRange = "30d"
+	N7d     GetStatsParamsRange = "7d"
+	Today   GetStatsParamsRange = "today"
 )
 
 // Valid indicates whether the value is a known member of the GetStatsParamsRange enum.
 func (e GetStatsParamsRange) Valid() bool {
 	switch e {
+	case Alltime:
+		return true
 	case N30d:
 		return true
 	case N7d:
@@ -232,7 +235,7 @@ type TranslateContentJSONBody struct {
 
 // GetStatsParams defines parameters for GetStats.
 type GetStatsParams struct {
-	// Range Window — UTC today, or the last 7/30 UTC days incl. today.
+	// Range Window — UTC today, the last 7/30 UTC days incl. today, or all time.
 	Range *GetStatsParamsRange `form:"range,omitempty" json:"range,omitempty"`
 }
 

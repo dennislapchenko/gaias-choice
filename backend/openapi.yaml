@@ -98,9 +98,9 @@ paths:
           required: false
           schema:
             type: string
-            enum: [today, 7d, 30d]
+            enum: [today, 7d, 30d, alltime]
             default: 7d
-          description: Window — UTC today, or the last 7/30 UTC days incl. today.
+          description: Window — UTC today, the last 7/30 UTC days incl. today, or all time.
       responses:
         '200':
           description: Hit totals per path, summed over the window, most-hit first.

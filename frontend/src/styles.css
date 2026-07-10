@@ -864,6 +864,7 @@ h1 {
     flex-direction: column;
     gap: 18px;
     margin-top: 20px;
+    position: relative; /* anchor for the top-right range picker */
 }
 .stats-fire {
     align-self: center;
@@ -878,10 +879,41 @@ h1 {
     width: 100%;
     transform: none;
 }
+/* Range picker floats to the top-right of the view, level with the campfire.
+   Square (not pill) buttons. Below 640px it drops back into the normal stacked
+   flow so it can't overlap the centered fire on a narrow column. */
 .stats-ranges {
+    position: absolute;
+    top: 0;
+    right: 0;
+    max-width: 60%;
     display: flex;
-    justify-content: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
     gap: 8px;
+}
+.stats-range-btn {
+    border: 1px solid var(--line);
+    background-color: var(--white);
+    background-image: linear-gradient(var(--panel-tint), var(--panel-tint));
+    color: var(--ink);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+.stats-range-btn.is-active {
+    background: var(--sage);
+    color: var(--on-accent);
+    border-color: var(--sage);
+}
+@media (max-width: 640px) {
+    .stats-ranges {
+        position: static;
+        max-width: none;
+        justify-content: center;
+        margin-top: 4px;
+    }
 }
 .stats-section {
     border: 1px solid var(--line);

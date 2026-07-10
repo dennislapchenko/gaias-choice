@@ -76,14 +76,18 @@ func (s *server) GetStats(_ context.Context, req GetStatsRequestObject) (GetStat
 	if req.Params.Range != nil && req.Params.Range.Valid() {
 		rng = *req.Params.Range
 	}
-	days := 7
-	switch rng {
-	case Today:
-		days = 1
-	case N30d:
-		days = 30
+	// alltime = no date floor; "" sorts before any YYYY-MM-DD, so day >= "" keeps every row.
+	since := ""
+	if rng != Alltime {
+		days := 7
+		switch rng {
+		case Today:
+			days = 1
+		case N30d:
+			days = 30
+		}
+		since = time.Now().UTC().AddDate(0, 0, -(days - 1)).Format("2006-01-02")
 	}
-	since := time.Now().UTC().AddDate(0, 0, -(days - 1)).Format("2006-01-02")
 	pages, err := s.store.Traffic("page", since)
 	if err != nil {
 		return nil, err

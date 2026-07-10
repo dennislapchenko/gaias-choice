@@ -312,7 +312,7 @@ export interface PathHits {
   hits: number
 }
 
-export type StatsRange = 'today' | '7d' | '30d'
+export type StatsRange = 'today' | '7d' | '30d' | 'alltime'
 
 /** GET /api/stats?range= — admin-only page + API hit totals (the campfire's
  *  Statistics view). `pages` are SPA pageviews from /track; `api` are backend

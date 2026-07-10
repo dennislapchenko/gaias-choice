@@ -84,8 +84,8 @@ charset, ≤128 chars, junk collapses to `(other)` so the table stays bounded;
 **`api`** rows come from a router middleware in `server.go` counting every
 **matched** request by `c.FullPath()` route template after `c.Next()`
 (unmatched scanner 404s have no FullPath and are skipped; count errors are
-dropped — counting never fails a request). `GET /api/stats?range=today|7d|30d`
-(`session: [admin]`, default 7d) returns `{range, pages[], api[]}` summed over
+dropped — counting never fails a request). `GET /api/stats?range=today|7d|30d|alltime`
+(`session: [admin]`, default 7d; `alltime` = no date floor) returns `{range, pages[], api[]}` summed over
 the window, most-hit first (`store.Traffic`). The FE skips the beacon for
 signed-in sessions unless `en/site.yaml` `analytics.trackSignedIn: true`; FE
 rendering details: development.md "Business toggles" row.
