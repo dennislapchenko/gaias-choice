@@ -1,14 +1,15 @@
 ---
 title: "Бутылка воды лайфстро"
-state: upcoming            # queued "in the works" — delete this line (or set active) when the review is finished
-category: Sleep            # Sleep | Feeding | Care | Kitchen | Travel — the filter chip on /reviews
-scores: [4, 4, 4]  # Gaia Score — one 0–5 per criterion in site.yaml ratingCriteria, in order
-price: "€00"               # what you actually paid; always quote it
+state: upcoming # queued "in the works" — delete this line (or set active) when the review is finished
+category: Sleep # Sleep | Feeding | Care | Kitchen | Travel — the filter chip on /reviews
+scores: [4, 4, 4] # Gaia Score — one 0–5 per criterion in site.yaml ratingCriteria, in order
+price: "€00" # what you actually paid; always quote it
 # affiliateUrl: "https://…"  # ONLY once enrolled in the program — never a placeholder
 excerpt: "<one honest sentence a friend would text you about it>"
 # image: /images/review-<slug>.webp   # real photo (run `task images`) or mandala SVG
-date: 2026-07-02           # today; controls list order
-tags: []                   # optional, e.g. [organic, cotton]
+date: 2026-07-02 # today; controls list order
+tags: [] # optional, e.g. [organic, cotton]
+boughtAt: "Centralais Turgus"
 ---
 
 <!--
