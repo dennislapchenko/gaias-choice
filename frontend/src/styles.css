@@ -3387,6 +3387,25 @@ a.respected-card:hover {
     background: color-mix(in srgb, var(--white) 92%, transparent);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 }
+/* Caption popup: appears above the toolbar only when Copy is tapped, so the
+   caption field costs no space until it's needed. Same pill look as the
+   controls. */
+.image-frame-caption-pop {
+    position: absolute;
+    left: 50%;
+    bottom: 60px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: min(100% - 16px, 520px);
+    gap: 8px;
+    padding: 6px;
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--white) 92%, transparent);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
 .image-frame-caption {
     min-width: 0;
     flex: 1 1 8rem;
@@ -3640,14 +3659,15 @@ a.respected-card:hover {
     overscroll-behavior: auto;
     resize: none;
 }
-/* Desktop: pack the fields into two columns; wide controls (scores, any
-   textarea like excerpt) span the full width. Mobile keeps one column. The
-   single-column scroll itself is a base rule (all widths) now. */
+/* Desktop: pack the fields into two columns; only textareas (excerpt) span the
+   full width. The scores block fits three small inputs in a single column, so
+   it rides in the second cell of the first row beside Category instead of
+   claiming its own row. Mobile keeps one column. The single-column scroll
+   itself is a base rule (all widths) now. */
 @media (min-width: 721px) {
     .ce-fields {
         grid-template-columns: 1fr 1fr;
     }
-    .ce-field-block,
     .ce-field:has(textarea) {
         grid-column: 1 / -1;
     }

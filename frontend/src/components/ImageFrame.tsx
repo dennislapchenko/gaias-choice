@@ -44,6 +44,7 @@ export default function ImageFrame({
   const [dirty, setDirty] = useState(false)
   const [saving, setSaving] = useState(false)
   const [caption, setCaption] = useState('')
+  const [asking, setAsking] = useState(false) // caption popup open (Copy was tapped)
   const pointers = useRef(new Map<number, { x: number; y: number }>())
   const pinchDist = useRef(0)
   const pinchMid = useRef({ x: 0, y: 0 }) // last two-finger midpoint (client px)
@@ -255,11 +256,12 @@ export default function ImageFrame({
 
   useCmdEnter(save, dirty && !saving)
 
-  // Copy a ready-to-paste markdown image tag with the caption from the inline
-  // field, then close the frame — the editor pastes it onto the target line. The
-  // caption renders as the faint centered subtitle under the image. The write is
-  // synchronous inside the tap: window.prompt is a no-op in iOS standalone mode
-  // and the blocking dialog also drops the transient activation clipboard needs.
+  // Copy a ready-to-paste markdown image tag with the caption asked for by the
+  // popup (opened on Copy), then close the frame — the editor pastes it onto the
+  // target line, where the caption renders as the faint centered subtitle under
+  // the image. The write is synchronous inside the popup's confirm tap: a custom
+  // popup (not window.prompt, a no-op in iOS standalone) keeps the transient
+  // user activation that clipboard.writeText needs, which a blocking dialog drops.
   const copyMd = async () => {
     await navigator.clipboard.writeText(`![${caption.trim()}](${src})`)
     onClose()
@@ -270,6 +272,28 @@ export default function ImageFrame({
   return (
     <div className="image-frame-backdrop" onClick={onClose}>
       <div className="image-frame" onClick={(e) => e.stopPropagation()}>
+        {asking && (
+          <div className="image-frame-caption-pop" onPointerDown={(e) => e.stopPropagation()}>
+            <input
+              type="text"
+              autoFocus
+              className="image-frame-caption"
+              placeholder={t('imageFrame.captionPrompt')}
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') copyMd()
+                if (e.key === 'Escape') {
+                  e.stopPropagation()
+                  setAsking(false)
+                }
+              }}
+            />
+            <button type="button" className="btn btn-primary" onClick={copyMd}>
+              {t('imageFrame.copyMd')}
+            </button>
+          </div>
+        )}
         <div className={`image-frame-hint${hintOn ? '' : ' is-faded'}`}>
           <span>✥ {t('imageFrame.hintMove')}</span>
           <span>⤢ {t('imageFrame.hintZoom')}</span>
@@ -288,15 +312,7 @@ export default function ImageFrame({
             <span className="image-frame-aspect-label">{t('imageFrame.aspect')}</span>
             {aspectLabel}
           </button>
-          <input
-            type="text"
-            className="image-frame-caption"
-            placeholder={t('imageFrame.captionPrompt')}
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
-            disabled={saving}
-          />
-          <button type="button" className="btn btn-ghost" onClick={copyMd} disabled={saving}>
+          <button type="button" className="btn btn-ghost" onClick={() => setAsking(true)} disabled={saving}>
             {t('imageFrame.copyMd')}
           </button>
           <button type="button" className="btn btn-primary" onClick={save} disabled={!dirty || saving}>
