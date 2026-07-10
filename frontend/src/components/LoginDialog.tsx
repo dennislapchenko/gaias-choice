@@ -4,6 +4,15 @@ import { useI18n } from '../lib/i18n'
 import { useSession } from '../lib/session'
 import { useVisibleViewportVars } from '../lib/viewport'
 
+// Telegram's paper-plane mark — an inline SVG so it inherits the button text
+// color (currentColor) and sits like the ✉ / 🔒 icons on the alt toggles.
+// Reused verbatim if Telegram ever demotes to a square toggle.
+const TelegramIcon = () => (
+  <svg className="login-tg-icon" viewBox="0 0 448 512" fill="currentColor" aria-hidden="true">
+    <path d="M446.7 98.6l-67.6 318.8c-5.1 22.5-18.4 28.1-37.3 17.5l-103-75.9-49.7 47.8c-5.5 5.5-10.1 10.1-20.7 10.1l7.4-104.9 190.9-172.5c8.3-7.4-1.8-11.5-12.9-4.1L117.8 284 16.2 252.2c-22.1-6.9-22.5-22.1 4.6-32.7L418.2 66.4c18.4-6.9 34.5 4.1 28.5 32.2z" />
+  </svg>
+)
+
 // The centered sign-in dialog over a blurred backdrop, rendered by
 // SessionProvider whenever `loginOpen` is true. Telegram-username sign-in is
 // the primary method: claim a @username → tap the t.me/<bot>?start=<code> deep
@@ -23,6 +32,9 @@ export default function LoginDialog() {
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const firstRef = useRef<HTMLInputElement>(null)
+  // Handle to the tab we opened for the t.me deep link, so we can close it
+  // once the grant lands and hand focus back to this (the site) tab.
+  const tgWin = useRef<Window | null>(null)
 
   // Mounted only while open — size the dialog to the visible viewport so the
   // auto-focused input's keyboard can't bury it on mobile (see the hook).
@@ -50,6 +62,7 @@ export default function LoginDialog() {
         clearInterval(id)
         acceptGrant(grant)
         closeLogin()
+        tgWin.current?.close() // return focus from the Telegram tab to the site
       } catch {
         if (!alive) return
         clearInterval(id)
@@ -137,11 +150,22 @@ export default function LoginDialog() {
           (challenge ? (
             <div className="login-tg-wait">
               <a
-                className="btn btn-primary login-submit"
+                className="btn btn-primary login-submit login-tg-submit"
                 href={`https://t.me/${challenge.bot}?start=${challenge.code}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => {
+                  // Open via script so we keep a handle to close on grant.
+                  // (no `noopener` here — that's what the null-check falls back
+                  // to native nav for; mobile app-switch can't be forced back.)
+                  const w = window.open(e.currentTarget.href, '_blank')
+                  if (w) {
+                    tgWin.current = w
+                    e.preventDefault()
+                  }
+                }}
               >
+                <TelegramIcon />
                 {t('login.telegramOpen')}
               </a>
               <p className="login-tg-status">
@@ -177,7 +201,12 @@ export default function LoginDialog() {
                 />
               </label>
               {error && <p className="login-error">{error}</p>}
-              <button type="submit" className="btn btn-primary login-submit" disabled={busy}>
+              <button
+                type="submit"
+                className="btn btn-primary login-submit login-tg-submit"
+                disabled={busy}
+              >
+                <TelegramIcon />
                 {t('login.telegramContinue')}
               </button>
             </form>

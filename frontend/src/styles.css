@@ -555,6 +555,18 @@ h1 {
     text-align: center;
     text-decoration: none;
 }
+/* Telegram-branded primary buttons: paper-plane glyph beside the label. */
+.login-tg-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.login-tg-icon {
+    width: 1.05em;
+    height: 1.05em;
+    flex-shrink: 0;
+}
 /* Telegram sign-in: the primary flow's hint + waiting states. */
 .login-tg-hint {
     margin: 0 0 16px;

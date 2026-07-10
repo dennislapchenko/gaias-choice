@@ -183,7 +183,12 @@ consumes the emailed `#magic=<token>` hash
 `requestTelegram` returns `{code, bot}` → the dialog shows a
 `t.me/<bot>?start=<code>` deep link and polls `pollTelegram` every ~2s until
 a grant arrives (`acceptGrant`), a 202 keeps it waiting, a dead code drops
-back to the claim step. The two email methods demote to **square toggle
+back to the claim step. The deep link opens via `window.open` (handle kept in
+`tgWin`) so on grant the dialog `.close()`s that tab and focus returns to the
+site tab — desktop only; a mobile app-switch to Telegram can't be forced back.
+The Telegram-branded primary buttons carry an inline paper-plane SVG
+(`TelegramIcon`, `currentColor` so it matches every palette's button text),
+styled like the ✉/🔒 alt-toggle icons. The two email methods demote to **square toggle
 buttons at the dialog bottom** (magic-link → "check your inbox"; password →
 the fallback for accounts that have one); each has a back-link to Telegram.
 There is no separate registration form — first sign-in by any method
