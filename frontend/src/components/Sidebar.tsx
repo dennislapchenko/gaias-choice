@@ -6,6 +6,7 @@ import { Link, useLocation } from 'react-router-dom'
 const AstroCalendar = lazy(() => import('./AstroCalendar'))
 import { useI18n, type Locale } from '../lib/i18n'
 import CollapsiblePanel from './CollapsiblePanel'
+import { useIsNarrow } from '../lib/viewport'
 import { getPage, getSite } from '../lib/content'
 import { withBase } from '../lib/asset'
 import type { SidebarWidget, SiteConfig } from '../lib/types'
@@ -179,23 +180,6 @@ const PANELS: Record<string, PanelDef> = {
 
 // Used when site.yaml declares no `sidebar:` list (older/partial configs).
 const DEFAULT_SIDEBAR: SidebarWidget[] = [{ type: 'about' }, { type: 'missionValues' }, { type: 'almanac' }]
-
-// True below the point where the two-column layout collapses (kept in sync with
-// the `max-width: 900px` sidebar rule in styles.css).
-function useIsNarrow() {
-  const query = '(max-width: 900px)'
-  // Starts false (the desktop/prerendered shape) and syncs after mount, so
-  // hydration sees identical trees; the visual collapse itself is CSS-driven.
-  const [narrow, setNarrow] = useState(false)
-  useEffect(() => {
-    const mq = window.matchMedia(query)
-    setNarrow(mq.matches)
-    const onChange = () => setNarrow(mq.matches)
-    mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
-  }, [])
-  return narrow
-}
 
 // On phones the rail moves above the content (see styles.css) and behaves like a
 // row of tabs in the freed header space: a row of rectangular toggles, at most

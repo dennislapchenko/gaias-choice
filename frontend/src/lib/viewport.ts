@@ -1,4 +1,22 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+
+/**
+ * True below a CSS breakpoint (default the 900px point where the two-column
+ * layouts collapse). Starts `false` (the desktop / prerendered shape) and syncs
+ * after mount, so hydration sees identical trees; the visual collapse itself
+ * stays CSS-driven. Shared by the sidebar and the account rail.
+ */
+export function useIsNarrow(query = '(max-width: 900px)'): boolean {
+  const [narrow, setNarrow] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia(query)
+    setNarrow(mq.matches)
+    const onChange = () => setNarrow(mq.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [query])
+  return narrow
+}
 
 /**
  * Make a full-screen modal overlay track the mobile on-screen keyboard. While

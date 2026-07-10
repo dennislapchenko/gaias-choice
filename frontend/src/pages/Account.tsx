@@ -15,8 +15,6 @@ export default function Account() {
   const { me, token, backendUp, openLogin, signOut } = useSession()
 
   const [members, setMembers] = useState<Member[] | null>(null)
-  // Your-details rail is open by default; below 900px its rail-toggle folds it.
-  const [fieldsOpen, setFieldsOpen] = useState(true)
   // Whether the admin Statistics view has the main column (else the campfire).
   const [statsOpen, setStatsOpen] = useState(false)
   const title = statsOpen ? t('account.stats.title') : t('account.title')
@@ -73,10 +71,9 @@ export default function Account() {
     )
   }
 
-  // AccountFields is always mounted — the right rail on desktop (like
-  // Reviews/Journal/Compass), opened on mobile by the details rail-toggle
-  // (`.account-fields` is display:none below 900px unless `fieldsOpen` adds
-  // `.is-open`). One tree, breakpoint entirely in CSS.
+  // AccountFields (self) is always mounted in the right rail — the `.account-rail`
+  // sticky column on desktop, riding above the campfire on mobile where it simply
+  // collapses via its own panel header (no toggle). One tree, breakpoint in CSS.
   return (
     <section className="account-page">
       <div className="page-head-row">
@@ -94,31 +91,6 @@ export default function Account() {
               <span className="rail-toggle-label">{selected.displayName}</span>
             </button>
           )}
-          {/* Statistics (admin-only): a pill toggle for the stats view, shown at
-              all widths. */}
-          {isAdmin && (
-            <button
-              type="button"
-              className={`user-toggle${statsOpen ? ' is-open' : ''}`}
-              aria-pressed={statsOpen}
-              onClick={() => setStatsOpen((o) => !o)}
-            >
-              <ChartIcon />
-              <span className="rail-toggle-label">{t('account.biz.stats')}</span>
-            </button>
-          )}
-          {/* Your-details rail toggle — icon-only, only below 900px (the rail is
-              always visible on desktop, foldable via its own panel header). */}
-          <button
-            type="button"
-            className={`user-toggle rail-toggle${fieldsOpen ? ' is-open' : ''}`}
-            aria-expanded={fieldsOpen}
-            aria-label={t('account.fields.title')}
-            title={t('account.fields.title')}
-            onClick={() => setFieldsOpen((o) => !o)}
-          >
-            <EditIcon />
-          </button>
         </div>
       </div>
       <p className="muted">{t('account.lead')}</p>
@@ -214,7 +186,22 @@ export default function Account() {
           </div>
         </div>
 
-        <AccountFields open={fieldsOpen} />
+        {/* The right rail: your-details fold + (admin) the Statistics button
+            below it — both panel-header styled, sticking together as one rail. */}
+        <div className="account-rail">
+          <AccountFields />
+          {isAdmin && (
+            <button
+              type="button"
+              className={`side-panel-toggle stats-panel-btn${statsOpen ? ' is-active' : ''}`}
+              aria-pressed={statsOpen}
+              onClick={() => setStatsOpen((o) => !o)}
+            >
+              <span>{t('account.biz.stats')}</span>
+              <ChartIcon />
+            </button>
+          )}
+        </div>
         {selected && (
           <AccountFields
             key={selected.id}
@@ -230,9 +217,8 @@ export default function Account() {
   )
 }
 
-// The mobile title-line toggle that reveals AccountFields — a pencil, since
-// it opens the edit-your-details form (a settings-cog glyph read too much
-// like a sun at this size).
+// The admin "edit another camper" toggle glyph (title row, ≤900px) — a pencil,
+// since it opens that camper's edit form.
 function EditIcon() {
   return (
     <svg className="user-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -242,7 +228,7 @@ function EditIcon() {
   )
 }
 
-// The «Твои дела» statistics-toggle glyph — plain bars, no drama.
+// The Statistics-button glyph — plain bars, no drama.
 function ChartIcon() {
   return (
     <svg className="user-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">

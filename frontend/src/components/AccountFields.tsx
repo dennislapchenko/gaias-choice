@@ -11,6 +11,7 @@ import { withBase } from '../lib/asset'
 import { downscaleToWebP } from '../lib/image'
 import { useI18n } from '../lib/i18n'
 import { useSession } from '../lib/session'
+import { useIsNarrow } from '../lib/viewport'
 import CollapsiblePanel from './CollapsiblePanel'
 
 // The avatar is stored verbatim as the data: URI (self-contained, survives the
@@ -26,9 +27,10 @@ const ROLES: Role[] = ['admin', 'editor', 'viewer']
 //     Never touches the target's email. Mount with key={target.id} so the
 //     initial state re-seeds per picked user. Shows a close (×) that calls
 //     `onClose`, and reports the fresh row via `onSaved`.
-// `open` just adds the CSS hook the mobile breakpoint needs (see
-// .account-fields in styles.css); on desktop the rail is always visible. Save
-// is always rendered but faded + disabled until a field actually differs.
+// `open` gates the admin **target** popover's mobile visibility (its `.is-open`
+// hook + backdrop); the **self** panel doesn't use it — it's always in the rail
+// and folds via its own CollapsiblePanel header (collapsed on mobile). Save is
+// always rendered but faded + disabled until a field actually differs.
 export default function AccountFields({
   open,
   target,
@@ -36,7 +38,7 @@ export default function AccountFields({
   onSaved,
   anchor,
 }: {
-  open: boolean
+  open?: boolean
   target?: Member
   onClose?: () => void
   onSaved?: (u: AdminUserSummary) => void
@@ -48,6 +50,7 @@ export default function AccountFields({
 }) {
   const { t } = useI18n()
   const { me, token, updateMe } = useSession()
+  const isNarrow = useIsNarrow()
   const [name, setName] = useState(target?.displayName ?? me?.displayName ?? '')
   const [email, setEmail] = useState(me?.email ?? '') // self mode only
   const [avatarUrl, setAvatarUrl] = useState(target?.avatarUrl ?? me?.avatarUrl ?? '')
@@ -220,8 +223,9 @@ export default function AccountFields({
             {form}
           </>
         ) : (
-          // Self panel: the standard headered fold (sidebar style).
-          <CollapsiblePanel label={t('account.fields.title')} defaultOpen>
+          // Self panel: the shared headered fold (sidebar style) — open on
+          // desktop, collapsed on mobile (folds via its own header, no toggle).
+          <CollapsiblePanel label={t('account.fields.title')} defaultOpen forceClosed={isNarrow}>
             {form}
           </CollapsiblePanel>
         )}
