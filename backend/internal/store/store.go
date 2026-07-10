@@ -141,6 +141,51 @@ func (s *Store) Bump() (int, error) {
 	return n, nil
 }
 
+// --- traffic (first-party analytics) --------------------------------------------
+
+// PathHits is one row of the stats view: a path and its summed hits.
+type PathHits struct {
+	Path string
+	Hits int64
+}
+
+// CountHit adds one to today's (UTC) counter for a path. kind is "page" (SPA
+// pageviews via /track) or "api" (every matched API request, by route
+// template). Day + kind + path + count is ALL that is ever stored — no
+// visitor data (see migration 007 and the site's /privacy page).
+func (s *Store) CountHit(kind, path string) error {
+	_, err := s.db.Exec(
+		`INSERT INTO traffic (day, kind, path, hits) VALUES (date('now'), ?, ?, 1)
+		 ON CONFLICT(day, kind, path) DO UPDATE SET hits = hits + 1`,
+		kind, path,
+	)
+	return err
+}
+
+// Traffic sums hits per path for kind since sinceDay (inclusive, UTC
+// 'YYYY-MM-DD'), most-hit first.
+func (s *Store) Traffic(kind, sinceDay string) ([]PathHits, error) {
+	rows, err := s.db.Query(
+		`SELECT path, SUM(hits) FROM traffic
+		 WHERE kind = ? AND day >= ?
+		 GROUP BY path ORDER BY SUM(hits) DESC, path`,
+		kind, sinceDay,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var out []PathHits
+	for rows.Next() {
+		var p PathHits
+		if err := rows.Scan(&p.Path, &p.Hits); err != nil {
+			return nil, err
+		}
+		out = append(out, p)
+	}
+	return out, rows.Err()
+}
+
 // --- users & sessions ---------------------------------------------------------
 
 type User struct {

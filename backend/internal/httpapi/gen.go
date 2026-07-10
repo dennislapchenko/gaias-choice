@@ -41,6 +41,27 @@ func (e Role) Valid() bool {
 	}
 }
 
+// Defines values for GetStatsParamsRange.
+const (
+	N30d  GetStatsParamsRange = "30d"
+	N7d   GetStatsParamsRange = "7d"
+	Today GetStatsParamsRange = "today"
+)
+
+// Valid indicates whether the value is a known member of the GetStatsParamsRange enum.
+func (e GetStatsParamsRange) Valid() bool {
+	switch e {
+	case N30d:
+		return true
+	case N7d:
+		return true
+	case Today:
+		return true
+	default:
+		return false
+	}
+}
+
 // Error defines model for Error.
 type Error struct {
 	Error string `json:"error"`
@@ -53,6 +74,12 @@ type MeResponse struct {
 	Editing     bool   `json:"editing"`
 	Email       string `json:"email"`
 	Role        Role   `json:"role"`
+}
+
+// PathHits defines model for PathHits.
+type PathHits struct {
+	Hits int64  `json:"hits"`
+	Path string `json:"path"`
 }
 
 // Role defines model for Role.
@@ -203,6 +230,21 @@ type TranslateContentJSONBody struct {
 	Text string `json:"text"`
 }
 
+// GetStatsParams defines parameters for GetStats.
+type GetStatsParams struct {
+	// Range Window — UTC today, or the last 7/30 UTC days incl. today.
+	Range *GetStatsParamsRange `form:"range,omitempty" json:"range,omitempty"`
+}
+
+// GetStatsParamsRange defines parameters for GetStats.
+type GetStatsParamsRange string
+
+// TrackPageviewJSONBody defines parameters for TrackPageview.
+type TrackPageviewJSONBody struct {
+	// Path The SPA route just viewed (location.pathname). Normalized server-side against the known route prefixes; anything else is bucketed as "(other)" so junk can't grow the table. Nothing about the visitor is read or stored — only day + path + count.
+	Path string `json:"path"`
+}
+
 // UpdateMeJSONBody defines parameters for UpdateMe.
 type UpdateMeJSONBody struct {
 	// AvatarUrl Image shown around the campfire — a URL or an inlined data: URI (browser-downscaled upload). Omit or empty to clear it.
@@ -263,6 +305,9 @@ type EnrichTemplateJSONRequestBody EnrichTemplateJSONBody
 // TranslateContentJSONRequestBody defines body for TranslateContent for application/json ContentType.
 type TranslateContentJSONRequestBody TranslateContentJSONBody
 
+// TrackPageviewJSONRequestBody defines body for TrackPageview for application/json ContentType.
+type TrackPageviewJSONRequestBody TrackPageviewJSONBody
+
 // UpdateMeJSONRequestBody defines body for UpdateMe for application/json ContentType.
 type UpdateMeJSONRequestBody UpdateMeJSONBody
 
@@ -322,6 +367,12 @@ type ServerInterface interface {
 	// Scaffold endpoint proving a DB round-trip (feeds BackendBadge)
 	// (GET /hello)
 	GetHello(c *gin.Context)
+	// Admin — page + API hit totals for a window (the campfire statistics view)
+	// (GET /stats)
+	GetStats(c *gin.Context, params GetStatsParams)
+	// Cookieless pageview counter — one day-bucketed hit per call
+	// (POST /track)
+	TrackPageview(c *gin.Context)
 	// Everyone around the campfire (any signed-in user may look)
 	// (GET /users)
 	ListUsers(c *gin.Context)
@@ -595,6 +646,48 @@ func (siw *ServerInterfaceWrapper) GetHello(c *gin.Context) {
 	siw.Handler.GetHello(c)
 }
 
+// GetStats operation middleware
+func (siw *ServerInterfaceWrapper) GetStats(c *gin.Context) {
+
+	var err error
+	_ = err
+
+	c.Set(string(SessionScopes), []string{"admin"})
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetStatsParams
+
+	// ------------- Optional query parameter "range" -------------
+
+	err = runtime.BindQueryParameterWithOptions("form", true, false, "range", c.Request.URL.Query(), &params.Range, runtime.BindQueryParameterOptions{Type: "string", Format: ""})
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter range: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetStats(c, params)
+}
+
+// TrackPageview operation middleware
+func (siw *ServerInterfaceWrapper) TrackPageview(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.TrackPageview(c)
+}
+
 // ListUsers operation middleware
 func (siw *ServerInterfaceWrapper) ListUsers(c *gin.Context) {
 
@@ -696,6 +789,8 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.POST(options.BaseURL+"/content/translate", wrapper.TranslateContent)
 	router.GET(options.BaseURL+"/healthz", wrapper.GetHealth)
 	router.GET(options.BaseURL+"/hello", wrapper.GetHello)
+	router.GET(options.BaseURL+"/stats", wrapper.GetStats)
+	router.POST(options.BaseURL+"/track", wrapper.TrackPageview)
 	router.GET(options.BaseURL+"/users", wrapper.ListUsers)
 	router.PUT(options.BaseURL+"/users/me", wrapper.UpdateMe)
 	router.PUT(options.BaseURL+"/users/:id", wrapper.UpdateUser)
@@ -2005,6 +2100,107 @@ func (response GetHello500JSONResponse) VisitGetHelloResponse(w http.ResponseWri
 	return err
 }
 
+type GetStatsRequestObject struct {
+	Params GetStatsParams
+}
+
+type GetStatsResponseObject interface {
+	VisitGetStatsResponse(w http.ResponseWriter) error
+}
+
+type GetStats200JSONResponse struct {
+	// Api API requests counted by route template.
+	Api []PathHits `json:"api"`
+
+	// Pages SPA pageviews reported by POST /track.
+	Pages []PathHits `json:"pages"`
+	Range string     `json:"range"`
+}
+
+func (response GetStats200JSONResponse) VisitGetStatsResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type GetStats401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetStats401JSONResponse) VisitGetStatsResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type GetStats403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetStats403JSONResponse) VisitGetStatsResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type TrackPageviewRequestObject struct {
+	Body *TrackPageviewJSONRequestBody
+}
+
+type TrackPageviewResponseObject interface {
+	VisitTrackPageviewResponse(w http.ResponseWriter) error
+}
+
+type TrackPageview204Response struct {
+}
+
+func (response TrackPageview204Response) VisitTrackPageviewResponse(w http.ResponseWriter) error {
+	w.WriteHeader(204)
+	return nil
+}
+
+type TrackPageview400JSONResponse struct{ BadRequestJSONResponse }
+
+func (response TrackPageview400JSONResponse) VisitTrackPageviewResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(400)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
+type TrackPageview429JSONResponse struct{ RateLimitedJSONResponse }
+
+func (response TrackPageview429JSONResponse) VisitTrackPageviewResponse(w http.ResponseWriter) error {
+
+	var buf bytes.Buffer
+	if err := json.NewEncoder(&buf).Encode(response); err != nil {
+		return err
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(429)
+	_, err := buf.WriteTo(w)
+	return err
+}
+
 type ListUsersRequestObject struct {
 }
 
@@ -2254,6 +2450,12 @@ type StrictServerInterface interface {
 	// Scaffold endpoint proving a DB round-trip (feeds BackendBadge)
 	// (GET /hello)
 	GetHello(ctx context.Context, request GetHelloRequestObject) (GetHelloResponseObject, error)
+	// Admin — page + API hit totals for a window (the campfire statistics view)
+	// (GET /stats)
+	GetStats(ctx context.Context, request GetStatsRequestObject) (GetStatsResponseObject, error)
+	// Cookieless pageview counter — one day-bucketed hit per call
+	// (POST /track)
+	TrackPageview(ctx context.Context, request TrackPageviewRequestObject) (TrackPageviewResponseObject, error)
 	// Everyone around the campfire (any signed-in user may look)
 	// (GET /users)
 	ListUsers(ctx context.Context, request ListUsersRequestObject) (ListUsersResponseObject, error)
@@ -2809,6 +3011,63 @@ func (sh *strictHandler) GetHello(ctx *gin.Context) {
 		sh.options.HandlerErrorFunc(ctx, err)
 	} else if validResponse, ok := response.(GetHelloResponseObject); ok {
 		if err := validResponse.VisitGetHelloResponse(ctx.Writer); err != nil {
+			sh.options.ResponseErrorHandlerFunc(ctx, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(ctx, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// GetStats operation middleware
+func (sh *strictHandler) GetStats(ctx *gin.Context, params GetStatsParams) {
+	var request GetStatsRequestObject
+
+	request.Params = params
+
+	handler := func(ctx *gin.Context, request interface{}) (interface{}, error) {
+		return sh.ssi.GetStats(ctx, request.(GetStatsRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetStats")
+	}
+
+	response, err := handler(ctx, request)
+
+	if err != nil {
+		sh.options.HandlerErrorFunc(ctx, err)
+	} else if validResponse, ok := response.(GetStatsResponseObject); ok {
+		if err := validResponse.VisitGetStatsResponse(ctx.Writer); err != nil {
+			sh.options.ResponseErrorHandlerFunc(ctx, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(ctx, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// TrackPageview operation middleware
+func (sh *strictHandler) TrackPageview(ctx *gin.Context) {
+	var request TrackPageviewRequestObject
+
+	var body TrackPageviewJSONRequestBody
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(ctx, err)
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx *gin.Context, request interface{}) (interface{}, error) {
+		return sh.ssi.TrackPageview(ctx, request.(TrackPageviewRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "TrackPageview")
+	}
+
+	response, err := handler(ctx, request)
+
+	if err != nil {
+		sh.options.HandlerErrorFunc(ctx, err)
+	} else if validResponse, ok := response.(TrackPageviewResponseObject); ok {
+		if err := validResponse.VisitTrackPageviewResponse(ctx.Writer); err != nil {
 			sh.options.ResponseErrorHandlerFunc(ctx, err)
 		}
 	} else if response != nil {

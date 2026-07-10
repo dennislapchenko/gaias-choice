@@ -59,6 +59,18 @@ func NewRouter(d Deps) *gin.Engine {
 	r.Use(func(c *gin.Context) {
 		c.Request.Body = http.MaxBytesReader(c.Writer, c.Request.Body, content.MaxImageBytes*2)
 	})
+	// Count every matched request into the day-bucketed traffic table by its
+	// route template (bounded cardinality; unmatched scanner noise has no
+	// FullPath and is skipped). A lost count must never fail a request, so
+	// the error is dropped. Feeds /account → Статистика.
+	// ponytail: one DB write per request — batch in memory if traffic ever
+	// makes SQLite blink.
+	r.Use(func(c *gin.Context) {
+		c.Next()
+		if p := c.FullPath(); p != "" {
+			_ = d.Store.CountHit("api", p)
+		}
+	})
 
 	srv := &server{
 		store:        d.Store,
@@ -76,6 +88,9 @@ func NewRouter(d Deps) *gin.Engine {
 		magicLimiter: newRateLimiter(10, time.Hour),
 		// Poll is cheap and the FE hits it every ~2s for minutes — lenient.
 		pollLimiter: newRateLimiter(120, time.Minute),
+		// A human clicks through pages far slower than this; only a script
+		// hammering /track hits the lid.
+		trackLimiter: newRateLimiter(60, time.Minute),
 	}
 	RegisterHandlersWithOptions(r, NewStrictHandler(srv, nil), GinServerOptions{
 		BaseURL:     "/api",
@@ -99,6 +114,7 @@ type server struct {
 	registerLimiter *rateLimiter
 	magicLimiter    *rateLimiter
 	pollLimiter     *rateLimiter
+	trackLimiter    *rateLimiter
 }
 
 // Compile-time proof the contract is fully implemented.

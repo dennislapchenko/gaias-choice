@@ -55,6 +55,75 @@ paths:
         '500':
           $ref: '#/components/responses/Internal'
 
+  /track:
+    post:
+      operationId: trackPageview
+      summary: Cookieless pageview counter — one day-bucketed hit per call
+      tags: [stats]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [path]
+              properties:
+                path:
+                  type: string
+                  maxLength: 128
+                  description: >-
+                    The SPA route just viewed (location.pathname). Normalized
+                    server-side against the known route prefixes; anything else
+                    is bucketed as "(other)" so junk can't grow the table.
+                    Nothing about the visitor is read or stored — only
+                    day + path + count.
+      responses:
+        '204':
+          description: Counted.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  /stats:
+    get:
+      operationId: getStats
+      summary: Admin — page + API hit totals for a window (the campfire statistics view)
+      tags: [stats]
+      security:
+        - session: [admin]
+      parameters:
+        - name: range
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [today, 7d, 30d]
+            default: 7d
+          description: Window — UTC today, or the last 7/30 UTC days incl. today.
+      responses:
+        '200':
+          description: Hit totals per path, summed over the window, most-hit first.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [range, pages, api]
+                properties:
+                  range: { type: string }
+                  pages:
+                    type: array
+                    description: SPA pageviews reported by POST /track.
+                    items: { $ref: '#/components/schemas/PathHits' }
+                  api:
+                    type: array
+                    description: API requests counted by route template.
+                    items: { $ref: '#/components/schemas/PathHits' }
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
   /auth/login:
     post:
       operationId: login
@@ -853,6 +922,12 @@ components:
         displayName: { type: string }
         avatarUrl: { type: string }
         editing: { type: boolean }
+    PathHits:
+      type: object
+      required: [path, hits]
+      properties:
+        path: { type: string }
+        hits: { type: integer, format: int64 }
     Error:
       type: object
       required: [error]
