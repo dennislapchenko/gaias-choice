@@ -1,20 +1,21 @@
 ---
 title: Стеклянные детские бутылочки с силиконовым чехлом
 category: Кормление
-scores: [4, 4, 4]  # Gaia Score — one 0–5 per criterion in site.yaml ratingCriteria, in order
+scores: [4, 4, 4] # Gaia Score — one 0–5 per criterion in site.yaml ratingCriteria, in order
 price: "€32"
 affiliateUrl: "https://www.amazon.com/dp/EXAMPLE5?tag=gaiaschoice-20"
 excerpt: Бутылочки без пластика, которые не мутнеют, не окрашиваются и не впитывают запахи — с чехлом, который выдерживает дорогу.
 image: /images/review-glass-baby-bottles.svg
 date: 2026-06-15
 tags: [plastic-free, glass, feeding]
+gallery: [/images/dreamegg-white-noise-machine-mrctan47.webp]
 ---
 
 Пластиковые бутылочки мутнеют, царапаются и со временем начинают пахнуть
 после многих циклов мытья. Со стеклом такого просто... не происходит. Для
 вещи, которая каждый день соприкасается со ртом ребёнка, для нас это было
 важно.
-
+prioln
 Эти бутылочки из **боросиликатного стекла** легко стерилизуются и никогда
 не впитывают запах. Именно обёрточный **силиконовый чехол** делает их
 удобными для путешествий — он даёт хороший захват для маленьких рук и
