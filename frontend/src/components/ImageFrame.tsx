@@ -272,28 +272,6 @@ export default function ImageFrame({
   return (
     <div className="image-frame-backdrop" onClick={onClose}>
       <div className="image-frame" onClick={(e) => e.stopPropagation()}>
-        {asking && (
-          <div className="image-frame-caption-pop" onPointerDown={(e) => e.stopPropagation()}>
-            <input
-              type="text"
-              autoFocus
-              className="image-frame-caption"
-              placeholder={t('imageFrame.captionPrompt')}
-              value={caption}
-              onChange={(e) => setCaption(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') copyMd()
-                if (e.key === 'Escape') {
-                  e.stopPropagation()
-                  setAsking(false)
-                }
-              }}
-            />
-            <button type="button" className="btn btn-primary" onClick={copyMd}>
-              {t('imageFrame.copyMd')}
-            </button>
-          </div>
-        )}
         <div className={`image-frame-hint${hintOn ? '' : ' is-faded'}`}>
           <span>✥ {t('imageFrame.hintMove')}</span>
           <span>⤢ {t('imageFrame.hintZoom')}</span>
@@ -307,20 +285,44 @@ export default function ImageFrame({
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
         />
-        <div className="image-frame-controls" onPointerDown={(e) => e.stopPropagation()}>
-          <button type="button" className="btn btn-ghost image-frame-aspect" onClick={cycleAspect} disabled={saving}>
-            <span className="image-frame-aspect-label">{t('imageFrame.aspect')}</span>
-            {aspectLabel}
-          </button>
-          <button type="button" className="btn btn-ghost" onClick={() => setAsking(true)} disabled={saving}>
-            {t('imageFrame.copyMd')}
-          </button>
-          <button type="button" className="btn btn-primary" onClick={save} disabled={!dirty || saving}>
-            {saving ? t('editor.imageUploading') : t('imageFrame.save')}
-          </button>
-          <button type="button" className="btn btn-ghost image-frame-del" onClick={del} disabled={saving}>
-            🗑
-          </button>
+        <div className="image-frame-dock" onPointerDown={(e) => e.stopPropagation()}>
+          {asking && (
+            <div className="image-frame-caption-pop">
+              <input
+                type="text"
+                autoFocus
+                className="image-frame-caption"
+                placeholder={t('imageFrame.captionPrompt')}
+                value={caption}
+                onChange={(e) => setCaption(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') copyMd()
+                  if (e.key === 'Escape') {
+                    e.stopPropagation()
+                    setAsking(false)
+                  }
+                }}
+              />
+              <button type="button" className="btn btn-primary" onClick={copyMd}>
+                {t('imageFrame.copyMd')}
+              </button>
+            </div>
+          )}
+          <div className="image-frame-controls">
+            <button type="button" className="btn btn-ghost image-frame-aspect" onClick={cycleAspect} disabled={saving}>
+              <span className="image-frame-aspect-label">{t('imageFrame.aspect')}</span>
+              {aspectLabel}
+            </button>
+            <button type="button" className="btn btn-ghost" onClick={() => setAsking(true)} disabled={saving}>
+              {t('imageFrame.copyMd')}
+            </button>
+            <button type="button" className="btn btn-primary" onClick={save} disabled={!dirty || saving}>
+              {saving ? t('editor.imageUploading') : t('imageFrame.save')}
+            </button>
+            <button type="button" className="btn btn-ghost image-frame-del" onClick={del} disabled={saving}>
+              🗑
+            </button>
+          </div>
         </div>
       </div>
     </div>

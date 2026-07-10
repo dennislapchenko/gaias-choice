@@ -3415,18 +3415,27 @@ a.respected-card:hover {
 .image-frame-canvas:active {
     cursor: grabbing;
 }
-.image-frame-controls {
+/* Bottom-pinned dock holding the caption popup (when open) stacked above the
+   controls toolbar. One column so the caption always clears the toolbar no
+   matter how many rows it wraps to — a fixed offset couldn't (the toolbar is
+   1 row on desktop, 2 on mobile). Anchored to the fixed backdrop (.image-frame
+   is static), never floats over the image. */
+.image-frame-dock {
     position: absolute;
     left: 50%;
     bottom: 8px;
     transform: translateX(-50%);
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: min(100% - 16px, 520px);
+}
+.image-frame-controls {
+    display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    /* Bottom-pinned toolbar at every width: capped so it stays a tidy ~2-row
-       cluster instead of stretching edge-to-edge on a wide desktop, and never
-       floats over the middle of the image (anchored to the fixed backdrop). */
-    width: min(100% - 16px, 520px);
+    width: 100%;
     gap: 8px;
     padding: 6px;
     border-radius: var(--radius-sm);
@@ -3436,19 +3445,15 @@ a.respected-card:hover {
     background: color-mix(in srgb, var(--white) 92%, transparent);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 }
-/* Caption popup: appears above the toolbar only when Copy is tapped, so the
-   caption field costs no space until it's needed. Same pill look as the
-   controls. */
+/* Caption popup: appears above the toolbar (in the dock) only when Copy is
+   tapped, so the caption field costs no space until it's needed. Same pill look
+   as the controls. */
 .image-frame-caption-pop {
-    position: absolute;
-    left: 50%;
-    bottom: 60px;
-    transform: translateX(-50%);
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    width: min(100% - 16px, 520px);
+    width: 100%;
     gap: 8px;
     padding: 6px;
     border-radius: var(--radius-sm);
