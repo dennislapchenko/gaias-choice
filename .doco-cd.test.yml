@@ -6,4 +6,4 @@
 name: gaias-test
 working_dir: deploy/test
 environment:
-  WHOAMI_NAME: reconcile-v1
+  WHOAMI_NAME: reconcile-v2
