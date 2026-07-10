@@ -425,12 +425,6 @@ h1 {
     align-items: center;
     gap: 8px;
 }
-/* Two-or-more toggle buttons sharing this row (e.g. Account's campfire-edit +
-   fields toggles) would crowd a phone-width header with labels — collapse
-   back to icon-only, same :has() pattern as the sidebar/TOC dimming above. */
-.head-toggles:has(.rail-toggle ~ .rail-toggle) .rail-toggle-label {
-    display: none;
-}
 .user-toggle:hover {
     background: var(--sand-2);
     text-decoration: none;

@@ -24,7 +24,8 @@ export default function Account() {
   const { me, token, backendUp, openLogin, signOut } = useSession()
 
   const [members, setMembers] = useState<Member[] | null>(null)
-  const [fieldsOpen, setFieldsOpen] = useState(false)
+  // Your-details rail is open by default (its YOUR BUSINESS toggle starts active).
+  const [fieldsOpen, setFieldsOpen] = useState(true)
   // Which business view has the main column (null = the campfire itself).
   const [biz, setBiz] = useState<BizId | null>(null)
   const title = biz === 'stats' ? t('account.stats.title') : t('account.title')
@@ -82,11 +83,9 @@ export default function Account() {
   }
 
   // AccountFields is always mounted — the right rail on desktop (like
-  // Reviews/Journal/Compass), reachable only via the .page-head-row title-
-  // line toggle on mobile (see the .rail-toggle CSS: hidden above 900px, and
-  // .account-fields itself is display:none below 900px unless `fieldsOpen`
-  // adds `.is-open`). One tree, breakpoint entirely in CSS — same pattern
-  // Reviews/Journal now share for their own Upcoming rail toggle.
+  // Reviews/Journal/Compass), opened on mobile by the details toggle in the
+  // YOUR BUSINESS group (`.account-fields` is display:none below 900px unless
+  // `fieldsOpen` adds `.is-open`). One tree, breakpoint entirely in CSS.
   const bizToggles = BUSINESS_TOGGLES.filter((b) => !b.adminOnly || isAdmin)
 
   return (
@@ -106,38 +105,41 @@ export default function Account() {
               <span className="rail-toggle-label">{selected.displayName}</span>
             </button>
           )}
-          <button
-            type="button"
-            className={`user-toggle rail-toggle${fieldsOpen ? ' is-open' : ''}`}
-            aria-expanded={fieldsOpen}
-            aria-label={t('account.fields.title')}
-            onClick={() => setFieldsOpen((o) => !o)}
-          >
-            <EditIcon />
-            <span className="rail-toggle-label">{t('account.fields.title')}</span>
-          </button>
-          {bizToggles.length > 0 && (
-            <div className="biz-toggles" role="group" aria-label={t('account.biz.label')}>
-              <span className="biz-label" aria-hidden="true">
-                {t('account.biz.label')}
-              </span>
-              <div className="biz-btns">
-                {bizToggles.map((b) => (
-                  <button
-                    key={b.id}
-                    type="button"
-                    className={`biz-toggle${biz === b.id ? ' is-active' : ''}`}
-                    aria-pressed={biz === b.id}
-                    aria-label={t(b.labelKey)}
-                    title={t(b.labelKey)}
-                    onClick={() => setBiz((cur) => (cur === b.id ? null : b.id))}
-                  >
-                    <b.icon />
-                  </button>
-                ))}
-              </div>
+          {/* YOUR BUSINESS group — owner-tool toggles. Stats (admin-only) on the
+              left; your-details on the right. Details is a rail toggle, so on
+              desktop the rail stays always-visible (button reads active) and the
+              toggle only opens/closes it below 900px — where it now folds inside
+              this group instead of standing alone. */}
+          <div className="biz-toggles" role="group" aria-label={t('account.biz.label')}>
+            <span className="biz-label" aria-hidden="true">
+              {t('account.biz.label')}
+            </span>
+            <div className="biz-btns">
+              {bizToggles.map((b) => (
+                <button
+                  key={b.id}
+                  type="button"
+                  className={`biz-toggle${biz === b.id ? ' is-active' : ''}`}
+                  aria-pressed={biz === b.id}
+                  aria-label={t(b.labelKey)}
+                  title={t(b.labelKey)}
+                  onClick={() => setBiz((cur) => (cur === b.id ? null : b.id))}
+                >
+                  <b.icon />
+                </button>
+              ))}
+              <button
+                type="button"
+                className={`biz-toggle${fieldsOpen ? ' is-active' : ''}`}
+                aria-pressed={fieldsOpen}
+                aria-label={t('account.fields.title')}
+                title={t('account.fields.title')}
+                onClick={() => setFieldsOpen((o) => !o)}
+              >
+                <EditIcon />
+              </button>
             </div>
-          )}
+          </div>
         </div>
       </div>
       <p className="muted">{t('account.lead')}</p>
