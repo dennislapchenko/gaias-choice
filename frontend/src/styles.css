@@ -873,11 +873,16 @@ h1 {
     transform: none;
 }
 /* Range picker sits below the campfire, above the tables — normal column flow,
-   centered. Square (not pill) buttons, wrap on a narrow column. */
+   right-aligned. Square (not pill) buttons, wrap on a narrow column. */
+.account-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
 .stats-ranges {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-end;
     gap: 8px;
 }
 .stats-range-btn {
