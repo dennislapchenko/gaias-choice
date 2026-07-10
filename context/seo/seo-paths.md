@@ -4,42 +4,22 @@ Goal: SEO-friendly URLs + crawlable pages, while keeping (a) the repo simple
 (content-as-data, 6 runtime deps, container-only npm), and (b) the browser
 fast (instant client-side navigation after load).
 
-## Decision (owner, 2026-07-06) — picked, deferred
+## Decision (owner, 2026-07-06; hold lifted 2026-07-10)
 
 - **Path A is picked**, with a twist: skip the A1/A2 staging and do **both
   locales in one effort** (the `/en/…` URL tree, hreflang pairs, and a
   URL-aware language switcher ship together with the prerender).
-- **Implementation is on hold until the owner has a custom domain.** Reason:
-  canonical URLs / sitemap / Search Console history accrue to the origin, and
-  moving domains after indexing starts resets that equity (see "Custom
-  domain" under cross-cutting decisions). The owner will have the domain when
-  we resume — no work should start before it exists.
+- **Execute now, under the temporary `github.io/gaias-choice` origin** — the
+  owner lifted the wait-for-domain hold. The original deferral protected
+  search equity, but the migration path makes it moot: when a custom domain
+  arrives, GitHub 301-redirects the old project-page URLs to it, so indexing
+  transfers and there is no duplicate-content window. All absolute URLs
+  derive from `site.yaml` `url:`, so domain day is a config flip (the exact
+  list: `action-plan.md` "Domain day").
+- The plan of record is **`action-plan.md`** next to this file (claims below
+  re-verified against the code 2026-07-10).
 
-### Resume checklist (first session after the domain exists)
-
-1. Wire the domain: Pages custom domain (CNAME) + enforce HTTPS,
-   `BASE_PATH=/` in `.github/workflows/deploy-pages.yml`, update `url:` in
-   `content/locales/en/site.yaml`. GitHub auto-redirects the old
-   `github.io/gaias-choice/` URLs to the custom domain for the same repo.
-2. Re-verify every claim in "Where we stand" below against the then-current
-   code (routes in `App.tsx`, browser-API audit, deploy workflow) — this doc
-   describes the repo as of the decision date and code drifts.
-3. Write `action-plan.md` next to this file per SKILL.md "Big tasks"
-   (numbered steps, files touched, success criterion each), covering at
-   least: route manifest derived from `content/` for **both** locales;
-   `src/entry-server.tsx` + `vite build --ssr`; per-route head helper
-   (title/description/canonical/OG + hreflang pairs + client-side
-   `document.title` hook); `scripts/prerender.mjs` writing
-   `dist/<route>/index.html` and `dist/en/<route>/index.html` + `sitemap.xml`
-   + `robots.txt`; `hydrateRoot` switch in `main.tsx`; locale-from-URL
-   (routing prefix, switcher navigates instead of only setState, localStorage
-   demoted to a preference redirect at most); almanac mounted client-side;
-   `404.html` restored to a real not-found page; site-wide raster og:image;
-   Taskfile + workflow build-chain updates; verification = typecheck, build,
-   curl-status + grep-HTML spot checks on `dist/`.
-4. Get the owner's agreement on the action plan, then execute step by step.
-
-Everything below is the analysis that decision was based on.
+Everything below is the analysis the decision was based on.
 
 ## Where we stand (verified in the repo, not guessed)
 
@@ -48,10 +28,14 @@ Everything below is the analysis that decision was based on.
    fine, but Pages serves them with a 404 status. Crawlers take the status
    literally: only the homepage is indexable at all right now. This is the
    single biggest blocker, and it's invisible in a browser.
-2. **One `<head>` for the whole site.** `index.html` has one hardcoded
-   title/description, `lang="ru"`; nothing (not even client-side JS) updates
-   `document.title` per route. No OG/Twitter tags, no canonical, no
-   sitemap.xml, no robots.txt → no social/Pinterest previews either.
+2. **Crawlers see one `<head>` for the whole site.** `index.html` has one
+   hardcoded title/description, `lang="ru"`. `src/lib/head.tsx` now updates
+   title + description client-side per route (tabs/bookmarks), but that needs
+   JS to run. No OG/Twitter tags, no canonical, no sitemap.xml → no
+   social/Pinterest previews either (`public/robots.txt` exists, allow-all,
+   sitemap line commented out). Two utility routes exist since the analysis:
+   `/magic` (emailed magic-link landing) and `/account` — both need 200s but
+   not indexing.
 3. **Locale is localStorage, not URL.** `ru` and `en` share every URL, so a
    crawler can only ever see one language per URL, and hreflang is impossible
    until locale becomes addressable.
@@ -173,11 +157,9 @@ trimming.
 ## Cross-cutting decisions (whichever path)
 
 - **Custom domain**: today's URLs live under
-  `dennislapchenko.github.io/gaias-choice/`. Search equity accrues to the
-  domain — if a custom domain is ever planned, wire it (Pages CNAME +
-  `BASE_PATH=/`) *before or with* the SEO launch, not after Search Console
-  history starts accruing. Decision needed from the owner; everything below
-  works either way.
+  `dennislapchenko.github.io/gaias-choice/`. Decided 2026-07-10: launch under
+  the temp origin; GitHub's automatic 301s carry indexing to a later custom
+  domain (flip list: `action-plan.md` "Domain day").
 - **og:image**: social crawlers won't rasterize SVG mandalas. Start with one
   committed site-wide raster og:image; per-page rasters can come later
   (e.g. a `task` target that rasterizes mandalas).
