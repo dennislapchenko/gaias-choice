@@ -6,7 +6,7 @@ We're building Gaia's Choice in public. This is the honest state of the
 project and where it's going — including the parts that aren't done yet.
 The thinking behind each phase lives in our free founder course,
 [An honest site from zero](/compass), starting with
-[chapter 1: The Kickstart Playbook](/compass/kickstart-playbook).
+[chapter 1: The Kickstart Playbook](/compass/founder-guide/kickstart-playbook).
 
 Where we actually are: seven months on the road with our son, we're no longer
 just travelling — we're **looking for the place to land**. We spent weeks on
@@ -102,7 +102,7 @@ other place gets our own words; About is tracked separately in Phase 0):**
 - [x] Privacy-friendly analytics — our own cookieless counter, no consent
       banner; [/privacy](/privacy) updated first, as promised
 
-**Done when:** the [launch checklist](/compass/launch-checklist) is green and
+**Done when:** the [launch checklist](/compass/founder-guide/launch-checklist) is green and
 the soft-launch test is passed.
 
 ## Phase 2 — Traffic *(months 3–6)*
@@ -131,7 +131,7 @@ place to sit.**
 
 - [ ] Apply to affiliate programs — brands we've already reviewed first,
       then Amazon Associates *(only once traffic can produce 3 sales in 180
-      days — see [chapter 4: the money math](/compass/how-this-site-will-make-money))*
+      days — see [chapter 4: the money math](/compass/founder-guide/how-this-site-will-make-money))*
 - [ ] Affiliate links added to existing reviews, with per-page disclosure
 - [ ] 2–3 higher-ticket reviews published (these carry the revenue math)
 - [ ] Dev track: `/go/<slug>` redirect service with click counting, where

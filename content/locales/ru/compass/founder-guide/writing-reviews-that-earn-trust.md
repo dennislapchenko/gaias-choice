@@ -7,7 +7,7 @@ chapter: 2
 tags: [founder-guide, reviews, process]
 ---
 
-> **Глава 2 из 5 · Путь** — [← Глава 1: Плейбук запуска](/compass/kickstart-playbook) · [Глава 3: Как получить трафик →](/compass/getting-traffic-seo-and-pinterest)
+> **Глава 2 из 5 · Путь** — [← Глава 1: Плейбук запуска](/compass/founder-guide/kickstart-playbook) · [Глава 3: Как получить трафик →](/compass/founder-guide/getting-traffic-seo-and-pinterest)
 > *Вы уже умеете:* называть два актива и порядок действий, который они диктуют.
 > *Эта глава добавит:* планку тестирования, структуру обзора и шаблон — честность, превращённую в повторяемое ремесло.
 
@@ -193,4 +193,4 @@ tags: [organic, cotton]
 хорошо подходит этой нише и что за месяцы затишья проходит каждый честный
 сайт.
 
-**[Глава 3: Как получить трафик →](/compass/getting-traffic-seo-and-pinterest)**
+**[Глава 3: Как получить трафик →](/compass/founder-guide/getting-traffic-seo-and-pinterest)**

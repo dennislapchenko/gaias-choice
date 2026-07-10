@@ -65,8 +65,8 @@ content/                 # ALL editable content (no code)
     en/                  # English — fallback source of truth, always complete
       site.yaml          # name, nav, values, respected, epics, sidebar, support…
       products/*.md      # reviews → /reviews/<filename-without-.md>
-      compass/<epic>/*.md# Compass chapters → /compass/<slug> (subfolder is
-                         # organizational only, not part of the route)
+      compass/<epic>/*.md# Compass chapters → /compass/<epic>/<file> (the epic
+                         # subfolder IS part of the slug/route)
       journal/*.md       # Journal entries → /journal/<slug> (flat)
       pages/*.md         # standalone pages (about, contact, roadmap, …)
     ru/                  # Russian — falls back to en/ per collection + per slug
@@ -171,8 +171,10 @@ section (user-facing "Compass" / «Путь») and the one **openly
 computer-assisted** section, disclosed by the `compass.provenance` banner (the
 provenance contract is SKILL.md non-negotiable #6).
 
-- **A chapter's FIRST tag is its epic** (course); the subfolder is filesystem
-  tidiness only — slug = filename. Epic display metadata lives in `site.yaml`
+- **A chapter's FIRST tag is its epic** (course, used to group the landing
+  page); the epic subfolder is also part of the slug/URL —
+  `compass/<epic>/<file>.md` → `/compass/<epic>/<file>`. Epic display metadata
+  lives in `site.yaml`
   `epics:`; the first entry is the default tab.
 - Courses are **5 or 11 chapters** (owner rule); optional `chapter: N`
   frontmatter orders them. Existing epics, all complete: `founder-guide` (5),

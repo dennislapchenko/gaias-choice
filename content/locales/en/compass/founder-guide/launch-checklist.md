@@ -7,7 +7,7 @@ chapter: 5
 tags: [founder-guide, launch, checklist]
 ---
 
-> **Chapter 5 of 5 · The Summit** — [← Chapter 4: How This Site Will Make Money](/compass/how-this-site-will-make-money)
+> **Chapter 5 of 5 · The Summit** — [← Chapter 4: How This Site Will Make Money](/compass/founder-guide/how-this-site-will-make-money)
 > *You already can:* build trust one review at a time, bring the right readers to it, and do the money math without romance.
 > *This chapter adds:* no new fundamentals — the Summit makes everything from chapters 1–4 true at the same time, on one page.
 
@@ -46,7 +46,7 @@ caption: "Six sections, one exam. A page that fails the stranger test gets fixed
 ## 2. Content
 
 - [ ] **10 real reviews** written per the
-      [review process](/compass/writing-reviews-that-earn-trust) — products you
+      [review process](/compass/founder-guide/writing-reviews-that-earn-trust) — products you
       own, your photos, honest flaws.
 - [ ] **Every placeholder review deleted.** No fake `affiliateUrl` anywhere
       (grep for `EXAMPLE`).
@@ -102,7 +102,7 @@ but the literal truth, and this walk-through grades it. Before announcing
 anywhere public, both of you click through the entire site on a phone and ask,
 for every page: *"Would I trust this if a stranger made it?"* Anything that
 fails gets fixed or deleted. Then you launch — quietly, and let the weekly
-rhythm from [chapter 1](/compass/kickstart-playbook) take over.
+rhythm from [chapter 1](/compass/founder-guide/kickstart-playbook) take over.
 
 ## Now you can
 

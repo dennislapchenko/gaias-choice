@@ -7,7 +7,7 @@ chapter: 1
 tags: [founder-guide, playbook]
 ---
 
-> **Chapter 1 of 5 · The Gate** — [Chapter 2: Writing Reviews That Earn Trust →](/compass/writing-reviews-that-earn-trust)
+> **Chapter 1 of 5 · The Gate** — [Chapter 2: Writing Reviews That Earn Trust →](/compass/founder-guide/writing-reviews-that-earn-trust)
 > *You're at the start* — and this is the right place to be: the map of the whole course is in this chapter.
 > *This chapter adds:* what this business actually is, the two assets everything serves, and the order of operations.
 
@@ -122,16 +122,16 @@ Do these in order. Each one is pointless without the one before it.
    own kid. Use each item for at least a couple of weeks. Take photos with your
    own hands in the frame.
 3. **Write the first 10 real reviews** using the process in
-   [chapter 2: Writing Reviews That Earn Trust](/compass/writing-reviews-that-earn-trust).
+   [chapter 2: Writing Reviews That Earn Trust](/compass/founder-guide/writing-reviews-that-earn-trust).
    Delete or rewrite every placeholder review as you go.
 4. **Launch properly** — domain, real email, disclosure and privacy pages,
    analytics, Search Console. The full list is in
-   [chapter 5: The Launch Checklist](/compass/launch-checklist).
+   [chapter 5: The Launch Checklist](/compass/founder-guide/launch-checklist).
 5. **Publish on a rhythm and build traffic** — see
-   [chapter 3: Getting Traffic](/compass/getting-traffic-seo-and-pinterest). One
+   [chapter 3: Getting Traffic](/compass/founder-guide/getting-traffic-seo-and-pinterest). One
    good piece a week beats ten in January and silence until June.
 6. **Apply for affiliate programs only once there's real content** — see
-   [chapter 4: How This Site Will Make Money](/compass/how-this-site-will-make-money).
+   [chapter 4: How This Site Will Make Money](/compass/founder-guide/how-this-site-will-make-money).
    Applying with placeholder content gets you rejected or banned.
 
 ```diagram order-of-operations
@@ -219,4 +219,4 @@ Everything rests on the trust asset, and trust is built one review at a time.
 Chapter 2 is the exact craft: the rules, the minimum testing bar, and the
 template every review on this site must survive.
 
-**[Chapter 2: Writing Reviews That Earn Trust →](/compass/writing-reviews-that-earn-trust)**
+**[Chapter 2: Writing Reviews That Earn Trust →](/compass/founder-guide/writing-reviews-that-earn-trust)**

@@ -19,9 +19,11 @@ server {
         try_files $uri =404;
     }
 
-    # SPA fallback: unknown paths render index.html so client routing works.
+    # Serve the prerendered <path>.html for a clean URL (parity with GitHub
+    # Pages), then the SPA fallback: unknown paths render index.html so client
+    # routing still works.
     location / {
-        try_files $uri $uri/ /index.html;
+        try_files $uri $uri.html $uri/ /index.html;
     }
 
     # Basic hardening headers.

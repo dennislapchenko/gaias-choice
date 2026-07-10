@@ -39,7 +39,9 @@ export default function App() {
                 <Route path="/journal" element={<Journal />} />
                 <Route path="/journal/:slug" element={<EntryDetail kind="journal" />} />
                 <Route path="/compass" element={<Compass />} />
-                <Route path="/compass/:slug" element={<EntryDetail kind="compass" />} />
+                {/* Splat, not :slug — a Compass slug carries its epic folder
+                    (`/compass/herbalism/02-…`), so it spans a path separator. */}
+                <Route path="/compass/*" element={<EntryDetail kind="compass" />} />
                 <Route path="/about" element={<MarkdownPage slug="about" />} />
                 <Route path="/contact" element={<MarkdownPage slug="contact" />} />
                 <Route path="/roadmap" element={<MarkdownPage slug="roadmap" />} />

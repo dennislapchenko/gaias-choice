@@ -7,7 +7,7 @@ chapter: 3
 tags: [founder-guide, seo, traffic]
 ---
 
-> **Chapter 3 of 5 · The Path** — [← Chapter 2: Writing Reviews That Earn Trust](/compass/writing-reviews-that-earn-trust) · [Chapter 4: How This Site Will Make Money →](/compass/how-this-site-will-make-money)
+> **Chapter 3 of 5 · The Path** — [← Chapter 2: Writing Reviews That Earn Trust](/compass/founder-guide/writing-reviews-that-earn-trust) · [Chapter 4: How This Site Will Make Money →](/compass/founder-guide/how-this-site-will-make-money)
 > *You already can:* test a product to the minimum bar and write a verdict-first review that names its flaws.
 > *This chapter adds:* keyword research without paid tools, Pinterest as a search engine, and the patience math of the flat months.
 
@@ -26,7 +26,7 @@ knows. Two things matter for you:
    explicitly reward evidence of real use: original photos, measurements,
    drawbacks, comparisons. This is where chapter 2's fourth rule — *photos are
    yours* — pays out: the
-   [review process](/compass/writing-reviews-that-earn-trust) produces exactly
+   [review process](/compass/founder-guide/writing-reviews-that-earn-trust) produces exactly
    this evidence, not as an SEO trick, but because the incentives align
    perfectly.
 2. **Topical focus.** Thirty pieces about one narrow topic (natural gear for
@@ -183,4 +183,4 @@ should build last. Chapter 4 is the money: how affiliate income actually
 works, the math with no romance in it, and the traps that have killed real
 sites.
 
-**[Chapter 4: How This Site Will Make Money →](/compass/how-this-site-will-make-money)**
+**[Chapter 4: How This Site Will Make Money →](/compass/founder-guide/how-this-site-will-make-money)**

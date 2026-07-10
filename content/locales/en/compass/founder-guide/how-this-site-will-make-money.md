@@ -7,7 +7,7 @@ chapter: 4
 tags: [founder-guide, monetization, affiliate]
 ---
 
-> **Chapter 4 of 5 · The Path** — [← Chapter 3: Getting Traffic](/compass/getting-traffic-seo-and-pinterest) · [Chapter 5: The Launch Checklist →](/compass/launch-checklist)
+> **Chapter 4 of 5 · The Path** — [← Chapter 3: Getting Traffic](/compass/founder-guide/getting-traffic-seo-and-pinterest) · [Chapter 5: The Launch Checklist →](/compass/founder-guide/launch-checklist)
 > *You already can:* write a review that earns trust and give it an honest chance of being found.
 > *This chapter adds:* how affiliate income actually works, the math with no romance in it, and the traps that get new sites banned.
 
@@ -122,7 +122,7 @@ Not now — but the roadmap should point here:
   "buy less, buy better" brand — decide when it's a real decision.
 - **Sponsorships.** Once there's an audience, eco brands pay flat fees for
   honest (disclosed) reviews. The no-copy-approval rule from chapter 2's
-  [review process](/compass/writing-reviews-that-earn-trust) is non-negotiable.
+  [review process](/compass/founder-guide/writing-reviews-that-earn-trust) is non-negotiable.
 
 ## The traps (each of these has killed real sites)
 
@@ -179,4 +179,4 @@ the Summit: no new fundamentals, just the checklist that forces chapters 1–4
 to be true at the same time, ending with the only exam that matters — *would a
 stranger trust this?*
 
-**[Chapter 5: The Launch Checklist →](/compass/launch-checklist)**
+**[Chapter 5: The Launch Checklist →](/compass/founder-guide/launch-checklist)**

@@ -141,14 +141,13 @@ function parseFrontmatter(raw: string): { data: Record<string, unknown>; body: s
 
 /**
  * Pulls the `<locale>` and slug out of a
- * `.../content/locales/<locale>/<kind>/[<subfolder>/]<slug>.md` path. Compass
- * chapters are grouped into epic subfolders on disk (e.g. `compass/homeopathy/…`)
- * for tidiness, but the subfolder is purely organizational — the slug is always
- * just the filename, so routes and links are unaffected by which folder a
- * chapter lives in. (Journal entries are flat, no subfolder.)
+ * `.../content/locales/<locale>/<kind>/<slug>.md` path. The slug is the whole
+ * path after `<kind>/`, so Compass's epic subfolders ARE part of the slug/URL
+ * (e.g. `compass/herbalism/02-meeting-a-plant.md` → `/compass/herbalism/02-meeting-a-plant`).
+ * Products, journal, and pages are flat, so their slug is just the filename.
  */
 function localeAndSlugFromPath(path: string, kind: string): { locale: string; slug: string } {
-  const match = new RegExp(`content/locales/([^/]+)/${kind}/(?:.+/)?([^/]+)\\.md$`).exec(path)
+  const match = new RegExp(`content/locales/([^/]+)/${kind}/(.+)\\.md$`).exec(path)
   return { locale: match?.[1] ?? 'en', slug: match?.[2] ?? path }
 }
 

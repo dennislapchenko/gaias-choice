@@ -19,7 +19,10 @@ import NotFound from './NotFound'
 // the article). `kind` picks the getter, the back-link target/label, and the
 // section tag; the chapter tag only shows for Compass.
 export default function EntryDetail({ kind }: { kind: 'compass' | 'journal' }) {
-  const { slug } = useParams()
+  // Compass uses a splat route (slug spans the epic folder → params['*']);
+  // journal is a flat `:slug`.
+  const params = useParams()
+  const slug = kind === 'compass' ? params['*'] : params.slug
   const { locale, t } = useI18n()
   // A JournalEntry is structurally a CompassEntry (chapter is optional), so both
   // getters' results share this type; `chapter` is only surfaced for compass.

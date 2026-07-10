@@ -37,12 +37,12 @@ grep -rh '^image:' {en,ru}/compass/<epic> | awk '{print $2}' | sort -u | \
 ```bash
 cd content/locales
 
-# every /compass/<slug> reference, with counts:
-grep -rho '(/compass/[a-z0-9-]*)' {en,ru}/compass/<epic> | tr -d '()' | \
+# every /compass/<epic>/<file> reference, with counts:
+grep -rho '(/compass/[a-z0-9/-]*)' {en,ru}/compass/<epic> | tr -d '()' | \
   sed 's|/compass/||' | sort | uniq -c | sort -rn
 
-# the set of real slugs to check against:
-ls en/compass/<epic> | sed 's/\.md$//'
+# the set of real slugs to check against (epic-prefixed, matching the URLs):
+ls en/compass/<epic> | sed "s|^|<epic>/|; s/\.md$//"
 ```
 
 Pass: every referenced slug is a real file; mid-course chapters referenced

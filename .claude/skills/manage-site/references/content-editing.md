@@ -68,7 +68,7 @@ To change the structure, edit the template files themselves (keep en + ru in
 lockstep) — don't improvise per review. Ask for real testing notes if the
 user didn't provide them.
 
-## Add a Compass chapter → `content/locales/en/compass/<epic-tag>/<slug>.md`
+## Add a Compass chapter → `content/locales/en/compass/<epic-tag>/<NN-slug>.md`
 
 > **Compass is the site's one openly computer-assisted section** — courses
 > AI-drafted from the owners' context/voice, then edited, disclosed by the
@@ -78,8 +78,13 @@ user didn't provide them.
 
 Frontmatter: `title`, `excerpt`, `date`, optional `image`, `tags`, optional
 `chapter: N` (course order — see below). The `<epic-tag>` subfolder (e.g.
-`compass/homeopathy/`) is just filesystem tidiness — a chapter's epic is decided
-by its first tag, not by which folder the file sits in.
+`compass/homeopathy/`) **is part of the slug/URL**: `compass/<epic>/<file>.md`
+→ `/compass/<epic>/<file>`. A chapter's epic is *still* decided by its first
+tag (that's what groups the landing page), but keep the file in the matching
+folder — the folder now shows in the URL. **Name numbered chapters
+`NN-topic.md`** (e.g. `02-meeting-a-plant.md`) — no redundant epic prefix,
+since the folder already carries it. Cross-chapter links are
+`(/compass/<epic>/<file>)`.
 
 The **founder guides** (internal playbooks, deliberately public) form the
 5-chapter epic «Честный сайт с нуля» / "An honest site from zero" (tag

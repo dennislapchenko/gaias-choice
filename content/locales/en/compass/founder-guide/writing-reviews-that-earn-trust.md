@@ -7,7 +7,7 @@ chapter: 2
 tags: [founder-guide, reviews, process]
 ---
 
-> **Chapter 2 of 5 · The Path** — [← Chapter 1: The Kickstart Playbook](/compass/kickstart-playbook) · [Chapter 3: Getting Traffic →](/compass/getting-traffic-seo-and-pinterest)
+> **Chapter 2 of 5 · The Path** — [← Chapter 1: The Kickstart Playbook](/compass/founder-guide/kickstart-playbook) · [Chapter 3: Getting Traffic →](/compass/founder-guide/getting-traffic-seo-and-pinterest)
 > *You already can:* name the two assets and the order of operations they dictate.
 > *This chapter adds:* the testing bar, the review structure, and the template that turn honesty into a repeatable craft.
 
@@ -182,4 +182,4 @@ A perfect review nobody reads builds nothing. Chapter 3 is the other asset:
 how people actually find a site like this, why Pinterest fits the niche
 unusually well, and the flat months every honest site walks through.
 
-**[Chapter 3: Getting Traffic →](/compass/getting-traffic-seo-and-pinterest)**
+**[Chapter 3: Getting Traffic →](/compass/founder-guide/getting-traffic-seo-and-pinterest)**
