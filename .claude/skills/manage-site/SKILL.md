@@ -378,13 +378,14 @@ Then, in either case:
    - **Backend deploy is automatic on a `backend/**` change — regardless of the
      flag.** If the pushed diff touched `backend/**` (so the "Build backend
      image" CI run fired — it's `paths`-filtered to `backend/**`), wait for that
-     image build to go **green**, then run `task be:deploy` to ship it to the VM
-     and report the result. FE and BE must ship together, so a backend change is
+     image build to go **green**, then run `task be:deploy` to ship it and
+     report the result. FE and BE must ship together, so a backend change is
      never left un-deployed just because Pages-watching is set to the single
-     check. (`be:deploy` needs the owner's local `.env` + VM secrets and Docker;
-     if they're absent it reports that instead of guessing — see
-     `references/backend.md`.) Because this is a long follow-through, run it via
-     the background *agent* so the owner isn't blocked.
+     check. (`be:deploy` bumps `BE_TAG` in `.doco-cd.yml` and pushes — doco-cd
+     on the VM reconciles within ~30s; it needs only `gh` + `git`, no VM access.
+     See `references/backend.md`.) Because the reconcile is a short follow-up,
+     verify it landed via the VM (`docker logs doco-cd-doco-cd-1`) or the live
+     `/api/healthz`.
 
    Either way: GitHub Pages fails transiently on its own side ("Deployment
    failed, try again later" while the build is green) — on that failure

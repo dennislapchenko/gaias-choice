@@ -113,23 +113,12 @@ tasks:
 
   be:deploy:
     desc: >-
-      Ship the latest CI-built backend image to the VM (owner-invoked, manual;
-      temporary until doco-cd). Resolves the image sha from GitHub Actions,
-      assembles deploy.env from the local .env + VM vars, scps
-      compose/Caddyfile/env, then pulls + recreates. Override: BE_TAG=sha-… to
-      pin an image; VM_SSH=… VM_KEY=… VM_PORT=… VM_DIR=… for a different host.
-    vars:
-      VM_SSH: '{{.VM_SSH | default "root@gaias-choice.gardenofatlantis.com"}}'
-      VM_KEY: '{{.VM_KEY | default "~/.ssh/gaia"}}'
-      VM_PORT: '{{.VM_PORT | default "13337"}}'
-      VM_DIR: '{{.VM_DIR | default "/opt/gaias-choice/deploy"}}'
-      API_DOMAIN: '{{.API_DOMAIN | default "gaias-choice.gardenofatlantis.com"}}'
-      CORS_ORIGINS: '{{.CORS_ORIGINS | default "https://dennislapchenko.github.io"}}'
+      Roll the VM backend to the latest CI-built image (owner-invoked). GitOps:
+      resolves the newest green image sha, bumps BE_TAG in .doco-cd.yml, and
+      commits + pushes — doco-cd on the VM reconciles it within ~30s. No SSH/scp.
+      Override BE_TAG=sha-… to pin (or roll back to) a specific image.
     cmds:
-      - >-
-        VM_SSH='{{.VM_SSH}}' VM_KEY='{{.VM_KEY}}' VM_PORT='{{.VM_PORT}}' VM_DIR='{{.VM_DIR}}'
-        API_DOMAIN='{{.API_DOMAIN}}' CORS_ORIGINS='{{.CORS_ORIGINS}}'
-        BE_TAG='{{.BE_TAG}}' bash deploy/release.sh
+      - BE_TAG='{{.BE_TAG}}' bash deploy/release.sh
 
   typecheck:
     desc: Strict TypeScript type-check

@@ -68,7 +68,7 @@ Keep this table current — when you add/rename/change a component, update the r
 | `task be:dev` | backend only, `go run .` on :8787 (`-it`) |
 | `task be:test` / `be:tidy` / `be:gen` / `be:image` / `be:run` / `be:verify` | vet+test / `go mod tidy && verify` / regenerate `internal/httpapi/gen.go` from `openapi.yaml` / build distroless image / run prod image :8787 / spec-drift check + test + image gate — all containerized (`golang:1.25-alpine`, cache in `gaias-choice-go-cache` volume) |
 | `task be:tunnel` | `ngrok http 8787` (host ngrok, as with FE dev) |
-| `task be:deploy` | ship the latest CI-built backend image to the VM (owner-invoked, manual; resolves the sha from GitHub Actions, rebuilds `deploy.env`, scps compose+Caddyfile+env, pulls + recreates). Temporary until doco-cd — see `deploy/release.sh` + `deploy/infra-log.md` |
+| `task be:deploy` | roll the VM backend (owner-invoked, GitOps): resolves the newest green image sha, bumps `BE_TAG` in `.doco-cd.yml`, commits + pushes — doco-cd reconciles the VM within ~30s (no SSH/scp). Pin/roll back with `BE_TAG=sha-…`. See `deploy/release.sh` + `deploy/infra-log.md` |
 | `task images` | optimize `frontend/public/images` → WebP |
 | `task mandalas SET=<name>` | generate mandala SVG art for a config set (`guides`, `reviews`); optional `ONLY=slug1,slug2` |
 | `task audit` | `npm audit` — must stay at 0 vulns |

@@ -107,7 +107,7 @@ backend/                 # optional Go/gin API sidecar; openapi.yaml is THE
                          # endpoint contract (see "Backend")
 compose.dev.yaml         # `task dev` stack: web (Vite HMR) + api (air reload)
 deploy/                  # live VM stack (api + Caddy) + infra-log.md record
-.doco-cd.yml             # doco-cd GitOps for the VM — deferred
+.doco-cd.yml             # doco-cd GitOps stack config for the VM (live)
 Taskfile.yml             # all common commands
 ```
 

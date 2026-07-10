@@ -388,19 +388,21 @@ body. `RESPONSE_LOG_LINES` (default 3) caps the echoed body. `LOG_EXCLUDE`
 endpoints from the log entirely, DEBUG or not. Separate from the FE
 `VITE_DEBUG` gate (different process, different gate).
 
-## Deploy (D8, live — manual)
+## Deploy (D8, live — doco-cd GitOps)
 
-The backend runs on the Hetzner VM as the
-`deploy/` compose stack (`api` + a `caddy` service terminating TLS for
-`gaias-choice.gardenofatlantis.com`), brought up by hand with
-`docker compose`. The image is built + pushed to GHCR by
-`.github/workflows/build-backend.yml` and pinned in `BE_TAG`. **doco-cd
-GitOps auto-redeploy is prepared but deferred** (`.doco-cd.yml` +
-`deploy/compose.yaml`). Provisioning record + redeploy/backup steps:
-`deploy/infra-log.md`. The static site never moves off Pages by this.
-`task be:deploy` ships the latest CI-built image to the VM (owner-invoked,
-manual; resolves the sha from GitHub Actions, rebuilds `deploy.env`, scps
-compose+Caddyfile+env, pulls + recreates — see `deploy/release.sh`).
+The backend runs on the Hetzner VM as the `deploy/` compose stack (`api` + a
+`caddy` service terminating TLS for `gaias-choice.gardenofatlantis.com`),
+reconciled by **doco-cd** (a GitOps daemon that polls this repo `main` every 30s
+and runs `docker compose up` from `.doco-cd.yml`, `working_dir: deploy`). **A
+push to `main` is the deploy.** The image is built + pushed to GHCR by
+`.github/workflows/build-backend.yml`; the deployed tag is `BE_TAG` in
+`.doco-cd.yml`. Secrets reach the stack via `PASS_ENV` from the VM-only
+`/opt/doco-cd/secrets.env` (non-secrets `API_DOMAIN`/`CORS_ORIGINS`/`BE_TAG` are
+in `.doco-cd.yml`). Provisioning record + redeploy/backup steps:
+`deploy/infra-log.md` (activation = step 9). The static site never moves off
+Pages by this. `task be:deploy` rolls the backend by bumping `BE_TAG` in
+`.doco-cd.yml` and pushing — doco-cd reconciles within ~30s, no SSH/scp (see
+`deploy/release.sh`).
 
 ## Common backend dev tasks
 
@@ -417,5 +419,7 @@ compose+Caddyfile+env, pulls + recreates — see `deploy/release.sh`).
 - **`be:*` tasks:** `be:dev` (go run on :8787), `be:test` (vet+test),
   `be:tidy` (tidy+verify), `be:gen` (regen OpenAPI server code), `be:image`,
   `be:run`, `be:verify` (spec-drift+test+image gate), `be:tunnel` (ngrok),
-  `be:deploy` (ship to VM). All containerized (`golang:1.25-alpine`, cache in
-  the `gaias-choice-go-cache` volume) — nothing on the host.
+  `be:deploy` (bump `BE_TAG` in `.doco-cd.yml` + push → doco-cd reconciles the
+  VM). The Go tasks are containerized (`golang:1.25-alpine`, cache in the
+  `gaias-choice-go-cache` volume) — nothing on the host; `be:deploy` is just
+  `gh` + `git`.

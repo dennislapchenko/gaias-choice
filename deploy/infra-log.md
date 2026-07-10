@@ -148,23 +148,60 @@
   deliver until the account is approved in the Postmark console (owner
   action). The BE logs each failed send (`mail: magic-link send failed`).
 
+### 9. doco-cd GitOps activated (manual deploy retired)
+
+- **Daemon:** `ghcr.io/kimdre/doco-cd:latest` runs on the VM from
+  `/opt/doco-cd/{compose.yaml,poll.yaml,secrets.env}` (project `doco-cd`). It
+  **polls** this repo `refs/heads/main` every 30s (`POLL_CONFIG_FILE`), so it
+  needs **no inbound port** — the edge firewall stays 22/80/443, no webhook.
+  Public repo ⇒ no `GIT_ACCESS_TOKEN`. Mounts `/var/run/docker.sock` + its own
+  `doco-cd_data` clone-cache volume. No `WEBHOOK_SECRET`/`API_SECRET` (both
+  endpoint sets stay disabled).
+- **Proof first (throwaway `test` target):** a `traefik/whoami` stack under
+  `deploy/test/` + `.doco-cd.test.yml`, selected by poll `target: test`, proved
+  the full loop (push → recreate) in isolation — the live `.doco-cd.yml` is
+  never read while a target is set. Both were deleted once the live stack
+  migrated.
+- **Migration:** the live stack moved from the hand-run compose project `deploy`
+  (`/opt/gaias-choice/deploy`, `docker compose up`) to doco-cd's project
+  `gaias-choice` (from repo-root `.doco-cd.yml`, `working_dir: deploy`). Cutover:
+  `docker compose down` the old `deploy` project (frees 80/443), then dropped
+  `target:` from `poll.yaml` and recreated the daemon → it deployed
+  `gaias-choice-{api,caddy}-1`. The `/srv/gaias-choice/{data,caddy}` **host bind
+  mounts carried the SQLite DB and Caddy cert across** — no re-ACME, no data
+  loss (brief api outage during the swap only).
+- **Secrets via `PASS_ENV`:** the daemon loads `/opt/doco-cd/secrets.env` (the
+  former `deploy.env`, `chmod 600`, uncommitted) and `PASS_ENV=true` forwards it
+  into the stack's compose interpolation. Non-secrets (`API_DOMAIN`,
+  `CORS_ORIGINS`, `BE_TAG`) were pulled OUT of `secrets.env` and into
+  `.doco-cd.yml`'s `environment:` in git — so a **backend release is now a
+  `BE_TAG` commit** (`task be:deploy`), not a VM edit. `secrets.env` holds only
+  the 13 real secrets.
+- **Verified externally** through the doco-cd-managed stack: `/api/healthz` 200
+  + valid TLS (cert reused), `/api/hello` 200 (DB round-trip), `/api/content/*`
+  **401 not 503** (⇒ `GITHUB_TOKEN` delivered via `PASS_ENV`), CORS preflight
+  from the Pages origin 204.
+- **Not yet cleaned:** the old `/opt/gaias-choice/deploy/` files
+  (`compose.yaml`, `Caddyfile`, `deploy.env`) are inert but still on disk — a
+  latent footgun if someone `docker compose up`s them there (caddy would fight
+  doco-cd's caddy for 80/443). Safe to delete once confident.
+- **doco-cd image is `latest`** — pin a digest before this is the only path to
+  prod.
+
 ## Redeploy / operate (quick reference)
 
-- **New backend image (automated):** push to `main` touching `backend/**` → CI
-  builds `sha-<commit>`, then run **`task be:deploy`** from the repo (owner
-  machine). It resolves the newest green build's sha from GitHub Actions,
-  regenerates `deploy.env` from the repo-root `.env` (secrets) + the VM
-  non-secrets (`API_DOMAIN`/`CORS_ORIGINS`/`BE_TAG`), scps
-  `compose.yaml`+`Caddyfile`+`deploy.env` to `/opt/gaias-choice/deploy/`, then
-  `pull` + `up -d`. Pin a specific image with `task be:deploy BE_TAG=sha-…`;
-  override host with `VM_SSH=… VM_KEY=…`. This is the temporary stand-in for
-  doco-cd — see `deploy/release.sh`. Because it always reships compose+Caddyfile
-  and rebuilds `deploy.env`, it also covers the two step-7 gotchas (stale VM
-  compose, secret drift) by construction.
-- **Manual fallback** (no `task`): bump `BE_TAG` in the VM's `deploy.env` and
-  `docker compose --env-file deploy.env -f compose.yaml up -d`. If
-  `deploy/compose.yaml` or `deploy/Caddyfile` changed, **scp them first** — the
-  VM copies are manual and do not track the repo (see step 7).
+- **New backend image (automated, GitOps):** push to `main` touching
+  `backend/**` → CI builds `sha-<commit>`, then run **`task be:deploy`** from the
+  repo. It resolves the newest green build's sha and bumps `BE_TAG` in
+  `.doco-cd.yml`, then commits + pushes. doco-cd on the VM reconciles within
+  ~30s — no SSH/scp. Pin/roll back with `task be:deploy BE_TAG=sha-…`. See
+  `deploy/release.sh` and step 9 below.
+- **Manual fallback** (doco-cd itself down): SSH in and, from `/opt/doco-cd`,
+  `docker compose up -d` restarts the daemon; it re-clones and reconciles. To
+  hand-run the app stack without doco-cd you'd need the repo on the VM (git is
+  not installed) — prefer fixing doco-cd. Secrets live in
+  `/opt/doco-cd/secrets.env` (`chmod 600`, never committed); the non-secrets
+  (`API_DOMAIN`/`CORS_ORIGINS`/`BE_TAG`) live in `.doco-cd.yml` in the repo.
 - **Restart:** same `up -d`; **logs:** `docker compose … logs -f api`.
 - **DB backup (host cron, never `cp` a live WAL db):**
   `docker exec deploy-api-1 …` isn't needed — the db is a host file:
@@ -229,7 +266,9 @@ sshd auth; apply with console access as the lockout fallback.
 ## Deferred (not done yet, by design)
 - **Terraform the edge firewall** — `gaias-choice-edge` is live but was created
   imperatively via `hcloud`; codify it later as `hcloud_firewall` + attachment.
-- **doco-cd GitOps** auto-redeploy (its server compose + webhook/poll + token
-  files) — first deploy was intentionally manual to prove the stack.
+- **SOPS+age secrets** — secrets currently reach doco-cd via `PASS_ENV` from the
+  VM-only `/opt/doco-cd/secrets.env` (step 9). Phase 3 would encrypt them with
+  SOPS+age and commit the encrypted env to the repo (doco-cd auto-decrypts with
+  an age key mounted as a docker secret), removing the VM-only secret file.
 - **DB backup cron** — dirs exist (`/srv/gaias-choice/backups`); the host cron
   itself is not yet installed.
