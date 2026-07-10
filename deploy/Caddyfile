@@ -2,6 +2,5 @@
 # subdomain the owner points at the VM — independent of the site's future
 # custom domain (the SEO plan stays decoupled).
 {$API_DOMAIN} {
-	header X-Gaia-Watch "hot-reload-test"
 	reverse_proxy api:8787
 }
