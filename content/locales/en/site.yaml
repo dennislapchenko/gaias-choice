@@ -163,7 +163,6 @@ analytics:
   trackSignedIn: true
 
 nav:
-  - { label: Home, path: / }
   - { label: Reviews, path: /reviews }
   - { label: Journal, path: /journal }
   - { label: Compass, path: /compass }
