@@ -858,7 +858,6 @@ h1 {
     flex-direction: column;
     gap: 18px;
     margin-top: 20px;
-    position: relative; /* anchor for the top-right range picker */
 }
 .stats-fire {
     align-self: center;
@@ -873,17 +872,12 @@ h1 {
     width: 100%;
     transform: none;
 }
-/* Range picker floats to the top-right of the view, level with the campfire.
-   Square (not pill) buttons. Below 640px it drops back into the normal stacked
-   flow so it can't overlap the centered fire on a narrow column. */
+/* Range picker sits below the campfire, above the tables — normal column flow,
+   centered. Square (not pill) buttons, wrap on a narrow column. */
 .stats-ranges {
-    position: absolute;
-    top: 0;
-    right: 0;
-    max-width: 60%;
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-end;
+    justify-content: center;
     gap: 8px;
 }
 .stats-range-btn {
@@ -900,20 +894,6 @@ h1 {
     background: var(--sage);
     color: var(--on-accent);
     border-color: var(--sage);
-}
-@media (max-width: 640px) {
-    /* Dissolve the unstyled .account-stats wrapper so its children join
-       .stats-main's flex column; order:-1 floats the range row above the fire,
-       matching desktop's top placement instead of dropping below it. */
-    .account-stats {
-        display: contents;
-    }
-    .stats-ranges {
-        position: static;
-        max-width: none;
-        justify-content: center;
-        order: -1;
-    }
 }
 .stats-section {
     border: 1px solid var(--line);
