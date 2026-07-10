@@ -69,7 +69,26 @@ static-site build work.
   model configured), `POST /api/content/translate` (translate a whole content
   file's prose into another locale — `session: [editor]`, 503 when no model;
   the FE saves the result as the sibling-locale file with a `translatedFrom:`
-  disclosure mark).
+  disclosure mark), `POST /api/track` + `GET /api/stats` (see "Analytics").
+
+## Analytics (first-party, cookieless)
+
+The traffic counters behind `/account` → Статистика. **Nothing about the
+visitor is ever stored** — one `traffic(day, kind, path, hits)` row per UTC
+day (migration 007; no IP/UA/user columns by design — the site's /privacy
+page promises exactly that shape). Two kinds: **`page`** rows come from
+`POST /api/track` (public, per-IP rate-limited 60/min; the SPA beacon in
+`Layout.tsx` fires it per navigation), whose path is normalized in
+`internal/httpapi/stats.go` — route-root allowlist mirroring `App.tsx`, clean
+charset, ≤128 chars, junk collapses to `(other)` so the table stays bounded;
+**`api`** rows come from a router middleware in `server.go` counting every
+**matched** request by `c.FullPath()` route template after `c.Next()`
+(unmatched scanner 404s have no FullPath and are skipped; count errors are
+dropped — counting never fails a request). `GET /api/stats?range=today|7d|30d`
+(`session: [admin]`, default 7d) returns `{range, pages[], api[]}` summed over
+the window, most-hit first (`store.Traffic`). The FE skips the beacon for
+signed-in sessions unless `en/site.yaml` `analytics.trackSignedIn: true`; FE
+rendering details: development.md "Business toggles" row.
 
 ## Auth (users/sessions/roles)
 
@@ -304,7 +323,9 @@ file — components never guess paths).
 SQLite at `${DATA_DIR}/gaia.db`. Local: `backend/data/`,
 git-ignored, nuke to reset. Server: a **host bind mount**
 `/srv/gaias-choice/data` so backups are a host concern (`sqlite3 … .backup`,
-never `cp` on a live WAL db; Litestream is the upgrade path).
+never `cp` on a live WAL db; Litestream is the upgrade path). Migration 007
+adds the `traffic` day-bucket counters (see "Analytics") — one small write
+per API request and per tracked pageview rides on the same WAL db.
 
 ## FE seam (`src/lib/api.ts`)
 
