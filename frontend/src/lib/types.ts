@@ -76,6 +76,7 @@ export interface SiteConfig {
   epics?: GuideEpic[] // themed Compass collections shown as thumbnails on /compass
   ratingCriteria?: { title: string; items: string[] } // Gaia Score criteria (labels); a review's `scores` array aligns to items order
   support?: SupportConfig // payment methods for /support; non-localized, so authored in en/ only and inherited by other locales (see getSite)
+  analytics?: { trackSignedIn?: boolean } // first-party pageview beacon knob (Layout.tsx); absent/false ⇒ signed-in visits aren't counted. Non-localized, en-only, inherited
   nav: NavItem[]
   footerNav?: NavItem[]
   social: { label: string; url: string }[]

@@ -797,6 +797,124 @@ h1 {
     }
 }
 
+/* ---------- Business toggles + Statistics view (account page) ---------- */
+/* The «Твои дела» row: square owner-tool toggles in the title row (right
+   end on desktop, same spot on mobile). Composition comes from the
+   BUSINESS_TOGGLES registry in Account.tsx. */
+.biz-toggles {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+.biz-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--sage-dark);
+}
+.biz-btns {
+    display: flex;
+    gap: 8px;
+}
+.biz-toggle {
+    width: 46px;
+    height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background-color: var(--white);
+    background-image: linear-gradient(var(--panel-tint), var(--panel-tint));
+    color: var(--ink);
+    cursor: pointer;
+}
+.biz-toggle:hover {
+    border-color: var(--sage);
+}
+.biz-toggle.is-active {
+    background: var(--sage);
+    border-color: var(--sage);
+    color: var(--on-accent);
+}
+.biz-toggle svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* The Statistics view replacing the campfire scene: the fire shrinks to a
+   top-center button (still burning — same animations ride along) that leads
+   back to the campfire; below it the range chips and the two hit tables. */
+.stats-main {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 20px;
+}
+.stats-fire {
+    align-self: center;
+    width: 120px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+.stats-fire .campfire {
+    position: static;
+    width: 100%;
+    transform: none;
+}
+.stats-ranges {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+.stats-section {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: var(--surface-muted);
+    padding: 6px 14px 12px;
+}
+.stats-section summary {
+    cursor: pointer;
+    padding: 6px 0;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--sage-dark);
+}
+.stats-empty {
+    margin: 8px 0 4px;
+    font-size: 0.9rem;
+}
+.stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+}
+.stats-table th {
+    text-align: left;
+    padding: 6px 8px 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+.stats-table td {
+    padding: 6px 8px;
+    border-top: 1px solid var(--line);
+    overflow-wrap: anywhere;
+}
+.stats-table th:last-child,
+.stats-table td:last-child {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
 /* ---------- Layout ---------- */
 .site-main {
     padding: 32px 0 64px;
@@ -1858,6 +1976,15 @@ a.respected-card:hover {
 @media (max-width: 900px) {
     .rail-toggle {
         display: inline-flex;
+    }
+    /* The title row holds the pencil toggles AND the «Твои дела» group — let
+       both wrap instead of pushing the group off the right edge on phones. */
+    .page-head-row,
+    .head-toggles {
+        flex-wrap: wrap;
+    }
+    .head-toggles {
+        justify-content: flex-end;
     }
     .account-fields,
     .upcoming {

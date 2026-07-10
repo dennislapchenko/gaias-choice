@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
+import { trackPageview } from "../lib/api";
 import { getSite } from "../lib/content";
 import { useI18n } from "../lib/i18n";
+import { useSession } from "../lib/session";
 import ThemeSwitcher from "./ThemeSwitcher";
 import LanguageSwitcher from "./LanguageSwitcher";
 import UserButton from "./UserButton";
@@ -11,6 +13,7 @@ import BackendBadge from "./BackendBadge";
 export default function Layout({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
   const { locale, t } = useI18n();
+  const { token } = useSession();
   const site = getSite(locale);
   const [menuOpen, setMenuOpen] = useState(false);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -19,6 +22,19 @@ export default function Layout({ children }: { children: ReactNode }) {
   useEffect(() => {
     window.scrollTo(0, 0);
     setMenuOpen(false);
+  }, [pathname]);
+
+  // First-party pageview beacon: one day-bucketed count per navigation,
+  // nothing about the visitor sent or stored (see /privacy). Signed-in
+  // sessions are skipped unless site.yaml's analytics.trackSignedIn says
+  // otherwise — the owners are most bootstrap-phase traffic. Fire-and-forget:
+  // no backend simply means no analytics. Deps deliberately exclude
+  // token/site — only a navigation counts, not a sign-in on the same page.
+  // (StrictMode double-fires this in dev only; prod builds fire once.)
+  useEffect(() => {
+    if (token && !site.analytics?.trackSignedIn) return;
+    trackPageview(pathname).catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   // While the mobile menu is open, close it on Escape or an outside click

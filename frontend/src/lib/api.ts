@@ -63,6 +63,9 @@ function headers(token?: string): HeadersInit {
 
 async function parseJson<T>(res: Response): Promise<T> {
   if (!res.ok) throw new ApiError(`HTTP ${res.status}`, res.status)
+  // Bodiless success (204 — /track, /auth/logout): nothing to parse, and the
+  // content-type guard below would misread it as "backend unavailable".
+  if (res.status === 204) return undefined as T
   // SPA-fallback guard: on GitHub Pages / nginx, unknown paths (including
   // /api/* when no backend is present) return index.html with HTTP 200. Treat
   // any non-JSON content-type as "backend unavailable", never as data.
@@ -301,6 +304,30 @@ export function translateContent(text: string, targetLocale: string, token?: str
     { text, targetLocale },
     { token },
   ).then((r) => r.text)
+}
+
+/** GET /api/stats — one row per path: summed hits over the window. */
+export interface PathHits {
+  path: string
+  hits: number
+}
+
+export type StatsRange = 'today' | '7d' | '30d'
+
+/** GET /api/stats?range= — admin-only page + API hit totals (the campfire's
+ *  Statistics view). `pages` are SPA pageviews from /track; `api` are backend
+ *  requests counted by route template. */
+export interface StatsResponse {
+  range: string
+  pages: PathHits[]
+  api: PathHits[]
+}
+
+/** POST /api/track — the cookieless pageview counter (day + path only,
+ *  nothing about the visitor). Fire-and-forget: callers swallow errors — no
+ *  backend simply means no analytics, never a user-visible failure. */
+export function trackPageview(path: string): Promise<void> {
+  return apiPost<void>('/track', { path })
 }
 
 interface ApiState<T> {

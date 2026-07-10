@@ -5,6 +5,16 @@ import { useI18n } from '../lib/i18n'
 import { useSession } from '../lib/session'
 import { initialOf } from '../components/UserButton'
 import AccountFields from '../components/AccountFields'
+import AccountStats from '../components/AccountStats'
+
+// The «Твои дела» row — owner tools that swap the campfire's main column for
+// a work view. A registry in code on purpose (each view IS code, same idea as
+// Sidebar's PANELS): adding a toggle = one entry here + a view branch in the
+// main column below. `adminOnly: false` shows it to every signed-in camper.
+type BizId = 'stats'
+const BUSINESS_TOGGLES: { id: BizId; adminOnly: boolean; labelKey: string; icon: () => JSX.Element }[] = [
+  { id: 'stats', adminOnly: true, labelKey: 'account.biz.stats', icon: ChartIcon },
+]
 
 // The account page: a campfire with every registered user seated around it
 // in a circle — the community, visible from day one. Signed-out visitors get
@@ -12,10 +22,13 @@ import AccountFields from '../components/AccountFields'
 export default function Account() {
   const { t } = useI18n()
   const { me, token, backendUp, openLogin, signOut } = useSession()
-  usePageHead(t('account.title'))
 
   const [members, setMembers] = useState<Member[] | null>(null)
   const [fieldsOpen, setFieldsOpen] = useState(false)
+  // Which business view has the main column (null = the campfire itself).
+  const [biz, setBiz] = useState<BizId | null>(null)
+  const title = biz === 'stats' ? t('account.stats.title') : t('account.title')
+  usePageHead(title)
   // Admin "edit another camper" mode: the picked user + its own mobile toggle.
   const [selected, setSelected] = useState<Member | null>(null)
   const [targetOpen, setTargetOpen] = useState(false)
@@ -74,10 +87,12 @@ export default function Account() {
   // .account-fields itself is display:none below 900px unless `fieldsOpen`
   // adds `.is-open`). One tree, breakpoint entirely in CSS — same pattern
   // Reviews/Journal now share for their own Upcoming rail toggle.
+  const bizToggles = BUSINESS_TOGGLES.filter((b) => !b.adminOnly || isAdmin)
+
   return (
     <section className="account-page">
       <div className="page-head-row">
-        <h1>{t('account.title')}</h1>
+        <h1>{title}</h1>
         <div className="head-toggles">
           {selected && (
             <button
@@ -101,12 +116,49 @@ export default function Account() {
             <EditIcon />
             <span className="rail-toggle-label">{t('account.fields.title')}</span>
           </button>
+          {bizToggles.length > 0 && (
+            <div className="biz-toggles" role="group" aria-label={t('account.biz.label')}>
+              <span className="biz-label" aria-hidden="true">
+                {t('account.biz.label')}
+              </span>
+              <div className="biz-btns">
+                {bizToggles.map((b) => (
+                  <button
+                    key={b.id}
+                    type="button"
+                    className={`biz-toggle${biz === b.id ? ' is-active' : ''}`}
+                    aria-pressed={biz === b.id}
+                    aria-label={t(b.labelKey)}
+                    title={t(b.labelKey)}
+                    onClick={() => setBiz((cur) => (cur === b.id ? null : b.id))}
+                  >
+                    <b.icon />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <p className="muted">{t('account.lead')}</p>
 
       <div className="reviews-layout">
         <div className="reviews-main">
+          {biz === 'stats' ? (
+            <div className="stats-main">
+              {/* The fire keeps burning up here — and is the way back home. */}
+              <button
+                type="button"
+                className="stats-fire"
+                onClick={() => setBiz(null)}
+                aria-label={t('account.stats.back')}
+                title={t('account.stats.back')}
+              >
+                <Campfire />
+              </button>
+              <AccountStats />
+            </div>
+          ) : (
           <div className="campfire-scene" role="list">
             <Campfire />
             {(members ?? []).map((m, i, all) => {
@@ -172,6 +224,7 @@ export default function Account() {
               )
             })}
           </div>
+          )}
 
           <div className="account-actions">
             <button type="button" className="btn btn-ghost" onClick={signOut}>
@@ -204,6 +257,18 @@ function EditIcon() {
     <svg className="user-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M4 16.7V20h3.3L18 9.3a1 1 0 0 0 0-1.4l-1.9-1.9a1 1 0 0 0-1.4 0L4 16.7z" />
       <path d="M13.8 6.9l3.3 3.3" />
+    </svg>
+  )
+}
+
+// The «Твои дела» statistics-toggle glyph — plain bars, no drama.
+function ChartIcon() {
+  return (
+    <svg className="user-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
+      <path d="M4 20h16" />
+      <path d="M7 16v-5" />
+      <path d="M12 16V7" />
+      <path d="M17 16v-8" />
     </svg>
   )
 }
