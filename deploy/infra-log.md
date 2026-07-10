@@ -181,12 +181,13 @@
   + valid TLS (cert reused), `/api/hello` 200 (DB round-trip), `/api/content/*`
   **401 not 503** (⇒ `GITHUB_TOKEN` delivered via `PASS_ENV`), CORS preflight
   from the Pages origin 204.
-- **Not yet cleaned:** the old `/opt/gaias-choice/deploy/` files
-  (`compose.yaml`, `Caddyfile`, `deploy.env`) are inert but still on disk — a
-  latent footgun if someone `docker compose up`s them there (caddy would fight
-  doco-cd's caddy for 80/443). Safe to delete once confident.
-- **doco-cd image is `latest`** — pin a digest before this is the only path to
-  prod.
+- **Old manual-deploy dir removed:** `/opt/gaias-choice/deploy/` (stale
+  `compose.yaml`/`Caddyfile`/`deploy.env`) was `rm -rf`'d — it was inert but a
+  footgun (a `docker compose up` there would fight doco-cd's caddy for 80/443).
+  `/opt/gaias-choice/` is gone; persistent data still lives in `/srv/gaias-choice`.
+- **doco-cd image pinned** to `v0.94.0@sha256:378fd7d5…` in
+  `/opt/doco-cd/compose.yaml` (was `:latest`). Bump the tag+digest together to
+  upgrade the daemon.
 
 ## Redeploy / operate (quick reference)
 
