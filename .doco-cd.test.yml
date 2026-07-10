@@ -1,9 +1,0 @@
-# Test target for doco-cd (poll `target: test` selects this file). Isolated from
-# the live `gaias-choice` stack in .doco-cd.yml — with target `test`, doco-cd
-# deploys ONLY this file, never .doco-cd.yml. Throwaway: delete once the GitOps
-# loop is proven and the live stack is migrated. Bump WHOAMI_NAME + push to see
-# doco-cd recreate the container.
-name: gaias-test
-working_dir: deploy/test
-environment:
-  WHOAMI_NAME: reconcile-v2

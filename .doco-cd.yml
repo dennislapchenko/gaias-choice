@@ -1,12 +1,18 @@
 # doco-cd deploy config for the live backend stack (api + caddy). The VM's
 # doco-cd polls this repo and reconciles deploy/ on push to main.
 #
-# Secrets are NOT in this repo. They live on the VM in /opt/doco-cd/secrets.env
-# (the same values that used to be scp'd to /opt/gaias-choice/deploy/deploy.env),
-# loaded into the doco-cd container and forwarded into this stack's compose
-# interpolation via PASS_ENV=true on the daemon. So ${API_DOMAIN}, ${BE_TAG},
-# ${GITHUB_TOKEN}, … in deploy/compose.yaml resolve from there — no env_files
-# here, nothing secret committed. Phase 3 (optional) swaps this for a
-# SOPS+age-encrypted env file committed to the repo.
+# Split by sensitivity:
+#   - Non-secrets (below) live in git — a public DNS name, a public origin, and
+#     the deployed image tag (a public GHCR sha). Bumping BE_TAG here IS the
+#     backend release: commit + push, doco-cd redeploys the api. No VM edit.
+#   - Secrets are NOT here. They live on the VM in /opt/doco-cd/secrets.env,
+#     loaded into the doco-cd container and forwarded into this stack's compose
+#     interpolation via PASS_ENV=true on the daemon (${GITHUB_TOKEN}, the
+#     BOOTSTRAP_ADMIN_*, POSTMARK/TELEGRAM/ANTHROPIC tokens, …). Phase 3
+#     (optional) swaps that for a SOPS+age-encrypted env file committed here.
 name: gaias-choice
 working_dir: deploy
+environment:
+  API_DOMAIN: gaias-choice.gardenofatlantis.com
+  CORS_ORIGINS: https://dennislapchenko.github.io
+  BE_TAG: sha-e2ae24749200d9e68cce3e35b87995725c6eeb0a
