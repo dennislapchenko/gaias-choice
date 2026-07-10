@@ -12,6 +12,7 @@ func TestNormalizePagePath(t *testing.T) {
 		"/reviews/wool-blanket":      "/reviews/wool-blanket",
 		"/compass/founder-guide-1":   "/compass/founder-guide-1",
 		"/account":                   "/account",
+		"/magic":                     "/magic",
 		"/journal/x?utm_source=spam": "/journal/x",
 		"/wp-admin/setup.php":        "(other)",
 		"/reviews/../../etc/passwd":  "(other)",

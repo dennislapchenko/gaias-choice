@@ -29,6 +29,11 @@ export default function App() {
             <Suspense fallback={null}>
               <Routes>
                 <Route path="/" element={<Home />} />
+                {/* Magic-link landing: emailed links point here so sign-ins
+                    count as /magic in analytics, not as /. Home is reused —
+                    session.tsx consumes the #magic= hash on any path and
+                    navigates to /account on success, same UX as before. */}
+                <Route path="/magic" element={<Home />} />
                 <Route path="/reviews" element={<Reviews />} />
                 <Route path="/reviews/:slug" element={<ReviewDetail />} />
                 <Route path="/journal" element={<Journal />} />

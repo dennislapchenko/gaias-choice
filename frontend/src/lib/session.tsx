@@ -143,8 +143,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     navigate('/account') // to the fireplace
   }
 
-  // Magic-link landing: the emailed URL is <site>/#magic=<token>. Consume the
-  // hash — on mount (fresh tab from the inbox) and on hashchange (link pasted
+  // Magic-link landing: the emailed URL is <site>/magic#magic=<token> (its
+  // own route so analytics counts sign-ins as /magic). Consume the hash — on
+  // mount (fresh tab from the inbox) and on hashchange (link pasted
   // into an already-open tab) — trade the token for a session, and scrub the
   // URL so the token never lingers in the address bar or history. A dead
   // token (expired/used) just reopens the dialog — request a fresh link.

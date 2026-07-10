@@ -13,7 +13,7 @@ import (
 // junk flood can't grow the traffic table past real-paths × days.
 var pageRoutes = []string{
 	"/reviews", "/journal", "/compass", "/about", "/contact",
-	"/roadmap", "/disclosure", "/privacy", "/support", "/account",
+	"/roadmap", "/disclosure", "/privacy", "/support", "/account", "/magic",
 }
 
 // normalizePagePath reduces a reported pathname to something safe to store:

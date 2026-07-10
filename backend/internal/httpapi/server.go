@@ -196,7 +196,9 @@ func (s *server) RequestMagicLink(ctx context.Context, req RequestMagicLinkReque
 	if req.Body.Locale != nil {
 		locale = *req.Body.Locale
 	}
-	subject, body := magicEmail(locale, s.siteURL+"/#magic="+token)
+	// /magic is a real SPA route (Home reused) so magic-link landings show up
+	// as their own path in analytics instead of inflating "/".
+	subject, body := magicEmail(locale, s.siteURL+"/magic#magic="+token)
 	// Send failure is an ops problem (bad SMTP config, provider down), not
 	// the user's: log it, keep the answer uniform.
 	if err := s.mailer.Send(strings.TrimSpace(req.Body.Email), subject, body); err != nil {

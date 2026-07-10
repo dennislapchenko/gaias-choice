@@ -176,7 +176,9 @@ seam — it owns the token (`localStorage['gc-session']`), validates it
 against `/api/auth/me` on every load (401 ⇒ silent drop), exposes
 requestMagicLink/login/requestTelegram/pollTelegram/acceptGrant/signOut,
 consumes the emailed `#magic=<token>` hash
-(on mount and on hashchange; scrubbed from the URL, traded at
+(on mount and on hashchange, on any path — the emailed URL points at the
+`/magic` SPA route so magic-link landings count as their own analytics path;
+scrubbed from the URL, traded at
 `/auth/magic/verify`, dead token ⇒ reopen the dialog), and renders
 `components/LoginDialog.tsx` (centered modal over a blurred backdrop).
 **Telegram is the primary flow** (default mode): claim a `@username` →
