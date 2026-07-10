@@ -130,7 +130,24 @@ session middleware (keyed off the generated `SessionScopes` marker), and
 the `editor` **scope** (`session: [editor]`, on both content ops) demands
 an admin/editor role — viewers get 403; the `admin` **scope**
 (`session: [admin]`, on `PUT /users/{id}`) demands the admin role
-specifically. Protecting a new endpoint = declaring it in the spec. The first admin is bootstrapped from env
+specifically. Protecting a new endpoint = declaring it in the spec.
+
+**The `editor` scope is coarse by design.** It's a single trust boundary:
+any editor/admin may write *any* path the content validators allow (all of
+`content/` — every locale, `site.yaml`, another author's posts — plus
+`frontend/public/images/`). There is no per-collection or per-user ownership.
+Correct while `editor` == the two owners. **If an outside editor is ever
+granted the role, tighten here** — the coarseness becomes a real hole. Two
+paths, cheapest first: (a) a per-user path allowlist checked alongside
+`ValidPath`/`ValidImagePath` in `internal/content/content.go` (e.g. confine an
+outsider to `content/locales/*/journal/`); or (b) drop their direct-commit
+right entirely and route their saves through review — the prod store already
+commits to git, so a PR/branch flow instead of a push to `main` is the
+natural shape. Content is also rendered unsanitized
+(`dangerouslySetInnerHTML`), so an untrusted editor is an XSS vector too —
+another reason (b) (human review) is the safer lever for real outsiders.
+
+The first admin is bootstrapped from env
 (`BOOTSTRAP_ADMIN_EMAIL`/`BOOTSTRAP_ADMIN_PASSWORD`) **only while the users
 table is empty**; `task dev` defaults these (`dev@local`/`dev-password`) so
 local editing works with zero setup — nuke `backend/data/` to re-bootstrap.
