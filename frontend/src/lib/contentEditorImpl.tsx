@@ -35,7 +35,7 @@ import CopyButton from '../components/CopyButton'
 import ImagePicker from '../components/ImagePicker'
 import ImageFrame from '../components/ImageFrame'
 import FrontmatterFields from '../components/FrontmatterFields'
-import { withBase } from './asset'
+import { withBase, withBaseHtml } from './asset'
 import { getSite } from './content'
 import { useCmdEnter } from './cmdEnter'
 import { DEBUG } from './debug'
@@ -1081,9 +1081,11 @@ export default function ContentEditorImpl({
             <div className="content-editor-body">
               {view === 'preview' ? (
                 // Author-controlled content, same trust model as Markdown.tsx.
+                // withBaseHtml rewrites /images/… srcs under the Pages base path,
+                // same as the real content render — without it preview images 404.
                 <div
                   className="content-editor-preview prose"
-                  dangerouslySetInnerHTML={{ __html: marked.parse(mdBody(state.value)) as string }}
+                  dangerouslySetInnerHTML={{ __html: withBaseHtml(marked.parse(mdBody(state.value)) as string) }}
                 />
               ) : view === 'raw' ? (
                 <textarea
