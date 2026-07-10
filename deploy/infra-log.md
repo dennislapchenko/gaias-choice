@@ -150,7 +150,7 @@
 
 ### 9. doco-cd GitOps activated (manual deploy retired)
 
-- **Daemon:** `ghcr.io/kimdre/doco-cd:latest` runs on the VM from
+- **Daemon:** `ghcr.io/kimdre/doco-cd` (pinned — see below) runs on the VM from
   `/opt/doco-cd/{compose.yaml,poll.yaml,secrets.env}` (project `doco-cd`). It
   **polls** this repo `refs/heads/main` every 30s (`POLL_CONFIG_FILE`), so it
   needs **no inbound port** — the edge firewall stays 22/80/443, no webhook.
@@ -188,6 +188,75 @@
 - **doco-cd image pinned** to `v0.94.0@sha256:378fd7d5…` in
   `/opt/doco-cd/compose.yaml` (was `:latest`). Bump the tag+digest together to
   upgrade the daemon.
+
+#### doco-cd server config (the VM-only files that set it up)
+
+Three files under `/opt/doco-cd/` (server bootstrap — kept off the repo). To
+rebuild the daemon: recreate these, then `docker compose up -d`.
+
+`compose.yaml` — the daemon (docker-socket, polling, `PASS_ENV`, pinned image):
+
+```yaml
+services:
+  doco-cd:
+    image: ghcr.io/kimdre/doco-cd:v0.94.0@sha256:378fd7d5fcbd9b038640dd14af7ded1686ab26b464bbbe7df880cc0563161e38
+    restart: unless-stopped
+    env_file: [secrets.env]          # forwarded into deploys via PASS_ENV
+    environment:
+      LOG_LEVEL: info
+      TZ: Europe/Helsinki
+      POLL_CONFIG_FILE: /etc/doco-cd/poll.yaml
+      PASS_ENV: "true"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./poll.yaml:/etc/doco-cd/poll.yaml:ro
+      - data:/data
+    healthcheck:
+      test: ["CMD", "/doco-cd", "healthcheck"]
+      start_period: 15s
+      interval: 30s
+      timeout: 5s
+      retries: 3
+volumes:
+  data:
+```
+
+`poll.yaml` — what to watch (no `target:` ⇒ the default `.doco-cd.yml`):
+
+```yaml
+- url: https://github.com/dennislapchenko/gaias-choice.git
+  reference: refs/heads/main
+  interval: 30s
+```
+
+`secrets.env` — VM-only secrets (`chmod 600`, uncommitted), keys only:
+`GITHUB_TOKEN`, `BOOTSTRAP_ADMIN_EMAIL`, `BOOTSTRAP_ADMIN_PASSWORD`,
+`POSTMARK_TOKEN`, `POSTMARK_STREAM`, `MAIL_FROM`, `PUBLIC_SITE_URL`,
+`TELEGRAM_BOT_TOKEN`, `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL`, `GIN_MODE`,
+`DEBUG`, `SERVER_IP`. (Non-secrets `API_DOMAIN`/`CORS_ORIGINS`/`BE_TAG` live in
+`.doco-cd.yml`, not here.) Mirror of the repo-root `.env` minus those three.
+
+#### Reconcile triggers (what actually causes a redeploy) — verified
+
+doco-cd polls every 30s; an unchanged ref is a ~400ms no-op. When the ref
+advances it enters a pre-deploy check (`shouldSkipDeployment`) and **only
+redeploys when something the stack actually references changed**:
+
+- **`deploy/compose.yaml`** (the compose file) → redeploy.
+- **`.doco-cd.yml`** (deploy config; it hashes the whole thing — `BE_TAG`,
+  `environment:`, …) → redeploy. This is what the backend auto-roll trips.
+- **A bind-mounted / referenced file changes**, e.g. `deploy/Caddyfile` →
+  doco-cd **force-recreates just that service** (`forced_services:[caddy],
+  mode:force`). So Caddyfile edits DO auto-apply — no `--watch`, no manual
+  reload. (Verified 2026-07: pushing a Caddyfile header force-recreated caddy.)
+- **A new image digest** behind the referenced tag → redeploy. Ours are
+  immutable `sha-…`, so this only moves when `BE_TAG` moves.
+- **Running services drifted** from the rendered config → recreate the drifted.
+
+Commits that touch **none** of the above — docs, `deploy/README.md`,
+`deploy/infra-log.md`, anything outside the stack, every `content/**` /
+`frontend/**` push — are **skipped** (checked out into doco-cd's clone but no
+`docker compose up`). Empirically: over one stretch, 50 polls → 1 deploy.
 
 ## Redeploy / operate (quick reference)
 
