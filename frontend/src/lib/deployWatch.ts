@@ -1,5 +1,5 @@
 // A content write commits to git instantly, but the live static site only
-// catches up after the GitHub Pages rebuild (~2 min). This tracks that whole tail
+// catches up after the GitHub Pages rebuild (~1 min). This tracks that whole tail
 // as a small state machine — 'publishing' the moment a publish-class write
 // commits, then 'live' once the deploy that carries it lands — so ONE persistent
 // pill (StatusPill.tsx, mounted above <Routes>) can bridge the gap and survive the
@@ -55,7 +55,7 @@ async function liveCommit(): Promise<string | null> {
 let timer: number | undefined
 let clearTimer: number | undefined
 const POLL_MS = 10_000
-const GIVE_UP_MS = 6 * 60_000 // deploy is usually ~2 min; stop quietly well after
+const GIVE_UP_MS = 6 * 60_000 // deploy is usually ~1 min; stop quietly well after
 const LIVE_MS = 8_000 // how long the "live" confirmation lingers before clearing
 
 // Start (or restart, on each new publish) watching for the deploy that carries it.

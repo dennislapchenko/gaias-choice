@@ -35,7 +35,7 @@ export default function EntryDetail({ kind }: { kind: 'compass' | 'journal' }) {
   const { active: editModeOn } = useEditMode()
   // Local override so flipping state feels immediate (optimistic UI) — the
   // static content.ts data itself only catches up once the save's git commit
-  // deploys, ~2 min later (see contentEditor.tsx). Compass ignores `state`
+  // deploys, ~1 min later (see contentEditor.tsx). Compass ignores `state`
   // entirely, so this is only ever exercised for kind === 'journal'.
   const [state, setState] = useState<PostState | undefined>(entry?.state)
   useEffect(() => setState(entry?.state), [entry])

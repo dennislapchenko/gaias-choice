@@ -31,7 +31,7 @@ permissions:
   id-token: write
 
 # A newer push supersedes an in-flight run: cancel it so rapid content edits
-# don't stack N sequential builds (each ~2 min). Safe here because every deploy
+# don't stack N sequential builds (each ~30s). Safe here because every deploy
 # publishes the FULL current build — a cancelled/failed run is fully recovered
 # by the next one; there's no partial-state to worry about.
 concurrency:
