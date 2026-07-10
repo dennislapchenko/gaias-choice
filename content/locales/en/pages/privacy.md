@@ -7,11 +7,21 @@ it that way.**
 
 ## What this site does
 
-- **No accounts, no forms, no tracking cookies.** The site is a static page —
-  there is no login, no comment system, and nothing that asks for your data.
-- **One preference is stored on your device:** your chosen color theme is
-  saved in your browser's `localStorage` (key `gc-theme`). It never leaves
-  your browser, and clearing your browser data removes it.
+- **No tracking cookies, no ad networks, no fingerprinting.** Reading the
+  site asks for nothing — no account, no forms, no consent banner needed,
+  because there is nothing to consent to.
+- **We count visits, not visitors.** Our own tiny counter stores, per day,
+  which page was opened and a running total — nothing else. No cookies, no
+  IP addresses, no user agents, no profiles; visits by signed-in members
+  aren't counted at all.
+- **Accounts are optional** — reading never requires one. If you do sign in
+  (via Telegram or an emailed one-time link, to take a seat by the campfire),
+  we store what you give us: a display name, an optional email address, an
+  avatar if you set one, and your role. Nothing else, and never for ads.
+- **A few preferences are stored on your device,** in your browser's
+  `localStorage`: your color theme (`gc-theme`), your language (`gc-lang`),
+  and — only once you sign in — your session key (`gc-session`). They never
+  leave your browser, and clearing your browser data removes them.
 - **The celestial almanac is computed in your browser.** No location or date
   is sent anywhere — the astronomy runs entirely on your device.
 
@@ -33,12 +43,10 @@ it that way.**
 
 We plan to add:
 
-- **Privacy-friendly analytics** — a cookieless counter (aggregate page views,
-  no personal profiles, no cross-site tracking).
 - **An email newsletter** — strictly opt-in; your address will be used for the
   newsletter and nothing else, with a working unsubscribe link in every email.
 
-When either of these ships, this page gets updated **before** it goes live.
+When it ships, this page gets updated **before** it goes live.
 
 Questions? [Contact us](/contact).
 

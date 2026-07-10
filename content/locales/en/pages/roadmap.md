@@ -99,8 +99,8 @@ other place gets our own words; About is tracked separately in Phase 0):**
       permanent address, not the temporary one)*
 - [ ] `sitemap.xml` generated from `content/` at build time
 - [ ] Search Console verified, sitemap submitted
-- [ ] Privacy-friendly analytics — cookieless, no consent banner; update
-      [/privacy](/privacy) first, it promises exactly that
+- [x] Privacy-friendly analytics — our own cookieless counter, no consent
+      banner; [/privacy](/privacy) updated first, as promised
 
 **Done when:** the [launch checklist](/compass/launch-checklist) is green and
 the soft-launch test is passed.
