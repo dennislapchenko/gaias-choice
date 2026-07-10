@@ -46,12 +46,11 @@ services:
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped
-    # --watch hot-reloads the Caddyfile when its content changes on disk. doco-cd
-    # checks the repo out into a stable in-place path that IS this bind mount, so
-    # a Caddyfile-only edit auto-applies within a poll cycle — even though such a
-    # commit doesn't change the compose file / image and so is otherwise skipped
-    # by doco-cd's change detection (see deploy/infra-log.md "reconcile triggers").
-    command: ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile", "--watch"]
+    # Caddyfile edits auto-apply: doco-cd tracks the files each service references
+    # (incl. this bind-mounted Caddyfile) and force-recreates caddy when its
+    # content changes — no --watch needed (see deploy/infra-log.md "reconcile
+    # triggers"). Default image CMD runs caddy; do not override without the
+    # `caddy` binary prefix (the image has no entrypoint).
     ports:
       - "80:80"
       - "443:443"
