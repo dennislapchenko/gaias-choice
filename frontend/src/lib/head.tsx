@@ -4,10 +4,10 @@ import { useI18n } from './i18n'
 
 /**
  * Per-route <title> + meta description, written client-side on render.
- * Interim until build-time prerendering bakes per-route heads into static
- * HTML (context/seo/seo-paths.md) — crawlers still see index.html's head;
- * this is for tabs, bookmarks, and history. The prerender step will derive
- * the same values straight from content, so keep this dumb: DOM writes only.
+ * Crawlers get the same values baked into each page's static HTML by the
+ * prerender (entry-server.tsx derives them from the same content); this hook
+ * keeps the head fresh across client-side SPA navigations — tabs, bookmarks,
+ * history. Keep it dumb: DOM writes only, same composition rule as pages().
  *
  * No `title` → the home form "<name> — <tagline>"; otherwise "<title> — <name>".
  * No `description` → the site description.

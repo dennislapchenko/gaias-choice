@@ -69,11 +69,6 @@ jobs:
           # secret — just the public API base. api.ts falls back to same-origin
           # /api when unset; remove this line to unwire the live site from the BE.
           VITE_API_URL: https://gaias-choice.gardenofatlantis.com/api
-      - name: SPA fallback
-        # GitHub Pages has no server-side rewrite, so deep links (e.g.
-        # /gaias-choice/reviews/foo) hit 404.html. Serving a copy of index.html
-        # there lets the client router take over.
-        run: cp dist/index.html dist/404.html
       - name: Stamp version
         # Publish the deployed commit at /version.json so the live-edit portal can
         # poll it after a write and toast "your change is live" once this deploy

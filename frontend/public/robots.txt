@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /
-
-# Add once the domain is live and sitemap generation exists (see /roadmap):
-# Sitemap: https://www.<domain>/sitemap.xml

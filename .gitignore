@@ -8,3 +8,4 @@ dist/
 !.env.example
 .secrets
 .vite/
+dist-server/

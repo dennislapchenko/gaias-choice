@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
-import { themes } from '../lib/content'
+import { defaultTheme, themes } from '../lib/content'
 import { useI18n } from '../lib/i18n'
 import { applyTheme, initialThemeTag, resolveTheme, storeThemeTag } from '../lib/theme'
 
 export default function ThemeSwitcher() {
   const { t } = useI18n()
   const [open, setOpen] = useState(false)
-  const [activeTag, setActiveTag] = useState(initialThemeTag)
+  // The saved palette is browser state: start from the default so the first
+  // client render matches the prerendered HTML, then sync after mount.
+  const [activeTag, setActiveTag] = useState(defaultTheme.tag)
+  useEffect(() => setActiveTag(initialThemeTag()), [])
   const ref = useRef<HTMLDivElement>(null)
 
   // Close the menu on outside click or Escape.

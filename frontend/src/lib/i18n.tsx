@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useContext, useMemo, type ReactNode } from 'react'
 import en from '../locales/en'
 import ru from '../locales/ru'
 
@@ -24,14 +24,49 @@ const STORAGE_KEY = 'gc-lang'
 
 const dictionaries: Record<Locale, Record<string, string>> = { en, ru }
 
-function isLocale(value: string | null): value is Locale {
-  return !!value && (SUPPORTED_LOCALES as readonly string[]).includes(value)
+/** Dictionary lookup shared by the `t()` hook and the prerender's head
+ *  resolver (entry-server.tsx), so both derive identical strings. */
+export function translate(locale: Locale, key: string, vars?: Record<string, string | number>): string {
+  const template = dictionaries[locale][key] ?? dictionaries.en[key] ?? key
+  if (!vars) return template
+  return Object.entries(vars).reduce(
+    (str, [name, value]) => str.replaceAll(`{{${name}}}`, String(value)),
+    template,
+  )
 }
 
-function getStoredLocale(): Locale | null {
+// --- Locale lives in the URL ------------------------------------------------
+// The EN tree is the same site under an `/en` prefix (`/en`, `/en/reviews/x`);
+// RU — the default locale — stays unprefixed. The prefix rides in the router
+// basename (set once per page load in main.tsx / entry-server.tsx), so every
+// <Link> and navigate() is locale-aware with zero per-link code. Switching
+// locale is therefore a real navigation to the sibling URL — which exists as
+// a prerendered HTML page. localStorage only remembers the *preference*, used
+// for the one root-entry redirect in main.tsx.
+
+const BASE = import.meta.env.BASE_URL // always ends with '/'
+
+/** App path without the Vite base or leading slash: '/gaias-choice/en/x' → 'en/x'. */
+export function stripBase(pathname: string): string {
+  if (pathname + '/' === BASE) return ''
+  return pathname.startsWith(BASE) ? pathname.slice(BASE.length) : pathname.replace(/^\//, '')
+}
+
+/** 'en/reviews' → 'en'; 'reviews' → 'ru'. The URL is the locale authority. */
+export function localeFromRest(rest: string): Locale {
+  return rest === 'en' || rest.startsWith('en/') ? 'en' : DEFAULT_LOCALE
+}
+
+/** The locale of the URL the browser is on (client only). */
+export function currentLocale(): Locale {
+  return localeFromRest(stripBase(window.location.pathname))
+}
+
+/** The stored language *preference* — consulted only for the root redirect. */
+export function storedLocale(): Locale | null {
   try {
     const value = localStorage.getItem(STORAGE_KEY)
-    return isLocale(value) ? value : null
+    return value && (SUPPORTED_LOCALES as readonly string[]).includes(value) ? (value as Locale) : null
   } catch {
     return null
   }
@@ -45,13 +80,20 @@ function storeLocale(locale: Locale): void {
   }
 }
 
-export function initialLocale(): Locale {
-  return getStoredLocale() ?? DEFAULT_LOCALE
-}
-
 /** Set <html lang> before first render, mirroring initTheme()'s flash-prevention pattern. */
 export function initI18n(): void {
-  document.documentElement.lang = initialLocale()
+  document.documentElement.lang = currentLocale()
+}
+
+/** Full navigation to the same page in `next`'s URL tree — a real page load on
+ *  purpose: the sibling page is prerendered HTML, and a constant basename per
+ *  document keeps links and hydration trivially consistent. */
+function navigateToLocale(next: Locale): void {
+  const { pathname, search, hash } = window.location
+  const rest = stripBase(pathname)
+  const app = rest === 'en' ? '' : rest.startsWith('en/') ? rest.slice(3) : rest
+  const target = next === 'en' ? (app ? `en/${app}` : 'en') : app
+  window.location.assign(BASE + target + search + hash)
 }
 
 type Translate = (key: string, vars?: Record<string, string | number>) => string
@@ -64,28 +106,21 @@ interface I18nContextValue {
 
 const I18nContext = createContext<I18nContextValue | null>(null)
 
-export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(initialLocale)
-
-  const setLocale = (next: Locale) => {
-    storeLocale(next)
-    document.documentElement.lang = next
-    setLocaleState(next)
-  }
-
-  const t = useMemo<Translate>(() => {
-    const dict = dictionaries[locale]
-    return (key, vars) => {
-      const template = dict[key] ?? dictionaries.en[key] ?? key
-      if (!vars) return template
-      return Object.entries(vars).reduce(
-        (str, [name, value]) => str.replaceAll(`{{${name}}}`, String(value)),
-        template,
-      )
-    }
-  }, [locale])
-
-  const value = useMemo(() => ({ locale, setLocale, t }), [locale, t])
+/** `locale` is derived from the URL by the caller: main.tsx passes
+ *  currentLocale(), entry-server.tsx the locale of the path being prerendered. */
+export function I18nProvider({ locale, children }: { locale: Locale; children: ReactNode }) {
+  const value = useMemo<I18nContextValue>(
+    () => ({
+      locale,
+      setLocale: (next) => {
+        if (next === locale) return
+        storeLocale(next)
+        navigateToLocale(next)
+      },
+      t: (key, vars) => translate(locale, key, vars),
+    }),
+    [locale],
+  )
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>
 }

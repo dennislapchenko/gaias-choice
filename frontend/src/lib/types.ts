@@ -67,7 +67,7 @@ export interface SiteConfig {
   tagline: string
   description: string
   bio: string // short personal line shown in the sidebar About panel (site.description is used on the homepage hero instead)
-  url: string // current production origin, no trailing slash — reference only for now (not yet used for canonical/OG tags or sitemaps); a GitHub Pages subpath today, will become a custom domain root later
+  url: string // current production origin, no trailing slash — drives every canonical/OG/hreflang/sitemap URL the prerender emits; a GitHub Pages subpath today, becomes the custom domain root on domain day (one edit here regenerates them all)
   mission: string
   heroImage?: string
   values: ValueItem[]

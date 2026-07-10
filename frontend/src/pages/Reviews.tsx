@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getProducts, getReviewTemplate, getUpcomingProducts } from '../lib/content'
 import { usePageHead } from '../lib/head'
@@ -21,8 +21,12 @@ export default function Reviews() {
 
   // The active category lives in the URL (`?category=`) so a category tag on any
   // card — here or on the Home page — can link straight to a filtered view.
+  // Prerendered HTML is always the unfiltered list, so the filter applies only
+  // after mount — a direct load of a ?category= link hydrates cleanly first.
   const [params, setParams] = useSearchParams()
-  const requested = params.get('category')
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  const requested = mounted ? params.get('category') : null
   const active = requested && categories.includes(requested) ? requested : ALL
   const setActive = (c: string) =>
     setParams(c === ALL ? {} : { category: c }, { replace: true })

@@ -28,8 +28,11 @@ road with a baby** (framed generally: camper, car, or carry-on — not
 RV/van-specific). Three pillars, one contract (everything is lived first):
 honest **reviews** of natural, plastic-free, fragrance-free gear; the
 **Compass** (free courses on the natural-living skills the owners practice);
-and the **Journal** (the handwritten record of the road). It is a
-**client-rendered SPA**, not an SSR/SSG site.
+and the **Journal** (the handwritten record of the road). It is an SPA that is
+**prerendered at build time**: every route ships as real HTML
+(`dist/<path>.html`, both locale trees, + sitemap/robots/OG heads —
+`src/entry-server.tsx` + `scripts/prerender.mjs`), then hydrates into the
+same client-routed SPA. No runtime SSR.
 
 - **Stack:** Vite + React 18 + TypeScript, `react-router-dom` (BrowserRouter).
 - **Content:** Markdown + YAML in `content/`, bundled at build time. No CMS, no
@@ -244,8 +247,13 @@ Two kinds of translatable text, separate homes: **page content** (data,
 `content/locales/<lng>/` — see `content/locales/README.md`) and **UI chrome
 strings** (code, `src/locales/<lng>.ts`, a flat dictionary via `t()` from
 `useI18n()`). `SUPPORTED_LOCALES` is `['ru', 'en']`, `DEFAULT_LOCALE` is
-`'ru'`; the choice persists to `localStorage['gc-lang']`; `initI18n()` runs
-before React renders. Every content getter **falls back to `en`** — per
+`'ru'`. **The locale lives in the URL**: RU is the unprefixed default tree,
+EN the same site under `/en/…` — the prefix rides in the router *basename*
+(set once per page load in `main.tsx`), so links need no per-link locale code
+and switching language is a full navigation to the prerendered sibling page.
+`localStorage['gc-lang']` only remembers the *preference*, honored by one
+root-entry redirect (`/` → `/en`); deep links never redirect. `initI18n()`
+runs before React renders. Every content getter **falls back to `en`** — per
 collection, then per slug — so the site never breaks mid-translation;
 `getSite` additionally **shallow-merges `en` as a base**, so locale-identical
 fields (e.g. the `support:` payment block) are authored once in `en/site.yaml`

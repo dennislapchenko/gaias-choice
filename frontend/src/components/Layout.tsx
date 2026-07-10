@@ -127,7 +127,9 @@ export default function Layout({ children }: { children: ReactNode }) {
           <p>
             {t("footer.disclosure")} <Link to="/disclosure">{t("footer.disclosureLinkText")}</Link>.
           </p>
-          <p>{t("footer.copyright", { year: new Date().getFullYear(), name: site.name })}</p>
+          {/* suppressHydrationWarning: prerendered at build time — the year can
+              lag the viewer's clock right after New Year until the next deploy. */}
+          <p suppressHydrationWarning>{t("footer.copyright", { year: new Date().getFullYear(), name: site.name })}</p>
           <BackendBadge />
         </div>
       </footer>

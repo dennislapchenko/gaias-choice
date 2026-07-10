@@ -18,7 +18,15 @@ export function withBase(path: string | undefined): string | undefined {
  * browser navigation straight to `href` — missing the base prefix sends it
  * to the wrong origin-relative URL entirely. Protocol-relative (`//host/…`)
  * and absolute (`https://…`) URLs are left untouched via the `(?!\/)` guard.
+ *
+ * `locale: 'en'` additionally moves internal page links into the `/en` URL
+ * tree (locale-in-URL routing — see lib/i18n.tsx). Asset refs stay shared:
+ * `src=` and `/images/…` hrefs never get the prefix.
  */
-export function withBaseHtml(html: string): string {
-  return html.replace(/(href|src)="\/(?!\/)/g, `$1="${BASE}`)
+export function withBaseHtml(html: string, locale?: string): string {
+  const based = html.replace(/(href|src)="\/(?!\/)/g, `$1="${BASE}`)
+  if (locale !== 'en') return based
+  return based
+    .replace(new RegExp(`href="${BASE}"`, 'g'), `href="${BASE}en"`)
+    .replace(new RegExp(`href="${BASE}(?!/)(?!en/|en")(?!images/)(?!")`, 'g'), `href="${BASE}en/`)
 }

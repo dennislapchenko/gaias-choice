@@ -48,6 +48,26 @@ export function applyTheme(theme: Theme): void {
   root.dataset.theme = theme.tag
 }
 
+/**
+ * The declarations applyTheme() would set, as one static CSS string — the
+ * prerender bakes `html[data-theme="<tag>"]{…}` rules plus a tiny pre-paint
+ * script into every page head, so the saved palette paints before any JS
+ * loads (no flash). Keep in lockstep with applyTheme above.
+ */
+export function themeCss(theme: Theme): string {
+  const decls: string[] = []
+  ;(Object.keys(CSS_VARS) as (keyof ThemeColors)[]).forEach((key) => {
+    const value = theme.colors[key] ?? SLOT_DEFAULTS[key]
+    if (value) decls.push(`${CSS_VARS[key]}:${value}`)
+  })
+  const dark = Boolean(theme.colors.ink)
+  decls.push(`--panel-tint:${dark ? 'rgba(255, 255, 255, 0.05)' : 'transparent'}`)
+  decls.push(`--surface-muted:${dark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(47, 44, 39, 0.05)'}`)
+  decls.push(`--surface-muted-strong:${dark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(47, 44, 39, 0.09)'}`)
+  decls.push(`--danger:${dark ? '#e08079' : '#b3423a'}`)
+  return decls.join(';')
+}
+
 function prefersDark(): boolean {
   try {
     return window.matchMedia('(prefers-color-scheme: dark)').matches

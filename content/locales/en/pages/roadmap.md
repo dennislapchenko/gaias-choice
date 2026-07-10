@@ -91,13 +91,13 @@ other place gets our own words; About is tracked separately in Phase 0):**
 
 **Dev track (makes the content findable):**
 
-- [x] Per-page `<title>` + meta description *(client-side for now — the
-      prerendering below will bake them into the HTML crawlers see)*
-- [ ] Build-time prerendering of every route to static HTML *(keystone task —
-      unlocks SEO, Open Graph previews, Pinterest Rich Pins; plan chosen, but
-      waiting on our own domain first — search history should accrue to the
-      permanent address, not the temporary one)*
-- [ ] `sitemap.xml` generated from `content/` at build time
+- [x] Per-page `<title>` + meta description — baked into the HTML crawlers
+      see, plus Open Graph tags for link previews
+- [x] Build-time prerendering of every route to static HTML *(the keystone —
+      every page now returns real HTML with a 200, in both languages, with
+      the language living in the URL; done under the temporary address after
+      all — moving to our own domain later is a redirect, not a rebuild)*
+- [x] `sitemap.xml` generated from `content/` at build time
 - [ ] Search Console verified, sitemap submitted
 - [x] Privacy-friendly analytics — our own cookieless counter, no consent
       banner; [/privacy](/privacy) updated first, as promised

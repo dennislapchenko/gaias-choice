@@ -87,17 +87,22 @@ function storeToken(token: string | null) {
 
 export function SessionProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate()
-  const [token, setToken] = useState<string | null>(() => {
+  // The stored session is browser state: start signed-out so the first client
+  // render matches the prerendered HTML, and load the token after mount (the
+  // legacy-key cleanup rides along). The [token] effect below then validates.
+  const [token, setToken] = useState<string | null>(null)
+  const [me, setMe] = useState<MeResponse | null>(null)
+  const [backendUp, setBackendUp] = useState(false)
+  const [loginOpen, setLoginOpen] = useState(false)
+  useEffect(() => {
     try {
       localStorage.removeItem(LEGACY_TOKEN_KEY)
     } catch {
       /* ignore */
     }
-    return readStoredToken()
-  })
-  const [me, setMe] = useState<MeResponse | null>(null)
-  const [backendUp, setBackendUp] = useState(false)
-  const [loginOpen, setLoginOpen] = useState(false)
+    const stored = readStoredToken()
+    if (stored) setToken(stored)
+  }, [])
 
   // Validate the stored session (or, signed out, just probe the backend).
   // 401 ⇒ expired/revoked — drop the token. Any other failure ⇒ backend

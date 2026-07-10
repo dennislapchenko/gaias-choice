@@ -183,11 +183,12 @@ const DEFAULT_SIDEBAR: SidebarWidget[] = [{ type: 'about' }, { type: 'missionVal
 // the `max-width: 900px` sidebar rule in styles.css).
 function useIsNarrow() {
   const query = '(max-width: 900px)'
-  const [narrow, setNarrow] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia(query).matches,
-  )
+  // Starts false (the desktop/prerendered shape) and syncs after mount, so
+  // hydration sees identical trees; the visual collapse itself is CSS-driven.
+  const [narrow, setNarrow] = useState(false)
   useEffect(() => {
     const mq = window.matchMedia(query)
+    setNarrow(mq.matches)
     const onChange = () => setNarrow(mq.matches)
     mq.addEventListener('change', onChange)
     return () => mq.removeEventListener('change', onChange)

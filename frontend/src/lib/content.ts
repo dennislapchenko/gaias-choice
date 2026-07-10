@@ -51,8 +51,12 @@ for (const [path, raw] of Object.entries(diagramModules)) {
 }
 
 // SVG ids (arrow markers) are document-global; suffixing per instance keeps
-// them unique however many diagrams share a page or a template.
-let diagramInstance = 0
+// them unique however many diagrams share a page. The counter lives in the
+// per-parse renderer (headingIdRenderer), NOT at module scope: the prerender
+// parses many entries in one process while the browser parses only the pages
+// it visits, so a global counter would give the same diagram different ids on
+// server and client — a hydration mismatch. Per-parse restarts are safe: only
+// one entry's html is ever mounted on a page.
 
 /** A visible-in-page error beats a thrown one, which would blank the whole SPA. */
 const diagramError = (message: string): string => {
@@ -60,7 +64,7 @@ const diagramError = (message: string): string => {
   return `<figure class="diagram"><figcaption>⚠ ${escapeHtml(message)}</figcaption></figure>\n`
 }
 
-function renderDiagram(name: string, yamlBody: string): string {
+function renderDiagram(name: string, yamlBody: string, instance: number): string {
   const template = diagramTemplates[name]
   if (!template) return diagramError(`unknown template "${name}" — expected content/shared/diagrams/${name}.svg`)
   let slots: Record<string, unknown>
@@ -70,7 +74,7 @@ function renderDiagram(name: string, yamlBody: string): string {
     return diagramError(`"${name}": bad YAML in slot block — ${String(err)}`)
   }
   const missing: string[] = []
-  const suffix = `-i${++diagramInstance}`
+  const suffix = `-i${instance}`
   const svg = template
     .replace(/id="([^"]+)"/g, (_, id: string) => `id="${id}${suffix}"`)
     .replace(/url\(#([^)]+)\)/g, (_, id: string) => `url(#${id}${suffix})`)
@@ -97,6 +101,7 @@ function renderDiagram(name: string, yamlBody: string): string {
 function headingIdRenderer(): Renderer {
   const renderer = new Renderer()
   const seen = new Map<string, number>()
+  let diagramInstance = 0
   renderer.heading = ({ tokens, depth }) => {
     const text = renderer.parser.parseInline(tokens)
     const plain = tokens.map((tok) => tok.raw).join('')
@@ -108,7 +113,7 @@ function headingIdRenderer(): Renderer {
   }
   renderer.code = function (token) {
     const match = /^diagram\s+(\S+)\s*$/.exec(token.lang ?? '')
-    if (match) return renderDiagram(match[1], token.text)
+    if (match) return renderDiagram(match[1], token.text, ++diagramInstance)
     return Renderer.prototype.code.call(this, token)
   }
   // Prose images: the `![caption](src)` bracket text renders as a visible faint
@@ -159,11 +164,14 @@ function loadCollection<T extends Entry>(
     // Markdown → HTML on first read, memoized. Only the detail pages consume
     // `html`, so boot skips parsing the whole corpus and each page pays for
     // itself alone.
+    // The entry's own file locale drives link rewriting: en entries link into
+    // the /en URL tree (see withBaseHtml). The rare ru-side fallback render of
+    // an en entry keeps /en links — consistent with the en text it shows.
     let html: string | undefined
     Object.defineProperty(entry, 'html', {
       enumerable: true,
       get: () =>
-        (html ??= withBaseHtml(marked.parse(body, { renderer: headingIdRenderer() }) as string)),
+        (html ??= withBaseHtml(marked.parse(body, { renderer: headingIdRenderer() }) as string, locale)),
     })
     ;(grouped[locale as Locale] ??= []).push(entry)
   }
