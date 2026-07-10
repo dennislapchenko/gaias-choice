@@ -51,7 +51,7 @@ services:
     # a Caddyfile-only edit auto-applies within a poll cycle — even though such a
     # commit doesn't change the compose file / image and so is otherwise skipped
     # by doco-cd's change detection (see deploy/infra-log.md "reconcile triggers").
-    command: ["run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile", "--watch"]
+    command: ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile", "--watch"]
     ports:
       - "80:80"
       - "443:443"
