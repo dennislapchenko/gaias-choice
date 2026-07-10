@@ -1135,8 +1135,10 @@ export default function ContentEditorImpl({
               )}
               {state.status === 'enriching' && (
                 <div className="content-editor-enriching" aria-live="polite">
-                  <span className="content-editor-spinner" aria-hidden="true" />
-                  {t('editor.enriching')}
+                  <span className="content-editor-enriching-pill">
+                    <span className="content-editor-spinner" aria-hidden="true" />
+                    {t('editor.enriching')}
+                  </span>
                 </div>
               )}
             </div>
