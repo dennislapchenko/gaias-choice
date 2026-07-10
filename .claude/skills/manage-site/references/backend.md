@@ -394,15 +394,17 @@ The backend runs on the Hetzner VM as the `deploy/` compose stack (`api` + a
 `caddy` service terminating TLS for `gaias-choice.gardenofatlantis.com`),
 reconciled by **doco-cd** (a GitOps daemon that polls this repo `main` every 30s
 and runs `docker compose up` from `.doco-cd.yml`, `working_dir: deploy`). **A
-push to `main` is the deploy.** The image is built + pushed to GHCR by
-`.github/workflows/build-backend.yml`; the deployed tag is `BE_TAG` in
-`.doco-cd.yml`. Secrets reach the stack via `PASS_ENV` from the VM-only
-`/opt/doco-cd/secrets.env` (non-secrets `API_DOMAIN`/`CORS_ORIGINS`/`BE_TAG` are
-in `.doco-cd.yml`). Provisioning record + redeploy/backup steps:
-`deploy/infra-log.md` (activation = step 9). The static site never moves off
-Pages by this. `task be:deploy` rolls the backend by bumping `BE_TAG` in
-`.doco-cd.yml` and pushing — doco-cd reconciles within ~30s, no SSH/scp (see
-`deploy/release.sh`).
+push to `main` is the deploy.** A `backend/**` push fires
+`.github/workflows/build-backend.yml`, which builds + pushes the image to GHCR
+**and rolls the deploy itself**: its final step bumps `BE_TAG` in `.doco-cd.yml`
+(a `[skip ci]` commit) and pushes, so doco-cd deploys the new image within ~30s.
+One human push → live; no `task be:deploy` for a normal ship. Secrets reach the
+stack via `PASS_ENV` from the VM-only `/opt/doco-cd/secrets.env` (non-secrets
+`API_DOMAIN`/`CORS_ORIGINS`/`BE_TAG` are in `.doco-cd.yml`). Provisioning record
++ redeploy/backup steps: `deploy/infra-log.md` (activation = step 9). The static
+site never moves off Pages by this. `task be:deploy` (→ `deploy/release.sh`) is
+now **manual rollback/pin only**: `task be:deploy BE_TAG=sha-…` writes that tag
+to `.doco-cd.yml` and pushes.
 
 ## Common backend dev tasks
 

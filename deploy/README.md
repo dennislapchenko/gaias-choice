@@ -5,9 +5,10 @@ This directory is the **production stack** for the Go backend sidecar. It is
 the Hetzner / AlmaLinux VM polls this repo and runs `docker compose up` on change,
 reconciling the `api` + `caddy` stack from repo-root `.doco-cd.yml`
 (`working_dir: deploy`). **A push to `main` is the deploy** (see `infra-log.md`
-step 9 for the activation record). Image delivery is **registry via CI**
-(`.github/workflows/build-backend.yml` builds `backend/Dockerfile` → GHCR); a
-backend release bumps `BE_TAG` in `.doco-cd.yml` (`task be:deploy`).
+step 9 for the activation record). A `backend/**` push is **fully automatic**:
+`.github/workflows/build-backend.yml` builds `backend/Dockerfile` → GHCR and its
+final step bumps `BE_TAG` in `.doco-cd.yml` and pushes, so doco-cd ships the new
+image within ~30s. `task be:deploy BE_TAG=sha-…` is the manual rollback/pin.
 
 The static site stays on GitHub Pages and never depends on this stack. This is
 the backend's home only.

@@ -191,12 +191,14 @@
 
 ## Redeploy / operate (quick reference)
 
-- **New backend image (automated, GitOps):** push to `main` touching
-  `backend/**` → CI builds `sha-<commit>`, then run **`task be:deploy`** from the
-  repo. It resolves the newest green build's sha and bumps `BE_TAG` in
-  `.doco-cd.yml`, then commits + pushes. doco-cd on the VM reconciles within
-  ~30s — no SSH/scp. Pin/roll back with `task be:deploy BE_TAG=sha-…`. See
-  `deploy/release.sh` and step 9 below.
+- **New backend image (fully automatic):** push to `main` touching `backend/**`
+  → `build-backend.yml` builds + pushes the image **and rolls the deploy** (final
+  step bumps `BE_TAG` in `.doco-cd.yml` with a `[skip ci]` commit and pushes) →
+  doco-cd reconciles within ~30s. One human push, no `task be:deploy`. Needs
+  `contents: write` on the workflow (granted). See step 9 below.
+- **Manual roll / rollback:** `task be:deploy BE_TAG=sha-…` (→ `deploy/release.sh`)
+  writes that tag to `.doco-cd.yml` and pushes — for pinning an older image or
+  shipping without a fresh `backend/**` build.
 - **Manual fallback** (doco-cd itself down): SSH in and, from `/opt/doco-cd`,
   `docker compose up -d` restarts the daemon; it re-clones and reconciles. To
   hand-run the app stack without doco-cd you'd need the repo on the VM (git is

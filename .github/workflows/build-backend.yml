@@ -1,10 +1,11 @@
 name: Build backend image
 
-# Builds backend/Dockerfile and pushes it to GHCR so the VM (and, later,
-# doco-cd) can pull a prebuilt image instead of building on the box. Tags each
-# push with the commit sha (pin this in deploy.env's BE_TAG) plus a moving
-# `latest`. The GHCR package must be public for the VM to pull unauthenticated
-# — set once after the first push (Package settings → Change visibility).
+# Builds backend/Dockerfile and pushes it to GHCR, then rolls the deploy: the
+# final step bumps BE_TAG in .doco-cd.yml to the built sha and pushes, so doco-cd
+# on the VM reconciles the new image within ~30s. One human push → live. Tags
+# each image with the commit sha (what BE_TAG pins) plus a moving `latest`. The
+# GHCR package must be public for the VM to pull unauthenticated — set once after
+# the first push (Package settings → Change visibility).
 on:
   push:
     branches: [main]
@@ -14,7 +15,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write # the roll step commits the BE_TAG bump to main
   packages: write
 
 jobs:
@@ -48,3 +49,25 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      # Roll the deploy: point BE_TAG at the image we just built and push to
+      # main. doco-cd reconciles it on its next poll. Applied on latest main (not
+      # the detached build sha) so it fast-forwards cleanly; [skip ci] keeps this
+      # tag-only commit from re-running any workflow (the paths filter already
+      # blocks a build loop — this also suppresses a redundant Pages rebuild).
+      - name: Roll BE_TAG for doco-cd
+        run: |
+          set -euo pipefail
+          tag="sha-${GITHUB_SHA}"
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --quiet origin main
+          git checkout -B main origin/main
+          sed -E -i "s|^(  BE_TAG: ).*|\1${tag}|" .doco-cd.yml
+          grep -q "^  BE_TAG: ${tag}\$" .doco-cd.yml
+          if git diff --quiet -- .doco-cd.yml; then
+            echo "BE_TAG already ${tag} — nothing to roll"; exit 0
+          fi
+          git add .doco-cd.yml
+          git commit -m "chore(deploy): roll VM backend image to ${tag} [skip ci]"
+          git push origin main

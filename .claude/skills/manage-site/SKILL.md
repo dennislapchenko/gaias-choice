@@ -375,17 +375,15 @@ Then, in either case:
      ~60s and check the "Deploy to Pages" run's **conclusion once**
      (`gh run list`; no `gh run watch`, no curl); `true` ⇒ poll "Deploy to
      Pages" to its conclusion.
-   - **Backend deploy is automatic on a `backend/**` change — regardless of the
-     flag.** If the pushed diff touched `backend/**` (so the "Build backend
-     image" CI run fired — it's `paths`-filtered to `backend/**`), wait for that
-     image build to go **green**, then run `task be:deploy` to ship it and
-     report the result. FE and BE must ship together, so a backend change is
-     never left un-deployed just because Pages-watching is set to the single
-     check. (`be:deploy` bumps `BE_TAG` in `.doco-cd.yml` and pushes — doco-cd
-     on the VM reconciles within ~30s; it needs only `gh` + `git`, no VM access.
-     See `references/backend.md`.) Because the reconcile is a short follow-up,
-     verify it landed via the VM (`docker logs doco-cd-doco-cd-1`) or the live
-     `/api/healthz`.
+   - **Backend deploy is fully automatic on a `backend/**` change.** The pushed
+     diff touching `backend/**` fires the "Build backend image" CI run
+     (`paths`-filtered), which builds the image **and rolls the deploy itself** —
+     its final step bumps `BE_TAG` in `.doco-cd.yml` (a `[skip ci]` commit) and
+     pushes, so doco-cd on the VM reconciles within ~30s. You don't run
+     `task be:deploy` for a normal ship; just watch the CI run go **green** and
+     confirm the reconcile landed (live `/api/healthz`, or `docker logs
+     doco-cd-doco-cd-1` on the VM). `task be:deploy` is now **manual
+     rollback/pin only** (`BE_TAG=sha-…`) — see `references/backend.md`.
 
    Either way: GitHub Pages fails transiently on its own side ("Deployment
    failed, try again later" while the build is green) — on that failure
