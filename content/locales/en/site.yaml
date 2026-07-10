@@ -154,12 +154,13 @@ support:
 
 # First-party analytics (feeds the campfire's admin Statistics view). The
 # beacon counts page path + day only — no cookies, no IPs, no visitor data
-# (see /privacy). trackSignedIn: false keeps signed-in visits (the owners,
-# editors, campfire members) out of the counters; flipping it to true means
-# also updating /privacy, which currently says signed-in visits aren't
-# counted. Non-localized — authored here only, inherited by every locale.
+# (see /privacy). trackSignedIn: true counts signed-in visits (the owners,
+# editors, campfire members) alongside anonymous ones; set it to false to keep
+# them out of the counters. Flipping this must stay in sync with /privacy,
+# which describes what is counted. Non-localized — authored here only,
+# inherited by every locale.
 analytics:
-  trackSignedIn: false
+  trackSignedIn: true
 
 nav:
   - { label: Home, path: / }

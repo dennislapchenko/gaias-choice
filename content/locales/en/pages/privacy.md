@@ -12,8 +12,8 @@ it that way.**
   because there is nothing to consent to.
 - **We count visits, not visitors.** Our own tiny counter stores, per day,
   which page was opened and a running total — nothing else. No cookies, no
-  IP addresses, no user agents, no profiles; visits by signed-in members
-  aren't counted at all.
+  IP addresses, no user agents, no profiles — the same day-and-page count
+  whether or not you're signed in.
 - **Accounts are optional** — reading never requires one. If you do sign in
   (via Telegram or an emailed one-time link, to take a seat by the campfire),
   we store what you give us: a display name, an optional email address, an
