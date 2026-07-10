@@ -53,6 +53,9 @@ const ru: Record<keyof typeof en, string> = {
   "toc.ariaLabel": "На этой странице",
   "toc.toggle": "На этой странице",
 
+  "speak.play": "Читать вслух отсюда",
+  "speak.stop": "Остановить",
+
   "reviewDetail.backLink": "← Все обзоры",
   "reviewDetail.checkPrice": "Линк в магазе →",
   "reviewDetail.priceLabel": "Дэнги",

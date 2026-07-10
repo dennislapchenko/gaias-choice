@@ -77,7 +77,10 @@ export default function ReviewDetail() {
           <img className="detail-image" src={withBase(product.image)} alt={product.title} />
         )}
 
-        <Markdown html={product.html} />
+        <Markdown
+          html={product.html}
+          tts={{ locale, playLabel: t('speak.play'), stopLabel: t('speak.stop') }}
+        />
       </article>
 
       {/* Right rail — facts + the buy action, each fact its own panel card

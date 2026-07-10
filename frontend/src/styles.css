@@ -2680,6 +2680,36 @@ a.respected-card:hover {
 .prose h2 {
     margin-top: 1.8em;
 }
+/* Read-aloud button injected into each h2 by Markdown.tsx (Web Speech API). */
+.speak-btn {
+    margin-left: 0.4em;
+    border: none;
+    background: none;
+    padding: 0 0.1em;
+    cursor: pointer;
+    font-size: 0.65em;
+    line-height: 1;
+    vertical-align: middle;
+    opacity: 0.35;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.speak-btn:hover,
+.speak-btn:focus-visible {
+    opacity: 0.9;
+}
+.speak-btn.is-speaking {
+    opacity: 1;
+    animation: speak-pulse 1s ease-in-out infinite;
+}
+@keyframes speak-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.22);
+    }
+}
 .prose h3 {
     margin-top: 1.4em;
 }

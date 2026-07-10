@@ -93,7 +93,10 @@ export default function EntryDetail({ kind }: { kind: 'compass' | 'journal' }) {
       </header>
       <TableOfContents html={entry.html} />
       <article className="detail">
-        <Markdown html={entry.html} />
+        <Markdown
+          html={entry.html}
+          tts={{ locale, playLabel: t('speak.play'), stopLabel: t('speak.stop') }}
+        />
       </article>
     </div>
   )

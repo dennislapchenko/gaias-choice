@@ -52,6 +52,9 @@ const en = {
   "toc.ariaLabel": "On this page",
   "toc.toggle": "On this page",
 
+  "speak.play": "Listen from here",
+  "speak.stop": "Stop reading",
+
   "reviewDetail.backLink": "← All reviews",
   "reviewDetail.checkPrice": "Check current price →",
   "reviewDetail.priceLabel": "Price",
