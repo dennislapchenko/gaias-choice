@@ -1,8 +1,12 @@
-# doco-cd deploy config (dormant — activated when the VM exists).
-# The VM's doco-cd polls this repo (or receives a GitHub webhook) and reconciles
-# the deploy/ stack on push to main. Values below are not secrets; the real
-# API domain, CORS origins, and image tag are set in the env file at activation.
+# doco-cd deploy config for the live backend stack (api + caddy). The VM's
+# doco-cd polls this repo and reconciles deploy/ on push to main.
+#
+# Secrets are NOT in this repo. They live on the VM in /opt/doco-cd/secrets.env
+# (the same values that used to be scp'd to /opt/gaias-choice/deploy/deploy.env),
+# loaded into the doco-cd container and forwarded into this stack's compose
+# interpolation via PASS_ENV=true on the daemon. So ${API_DOMAIN}, ${BE_TAG},
+# ${GITHUB_TOKEN}, … in deploy/compose.yaml resolve from there — no env_files
+# here, nothing secret committed. Phase 3 (optional) swaps this for a
+# SOPS+age-encrypted env file committed to the repo.
 name: gaias-choice
 working_dir: deploy
-env_files:
-  - deploy.env
