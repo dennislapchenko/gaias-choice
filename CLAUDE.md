@@ -228,6 +228,14 @@ any hue in them), `--sand` the page background, `--on-accent` the text color
 placed on accent surfaces. Detail/prose images cap at 440px tall on desktop
 only; phones keep full width.
 
+**Foldable/headered sections use one shared header.** Any collapsible or
+"headered" block reuses the left-sidebar panel look (`CollapsiblePanel` →
+`.side-panel*`, a flat rectangular header + chevron over a tinted body) — the
+sidebar panels, the account **Your details** rail, and the stats
+**Frontend/API** tables all go through it. Don't hand-roll a new header/fold;
+reach for `src/components/CollapsiblePanel.tsx` (development.md "Collapsible
+panel").
+
 ### Theming / palette switcher
 
 Palettes are **data, not code** — one entry per palette in

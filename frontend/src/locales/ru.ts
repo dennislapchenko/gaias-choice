@@ -115,7 +115,6 @@ const ru: Record<keyof typeof en, string> = {
   "account.signedOut": "Войдите, чтобы занять место у костра.",
   "account.offline": "Костёр сейчас недосягаем — загляните позже.",
 
-  "account.biz.label": "Твои дела",
   "account.biz.stats": "Статистика",
   "account.stats.title": "Статистика",
   "account.stats.back": "Обратно к костру",

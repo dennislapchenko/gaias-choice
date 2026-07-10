@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { apiGet, type PathHits, type StatsRange, type StatsResponse } from '../lib/api'
 import { useI18n } from '../lib/i18n'
 import { useSession } from '../lib/session'
+import CollapsiblePanel from './CollapsiblePanel'
 
 const RANGES: StatsRange[] = ['today', '7d', '30d', 'alltime']
 
@@ -59,8 +60,7 @@ export default function AccountStats() {
 function Section({ label, rows }: { label: string; rows: PathHits[] }) {
   const { t } = useI18n()
   return (
-    <details className="stats-section" open>
-      <summary>{label}</summary>
+    <CollapsiblePanel label={label} defaultOpen>
       {rows.length === 0 ? (
         <p className="muted stats-empty">{t('account.stats.empty')}</p>
       ) : (
@@ -81,6 +81,6 @@ function Section({ label, rows }: { label: string; rows: PathHits[] }) {
           </tbody>
         </table>
       )}
-    </details>
+    </CollapsiblePanel>
   )
 }

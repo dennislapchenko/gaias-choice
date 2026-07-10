@@ -803,52 +803,11 @@ h1 {
     }
 }
 
-/* ---------- Business toggles + Statistics view (account page) ---------- */
-/* The «Твои дела» row: square owner-tool toggles in the title row (right
-   end on desktop, same spot on mobile). Composition comes from the
-   BUSINESS_TOGGLES registry in Account.tsx. */
-.biz-toggles {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 6px;
-}
-.biz-label {
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--sage-dark);
-}
-.biz-btns {
-    display: flex;
-    gap: 8px;
-}
-.biz-toggle {
-    width: 46px;
-    height: 46px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    background-color: var(--white);
-    background-image: linear-gradient(var(--panel-tint), var(--panel-tint));
-    color: var(--ink);
-    cursor: pointer;
-}
-.biz-toggle:hover {
-    border-color: var(--sage);
-}
-.biz-toggle.is-active {
-    background: var(--sage);
-    border-color: var(--sage);
-    color: var(--on-accent);
-}
-.biz-toggle svg {
-    width: 24px;
-    height: 24px;
-}
+/* ---------- Statistics view (account page) ---------- */
+/* Owner tools sit in the title-row `.head-toggles`: the admin Statistics pill
+   (a `.user-toggle`, visible at all widths) toggles the view below; the
+   your-details pencil is a `.rail-toggle` (mobile-only, folds the always-open
+   desktop rail). Both reuse existing header chrome — no bespoke controls. */
 
 /* The Statistics view replacing the campfire scene: the fire shrinks to a
    top-center button (still burning — same animations ride along) that leads
@@ -899,21 +858,6 @@ h1 {
     background: var(--sage);
     color: var(--on-accent);
     border-color: var(--sage);
-}
-.stats-section {
-    border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
-    background: var(--surface-muted);
-    padding: 6px 14px 12px;
-}
-.stats-section summary {
-    cursor: pointer;
-    padding: 6px 0;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--sage-dark);
 }
 .stats-empty {
     margin: 8px 0 4px;
@@ -2006,7 +1950,7 @@ a.respected-card:hover {
     .rail-toggle {
         display: inline-flex;
     }
-    /* The title row keeps the «Твои дела» group pinned top-right and lets the
+    /* The title row keeps the owner-tool toggles pinned top-right and lets the
        title wrap under it — same one-line layout the short Stats title gets,
        now for the long campfire title too. */
     .page-head-row {

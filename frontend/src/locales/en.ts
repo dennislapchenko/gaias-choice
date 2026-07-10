@@ -114,7 +114,6 @@ const en = {
   "account.signedOut": "Sign in to take your place by the fire.",
   "account.offline": "The campfire is out of reach right now — try again later.",
 
-  "account.biz.label": "Your business",
   "account.biz.stats": "Statistics",
   "account.stats.title": "Statistics",
   "account.stats.back": "Back to the campfire",

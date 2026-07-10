@@ -7,15 +7,6 @@ import { initialOf } from '../components/UserButton'
 import AccountFields from '../components/AccountFields'
 import AccountStats from '../components/AccountStats'
 
-// The «Твои дела» row — owner tools that swap the campfire's main column for
-// a work view. A registry in code on purpose (each view IS code, same idea as
-// Sidebar's PANELS): adding a toggle = one entry here + a view branch in the
-// main column below. `adminOnly: false` shows it to every signed-in camper.
-type BizId = 'stats'
-const BUSINESS_TOGGLES: { id: BizId; adminOnly: boolean; labelKey: string; icon: () => JSX.Element }[] = [
-  { id: 'stats', adminOnly: true, labelKey: 'account.biz.stats', icon: ChartIcon },
-]
-
 // The account page: a campfire with every registered user seated around it
 // in a circle — the community, visible from day one. Signed-out visitors get
 // an invitation; without a backend the page degrades to a quiet note.
@@ -24,11 +15,11 @@ export default function Account() {
   const { me, token, backendUp, openLogin, signOut } = useSession()
 
   const [members, setMembers] = useState<Member[] | null>(null)
-  // Your-details rail is open by default (its YOUR BUSINESS toggle starts active).
+  // Your-details rail is open by default; below 900px its rail-toggle folds it.
   const [fieldsOpen, setFieldsOpen] = useState(true)
-  // Which business view has the main column (null = the campfire itself).
-  const [biz, setBiz] = useState<BizId | null>(null)
-  const title = biz === 'stats' ? t('account.stats.title') : t('account.title')
+  // Whether the admin Statistics view has the main column (else the campfire).
+  const [statsOpen, setStatsOpen] = useState(false)
+  const title = statsOpen ? t('account.stats.title') : t('account.title')
   usePageHead(title)
   // Admin "edit another camper" mode: the picked user + its own mobile toggle.
   const [selected, setSelected] = useState<Member | null>(null)
@@ -83,11 +74,9 @@ export default function Account() {
   }
 
   // AccountFields is always mounted — the right rail on desktop (like
-  // Reviews/Journal/Compass), opened on mobile by the details toggle in the
-  // YOUR BUSINESS group (`.account-fields` is display:none below 900px unless
-  // `fieldsOpen` adds `.is-open`). One tree, breakpoint entirely in CSS.
-  const bizToggles = BUSINESS_TOGGLES.filter((b) => !b.adminOnly || isAdmin)
-
+  // Reviews/Journal/Compass), opened on mobile by the details rail-toggle
+  // (`.account-fields` is display:none below 900px unless `fieldsOpen` adds
+  // `.is-open`). One tree, breakpoint entirely in CSS.
   return (
     <section className="account-page">
       <div className="page-head-row">
@@ -105,54 +94,44 @@ export default function Account() {
               <span className="rail-toggle-label">{selected.displayName}</span>
             </button>
           )}
-          {/* YOUR BUSINESS group — owner-tool toggles. Stats (admin-only) on the
-              left; your-details on the right. Details is a rail toggle, so on
-              desktop the rail stays always-visible (button reads active) and the
-              toggle only opens/closes it below 900px — where it now folds inside
-              this group instead of standing alone. */}
-          <div className="biz-toggles" role="group" aria-label={t('account.biz.label')}>
-            <span className="biz-label" aria-hidden="true">
-              {t('account.biz.label')}
-            </span>
-            <div className="biz-btns">
-              {bizToggles.map((b) => (
-                <button
-                  key={b.id}
-                  type="button"
-                  className={`biz-toggle${biz === b.id ? ' is-active' : ''}`}
-                  aria-pressed={biz === b.id}
-                  aria-label={t(b.labelKey)}
-                  title={t(b.labelKey)}
-                  onClick={() => setBiz((cur) => (cur === b.id ? null : b.id))}
-                >
-                  <b.icon />
-                </button>
-              ))}
-              <button
-                type="button"
-                className={`biz-toggle${fieldsOpen ? ' is-active' : ''}`}
-                aria-pressed={fieldsOpen}
-                aria-label={t('account.fields.title')}
-                title={t('account.fields.title')}
-                onClick={() => setFieldsOpen((o) => !o)}
-              >
-                <EditIcon />
-              </button>
-            </div>
-          </div>
+          {/* Statistics (admin-only): a pill toggle for the stats view, shown at
+              all widths. */}
+          {isAdmin && (
+            <button
+              type="button"
+              className={`user-toggle${statsOpen ? ' is-open' : ''}`}
+              aria-pressed={statsOpen}
+              onClick={() => setStatsOpen((o) => !o)}
+            >
+              <ChartIcon />
+              <span className="rail-toggle-label">{t('account.biz.stats')}</span>
+            </button>
+          )}
+          {/* Your-details rail toggle — icon-only, only below 900px (the rail is
+              always visible on desktop, foldable via its own panel header). */}
+          <button
+            type="button"
+            className={`user-toggle rail-toggle${fieldsOpen ? ' is-open' : ''}`}
+            aria-expanded={fieldsOpen}
+            aria-label={t('account.fields.title')}
+            title={t('account.fields.title')}
+            onClick={() => setFieldsOpen((o) => !o)}
+          >
+            <EditIcon />
+          </button>
         </div>
       </div>
       <p className="muted">{t('account.lead')}</p>
 
       <div className="reviews-layout">
         <div className="reviews-main">
-          {biz === 'stats' ? (
+          {statsOpen ? (
             <div className="stats-main">
               {/* The fire keeps burning up here — and is the way back home. */}
               <button
                 type="button"
                 className="stats-fire"
-                onClick={() => setBiz(null)}
+                onClick={() => setStatsOpen(false)}
                 aria-label={t('account.stats.back')}
                 title={t('account.stats.back')}
               >

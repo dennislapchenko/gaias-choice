@@ -11,6 +11,7 @@ import { withBase } from '../lib/asset'
 import { downscaleToWebP } from '../lib/image'
 import { useI18n } from '../lib/i18n'
 import { useSession } from '../lib/session'
+import CollapsiblePanel from './CollapsiblePanel'
 
 // The avatar is stored verbatim as the data: URI (self-contained, survives the
 // source file going away); 256 px keeps the campfire payload small (backend caps
@@ -125,29 +126,7 @@ export default function AccountFields({
         } as CSSProperties)
       : undefined
 
-  return (
-    <>
-      {target && open && <div className="account-popover-backdrop" onClick={onClose} />}
-      <section
-        className={`account-fields${target ? ' account-fields-target' : ''}${anchor?.openUp ? ' opens-up' : ''}${open ? ' is-open' : ''}`}
-        style={popoverStyle}
-        aria-label={target ? t('account.editUser', { name: target.displayName }) : t('account.fields.title')}
-      >
-        <div className="side-label-row">
-          <p className="side-label">
-            {target ? t('account.editUser', { name: target.displayName }) : t('account.fields.title')}
-          </p>
-          {target && (
-            <button
-              type="button"
-              className="rail-close"
-              aria-label={t('account.fields.close')}
-              onClick={onClose}
-            >
-              ×
-            </button>
-          )}
-        </div>
+  const form = (
         <form onSubmit={onSubmit}>
           <label className="field">
             <span className="field-label">{t('account.fields.name')}</span>
@@ -214,6 +193,38 @@ export default function AccountFields({
             {t('account.fields.save')}
           </button>
         </form>
+  )
+
+  return (
+    <>
+      {target && open && <div className="account-popover-backdrop" onClick={onClose} />}
+      <section
+        className={`account-fields${target ? ' account-fields-target' : ''}${anchor?.openUp ? ' opens-up' : ''}${open ? ' is-open' : ''}`}
+        style={popoverStyle}
+        aria-label={target ? t('account.editUser', { name: target.displayName }) : t('account.fields.title')}
+      >
+        {target ? (
+          <>
+            {/* Admin popover: a close-× header, not a fold — it's transient. */}
+            <div className="side-label-row">
+              <p className="side-label">{t('account.editUser', { name: target.displayName })}</p>
+              <button
+                type="button"
+                className="rail-close"
+                aria-label={t('account.fields.close')}
+                onClick={onClose}
+              >
+                ×
+              </button>
+            </div>
+            {form}
+          </>
+        ) : (
+          // Self panel: the standard headered fold (sidebar style).
+          <CollapsiblePanel label={t('account.fields.title')} defaultOpen>
+            {form}
+          </CollapsiblePanel>
+        )}
       </section>
     </>
   )
