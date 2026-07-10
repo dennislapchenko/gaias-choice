@@ -10,7 +10,7 @@ excerpt: "<one honest sentence a friend would text you about it>"
 # image: /images/review-<slug>.webp   # real photo (run `task images`) or mandala SVG
 date: 2026-07-06 # today; controls list order
 tags: [] # optional, e.g. [organic, cotton]
-gallery: [/images/review-beeswax-food-wraps.svg, /images/dreamegg-white-noise-machine-mrctcxwn.webp]
+gallery: [/images/review-beeswax-food-wraps.svg, /images/dreamegg-white-noise-machine-mrctcxwn.webp, /images/dreamegg-white-noise-machine-mrf4cgtd.jpg]
 ---
 
 <!--
