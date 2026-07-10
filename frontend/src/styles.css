@@ -902,11 +902,17 @@ h1 {
     border-color: var(--sage);
 }
 @media (max-width: 640px) {
+    /* Dissolve the unstyled .account-stats wrapper so its children join
+       .stats-main's flex column; order:-1 floats the range row above the fire,
+       matching desktop's top placement instead of dropping below it. */
+    .account-stats {
+        display: contents;
+    }
     .stats-ranges {
         position: static;
         max-width: none;
         justify-content: center;
-        margin-top: 4px;
+        order: -1;
     }
 }
 .stats-section {
