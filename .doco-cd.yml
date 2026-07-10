@@ -15,4 +15,4 @@ working_dir: deploy
 environment:
   API_DOMAIN: gaias-choice.gardenofatlantis.com
   CORS_ORIGINS: https://dennislapchenko.github.io
-  BE_TAG: sha-e2ae24749200d9e68cce3e35b87995725c6eeb0a
+  BE_TAG: sha-c84ba9c5f2e84dbb607596c84560a744de0d9f20
