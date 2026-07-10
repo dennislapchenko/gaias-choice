@@ -2021,14 +2021,16 @@ a.respected-card:hover {
     .rail-toggle {
         display: inline-flex;
     }
-    /* The title row holds the pencil toggles AND the «Твои дела» group — let
-       both wrap instead of pushing the group off the right edge on phones. */
-    .page-head-row,
-    .head-toggles {
-        flex-wrap: wrap;
+    /* The title row keeps the «Твои дела» group pinned top-right and lets the
+       title wrap under it — same one-line layout the short Stats title gets,
+       now for the long campfire title too. */
+    .page-head-row {
+        align-items: flex-start;
     }
     .head-toggles {
+        flex-wrap: wrap;
         justify-content: flex-end;
+        flex-shrink: 0;
     }
     .account-fields,
     .upcoming {
