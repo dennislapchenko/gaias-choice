@@ -1,7 +1,7 @@
 ---
 title: "Тапочки RABANA"
 state: upcoming
-category: Sleep            # Sleep | Feeding | Care | Kitchen | Travel — the filter chip on /reviews
+category: Сон              # фильтр на /reviews; сейчас есть: Сон | Кормление | Уход | Кухня | Путешествия
 scores: [4, 4, 4]          # Gaia Score — one 0–5 number per criterion in en/site.yaml `ratingCriteria`, IN THAT ORDER. A 5 must survive the "no flaws at all?" test
 price: "€00"               # what you actually paid; always quote it
 boughtAt: ""               # optional — where we got it (store/place); splits the price panel in two

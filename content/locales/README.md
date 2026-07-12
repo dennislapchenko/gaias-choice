@@ -60,8 +60,8 @@ Keep in English (non-exhaustive):
   in-prose references to that page). Ordinary nav words with plain native
   equivalents are still translated (Home→Главная, Reviews→Обзоры,
   Guides→Гайды, About→О нас, Contact→Контакты).
-- **Palette names:** Meadow, Bubblegum, Citrus, Periwinkle, Lagoon, Sunset,
-  Grape (invented names in `themes.yaml`; not localized anyway).
+- **Palette names:** every `label` in `themes.yaml` (Meadow, Citrus, Midnight…
+  — invented names; not localized anyway).
 - **Platforms / companies / products:** Pinterest, Instagram, Amazon, Amazon
   Associates, Google, Google Cloud Run, Search Console, Bing Webmaster Tools,
   Mediavine, Raptive, AdSense, Awin, ShareASale, impact.com, AvantLink,

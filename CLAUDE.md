@@ -394,8 +394,8 @@ the history:
   provenance at its top.
 - **Journal:** one seed entry (an explicit fill-in template) + a couple of
   `state: upcoming` stubs queued.
-- **Reviews:** the six *active* `products/*` are **AI placeholder reviews**
-  with fake affiliate URLs (`EXAMPLE…`) — slated for deletion/replacement.
+- **Reviews:** the *active* `products/*` with fake affiliate URLs
+  (`EXAMPLE…`) are **AI placeholder reviews** — slated for deletion/replacement.
   **Never add a real affiliate program while these exist.** The real pipeline
   is the `state: upcoming` stubs feeding the "in the works" rail.
 - **Pages:** `/roadmap` is public building-in-public — keep it updated when
