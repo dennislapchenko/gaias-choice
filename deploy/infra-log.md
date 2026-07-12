@@ -296,6 +296,16 @@ Commits that touch **none** of the above — docs, `deploy/README.md`,
   limiting would need the `caddy-ratelimit` plugin → a custom image off the
   stock `caddy:2-alpine`, not worth it while these scans just 404 harmlessly.
   Extend the matcher as new patterns appear in the logs.
+- **Transport hardening in the `Caddyfile`** (the backend already owns per-field
+  size caps + a 429 rate limiter, so these are only the edge-level gaps): HSTS
+  (`max-age=31536000`, no preload/includeSubDomains), `X-Content-Type-Options:
+  nosniff`, `Server` banner dropped, and a **10MB `request_body max_size`** — the
+  backend's 256KB/1MB caps only fire after gin buffers the whole body, so the cap
+  stops a giant POST to the unauthenticated `/track`/`/auth/*` endpoints from
+  OOMing before the handler runs. Deliberately NOT added: TLS tuning (Caddy
+  defaults are already A+), CSP/X-Frame-Options (this host serves JSON to a
+  cross-origin `fetch`, never framed HTML — those belong to the SPA edge), and
+  real rate limiting/WAF (that's the future Cloudflare's job).
 
 **The gap:** nothing at the network edge. There's no Hetzner Cloud Firewall and
 no host firewall. Today that's fine (only Caddy publishes ports), but there's

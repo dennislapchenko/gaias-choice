@@ -2,6 +2,26 @@
 # subdomain the owner points at the VM — independent of the site's future
 # custom domain (the SEO plan stays decoupled).
 {$API_DOMAIN} {
+	# Transport-level hardening (the backend owns per-field size caps + a 429
+	# rate limiter already; these fill the gaps that belong at the edge):
+	#   - HSTS: browsers refuse plaintext (Caddy already force-redirects to 443).
+	#     No preload/includeSubDomains — don't bind sibling *.gardenofatlantis.com.
+	#   - nosniff: no MIME-sniffing of our JSON responses.
+	#   - -Server: drop the `Server: Caddy` version banner.
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		-Server
+	}
+
+	# Cap the request body BEFORE gin buffers it into memory — the backend's
+	# 256KB/1MB field caps only fire after the full body is read, so a giant POST
+	# to the unauthenticated /track or /auth/* endpoints is a cheap OOM otherwise.
+	# 10MB clears the base64 image-upload path (~1.4MB for a 1MB image) with room.
+	request_body {
+		max_size 10MB
+	}
+
 	# Edge-drop the constant bot scans (/.env, /.git, wp-*, *.php …) before they
 	# ever reach the api — `abort` closes the TCP connection with no response, so
 	# they cost nothing and stop cluttering the backend logs. This is NOT rate
