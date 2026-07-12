@@ -109,8 +109,9 @@ compose.dev.yaml         # `task dev` stack: web (Vite HMR) + api (air reload)
 deploy/                  # live VM deploy — two layers + infra-log.md record:
   app/                   #   Layer 1 (GitOps): api + Caddy, reconciled from git
   controller/            #   Layer 0: the doco-cd daemon itself (compose, poll,
-                         #   secrets.env.example, sync.sh, bootstrap-vm.sh) —
-                         #   hand-synced via `task doco:sync`
+                         #   secrets.env.example, sync.sh, push-secrets.sh,
+                         #   bootstrap-vm.sh) — synced via `task doco:sync` +
+                         #   `task doco:secrets`
 .doco-cd.yml             # doco-cd GitOps stack config (working_dir: deploy/app)
 Taskfile.yml             # all common commands
 ```

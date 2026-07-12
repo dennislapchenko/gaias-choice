@@ -361,8 +361,13 @@ deploy.
   shipping without a fresh `backend/**` build.
 - **Controller (Layer 0) change:** edit `deploy/controller/{compose,poll}.yaml`
   in the repo, then `task doco:sync` (scp non-secret files → `/opt/doco-cd/` +
-  `docker compose up -d`). doco-cd does NOT self-deploy its own config. Secrets
-  (`secrets.env`) stay VM-only and are never synced.
+  `docker compose up -d`). doco-cd does NOT self-deploy its own config.
+- **Secret rotation / notify-target change:** edit the repo-root `.env`
+  (gitignored source of truth) — e.g. `TELEGRAM_CHAT_ID` to move the deploy-ping
+  target — then `task doco:secrets` (→ `push-secrets.sh`): streams `.env` + a
+  derived `APPRISE_NOTIFY_URLS` 0600 over ssh into `/opt/doco-cd/secrets.env` and
+  reloads the daemon. Never a local temp, never git; kept out of `doco:sync` so a
+  routine config sync never rewrites secrets.
 - **From-scratch VM:** `deploy/controller/bootstrap-vm.sh` (Docker + `/srv` dirs
   + fetch controller config + seed secrets template + up). Doubles as OpenTofu
   userdata.

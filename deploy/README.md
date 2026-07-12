@@ -48,6 +48,10 @@ The static site stays on GitHub Pages and never depends on this stack.
   real `secrets.env` is VM-only (below).
 - `controller/sync.sh` — `task doco:sync` runs this (scp non-secret files → VM +
   `docker compose up -d`).
+- `controller/push-secrets.sh` — `task doco:secrets` runs this: generate
+  `/opt/doco-cd/secrets.env` from the repo-root `.env` (+ derived
+  `APPRISE_NOTIFY_URLS`), stream it 0600 over ssh, reload. The one write path for
+  secret values; never a local temp, never git.
 - `controller/bootstrap-vm.sh` — idempotent from-scratch VM provisioner (Docker,
   `/srv` dirs, fetch controller config, seed secrets template, bring the daemon
   up). Doubles as OpenTofu server userdata.
@@ -61,8 +65,12 @@ The static site stays on GitHub Pages and never depends on this stack.
   `PASS_ENV`. Holds only real secrets — the non-secret `API_DOMAIN`,
   `CORS_ORIGINS`, `BE_TAG` live in `.doco-cd.yml`. The **key list** is
   `controller/secrets.env.example`; each is optional and an unset secret 503s
-  just its feature (`app/compose.yaml` comments). Values mirror the repo-root
-  `.env` locally.
+  just its feature (`app/compose.yaml` comments). **Written reproducibly, not by
+  hand:** the repo-root `.env` (gitignored) is the single source of truth for
+  values (same ones local dev uses); `task doco:secrets` (→
+  `controller/push-secrets.sh`) streams `.env` + a derived `APPRISE_NOTIFY_URLS`
+  over ssh into the 0600 file and reloads the daemon. Move the notify target by
+  editing `TELEGRAM_CHAT_ID` in `.env` and re-running it.
 - **The Hetzner edge firewall + SSH hardening** — currently applied
   imperatively (see `infra-log.md` "Security posture"); **to be codified in
   OpenTofu later**, not as shell here.
@@ -86,9 +94,11 @@ or wire it as OpenTofu userdata):
 3. **Run `bootstrap-vm.sh`** — installs Docker, creates `/srv/gaias-choice/…`,
    fetches `controller/{compose,poll}.yaml` into `/opt/doco-cd/`, seeds
    `secrets.env` from the example.
-4. **Fill `/opt/doco-cd/secrets.env`** (keys in `secrets.env.example`), then
-   `cd /opt/doco-cd && docker compose up -d`. doco-cd reconciles the app stack
-   from git within ~30s.
+4. **Fill secrets, then bring the daemon up.** From a laptop with the repo-root
+   `.env`: `task doco:secrets` (writes `/opt/doco-cd/secrets.env` 0600 + reloads).
+   On the box with no `.env`: hand-fill `/opt/doco-cd/secrets.env` (keys in
+   `secrets.env.example`), then `cd /opt/doco-cd && docker compose up -d`. doco-cd
+   reconciles the app stack from git within ~30s.
 5. **Point the Pages build at the API** — `VITE_API_URL=https://{$API_DOMAIN}/api`
    in the Pages workflow build env.
 

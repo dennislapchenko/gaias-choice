@@ -126,11 +126,22 @@ tasks:
   doco:sync:
     desc: >-
       Push the doco-cd CONTROLLER config (deploy/controller/{compose,poll}.yaml)
-      to the VM and reload the daemon. Secrets (secrets.env) stay VM-only. The
-      app stack (deploy/app/) needs no sync — doco-cd pulls it from git on push.
-      Override VM_HOST/VM_PORT/VM_KEY via env.
+      to the VM and reload the daemon. Secrets (secrets.env) stay VM-only — use
+      doco:secrets for those. The app stack (deploy/app/) needs no sync — doco-cd
+      pulls it from git on push. Override VM_HOST/VM_PORT/VM_KEY via env.
     cmds:
       - bash deploy/controller/sync.sh
+
+  doco:secrets:
+    desc: >-
+      Generate /opt/doco-cd/secrets.env on the VM from the local repo-root .env
+      (+ a derived APPRISE_NOTIFY_URLS) and reload the daemon. The ONE
+      reproducible path that writes secret VALUES to the VM — values stream over
+      ssh into a 0600 file, never a local temp, never git. Run when a secret
+      rotates or the notify target (TELEGRAM_CHAT_ID) changes. Override
+      VM_HOST/VM_PORT/VM_KEY/ENV_FILE via env.
+    cmds:
+      - bash deploy/controller/push-secrets.sh
 
   be:logs:
     desc: >-
