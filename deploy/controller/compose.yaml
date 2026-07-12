@@ -23,6 +23,14 @@ services:
       # ✅ completed / ❌ failed deploys + reconciliation warnings only, never
       # per-poll. APPRISE_NOTIFY_URLS carries the bot token, so it lives in
       # secrets.env (not here): tgram://<TELEGRAM_BOT_TOKEN>/<chat_id>/
+      #
+      # The message body is doco-cd-native and NOT customizable: it hard-codes
+      # `<emoji> <title>` + alphabetically-sorted `job_id`/`repository`/`revision`/
+      # `stack` lines (verified in its notification.go — no template knob). It
+      # reads a bit verbose (job_id etc.); reshaping it means replacing Apprise
+      # with our own forwarder endpoint, judged not worth an extra sidecar for a
+      # single stack. Revisit only if several hosts/stacks ever share one channel.
+      # Full write-up: the doco-cd skill "Notifications (Apprise)".
       APPRISE_API_URL: http://apprise:8000/notify
       APPRISE_NOTIFY_LEVEL: success
     depends_on:
