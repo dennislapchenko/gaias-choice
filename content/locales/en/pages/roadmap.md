@@ -72,6 +72,9 @@ belonging is harder to copy than content.
 - [x] "Maybe Homeopathy" Compass course finished (all 11 chapters, both
       languages) — with a situation table for real family nights (teething,
       bumps, fevers, colds) and the red flags ahead of everything else
+- [x] "Aromatherapy: Living Scent" Compass course finished (all 11 chapters,
+      both languages) — ten essential oils learned by nose and dose, graded on a
+      trust ladder, with the fragrance-free bright line held and no medical claims
 - [ ] Pick one recurring ritual and hold it — a monthly almanac letter, a
       season-opening Journal note — something readers learn to expect. Trust
       comes from consistency, not expertise alone

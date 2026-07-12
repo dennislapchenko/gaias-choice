@@ -1,0 +1,23 @@
+<svg viewBox="0 0 640 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs><marker id="arr-amap" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<rect x="14" y="95" width="104" height="70" rx="12" fill="var(--sage)"/>
+<text x="66" y="122" text-anchor="middle" font-size="14" font-weight="700" fill="var(--on-accent)">{{gate_title}}</text>
+<text x="66" y="142" text-anchor="middle" font-size="12" fill="var(--on-accent)">{{gate_l1}}</text>
+<line x1="118" y1="130" x2="136" y2="130" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-amap)"/>
+<rect x="140" y="65" width="156" height="130" rx="12" fill="var(--mint)"/>
+<text x="218" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">{{path1_title}}</text>
+<text x="218" y="116" text-anchor="middle" font-size="12" fill="var(--muted)">{{path1_l1}}</text>
+<text x="218" y="136" text-anchor="middle" font-size="12" fill="var(--muted)">{{path1_l2}}</text>
+<text x="218" y="156" text-anchor="middle" font-size="12" fill="var(--muted)">{{path1_l3}}</text>
+<line x1="296" y1="130" x2="314" y2="130" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-amap)"/>
+<rect x="320" y="65" width="156" height="130" rx="12" fill="var(--peach)"/>
+<text x="398" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">{{path2_title}}</text>
+<text x="398" y="116" text-anchor="middle" font-size="12" fill="var(--muted)">{{path2_l1}}</text>
+<text x="398" y="136" text-anchor="middle" font-size="12" fill="var(--muted)">{{path2_l2}}</text>
+<text x="398" y="156" text-anchor="middle" font-size="12" fill="var(--muted)">{{path2_l3}}</text>
+<line x1="476" y1="130" x2="494" y2="130" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-amap)"/>
+<rect x="500" y="80" width="126" height="100" rx="12" fill="var(--lilac)"/>
+<text x="563" y="108" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">{{summit_title}}</text>
+<text x="563" y="132" text-anchor="middle" font-size="12" fill="var(--muted)">{{summit_l1}}</text>
+<text x="563" y="152" text-anchor="middle" font-size="12" fill="var(--muted)">{{summit_l2}}</text>
+</svg>

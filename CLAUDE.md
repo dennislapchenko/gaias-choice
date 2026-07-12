@@ -184,9 +184,10 @@ provenance contract is SKILL.md non-negotiable #6).
   `epics:`; the first entry is the default tab.
 - Courses are **5 or 11 chapters** (owner rule); optional `chapter: N`
   frontmatter orders them. Existing epics, all complete: `founder-guide` (5),
-  `herbalism` (11), `homeopathy` (11), `trophology` (5) — en+ru — and
-  `inside-websites` (5, **English-only by owner decision** — absent from
-  `ru/site.yaml`; its EN-only diagrams are expected parity-check asymmetries).
+  `herbalism` (11), `homeopathy` (11), `aromatherapy` (11), `trophology` (5) —
+  en+ru — and `inside-websites` (5, **English-only by owner decision** — absent
+  from `ru/site.yaml`; its EN-only diagrams are expected parity-check
+  asymmetries).
   Outlines: `context/course-plan-*.md`; blueprint:
   `context/epic-writing-context.md`.
 - **EntryDetail** is the shared detail page for Compass chapters *and* Journal
@@ -387,7 +388,7 @@ The owners are first-time site builders learning the affiliate-content
 business in public. Keep this section current *and short* — the phase, not
 the history:
 
-- **Compass:** all five courses complete. The founder guides are internal
+- **Compass:** all six courses complete. The founder guides are internal
   playbooks deliberately published as a course — don't "fix" them into
   consumer content; retelling them from lived experience is a roadmap
   milestone. Open launch-checklist item: label each reader course's

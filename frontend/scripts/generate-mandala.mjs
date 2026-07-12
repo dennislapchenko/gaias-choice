@@ -450,6 +450,145 @@ const SETS = {
 <path d="M0,26 C-8,2 10,-14 -2,-36 C-10,-52 6,-64 2,-78" fill="none" stroke="#e0b5f2" stroke-width="5" stroke-linecap="round"/>
 <circle cx="2" cy="-84" r="6" fill="#e6cdf7"/>`,
       },
+
+      // «Ароматерапия: Живой аромат» / "Aromatherapy: Living Scent"
+      // (aromatherapy), chapters 1–11. Shared dusty-rose / plum family (distinct
+      // from herbalism green, homeopathy violet, trophology amber, inside blue,
+      // founder gold) — one hue/lightness step per chapter, icon per concept.
+      {
+        // ch. 1 — what living scent is: a scent drop with rising aroma wisps.
+        slug: 'aromatherapy-01-what-living-scent-is',
+        petalCount: 12,
+        bg: ['#3a1a2e', '#7a2f4f', '#160812'],
+        stroke: '#f0a8c8',
+        centerIcon: `
+<path d="M0,-40 C16,-12 28,2 28,18 A28,28 0 1 1 -28,18 C-28,2 -16,-12 0,-40 Z" fill="#f7d0e4" opacity="0.92"/>
+<path d="M-20,-44 Q-30,-58 -20,-72 M0,-52 Q-10,-68 0,-84 M20,-44 Q30,-58 20,-72" fill="none" stroke="#f0a8c8" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+<path d="M-10,14 A14,14 0 0 0 6,28" fill="none" stroke="#e089b0" stroke-width="4" stroke-linecap="round" opacity="0.75"/>`,
+      },
+      {
+        // ch. 2 — how smell works: a stylised nose in profile with a nostril.
+        slug: 'aromatherapy-02-how-smell-works',
+        petalCount: 10,
+        bg: ['#3c1a30', '#7e2f54', '#170813'],
+        stroke: '#f0a4c6',
+        centerIcon: `
+<path d="M-40,-64 C-58,-30 -58,20 -34,48 L-14,48 C-24,36 -22,24 -8,20 C6,16 8,2 -2,-6 C6,-12 4,-26 -6,-30" fill="none" stroke="#f7d0e4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.92"/>
+<circle cx="-18" cy="36" r="4" fill="#f0a4c6"/>`,
+      },
+      {
+        // ch. 3 — skin and dose: a dropper bottle.
+        slug: 'aromatherapy-03-skin-and-dose',
+        petalCount: 14,
+        bg: ['#3d1a33', '#822f59', '#170814'],
+        stroke: '#f2a2ca',
+        centerIcon: `
+<rect x="-30" y="-6" width="60" height="80" rx="12" fill="#f7d0e4" opacity="0.92"/>
+<rect x="-16" y="-30" width="32" height="26" rx="5" fill="#e089b0" opacity="0.9"/>
+<rect x="-10" y="-56" width="20" height="30" rx="6" fill="#f7d0e4" opacity="0.9"/>
+<path d="M-22,40 L22,40" stroke="#822f59" stroke-width="4" opacity="0.55"/>`,
+      },
+      {
+        // ch. 4 — molecule families: a central atom bonded to three others.
+        slug: 'aromatherapy-04-molecule-families',
+        petalCount: 8,
+        bg: ['#3d1a36', '#822f5f', '#170815'],
+        stroke: '#f2a2d0',
+        centerIcon: `
+<path d="M0,-24 L0,4 M-12,10 L-30,18 M12,10 L30,18" stroke="#f2a2d0" stroke-width="4" opacity="0.8"/>
+<circle cx="0" cy="-40" r="16" fill="#f7d0e4" opacity="0.95"/>
+<circle cx="-42" cy="24" r="16" fill="#e089b0" opacity="0.95"/>
+<circle cx="42" cy="24" r="16" fill="#e089b0" opacity="0.95"/>
+<circle cx="0" cy="16" r="12" fill="#f7d0e4" opacity="0.9"/>`,
+      },
+      {
+        // ch. 5 — the starter set: ten labelled bottles in two rows.
+        slug: 'aromatherapy-05-the-starter-set',
+        petalCount: 16,
+        bg: ['#3c1a39', '#7e2f64', '#160816'],
+        stroke: '#eea4d6',
+        centerIcon: `
+<g fill="#f7d0e4" opacity="0.92">
+  <rect x="-84" y="-48" width="26" height="42" rx="6"/><rect x="-50" y="-48" width="26" height="42" rx="6"/>
+  <rect x="-16" y="-48" width="26" height="42" rx="6"/><rect x="18" y="-48" width="26" height="42" rx="6"/>
+  <rect x="52" y="-48" width="26" height="42" rx="6"/>
+  <rect x="-84" y="12" width="26" height="42" rx="6"/><rect x="-50" y="12" width="26" height="42" rx="6"/>
+  <rect x="-16" y="12" width="26" height="42" rx="6"/><rect x="18" y="12" width="26" height="42" rx="6"/>
+  <rect x="52" y="12" width="26" height="42" rx="6"/>
+</g>
+<g stroke="#7e2f64" stroke-width="4" stroke-linecap="round">
+  <path d="M-80,-52 L-62,-52 M-46,-52 L-28,-52 M-12,-52 L6,-52 M22,-52 L40,-52 M56,-52 L74,-52"/>
+  <path d="M-80,8 L-62,8 M-46,8 L-28,8 M-12,8 L6,8 M22,8 L40,8 M56,8 L74,8"/>
+</g>`,
+      },
+      {
+        // ch. 6 — calm and sleep: a crescent moon with two small stars.
+        slug: 'aromatherapy-06-calm-and-sleep',
+        petalCount: 8,
+        bg: ['#3a1a3c', '#7a2f69', '#150816'],
+        stroke: '#eaa6dc',
+        centerIcon: `
+<path d="M18,-58 A58,58 0 1 0 18,58 A44,44 0 0 1 18,-58 Z" fill="#f7d0e4" opacity="0.92"/>
+<circle cx="-4" cy="-26" r="4" fill="#eaa6dc"/>
+<circle cx="-16" cy="6" r="3" fill="#eaa6dc"/>`,
+      },
+      {
+        // ch. 7 — focus, energy, mood: a radiant spark.
+        slug: 'aromatherapy-07-focus-energy-mood',
+        petalCount: 12,
+        bg: ['#3d1c38', '#86325f', '#170916'],
+        stroke: '#f4a8cc',
+        centerIcon: `
+<g stroke="#f4a8cc" stroke-width="5" stroke-linecap="round">
+  <path d="M0,-30 L0,-58 M0,30 L0,58 M-30,0 L-58,0 M30,0 L58,0 M-21,-21 L-42,-42 M21,-21 L42,-42 M-21,21 L-42,42 M21,21 L42,42"/>
+</g>
+<circle cx="0" cy="0" r="18" fill="#f7d0e4" opacity="0.95"/>`,
+      },
+      {
+        // ch. 8 — care and boundaries: a shield with a check mark.
+        slug: 'aromatherapy-08-care-and-boundaries',
+        petalCount: 10,
+        bg: ['#381836', '#722c60', '#150714'],
+        stroke: '#e6a0d4',
+        centerIcon: `
+<path d="M0,-72 C24,-58 48,-52 62,-52 C62,4 48,50 0,74 C-48,50 -62,4 -62,-52 C-48,-52 -24,-58 0,-72 Z" fill="#f7d0e4" opacity="0.92"/>
+<path d="M0,-72 C24,-58 48,-52 62,-52 C62,4 48,50 0,74 C-48,50 -62,4 -62,-52 C-48,-52 -24,-58 0,-72 Z" fill="none" stroke="#e089b0" stroke-width="4"/>
+<path d="M-22,-2 L-6,16 L26,-24" fill="none" stroke="#e089b0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`,
+      },
+      {
+        // ch. 9 — the honesty of the bottle: a magnifier over label lines.
+        slug: 'aromatherapy-09-honesty-of-the-bottle',
+        petalCount: 14,
+        bg: ['#341832', '#6a2c5a', '#130713'],
+        stroke: '#dc9ecc',
+        centerIcon: `
+<path d="M-26,-16 L10,-16 M-26,-2 L4,-2" stroke="#dc9ecc" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+<circle cx="-8" cy="-8" r="40" fill="none" stroke="#f7d0e4" stroke-width="8" opacity="0.92"/>
+<line x1="22" y1="22" x2="56" y2="56" stroke="#f7d0e4" stroke-width="10" stroke-linecap="round" opacity="0.92"/>`,
+      },
+      {
+        // ch. 10 — blending: three circles pouring into one bottle.
+        slug: 'aromatherapy-10-blending',
+        petalCount: 10,
+        bg: ['#3a1a3a', '#7c2f68', '#160816'],
+        stroke: '#eea6da',
+        centerIcon: `
+<circle cx="-52" cy="-56" r="20" fill="#e089b0" opacity="0.95"/>
+<circle cx="0" cy="-70" r="24" fill="#f7d0e4" opacity="0.95"/>
+<circle cx="52" cy="-56" r="20" fill="#dda0d8" opacity="0.95"/>
+<path d="M-46,-36 C-36,-20 -18,-10 -8,-6 M0,-46 L0,-8 M46,-36 C36,-20 18,-10 8,-6" fill="none" stroke="#eea6da" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+<path d="M-40,2 L-40,16 Q-40,22 -34,24 L-34,64 Q-34,76 -22,76 L22,76 Q34,76 34,64 L34,24 Q40,22 40,16 L40,2 Z" fill="#f7d0e4" opacity="0.92"/>`,
+      },
+      {
+        // ch. 11 — your nose, your arbiter: a winding path rising to a drop.
+        slug: 'aromatherapy-11-your-nose-your-arbiter',
+        petalCount: 14,
+        bg: ['#3e1c34', '#88345c', '#180915'],
+        stroke: '#f4aacf',
+        centerIcon: `
+<path d="M-70,78 C-20,66 40,58 70,42 C30,44 -10,48 -34,40 C6,34 44,24 60,10 C28,14 -4,18 -22,10 C6,2 28,-8 36,-22" fill="none" stroke="#f7d0e4" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+<path d="M36,-30 C44,-16 50,-8 50,0 A14,14 0 1 1 22,0 C22,-8 28,-16 36,-30 Z" fill="#f4aacf" opacity="0.95"/>`,
+      },
     ],
   },
 
@@ -526,6 +665,20 @@ const SETS = {
 <circle cx="0" cy="-40" r="13" fill="#f2dcc0"/>
 <circle cx="0" cy="40" r="13" fill="#b04e1e"/>
 <circle cx="0" cy="0" r="80" fill="none" stroke="#f0b36a" stroke-width="3" opacity="0.85"/>`,
+      },
+      {
+        // «Ароматерапия» — a scent drop radiating concentric rings, distinct
+        // from the course's own drop/bottle/nose chapter icons.
+        slug: 'aromatherapy',
+        petalCount: 12,
+        bg: ['#3a1a2e', '#7a2f4f', '#160812'],
+        stroke: '#f0a8c8',
+        centerIcon: `
+<circle cx="0" cy="6" r="30" fill="none" stroke="#f7d0e4" stroke-width="3" opacity="0.5"/>
+<circle cx="0" cy="6" r="54" fill="none" stroke="#f7d0e4" stroke-width="3" opacity="0.34"/>
+<circle cx="0" cy="6" r="78" fill="none" stroke="#f7d0e4" stroke-width="3" opacity="0.2"/>
+<path d="M0,-58 C22,-20 38,2 38,24 A38,38 0 1 1 -38,24 C-38,2 -22,-20 0,-58 Z" fill="#f7d0e4" opacity="0.95"/>
+<path d="M-12,16 A18,18 0 0 0 6,34" fill="none" stroke="#e089b0" stroke-width="4" stroke-linecap="round" opacity="0.8"/>`,
       },
     ],
   },

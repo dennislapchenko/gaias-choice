@@ -123,6 +123,10 @@ epics:
     title: Trophology
     image: /images/epic-trophology.svg
     blurb: A 5-chapter guide to food combining — build a fridge chart and a digestion journal, then test which eating habits actually leave you lighter, judged by your own body, never by dogma.
+  - tag: aromatherapy
+    title: "Aromatherapy: Living Scent"
+    image: /images/epic-aromatherapy.svg
+    blurb: An 11-chapter guide — build a scent shelf and a smell journal, learn ten essential oils by nose and by dose, and weigh every claim against what you actually feel. The bright line held throughout — synthetic fragrance out, true oils in. No medical claims.
   # English-only course (owner decision 2026-07-05) — deliberately absent from
   # ru/site.yaml, so the RU locale never shows this tab.
   - tag: inside-websites

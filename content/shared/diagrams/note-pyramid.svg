@@ -1,0 +1,11 @@
+<svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<polygon points="320,28 397,88 243,88" fill="var(--peach)" stroke="var(--ink)" stroke-width="1.5"/>
+<polygon points="243,88 397,88 478,152 162,152" fill="var(--lilac)" stroke="var(--ink)" stroke-width="1.5"/>
+<polygon points="162,152 478,152 560,216 80,216" fill="var(--mint)" stroke="var(--ink)" stroke-width="1.5"/>
+<text x="320" y="62" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{top_title}}</text>
+<text x="320" y="80" text-anchor="middle" font-size="11" fill="var(--muted)">{{top_ex}}</text>
+<text x="320" y="114" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{heart_title}}</text>
+<text x="320" y="136" text-anchor="middle" font-size="12" fill="var(--muted)">{{heart_ex}}</text>
+<text x="320" y="180" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{base_title}}</text>
+<text x="320" y="202" text-anchor="middle" font-size="12" fill="var(--muted)">{{base_ex}}</text>
+</svg>

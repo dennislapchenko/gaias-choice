@@ -19,11 +19,13 @@ This file is the *structure and method*; read it together with:
 ## 1. What an epic course is (the content model)
 
 - **11 chapters, one chapter = one page** = one guide file per locale:
-  `content/locales/en/guides/<course-slug>/<course-slug>-NN-<chapter-slug>.md`
+  `content/locales/en/compass/<epic>/NN-<chapter-slug>.md`
   + the RU counterpart with the **same filename** (slug = URL; identical
   slugs keep the locale fallback working). `NN` = zero-padded chapter number
-  for tidy listings. The `<course-slug>` subfolder is filesystem tidiness
-  only — it plays no role in routing or epic membership (that's the tag).
+  for tidy listings — the filename carries **no** epic prefix. The `<epic>`
+  subfolder **is** part of the route — URL = `/compass/<epic>/NN-<chapter-slug>`
+  — while epic *membership* (which course groups the chapter on the landing
+  page) is set by the first `tags:` entry, not the folder.
 - Frontmatter per chapter: `title`, `excerpt`, `date` (real authoring date),
   **`chapter: N`** (1–11 — drives display order within the epic; sorting +
   "Глава N" labels landed 2026-07-05), `tags:` with the
@@ -112,6 +114,11 @@ tells them where they are; the artifact makes them want the next chapter.
   her register (see persona-context — she names things vividly). A callback to
   a named concept costs one word; a callback to an unnamed one costs a
   paragraph of re-explanation.
+- **Cross-course links (standing practice):** the Compass courses share one
+  epistemology — direct experience over received opinion — taught through
+  different domains. Link between courses wherever it genuinely *deepens*
+  understanding (e.g. aromatherapy's volatile fraction vs herbalism's whole
+  plant); earned links only, never SEO-style interlinking.
 
 ### 3d. The Bridge block — closes every chapter
 
@@ -207,6 +214,12 @@ not just the sentences:
 Standing rules: truth-first is senior to ideology; no medical claims; spiritual
 claims are framed as **invitations to direct experience** («проверьте сами»),
 never as facts to believe — that's Ralston applied to Buhner and Swan.
+**Symmetric skepticism:** "science says" / "peer-reviewed" earns the same
+scrutiny as tradition and marketing — often bought or dogmatic Scientism
+(Buhner's *Plant Intelligence* closing chapters; Chek's respect-yet-verify).
+Never present "studies show" as a trump card; direct verified experience
+arbitrates — Ralston applied to institutional science, the mirror of applying
+it to Buhner and Swan.
 Meat-free framing follows the precedence rule in ideology-context §How-to-use.
 Before saving ideology integrated upon course plan - ask the owner for feedback. Just in case. That during-creation feedback overrides everything.
 
