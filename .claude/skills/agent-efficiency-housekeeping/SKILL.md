@@ -79,7 +79,7 @@ only reachable in a plain CLI session (no app MCP layer). Set the target against
 the bucket you can actually move. Estimate tokens as bytes ÷ ~3.8 for prose (path-
 /JSON-dense text skews higher); verify with `wc -c` byte targets per file and
 `/context` before/after in a fresh session. Full worked example:
-`context/token-budget/action-plan.md`.
+`context/archive/token-budget/action-plan.md`.
 
 ## Defect taxonomy (hunt in priority order)
 

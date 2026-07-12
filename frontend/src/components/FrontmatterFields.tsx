@@ -1,4 +1,4 @@
-// Structured frontmatter editing (Path C — see context/editor-fields/). Renders
+// Structured frontmatter editing (Path C — see context/archive/editor-fields/). Renders
 // one control per key ACTUALLY present in the file's `---` block (dynamic: a new
 // key shows up as a new input, no code change) plus any `extraKeys` prop keys
 // (known-optional fields surfaced blank so the owner can ADD them — e.g. a

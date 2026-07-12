@@ -1,5 +1,5 @@
 // Structured frontmatter editing for the portal editor (Path C, see
-// context/editor-fields/). Parse a content file's `---` block to a `yaml`
+// context/archive/editor-fields/). Parse a content file's `---` block to a `yaml`
 // Document, edit one field, re-emit ONLY that block (comments + commented-out
 // optional keys survive, since the Document API round-trips them) and splice the
 // untouched body back byte-for-byte. Confirmed there are no block-scalar

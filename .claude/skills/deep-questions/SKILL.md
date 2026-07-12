@@ -84,4 +84,4 @@ Lida `#LIDA`) per non-negotiable 2.
   session was heavy or purely mechanical. If they answer, record it verbatim.
 - **Future (backlog, not built):** auto-deliver one question every other day to
   Denis's and Lida's Telegram accounts. Tracked in
-  `context/backend/action-plan.md` → "Future backend work (backlog)".
+  `context/archive/backend/action-plan.md` → "Future backend work (backlog)".
