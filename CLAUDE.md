@@ -106,14 +106,19 @@ frontend/                # the Vite SPA (all app code + its build config)
 backend/                 # optional Go/gin API sidecar; openapi.yaml is THE
                          # endpoint contract (see "Backend")
 compose.dev.yaml         # `task dev` stack: web (Vite HMR) + api (air reload)
-deploy/                  # live VM stack (api + Caddy) + infra-log.md record
-.doco-cd.yml             # doco-cd GitOps stack config for the VM (live)
+deploy/                  # live VM deploy — two layers + infra-log.md record:
+  app/                   #   Layer 1 (GitOps): api + Caddy, reconciled from git
+  controller/            #   Layer 0: the doco-cd daemon itself (compose, poll,
+                         #   secrets.env.example, sync.sh, bootstrap-vm.sh) —
+                         #   hand-synced via `task doco:sync`
+.doco-cd.yml             # doco-cd GitOps stack config (working_dir: deploy/app)
 Taskfile.yml             # all common commands
 ```
 
 `content/` and `backend/` stay at the repo root — `content/` is shared (the FE
 globs it at build time; the BE live-edit seam writes it), and each app dir owns
-its own build. Room for a future `infra/` (Terraform) / `ansible/` alongside.
+its own build. Room for a future `infra/` (OpenTofu — the Hetzner edge firewall
++ SSH hardening, currently applied imperatively, land there) alongside.
 
 **Path convention:** bare `src/…`, `public/…`, `scripts/…`, `vite.config.ts`,
 `package.json` in these docs are relative to `frontend/` (e.g. `src/lib/api.ts`

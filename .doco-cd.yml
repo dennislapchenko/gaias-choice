@@ -11,7 +11,7 @@
 #     BOOTSTRAP_ADMIN_*, POSTMARK/TELEGRAM/ANTHROPIC tokens, …). Phase 3
 #     (optional) swaps that for a SOPS+age-encrypted env file committed here.
 name: gaias-choice
-working_dir: deploy
+working_dir: deploy/app
 environment:
   API_DOMAIN: gaias-choice.gardenofatlantis.com
   CORS_ORIGINS: https://dennislapchenko.github.io

@@ -390,11 +390,13 @@ endpoints from the log entirely, DEBUG or not. Separate from the FE
 
 ## Deploy (D8, live — doco-cd GitOps)
 
-The backend runs on the Hetzner VM as the `deploy/` compose stack (`api` + a
+The backend runs on the Hetzner VM as the `deploy/app/` compose stack (`api` + a
 `caddy` service terminating TLS for `gaias-choice.gardenofatlantis.com`),
 reconciled by **doco-cd** (a GitOps daemon that polls this repo `main` every 30s
-and runs `docker compose up` from `.doco-cd.yml`, `working_dir: deploy`). **A
-push to `main` is the deploy.** A `backend/**` push fires
+and runs `docker compose up` from `.doco-cd.yml`, `working_dir: deploy/app`). The
+doco-cd daemon's own config lives in `deploy/controller/` (synced with
+`task doco:sync`, not GitOps — see `deploy/README.md`). **A push to `main` is the
+deploy.** A `backend/**` push fires
 `.github/workflows/build-backend.yml`, which builds + pushes the image to GHCR
 **and rolls the deploy itself**: its final step bumps `BE_TAG` in `.doco-cd.yml`
 (a `[skip ci]` commit) and pushes, so doco-cd deploys the new image within ~30s.

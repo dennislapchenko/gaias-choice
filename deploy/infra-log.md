@@ -189,10 +189,12 @@
   `/opt/doco-cd/compose.yaml` (was `:latest`). Bump the tag+digest together to
   upgrade the daemon.
 
-#### doco-cd server config (the VM-only files that set it up)
+#### doco-cd server config (`/opt/doco-cd/`)
 
-Three files under `/opt/doco-cd/` (server bootstrap — kept off the repo). To
-rebuild the daemon: recreate these, then `docker compose up -d`.
+Three files under `/opt/doco-cd/`. Two are **mirrored in the repo**
+(`deploy/controller/`) and pushed with `task doco:sync` (step 10); `secrets.env`
+is VM-only. The verbatim copies below are kept for the record — the repo files
+are the source of truth.
 
 `compose.yaml` — the daemon + the Apprise notification sidecar (docker-socket,
 polling, `PASS_ENV`, pinned images):
@@ -281,10 +283,12 @@ doco-cd polls every 30s; an unchanged ref is a ~400ms no-op. When the ref
 advances it enters a pre-deploy check (`shouldSkipDeployment`) and **only
 redeploys when something the stack actually references changed**:
 
-- **`deploy/compose.yaml`** (the compose file) → redeploy.
+- **`deploy/app/compose.yaml`** (the compose file, `working_dir: deploy/app`) →
+  redeploy.
 - **`.doco-cd.yml`** (deploy config; it hashes the whole thing — `BE_TAG`,
-  `environment:`, …) → redeploy. This is what the backend auto-roll trips.
-- **A bind-mounted / referenced file changes**, e.g. `deploy/Caddyfile` →
+  `environment:`, `working_dir`, …) → redeploy. This is what the backend
+  auto-roll trips.
+- **A bind-mounted / referenced file changes**, e.g. `deploy/app/Caddyfile` →
   doco-cd **force-recreates just that service** (`forced_services:[caddy],
   mode:force`). So Caddyfile edits DO auto-apply — no `--watch`, no manual
   reload. (Verified 2026-07: pushing a Caddyfile header force-recreated caddy.)
@@ -293,9 +297,33 @@ redeploys when something the stack actually references changed**:
 - **Running services drifted** from the rendered config → recreate the drifted.
 
 Commits that touch **none** of the above — docs, `deploy/README.md`,
-`deploy/infra-log.md`, anything outside the stack, every `content/**` /
-`frontend/**` push — are **skipped** (checked out into doco-cd's clone but no
-`docker compose up`). Empirically: over one stretch, 50 polls → 1 deploy.
+`deploy/infra-log.md`, **`deploy/controller/**`** (Layer 0, applied via
+`task doco:sync`, not by doco-cd), anything outside the stack, every
+`content/**` / `frontend/**` push — are **skipped** (checked out into doco-cd's
+clone but no `docker compose up`). Empirically: over one stretch, 50 polls → 1
+deploy.
+
+### 10. Deploy layout: `app/` + `controller/` split; controller now repo-managed
+
+- **Split `deploy/` into two layers by lifecycle.** `deploy/app/` holds the
+  GitOps app stack (`compose.yaml` + `Caddyfile`, reconciled by doco-cd);
+  `deploy/controller/` holds the doco-cd daemon's own config (previously VM-only
+  bootstrap). `.doco-cd.yml` `working_dir` moved `deploy` → `deploy/app` in the
+  same commit as the file move — doco-cd checked out the new tree and reconciled
+  from `deploy/app` in one poll (verified: `/api/healthz` 200, first real ✅
+  Telegram deploy ping fired end-to-end).
+- **Controller config is now in the repo** (`deploy/controller/{compose.yaml,
+  poll.yaml}` + `secrets.env.example`), the repo being the source of truth.
+  `task doco:sync` (→ `sync.sh`) scps the two non-secret files to `/opt/doco-cd/`
+  and reloads the daemon; `secrets.env` stays VM-only (git-ignored). doco-cd
+  never deploys `deploy/controller/**` itself (it's Layer 0, not in the watched
+  stack).
+- **`bootstrap-vm.sh`** added — idempotent from-scratch provisioner (Docker +
+  `/srv` dirs + fetch controller config from the public repo + seed the secrets
+  template + `up`), meant to double as OpenTofu server userdata.
+- **Deferred to OpenTofu:** the Hetzner edge firewall + SSH hardening stay
+  imperative for now (see "Security posture"); they'll be codified as
+  `hcloud_firewall`/config in an `infra/` OpenTofu module, not shell.
 
 ## Redeploy / operate (quick reference)
 
@@ -307,15 +335,20 @@ Commits that touch **none** of the above — docs, `deploy/README.md`,
 - **Manual roll / rollback:** `task be:deploy BE_TAG=sha-…` (→ `deploy/release.sh`)
   writes that tag to `.doco-cd.yml` and pushes — for pinning an older image or
   shipping without a fresh `backend/**` build.
+- **Controller (Layer 0) change:** edit `deploy/controller/{compose,poll}.yaml`
+  in the repo, then `task doco:sync` (scp non-secret files → `/opt/doco-cd/` +
+  `docker compose up -d`). doco-cd does NOT self-deploy its own config. Secrets
+  (`secrets.env`) stay VM-only and are never synced.
+- **From-scratch VM:** `deploy/controller/bootstrap-vm.sh` (Docker + `/srv` dirs
+  + fetch controller config + seed secrets template + up). Doubles as OpenTofu
+  userdata.
 - **Manual fallback** (doco-cd itself down): SSH in and, from `/opt/doco-cd`,
-  `docker compose up -d` restarts the daemon; it re-clones and reconciles. To
-  hand-run the app stack without doco-cd you'd need the repo on the VM (git is
-  not installed) — prefer fixing doco-cd. Secrets live in
-  `/opt/doco-cd/secrets.env` (`chmod 600`, never committed); the non-secrets
-  (`API_DOMAIN`/`CORS_ORIGINS`/`BE_TAG`) live in `.doco-cd.yml` in the repo.
-- **Restart:** same `up -d`; **logs:** `docker compose … logs -f api`.
-- **DB backup (host cron, never `cp` a live WAL db):**
-  `docker exec deploy-api-1 …` isn't needed — the db is a host file:
+  `docker compose up -d` restarts the daemon; it re-clones and reconciles.
+  Secrets live in `/opt/doco-cd/secrets.env` (`chmod 600`, never committed); the
+  non-secrets (`API_DOMAIN`/`CORS_ORIGINS`/`BE_TAG`) live in `.doco-cd.yml`.
+- **Logs:** `task be:logs` (app api; `SVC=caddy` for the edge) or
+  `docker logs -f doco-cd-doco-cd-1` (the daemon).
+- **DB backup (host cron, never `cp` a live WAL db):** the db is a host file:
   `sqlite3 /srv/gaias-choice/data/gaia.db ".backup '/srv/gaias-choice/backups/gaia-$(date +%F).db'"`.
 
 ## Security posture & hardening plan

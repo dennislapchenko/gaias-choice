@@ -1,0 +1,6 @@
+# doco-cd poll config. Reconciles the live gaias-choice stack (.doco-cd.yml) —
+# no `target:`, so the default deploy config is used. Push to main → within one
+# interval the VM runs `docker compose up` for deploy/app/.
+- url: https://github.com/dennislapchenko/gaias-choice.git
+  reference: refs/heads/main
+  interval: 30s
