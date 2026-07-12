@@ -18,9 +18,15 @@ vars:
   BE_PORT: '8787'
   BE_IMAGE: gaias-choice-be
   GO_VOLUME: gaias-choice-go-cache
-  # VM ssh target for ops-only tasks (be:logs). Deploys don't use this — those
-  # go through git/doco-cd (be:deploy). Port moved off 22 (infra-log hardening).
-  VM_SSH: ssh -p 13337 -i ~/.ssh/gaia root@gaias-choice.gardenofatlantis.com
+  # VM connection — the ONE source of truth for host/port/key. The controller
+  # scripts (sync.sh, push-secrets.sh) read these from env; the tasks below pass
+  # them in, so rotating the port/host/key is a one-place edit here. Port moved
+  # off 22 (infra-log hardening). Deploys don't use SSH — they go through
+  # git/doco-cd (be:deploy); this is ops-only (be:logs, doco:*).
+  VM_HOST: root@gaias-choice.gardenofatlantis.com
+  VM_PORT: '13337'
+  VM_KEY: ~/.ssh/gaia
+  VM_SSH: ssh -p {{.VM_PORT}} -i {{.VM_KEY}} {{.VM_HOST}}
   # Reusable "npm in a container" prefix: repo mounted, workdir frontend/, deps
   # in a volume. content/ stays at repo root (/app/content), reachable from the app.
   NODE_RUN: >-
@@ -130,7 +136,7 @@ tasks:
       doco:secrets for those. The app stack (deploy/app/) needs no sync — doco-cd
       pulls it from git on push. Override VM_HOST/VM_PORT/VM_KEY via env.
     cmds:
-      - bash deploy/controller/sync.sh
+      - VM_HOST={{.VM_HOST}} VM_PORT={{.VM_PORT}} VM_KEY={{.VM_KEY}} bash deploy/controller/sync.sh
 
   doco:secrets:
     desc: >-
@@ -141,7 +147,7 @@ tasks:
       rotates or the notify target (TELEGRAM_CHAT_ID) changes. Override
       VM_HOST/VM_PORT/VM_KEY/ENV_FILE via env.
     cmds:
-      - bash deploy/controller/push-secrets.sh
+      - VM_HOST={{.VM_HOST}} VM_PORT={{.VM_PORT}} VM_KEY={{.VM_KEY}} bash deploy/controller/push-secrets.sh
 
   be:logs:
     desc: >-
