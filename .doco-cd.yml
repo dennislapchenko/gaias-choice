@@ -16,3 +16,11 @@ environment:
   API_DOMAIN: gaias-choice.gardenofatlantis.com
   CORS_ORIGINS: https://dennislapchenko.github.io
   BE_TAG: sha-4458a8dd8281688e16083c967b6dcd50b54d3ce1
+# Runtime self-healing (doco-cd watches Docker events on this stack's containers):
+#   unhealthy → in-place container restart (api's /api/healthz DB probe drives it)
+#   die       → full `compose up` reconcile + a [R] Telegram alert on any
+#               unexpected exit. Events during our own deploys are suppressed
+#               (isStackDeploymentInProgress), so a BE_TAG bump won't self-fire.
+# Both send a [R] notification. Exit code isn't in the payload — check `task be:logs`.
+reconciliation:
+  events: [unhealthy, die]

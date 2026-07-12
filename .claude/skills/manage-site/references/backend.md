@@ -44,8 +44,11 @@ static-site build work.
   gates both — `ANTHROPIC_MODEL` overrides the default; unset ⇒ nil ⇒
   `/api/content/{template,translate}` answer 503),
   `internal/httpapi` (gin router, hand-written CORS
-  allowlist, middleware, handlers). Endpoints: `/api/healthz`, `/api/hello`
-  (hits counter proving a DB round-trip), `/api/auth/telegram` +
+  allowlist, middleware, handlers). Endpoints: `/api/healthz` (readiness probe
+  — DB `Ping`, 200 only when the DB round-trips, else 500; drives both the FE
+  `backendUp` gate and the container healthcheck), `/api/hello`
+  (hits counter proving a DB round-trip — the mutating one, feeds BackendBadge),
+  `/api/auth/telegram` +
   `/api/auth/telegram/poll` (the primary Telegram login), `/api/auth/magic` +
   `/api/auth/magic/verify` (the passwordless email login),
   `/api/auth/{login,register,logout,me}`,

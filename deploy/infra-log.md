@@ -325,6 +325,30 @@ deploy.
   imperative for now (see "Security posture"); they'll be codified as
   `hcloud_firewall`/config in an `infra/` OpenTofu module, not shell.
 
+### 11. Runtime self-healing: api healthcheck + doco-cd reconciliation
+
+- **`/api/healthz` is now a readiness probe** — it `Ping`s the DB (was a bare
+  `{status:ok}` liveness). 200 only when the DB round-trips, else 500. Non-mutating
+  (unlike `/api/hello`, which bumps a counter), so it's safe to hit every interval.
+  Also tightens the FE `backendUp` gate (`session.tsx` probes it).
+- **Container healthcheck** on the api service (`deploy/app/compose.yaml`):
+  `test: ["CMD", "/server", "healthcheck"]`. The image is distroless (no
+  shell/curl), so the Go binary probes itself — `main.go` intercepts a
+  `healthcheck` arg, GETs `/api/healthz`, exits 0/1 (same pattern as doco-cd's
+  own `/doco-cd healthcheck`).
+- **`reconciliation: { events: [unhealthy, die] }`** in `.doco-cd.yml`. doco-cd
+  watches Docker events on the stack: **unhealthy** → in-place container restart;
+  **die** → full `compose up` reconcile. Both fire a `[R]` Telegram alert. Events
+  during doco-cd's own deploys are suppressed (`isStackDeploymentInProgress`), so a
+  `BE_TAG` bump never self-triggers. Crash-loop caveat: `die` isn't rate-limited
+  (only `unhealthy` is, via `restart_limit`/`restart_window`), so a genuinely broken
+  api can redeploy-loop until fixed — acceptable (noisy, not damaging). Exit code is
+  **not** in the notification payload; `task be:logs` for the why.
+- **Shipped in two phases (ordering matters):** the healthcheck config must not go
+  live before the image that implements `/server healthcheck`. Phase 1 = backend
+  push (CI builds the new image + auto-bumps `BE_TAG`); phase 2 = the compose
+  healthcheck + reconciliation, applied against the now-current image.
+
 ## Redeploy / operate (quick reference)
 
 - **New backend image (fully automatic):** push to `main` touching `backend/**`

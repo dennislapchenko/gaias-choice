@@ -42,6 +42,15 @@ services:
       ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-}
     volumes:
       - /srv/gaias-choice/data:/data # host bind mount, per D9 (boring backups)
+    # Readiness gate for doco-cd reconciliation (.doco-cd.yml `reconciliation`).
+    # The binary probes /api/healthz (DB round-trip) — distroless has no curl.
+    # unhealthy ⇒ doco-cd restarts the container; start_period covers boot+migrate.
+    healthcheck:
+      test: ["CMD", "/server", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
 
   caddy:
     image: caddy:2-alpine
