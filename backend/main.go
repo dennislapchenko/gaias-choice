@@ -8,6 +8,9 @@ import (
 	"context"
 	"errors"
 	"log"
+	"net/http"
+	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -22,6 +25,13 @@ import (
 )
 
 func main() {
+	// `/server healthcheck` — the container HEALTHCHECK probe. Distroless has no
+	// shell/curl, so the binary probes itself: GET /api/healthz, exit 0 on 200
+	// else 1. Docker's unhealthy status then drives doco-cd reconciliation.
+	if len(os.Args) > 1 && os.Args[1] == "healthcheck" {
+		os.Exit(healthcheck())
+	}
+
 	cfg := config.Load()
 
 	if cfg.Debug {
@@ -119,6 +129,26 @@ func main() {
 	if err := r.Run(":" + cfg.Port); err != nil {
 		log.Fatalf("run: %v", err)
 	}
+}
+
+// healthcheck probes the running server's readiness endpoint and returns a
+// process exit code (0 healthy, 1 not) for Docker's HEALTHCHECK. Same PORT
+// default as config.Load, read directly to keep the probe dependency-free.
+func healthcheck() int {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8787"
+	}
+	c := http.Client{Timeout: 3 * time.Second}
+	resp, err := c.Get("http://127.0.0.1:" + port + "/api/healthz")
+	if err != nil {
+		return 1
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return 1
+	}
+	return 0
 }
 
 // contentStoreFor picks the live-edit storage backend and logs the decision —

@@ -122,7 +122,15 @@ var _ StrictServerInterface = (*server)(nil)
 
 // --- system --------------------------------------------------------------------
 
-func (s *server) GetHealth(context.Context, GetHealthRequestObject) (GetHealthResponseObject, error) {
+// GetHealth is the readiness probe the container healthcheck hits: 200 only
+// when the DB round-trips, so a wedged-but-alive process (unreachable SQLite,
+// stuck WAL) reports unhealthy and doco-cd reconciliation restarts it. A
+// returned error maps to 500 (non-200) via the strict handler — that's the
+// unhealthy signal; no dedicated 503 in the spec needed.
+func (s *server) GetHealth(ctx context.Context, _ GetHealthRequestObject) (GetHealthResponseObject, error) {
+	if err := s.store.Ping(ctx); err != nil {
+		return nil, fmt.Errorf("db unreachable: %w", err)
+	}
 	return GetHealth200JSONResponse{Status: "ok"}, nil
 }
 

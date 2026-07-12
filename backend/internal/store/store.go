@@ -4,6 +4,7 @@
 package store
 
 import (
+	"context"
 	"database/sql"
 	"embed"
 	"errors"
@@ -59,6 +60,11 @@ func Open(dataDir string) (*Store, error) {
 }
 
 func (s *Store) Close() error { return s.db.Close() }
+
+// Ping verifies the DB connection is alive — a readiness probe with no writes
+// (feeds /api/healthz, which the container healthcheck hits). Unlike Bump
+// (/api/hello), it must not mutate: it runs every healthcheck interval.
+func (s *Store) Ping(ctx context.Context) error { return s.db.PingContext(ctx) }
 
 // migrate applies every migrations/*.sql not yet recorded, in filename order,
 // one transaction each. Hand-rolled — no framework.
