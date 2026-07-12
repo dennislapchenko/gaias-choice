@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { getCompass, getSite } from '../lib/content'
 import { usePageHead } from '../lib/head'
 import { useI18n } from '../lib/i18n'
@@ -15,7 +16,17 @@ export default function Compass() {
   // site.yaml; a chapter belongs to the epic whose `tag` matches its FIRST tag.
   // Only show epics that actually have chapters. The first one is the default.
   const epics = (site.epics ?? []).filter((e) => entries.some((g) => g.tags?.[0] === e.tag))
-  const [activeTag, setActiveTag] = useState<string | undefined>(epics[0]?.tag)
+
+  // Selected course persists in the URL (?course=<tag>), mirroring the Reviews/
+  // Journal filter idiom. Prerendered HTML is the default (first) tab, so the
+  // param applies only after mount — a direct ?course= link hydrates cleanly.
+  const [params, setParams] = useSearchParams()
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  const requested = mounted ? params.get('course') : null
+  const activeTag = epics.some((e) => e.tag === requested) ? requested! : epics[0]?.tag
+  const setActiveTag = (tag: string) =>
+    setParams(tag === epics[0]?.tag ? {} : { course: tag }, { replace: true })
 
   // With epics configured, the window shows the active epic's chapters; without
   // any (older config), it falls back to showing every chapter.
