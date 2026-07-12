@@ -203,7 +203,12 @@ services:
     restart: unless-stopped
     env_file: [secrets.env]          # forwarded into deploys via PASS_ENV
     environment:
-      LOG_LEVEL: info
+      LOG_LEVEL: warn   # `info` logs two lines every 30s poll (polling + job
+                        # completed) — pure noise. doco-cd has no per-event log
+                        # toggle, only LOG_LEVEL, so `warn` is the lever: routine
+                        # polls go silent, deploy *failures* (warn/error) still
+                        # show; you lose the "deployed" info line (deploys are
+                        # confirmed externally anyway). Bump back to info to debug.
       TZ: Europe/Helsinki
       POLL_CONFIG_FILE: /etc/doco-cd/poll.yaml
       PASS_ENV: "true"
