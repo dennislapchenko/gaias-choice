@@ -194,7 +194,8 @@
 Three files under `/opt/doco-cd/` (server bootstrap — kept off the repo). To
 rebuild the daemon: recreate these, then `docker compose up -d`.
 
-`compose.yaml` — the daemon (docker-socket, polling, `PASS_ENV`, pinned image):
+`compose.yaml` — the daemon + the Apprise notification sidecar (docker-socket,
+polling, `PASS_ENV`, pinned images):
 
 ```yaml
 services:
@@ -212,6 +213,12 @@ services:
       TZ: Europe/Helsinki
       POLL_CONFIG_FILE: /etc/doco-cd/poll.yaml
       PASS_ENV: "true"
+      APPRISE_API_URL: http://apprise:8000/notify  # notifications → apprise
+      APPRISE_NOTIFY_LEVEL: success                # min level; no-op polls
+                                                   # aren't deploys, so this is
+                                                   # ✅/❌ deploys only, no spam
+    depends_on: [apprise]            # service_started (not _healthy): a broken
+                                     # apprise must never block polling
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./poll.yaml:/etc/doco-cd/poll.yaml:ro
@@ -222,9 +229,33 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
+  # doco-cd's notifier speaks only the Apprise wire format (not a raw templatable
+  # webhook), so Telegram/etc. deploy pings need this sidecar. Stateless,
+  # internal-only (no published port; reached at apprise:8000), pinned by digest.
+  apprise:
+    image: caronc/apprise@sha256:91321755496e8472bdb674e4b14eb64d1f3b15510ef94971309c9f76ef3171e7
+    restart: unless-stopped
+    environment: { TZ: Europe/Helsinki, APPRISE_WORKER_COUNT: 1 }
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
 volumes:
   data:
 ```
+
+**Notifications (Telegram, via the Apprise sidecar).** doco-cd POSTs an
+Apprise-format `{urls,title,body,type}` to `apprise:8000`, which does the actual
+Telegram `sendMessage`. Fires on **deploy completed / failed** + reconciliation
+warnings — never per-poll (a skipped poll isn't a deployment). The target lives
+in `secrets.env` as `APPRISE_NOTIFY_URLS=tgram://<TELEGRAM_BOT_TOKEN>/<chat_id>/`
+— it **reuses the BE's login-bot token** (safe: Apprise only calls `sendMessage`,
+independent of the BE's `getUpdates` login poll). Always an **explicit** chat_id,
+never Apprise's chat-id-less form (that auto-broadcasts to *every* user who ever
+DM'd the login bot). Current target is a personal chat; swap the chat_id for a
+channel id (`-100…`) + add the bot as a channel admin to move it later.
 
 `poll.yaml` — what to watch (no `target:` ⇒ the default `.doco-cd.yml`):
 
@@ -238,8 +269,11 @@ volumes:
 `GITHUB_TOKEN`, `BOOTSTRAP_ADMIN_EMAIL`, `BOOTSTRAP_ADMIN_PASSWORD`,
 `POSTMARK_TOKEN`, `POSTMARK_STREAM`, `MAIL_FROM`, `PUBLIC_SITE_URL`,
 `TELEGRAM_BOT_TOKEN`, `ANTHROPIC_API_KEY`, `ANTHROPIC_MODEL`, `GIN_MODE`,
-`DEBUG`, `SERVER_IP`. (Non-secrets `API_DOMAIN`/`CORS_ORIGINS`/`BE_TAG` live in
-`.doco-cd.yml`, not here.) Mirror of the repo-root `.env` minus those three.
+`DEBUG`, `SERVER_IP`, plus `APPRISE_NOTIFY_URLS` (the tgram target — reuses
+`TELEGRAM_BOT_TOKEN` inline, so the token string appears twice; `env_file` has
+no interpolation, hence the small duplication). (Non-secrets
+`API_DOMAIN`/`CORS_ORIGINS`/`BE_TAG` live in `.doco-cd.yml`, not here.) Mirror of
+the repo-root `.env` minus those three (plus the doco-cd-only `APPRISE_NOTIFY_URLS`).
 
 #### Reconcile triggers (what actually causes a redeploy) — verified
 
