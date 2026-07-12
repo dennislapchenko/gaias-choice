@@ -2,5 +2,20 @@
 # subdomain the owner points at the VM — independent of the site's future
 # custom domain (the SEO plan stays decoupled).
 {$API_DOMAIN} {
-	reverse_proxy api:8787
+	# Edge-drop the constant bot scans (/.env, /.git, wp-*, *.php …) before they
+	# ever reach the api — `abort` closes the TCP connection with no response, so
+	# they cost nothing and stop cluttering the backend logs. This is NOT rate
+	# limiting or IP banning: Caddy has no native counter keyed on response
+	# status (that's the fail2ban pattern), and real rate limiting needs the
+	# caddy-ratelimit plugin, i.e. a custom image off the stock caddy:2-alpine —
+	# not worth it while these scans just 404 harmlessly. Add paths as new
+	# scanner patterns show up in the logs. (Path matching is case-insensitive.)
+	@scanners path /.env* /.git* /wp-* /wordpress* /vendor/* /.aws/* /.ssh/* /config* /phpinfo* *.php *.asp *.aspx
+	handle @scanners {
+		abort
+	}
+
+	handle {
+		reverse_proxy api:8787
+	}
 }

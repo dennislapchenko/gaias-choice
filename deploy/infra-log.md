@@ -288,6 +288,14 @@ Commits that touch **none** of the above — docs, `deploy/README.md`,
   `Host` get no matching site (and no cert on 443), so they don't proxy
   through. `api:8787` is **not** host-published — it lives only on the compose
   network. So the effective surface is 22 + 80/443, nothing else.
+- **Scanner paths edge-dropped:** the `Caddyfile` matches the usual bot-scan
+  paths (`/.env*`, `/.git*`, `/wp-*`, `*.php`, …) with an `@scanners` matcher
+  and `abort`s the connection — they never reach the api, so its logs stay
+  clean. This is **not** rate limiting/IP banning: Caddy has no native counter
+  keyed on response status (that's the fail2ban pattern), and real rate
+  limiting would need the `caddy-ratelimit` plugin → a custom image off the
+  stock `caddy:2-alpine`, not worth it while these scans just 404 harmlessly.
+  Extend the matcher as new patterns appear in the logs.
 
 **The gap:** nothing at the network edge. There's no Hetzner Cloud Firewall and
 no host firewall. Today that's fine (only Caddy publishes ports), but there's
