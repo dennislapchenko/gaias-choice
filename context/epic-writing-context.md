@@ -208,6 +208,7 @@ Standing rules: truth-first is senior to ideology; no medical claims; spiritual
 claims are framed as **invitations to direct experience** («проверьте сами»),
 never as facts to believe — that's Ralston applied to Buhner and Swan.
 Meat-free framing follows the precedence rule in ideology-context §How-to-use.
+Before saving ideology integrated upon course plan - ask the owner for feedback. Just in case. That during-creation feedback overrides everything.
 
 ## 7. Shipping checklist (per course)
 
@@ -256,3 +257,5 @@ Meat-free framing follows the precedence rule in ideology-context §How-to-use.
   the long chapter (it respects the reader) but the skeleton is deliberately
   built from resumable ~30-min blocks — treat Core / Worked example / Практика
   as natural session breaks.
+
+Before saving editorial notes upon course plan - ask the owner for feedback. Just in case. That during-creation feedback overrides everything.
