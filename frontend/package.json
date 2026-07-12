@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Gaia's Choice — honest reviews of natural, plastic-free gear for RV travel with a baby.",
+  "description": "Gaia's Choice — honest reviews of natural, plastic-free gear for family travel with a baby.",
   "scripts": {
     "dev": "vite",
     "build": "vite build && vite build --ssr src/entry-server.tsx --outDir dist-server && node scripts/prerender.mjs",

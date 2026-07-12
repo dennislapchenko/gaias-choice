@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getJournal, getJournalTemplate, getUpcomingJournal } from '../lib/content'
 import { usePageHead } from '../lib/head'
@@ -22,9 +22,13 @@ export default function Journal() {
     b.localeCompare(a),
   )
 
-  // The active year lives in the URL (`?year=`), mirroring Reviews' `?category=`.
+  // The active year lives in the URL (`?year=`), mirroring Reviews' `?category=`
+  // — including its mounted guard: prerendered HTML is always the unfiltered
+  // list, so the filter applies only after mount for a clean hydration.
   const [params, setParams] = useSearchParams()
-  const requested = params.get('year')
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  const requested = mounted ? params.get('year') : null
   const active = requested && years.includes(requested) ? requested : undefined // undefined = all
   const setActive = (y?: string) => setParams(y ? { year: y } : {}, { replace: true })
 
