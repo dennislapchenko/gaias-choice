@@ -65,6 +65,25 @@ The owner's chosen process:
 Small tasks (copy edits, single components, content entries) skip this —
 classify-and-do as usual.
 
+## Engineering audits ("is X awesome engineering?")
+
+The owner periodically asks for an audit of one area (the Taskfile, a
+directory, configs). The format that works — audit first, execute only what's
+approved:
+
+1. **Verify everything in the repo** — read the actual files, grep the actual
+   references; no findings from memory. Before flagging something as a bug,
+   check whether it's a *documented decision* (code comments, docs) — e.g.
+   upcoming review stubs deliberately live in `en/` only (`content.ts`
+   `upcomingFor`).
+2. **Report:** verdict up front → "what's already right" (verified, so the
+   owner knows it was checked, not skipped) → ranked fix-worthy findings →
+   "nits considered and skipped" with one-line reasons.
+3. **Wait for the owner to pick items.** They often take some themselves
+   (especially their own in-progress content — don't touch that uninvited).
+4. **Execute the picked items, verify proportionally, commit per
+   behavior.yaml, and fold any durable learnings into the docs.**
+
 ## Non-negotiables (violating any of these is the failure mode)
 
 1. **Truth-first content.** The site's only asset is trust. Never write a
