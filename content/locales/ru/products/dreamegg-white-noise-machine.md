@@ -5,14 +5,14 @@ state: upcoming
 category: Сон # фильтр на /reviews; сейчас есть: Сон | Кормление | Уход | Кухня | Путешествия
 scores: [5, 4, 4]
 price: "€00" # сколько реально заплатили; всегда в кавычках
-boughtAt: "" # по желанию — где брали (магазин/место); делит панель цены надвое
+boughtAt: "Амазон" # по желанию — где брали (магазин/место); делит панель цены надвое
 # affiliateUrl: "https://www.amazon.de/-/en/dp/B0B156917Z?ref_=ppx_hzsearch_conn_dt_b_fed_asin_title_1&th=1"  # ТОЛЬКО после вступления в программу — никаких заглушек
-excerpt: "<одна честная фраза, которую написал бы другу об этой вещи>"
+excerpt: ""
 date: 2026-07-06 # сегодня; задаёт порядок в списке
 tags: [белый шум, сон, малыш]
 gallery: [/images/review-beeswax-food-wraps.svg, /images/dreamegg-white-noise-machine-mrctcxwn.webp, /images/dreamegg-white-noise-machine-mrf4cgtd.jpg]
 ---
-
+![](/images/dreamegg-white-noise-machine-mrf4cgtd.jpg)
 <!--
   Пишется от руки, из настоящего опыта — без придуманных сроков и результатов,
   а каждое число Gaia Score заработай в тексте. Оставь все пять разделов,
