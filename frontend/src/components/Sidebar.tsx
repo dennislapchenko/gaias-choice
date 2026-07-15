@@ -115,8 +115,15 @@ function RespectedBody({ site, t }: BodyProps) {
 
   const card = (
     <>
-      <h3 className="respected-name">{active.name}</h3>
-      <p className="respected-bio">{active.bio}</p>
+      <div className="respected-head">
+        <div>
+          <h3 className="respected-name">{active.name}</h3>
+          <p className="respected-bio">{active.bio}</p>
+        </div>
+        {active.image && (
+          <img className="respected-photo" src={withBase(active.image)} alt={active.name} loading="lazy" />
+        )}
+      </div>
       <p className="respected-why">{active.why}</p>
     </>
   )

@@ -21,6 +21,7 @@ export interface RespectedPerson {
   bio: string // shortest who-they-are, 1–2 sentences
   why: string // the one deep reason they're respected here
   url?: string // their website/social page — the detail card links out to it
+  image?: string // portrait, /images/respected/<slug>.webp — uniform warm-duotone treatment
 }
 
 /**

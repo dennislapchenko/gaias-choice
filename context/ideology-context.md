@@ -173,6 +173,46 @@ and see if you lose anything but illusions."*
 **How it shows on the site:** the deep root of «меньше, но лучше» — things are
 tools, not identity; buying less is non-attachment, not austerity marketing.
 
+### Drunvalo Melchizedek — sacred geometry, the heart before the mind
+
+Author (*The Ancient Secret of the Flower of Life*, *Living in the Heart*),
+teacher of sacred geometry and the Merkaba meditation.
+
+**Core ideas we carry:**
+- **Creation has a geometry** — the Flower of Life as a lens for one pattern
+  repeating through nature, from cells to seed heads to spirals.
+- **The heart, not the mind, is the way in**: perception moved from thinking
+  into the "tiny space of the heart" changes what you see and what you do.
+
+**How it shows on the site:** the radial mandala art across guides and reviews
+is this thread made visible — geometric, nature-derived pattern instead of
+stock photos; wonder framed as pattern-in-nature.
+
+**Caution:** we carry the geometry-as-wonder and heart-first substance only —
+the cosmology/prophecy layer (Atlantis, ascension timelines) never enters site
+content.
+
+### Sadhguru — inner engineering, responsibility as the ability to respond
+
+Yogi and mystic (Jaggi Vasudev); founder of the Isha Foundation; author of
+*Inner Engineering*; behind large ecological initiatives (Save Soil).
+
+**Core ideas we carry:**
+- **Your inner state is your own making** — joy is engineered from within
+  (attention, breath, body), not extracted from circumstances.
+- **Responsibility = the ability to respond**, not blame or duty — widening
+  what you are willing to respond to is the root stance of conscious living.
+- **Ecology as a personal matter** — soil and food are the body extended, not
+  "an issue" out there.
+
+**How it shows on the site:** the framing that a family's calm on the road is
+made, not found — rhythm, breath, and attention come before gear; earth-care
+content (soil, waste, materials) framed as self-care at scale.
+
+**Caution:** a large commercial/organizational ecosystem surrounds him — we
+carry the teaching substance, never promote programs or products; food/health
+claims stay governed by the Health section.
+
 ## Children
 
 For everything touching children — gear, toys, play, education, parenting,

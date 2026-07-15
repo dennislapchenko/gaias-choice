@@ -60,38 +60,57 @@ respected:
     bio: Holistic-health pioneer, founder of the CHEK Institute.
     why: He weighs every choice on four scales at once — rest, food, movement, joy — and asks first what dream your daily habits serve.
     url: "https://chekinstitute.com"
+    image: /images/respected/paul-chek.webp
   - name: Dave Asprey
     bio: Founder of biohacking and Bulletproof.
     why: Remove the poison before adding the clever — and trust measurement over dogma, even your own.
     url: "https://daveasprey.com"
+    image: /images/respected/dave-asprey.webp
   - name: Daniel Reid
     bio: Author of "The Tao of Health, Sex and Longevity"; brought Taoist health practice and food combining to the West.
     why: He treats digestion as a craft the body already knows — eat simply, and let your own gut be the judge.
     url: "https://www.danreid.org"
+    image: /images/respected/daniel-reid.webp
   - name: Stephen Harrod Buhner
     bio: Herbalist, author of "Plant Intelligence and the Imaginal Realm".
     why: He takes Gaia literally — the world is alive and intelligent, and the heart is an organ for perceiving it.
     url: "https://www.stephenharrodbuhner.com"
+    image: /images/respected/stephen-harrod-buhner.webp
   - name: Konstantin Daragan
     bio: Astrologer; his ephemeris-grade technique powers our almanac.
     why: If you enter a non-mainstream domain, enter it at its most rigorous — or not at all.
     url: "https://astrology-online.ru"
+    image: /images/respected/konstantin-daragan.webp
   - name: Peter Ralston
     bio: First non-Asian world champion of full-contact martial arts (1978), founder of Cheng Hsin; author of "The Book of Not Knowing".
     why: Not-knowing is the honest starting point — never mistake a concept for an experience.
     url: "https://chenghsin.com"
+    image: /images/respected/peter-ralston.webp
   - name: Mooji
     bio: Non-duality teacher (Anthony Paul Moo-Young).
     why: '"Be nobody and nothing — and see if you lose anything but illusions." The root of owning things without being owned.'
     url: "https://mooji.org"
+    image: /images/respected/mooji.webp
+  - name: Drunvalo Melchizedek
+    bio: Author of "The Ancient Secret of the Flower of Life"; teacher of sacred geometry and the Merkaba meditation.
+    why: Creation has a geometry — and the way in is not the mind but the tiny space of the heart.
+    url: "https://www.drunvalo.org"
+    image: /images/respected/drunvalo-melchizedek.webp
+  - name: Sadhguru
+    bio: Yogi and mystic (Jaggi Vasudev), founder of the Isha Foundation.
+    why: Responsibility means the ability to respond — your inner state is your own making, whatever the world does.
+    url: "https://isha.sadhguru.org"
+    image: /images/respected/sadhguru.webp
   - name: Rudolf Steiner
     bio: Austrian philosopher (1861–1925), founder of Waldorf education.
     why: The environment is the curriculum — a child absorbs the whole world around them, so materials and rhythm are never details.
     url: "https://rsarchive.org"
+    image: /images/respected/rudolf-steiner.webp
   - name: Teal Swan
     bio: Contemporary teacher on emotion and trauma.
     why: Children need to feel felt — attunement, not management, is the heart of parenting.
     url: "https://tealswan.com"
+    image: /images/respected/teal-swan.webp
 
 # Left-rail widgets, in render order. Each `type` maps to a collapsible panel in
 # src/components/Sidebar.tsx (about | missionValues | respected | almanac).

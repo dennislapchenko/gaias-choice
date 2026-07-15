@@ -1217,6 +1217,22 @@ h1 {
 a.respected-card:hover {
     border-color: var(--sage);
 }
+.respected-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+.respected-head > div {
+    flex: 1;
+    min-width: 0;
+}
+.respected-photo {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
 .respected-name {
     margin: 0 0 3px;
     font-size: 0.9rem;

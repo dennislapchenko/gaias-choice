@@ -58,38 +58,57 @@ respected:
     bio: Пионер холистического здоровья, основатель CHEK Institute.
     why: Взвешивает каждый выбор сразу на четырёх весах — сон, еда, движение, радость — и первым делом спрашивает, какой мечте служат твои ежедневные привычки.
     url: "https://chekinstitute.com"
+    image: /images/respected/paul-chek.webp
   - name: Dave Asprey
     bio: Основатель биохакинга и Bulletproof.
     why: Сначала убери яд, потом добавляй умное — и верь измерению, а не догме, даже собственной.
     url: "https://daveasprey.com"
+    image: /images/respected/dave-asprey.webp
   - name: Daniel Reid
     bio: Автор "The Tao of Health, Sex and Longevity"; открыл Западу даосскую практику здоровья и сочетание продуктов.
     why: Пищеварение для него — ремесло, которое тело уже знает — ешь проще и суди собственным желудком.
     url: "https://www.danreid.org"
+    image: /images/respected/daniel-reid.webp
   - name: Stephen Harrod Buhner
     bio: Травник, автор "Plant Intelligence and the Imaginal Realm".
     why: Понимает Гаию буквально — мир жив и разумен, а сердце — орган, которым его воспринимают.
     url: "https://www.stephenharrodbuhner.com"
+    image: /images/respected/stephen-harrod-buhner.webp
   - name: Konstantin Daragan
     bio: Астролог; его строгая эфемеридная техника лежит в основе нашего альманаха.
     why: Если входишь в немейнстримную область — входи на самом серьёзном её уровне, или не входи вовсе.
     url: "https://astrology-online.ru"
+    image: /images/respected/konstantin-daragan.webp
   - name: Peter Ralston
     bio: Первый неазиат — чемпион мира по полноконтактным боевым искусствам (1978), основатель Cheng Hsin; автор "The Book of Not Knowing".
     why: Незнание — честная точка отсчёта — никогда не принимай концепцию за опыт.
     url: "https://chenghsin.com"
+    image: /images/respected/peter-ralston.webp
   - name: Mooji
     bio: Учитель недвойственности (Anthony Paul Moo-Young).
     why: «Будь никем и ничем — и посмотри, потеряешь ли что-то, кроме иллюзий». Корень нашего «меньше, но лучше».
     url: "https://mooji.org"
+    image: /images/respected/mooji.webp
+  - name: Drunvalo Melchizedek
+    bio: Автор "The Ancient Secret of the Flower of Life"; учитель сакральной геометрии и медитации Меркаба.
+    why: У творения есть геометрия — и вход в неё не ум, а крошечное пространство сердца.
+    url: "https://www.drunvalo.org"
+    image: /images/respected/drunvalo-melchizedek.webp
+  - name: Sadhguru
+    bio: Йог и мистик (Jaggi Vasudev), основатель Isha Foundation.
+    why: Ответственность — это способность отвечать; твоё внутреннее состояние — дело твоих рук, что бы ни происходило вокруг.
+    url: "https://isha.sadhguru.org"
+    image: /images/respected/sadhguru.webp
   - name: Rudolf Steiner
     bio: Австрийский философ (1861–1925), основатель вальдорфской педагогики.
     why: Среда и есть учебная программа — ребёнок впитывает весь мир вокруг, поэтому материалы и ритм никогда не мелочи.
     url: "https://rsarchive.org"
+    image: /images/respected/rudolf-steiner.webp
   - name: Teal Swan
     bio: Современный учитель об эмоциях и травме.
     why: Ребёнку нужно чувствовать, что его чувствуют, — настройка на ребёнка, а не управление им, и есть сердце родительства.
     url: "https://tealswan.com"
+    image: /images/respected/teal-swan.webp
 
 # Themed Compass collections shown as thumbnails at the top of /compass. A
 # chapter belongs to the epic whose `tag` equals its FIRST tag. The first epic
