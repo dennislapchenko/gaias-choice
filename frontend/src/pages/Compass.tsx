@@ -54,6 +54,7 @@ export default function Compass() {
 
       <div className="reviews-layout">
         <div className="reviews-main">
+          {activeEpic && <h2 className="epic-title">{activeEpic.title}</h2>}
           {activeEpic?.blurb && <p className="epic-blurb">{activeEpic.blurb}</p>}
 
           <div className="guide-row-list">

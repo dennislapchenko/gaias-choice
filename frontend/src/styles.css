@@ -1924,6 +1924,12 @@ a.respected-card:hover {
     font-size: 1.3rem;
     transform: none;
 }
+.epic-title {
+    margin: 0 0 10px;
+    font-size: 1.5rem;
+    line-height: 1.2;
+}
+
 .epic-blurb {
     margin: 0 0 20px;
     max-width: 60ch;
