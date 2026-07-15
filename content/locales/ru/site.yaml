@@ -91,12 +91,12 @@ respected:
     image: /images/respected/mooji.webp
   - name: Drunvalo Melchizedek
     bio: Автор "The Ancient Secret of the Flower of Life"; учитель сакральной геометрии и медитации Меркаба.
-    why: У творения есть геометрия — и вход в неё не ум, а крошечное пространство сердца.
+    why: "Ум видит мир только разделённым надвое; сердце воспринимает в единстве — один узор сквозь всё живое, и вход в него не через мысль, а через крошечное пространство сердца."
     url: "https://www.drunvalo.org"
     image: /images/respected/drunvalo-melchizedek.webp
   - name: Sadhguru
     bio: Йог и мистик (Jaggi Vasudev), основатель Isha Foundation.
-    why: Ответственность — это способность отвечать; твоё внутреннее состояние — дело твоих рук, что бы ни происходило вокруг.
+    why: "Реактивность — рабство, ответственность — свобода: не груз, который несёшь, а способность отвечать. И не верь ему на слово — проверь; йога это технология, а не доктрина."
     url: "https://isha.sadhguru.org"
     image: /images/respected/sadhguru.webp
   - name: Rudolf Steiner

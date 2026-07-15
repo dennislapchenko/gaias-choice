@@ -175,43 +175,74 @@ tools, not identity; buying less is non-attachment, not austerity marketing.
 
 ### Drunvalo Melchizedek — sacred geometry, the heart before the mind
 
-Author (*The Ancient Secret of the Flower of Life*, *Living in the Heart*),
-teacher of sacred geometry and the Merkaba meditation.
+Author (*The Ancient Secret of the Flower of Life* I–II, *Living in the
+Heart*, *Serpent of Light*); founder of the School of Remembering; brought the
+Flower of Life and the Merkaba meditation to a wide audience.
 
 **Core ideas we carry:**
-- **Creation has a geometry** — the Flower of Life as a lens for one pattern
-  repeating through nature, from cells to seed heads to spirals.
-- **The heart, not the mind, is the way in**: perception moved from thinking
-  into the "tiny space of the heart" changes what you see and what you do.
+- **One pattern beneath all life.** The Flower of Life as the geometric matrix
+  all form grows from — "all life is one" said structurally, not
+  sentimentally; geometry as the language creation actually uses.
+- **The mind perceives in polarity, the heart in unity.** There is a "tiny
+  space of the heart" — an enterable, pre-conceptual place — where experience
+  isn't split into good/bad. Live from there first and align the mind after,
+  rather than living from the mind and consulting the heart never.
+- **Creation moves from the heart outward**: what is genuinely dreamed in that
+  space tends to get made — intention work is heart work, not visualization
+  gymnastics.
+- **He corrected his own signature teaching.** After years of teaching the
+  17-breath (mental) Merkaba he publicly demoted it: without the heart it
+  stays mechanical, so the heart practice now comes first. A teacher who
+  revises his central technique when experience disagrees is doing what our
+  truth-first rule preaches.
+- **Remembering, not learning**: working with Mayan, Hopi and Kogi elders, he
+  framed the old human knowledge as something to *remember* — the skills are
+  ours already.
 
 **How it shows on the site:** the radial mandala art across guides and reviews
-is this thread made visible — geometric, nature-derived pattern instead of
-stock photos; wonder framed as pattern-in-nature.
+(one geometric, nature-derived pattern instead of stock photos); heart-first
+framing of family decisions — feel from the quiet place first, reason second;
+the Compass's stance that herbalism, food wisdom and craft are *remembered*
+human skills, not our inventions.
 
-**Caution:** we carry the geometry-as-wonder and heart-first substance only —
-the cosmology/prophecy layer (Atlantis, ascension timelines) never enters site
-content.
+**Caution:** we carry the geometry-as-wonder, the heart practice, and the
+intellectual honesty — not the cosmology/prophecy layer (Atlantis, Thoth,
+ascension timelines). That never enters site content.
 
 ### Sadhguru — inner engineering, responsibility as the ability to respond
 
 Yogi and mystic (Jaggi Vasudev); founder of the Isha Foundation; author of
-*Inner Engineering*; behind large ecological initiatives (Save Soil).
+*Inner Engineering* and *Karma*; behind some of the largest ecological
+campaigns anywhere (Rally for Rivers, Cauvery Calling, Save Soil).
 
 **Core ideas we carry:**
-- **Your inner state is your own making** — joy is engineered from within
-  (attention, breath, body), not extracted from circumstances.
-- **Responsibility = the ability to respond**, not blame or duty — widening
-  what you are willing to respond to is the root stance of conscious living.
-- **Ecology as a personal matter** — soil and food are the body extended, not
-  "an issue" out there.
+- **The inside is engineerable.** Thought, emotion, mood and energy are yours
+  to shape — "the only way out is in"; pleasantness/joy is a *made* state, not
+  a lucky one. Misery is self-manufactured; so is its opposite.
+- **Responsibility = the ability to respond.** Not blame, not duty, not
+  burden — "reactivity is enslavement, responsibility is freedom." Made
+  limitless it has no boundary and therefore no burden; being fully
+  responsible is being fully conscious.
+- **Technology, not belief.** "Yoga is a technology — it works no matter what
+  you believe in or do not believe in." He explicitly asks people *not* to
+  believe him but to experiment and watch the result — the same epistemology
+  as our reviews.
+- **You are not what you gather.** The body is gathered food, the mind
+  gathered impressions; "what you gather can be yours, it can never be you" —
+  the deepest version of owning things without being owned.
+- **Soil is not scenery.** Ecology framed as the body extended — soil a
+  living organism, its death a bodily event, not "an issue" out there.
 
 **How it shows on the site:** the framing that a family's calm on the road is
-made, not found — rhythm, breath, and attention come before gear; earth-care
-content (soil, waste, materials) framed as self-care at scale.
+*made*, not found — attention, breath and rhythm come before gear in every
+guide; reviews judge things as tools for a made inner state, never as its
+source; and the land we're searching for (food forest, homestead) treats soil
+regeneration as self-care at scale.
 
-**Caution:** a large commercial/organizational ecosystem surrounds him — we
-carry the teaching substance, never promote programs or products; food/health
-claims stay governed by the Health section.
+**Caution:** a vast commercial/organizational ecosystem and real public
+controversies surround him — we carry the teaching substance, never promote
+Isha programs or products; food/health positions stay governed by the Health
+section (framed as practice, never medicine).
 
 ## Children
 
@@ -286,15 +317,17 @@ choice, never as health advice (Health section governs there).
 These teachers converge, and the convergence is the site's worldview:
 
 1. **Direct experience beats received opinion.** (Ralston's not-knowing, Chek's
-   bio-individuality, Asprey's n=1, house truth-first content rule.)
-2. **The world is alive.** (Buhner's Gaia, the author's butterfly, the brand
-   name taken literally.)
+   bio-individuality, Asprey's n=1, Sadhguru's test-don't-believe, house
+   truth-first content rule.)
+2. **The world is alive.** (Buhner's Gaia, Drunvalo's one pattern through all
+   form, the author's butterfly, the brand name taken literally.)
 3. **Remove the toxic before adding the clever.** (Asprey's toxin lens, Chek's
    real food, the plastic-free/fragrance-free mission.)
 4. **Rigor inside non-mainstream domains.** (Daragan's ephemeris astrology, the
    almanac's hard rule, serious herbalism over wellness-fluff.)
-5. **Non-identification — own things, don't be owned.** (Mooji/Ralston →
-   "buy less, buy better" as a spiritual position, not a slogan.)
+5. **Non-identification — own things, don't be owned.** (Mooji/Ralston,
+   Sadhguru's "what you gather can never be you" → "buy less, buy better" as a
+   spiritual position, not a slogan.)
 6. **Children are whole people; environment and attunement shape them.**
    (Steiner's rhythm + natural materials, Swan's feeling-felt — the deep reason
    a baby-gear site cares about materials and emotional tone at all.)
