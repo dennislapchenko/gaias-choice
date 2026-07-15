@@ -281,10 +281,12 @@ entirely rather than pad it with "N/A".**
   - **risk / rollback** and **proof** — proof is the claim + a pointer (build
     green, a screenshot, the compare) — **never the transcript**.
   - non-obvious **decisions**, as *"X over Y because Z"*.
-- **Tiny diffs unfolded:** when the body names a file whose change is **≤3
-  lines**, show that diff inline in a fenced ` ```diff ` block right there —
-  it's small enough that seeing it beats describing it and saves the reader
-  opening the file. Larger changes stay described, not pasted.
+- **Tiny diffs unfolded (non-negotiable):** whenever the body names a file
+  whose change is **≤10 lines**, you MUST show that diff inline in a fenced
+  ` ```diff ` block right there — it's small enough that seeing it beats
+  describing it and saves the reader opening the file. Not optional, not
+  "when it helps": if the diff is ≤10 lines, it goes in. Larger changes stay
+  described, not pasted.
 - Then one line per step still left: `🚀 <step that is left>` (commit
   pending, deploy pending, follow-up work…).
 - Then, per open question **or** forward-looking tradeoff worth flagging:
