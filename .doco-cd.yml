@@ -15,7 +15,7 @@ working_dir: deploy/app
 environment:
   API_DOMAIN: gaias-choice.gardenofatlantis.com
   CORS_ORIGINS: https://dennislapchenko.github.io
-  BE_TAG: sha-9489417554b2fce481b89a09442a462cc6c5ae77
+  BE_TAG: sha-97e7d8cfe2f066c177a01a123e7c9b18269dc596
 # Runtime self-healing (doco-cd watches Docker events on this stack's containers):
 #   unhealthy → in-place container restart (api's /api/healthz DB probe drives it)
 #   die       → full `compose up` reconcile + a [R] Telegram alert on any
