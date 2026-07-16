@@ -181,7 +181,6 @@ const ru: Record<keyof typeof en, string> = {
   "support.cryptoWarn": "Стоит убедиться в сети перед отправкой",
   "support.thanks": "Спасибо — правда. Даже просто поделиться обзором с другом, которому он нужен, помогает больше, чем кажется.",
 
-  "backend.connected": "Бэкенд подключён · {{hits}} обращений",
 
   "editor.save": "✓ Сохранить",
   "editor.saving": "Сохраняем…",

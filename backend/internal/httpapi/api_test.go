@@ -82,15 +82,6 @@ func TestPublicEndpoints(t *testing.T) {
 	if w := do(r, http.MethodGet, "/api/healthz", "", ""); w.Code != http.StatusOK {
 		t.Errorf("healthz: got %d", w.Code)
 	}
-	w := do(r, http.MethodGet, "/api/hello", "", "")
-	if w.Code != http.StatusOK {
-		t.Fatalf("hello: got %d", w.Code)
-	}
-	var hello struct{ Hits int }
-	json.Unmarshal(w.Body.Bytes(), &hello)
-	if hello.Hits < 1 {
-		t.Errorf("hits not bumped: %+v", hello)
-	}
 }
 
 // Every operation the spec marks `security: session` refuses missing and

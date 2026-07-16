@@ -36,25 +36,6 @@ paths:
                 properties:
                   status: { type: string }
 
-  /hello:
-    get:
-      operationId: getHello
-      summary: Scaffold endpoint proving a DB round-trip (feeds BackendBadge)
-      tags: [system]
-      responses:
-        '200':
-          description: Greeting plus the bumped hits counter.
-          content:
-            application/json:
-              schema:
-                type: object
-                required: [message, hits]
-                properties:
-                  message: { type: string }
-                  hits: { type: integer }
-        '500':
-          $ref: '#/components/responses/Internal'
-
   /track:
     post:
       operationId: trackPageview

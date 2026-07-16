@@ -62,8 +62,8 @@ func Open(dataDir string) (*Store, error) {
 func (s *Store) Close() error { return s.db.Close() }
 
 // Ping verifies the DB connection is alive — a readiness probe with no writes
-// (feeds /api/healthz, which the container healthcheck hits). Unlike Bump
-// (/api/hello), it must not mutate: it runs every healthcheck interval.
+// (feeds /api/healthz, which the container healthcheck hits). It must not
+// mutate: it runs every healthcheck interval.
 func (s *Store) Ping(ctx context.Context) error { return s.db.PingContext(ctx) }
 
 // migrate applies every migrations/*.sql not yet recorded, in filename order,
@@ -121,30 +121,6 @@ func (s *Store) migrate() error {
 		}
 	}
 	return nil
-}
-
-// Bump increments the single hits row and returns the new count. It exists
-// only to prove a full DB round-trip end-to-end (feeds /api/hello).
-func (s *Store) Bump() (int, error) {
-	tx, err := s.db.Begin()
-	if err != nil {
-		return 0, err
-	}
-	defer tx.Rollback()
-
-	if _, err := tx.Exec(
-		`UPDATE hits SET count = count + 1 WHERE id = 1`,
-	); err != nil {
-		return 0, err
-	}
-	var n int
-	if err := tx.QueryRow(`SELECT count FROM hits WHERE id = 1`).Scan(&n); err != nil {
-		return 0, err
-	}
-	if err := tx.Commit(); err != nil {
-		return 0, err
-	}
-	return n, nil
 }
 
 // --- traffic (first-party analytics) --------------------------------------------

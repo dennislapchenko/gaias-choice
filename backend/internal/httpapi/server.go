@@ -134,17 +134,6 @@ func (s *server) GetHealth(ctx context.Context, _ GetHealthRequestObject) (GetHe
 	return GetHealth200JSONResponse{Status: "ok"}, nil
 }
 
-func (s *server) GetHello(context.Context, GetHelloRequestObject) (GetHelloResponseObject, error) {
-	n, err := s.store.Bump()
-	if err != nil {
-		return GetHello500JSONResponse{InternalJSONResponse{Error: "db"}}, nil
-	}
-	return GetHello200JSONResponse{
-		Message: "Hello from the Gaia's Choice backend.",
-		Hits:    n,
-	}, nil
-}
-
 // --- auth ----------------------------------------------------------------------
 
 func (s *server) Login(ctx context.Context, req LoginRequestObject) (LoginResponseObject, error) {
@@ -429,6 +418,19 @@ func (s *server) UpdateUser(ctx context.Context, req UpdateUserRequestObject) (U
 
 // --- content -------------------------------------------------------------------
 
+// commitMsg is the shared commit-message rule for the content endpoints: the
+// client's message when given, else the fallback, capped at 200 chars.
+func commitMsg(p *string, fallback string) string {
+	msg := fallback
+	if p != nil && *p != "" {
+		msg = *p
+	}
+	if len(msg) > 200 {
+		msg = msg[:200]
+	}
+	return msg
+}
+
 func (s *server) GetContentFile(_ context.Context, req GetContentFileRequestObject) (GetContentFileResponseObject, error) {
 	if s.content == nil {
 		return GetContentFile503JSONResponse{NotConfiguredJSONResponse{Error: "editing not configured"}}, nil
@@ -461,16 +463,7 @@ func (s *server) SaveContent(_ context.Context, req SaveContentRequestObject) (S
 	if len(b.Content) == 0 || len(b.Content) > content.MaxBytes {
 		return SaveContent413JSONResponse(Error{Error: "content empty or too large"}), nil
 	}
-	msg := ""
-	if b.Message != nil {
-		msg = *b.Message
-	}
-	if msg == "" {
-		msg = fmt.Sprintf("content: edit %s via portal", b.Path)
-	}
-	if len(msg) > 200 {
-		msg = msg[:200]
-	}
+	msg := commitMsg(b.Message, fmt.Sprintf("content: edit %s via portal", b.Path))
 	sha := ""
 	if b.Sha != nil {
 		sha = *b.Sha
@@ -498,16 +491,7 @@ func (s *server) DeleteContent(_ context.Context, req DeleteContentRequestObject
 			return DeleteContent400JSONResponse{BadRequestJSONResponse{Error: "invalid path"}}, nil
 		}
 	}
-	msg := ""
-	if req.Body.Message != nil {
-		msg = *req.Body.Message
-	}
-	if msg == "" {
-		msg = fmt.Sprintf("content: delete %s via portal", strings.Join(req.Body.Paths, ", "))
-	}
-	if len(msg) > 200 {
-		msg = msg[:200]
-	}
+	msg := commitMsg(req.Body.Message, fmt.Sprintf("content: delete %s via portal", strings.Join(req.Body.Paths, ", ")))
 	res, err := s.content.Delete(req.Body.Paths, msg)
 	if err != nil {
 		return DeleteContent502JSONResponse{UpstreamJSONResponse{Error: err.Error()}}, nil
@@ -539,16 +523,7 @@ func (s *server) CommitContent(_ context.Context, req CommitContentRequestObject
 		files = append(files, content.FileWrite{Path: f.Path, Content: f.Content})
 		paths = append(paths, f.Path)
 	}
-	msg := ""
-	if req.Body.Message != nil {
-		msg = *req.Body.Message
-	}
-	if msg == "" {
-		msg = fmt.Sprintf("content: update %s via portal", strings.Join(paths, ", "))
-	}
-	if len(msg) > 200 {
-		msg = msg[:200]
-	}
+	msg := commitMsg(req.Body.Message, fmt.Sprintf("content: update %s via portal", strings.Join(paths, ", ")))
 	res, err := s.content.SaveMany(files, msg)
 	if err != nil {
 		return CommitContent502JSONResponse{UpstreamJSONResponse{Error: err.Error()}}, nil

@@ -83,7 +83,7 @@ func Load() Config {
 		ResponseLogLines: envInt("RESPONSE_LOG_LINES", 3),
 		LogExclude: splitCSV(envOr(
 			"LOG_EXCLUDE",
-			"/api/healthz,/api/hello,/api/auth/me,/api/auth/telegram/poll",
+			"/api/healthz,/api/auth/me,/api/auth/telegram/poll",
 		)),
 		GitHubToken:            os.Getenv("GITHUB_TOKEN"),
 		GitHubRepo:             envOr("GITHUB_REPO", "dennislapchenko/gaias-choice"),

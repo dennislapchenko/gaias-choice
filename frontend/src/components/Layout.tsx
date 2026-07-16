@@ -8,7 +8,6 @@ import ThemeSwitcher from "./ThemeSwitcher";
 import LanguageSwitcher from "./LanguageSwitcher";
 import UserButton from "./UserButton";
 import Sidebar from "./Sidebar";
-import BackendBadge from "./BackendBadge";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
@@ -130,7 +129,6 @@ export default function Layout({ children }: { children: ReactNode }) {
           {/* suppressHydrationWarning: prerendered at build time — the year can
               lag the viewer's clock right after New Year until the next deploy. */}
           <p suppressHydrationWarning>{t("footer.copyright", { year: new Date().getFullYear(), name: site.name })}</p>
-          <BackendBadge />
         </div>
       </footer>
     </div>

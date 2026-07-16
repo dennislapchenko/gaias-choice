@@ -111,9 +111,6 @@ type BadRequest = Error
 // Forbidden defines model for Forbidden.
 type Forbidden = Error
 
-// Internal defines model for Internal.
-type Internal = Error
-
 // NotConfigured defines model for NotConfigured.
 type NotConfigured = Error
 
@@ -367,9 +364,6 @@ type ServerInterface interface {
 	// Liveness probe
 	// (GET /healthz)
 	GetHealth(c *gin.Context)
-	// Scaffold endpoint proving a DB round-trip (feeds BackendBadge)
-	// (GET /hello)
-	GetHello(c *gin.Context)
 	// Admin — page + API hit totals for a window (the campfire statistics view)
 	// (GET /stats)
 	GetStats(c *gin.Context, params GetStatsParams)
@@ -636,19 +630,6 @@ func (siw *ServerInterfaceWrapper) GetHealth(c *gin.Context) {
 	siw.Handler.GetHealth(c)
 }
 
-// GetHello operation middleware
-func (siw *ServerInterfaceWrapper) GetHello(c *gin.Context) {
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-		if c.IsAborted() {
-			return
-		}
-	}
-
-	siw.Handler.GetHello(c)
-}
-
 // GetStats operation middleware
 func (siw *ServerInterfaceWrapper) GetStats(c *gin.Context) {
 
@@ -791,7 +772,6 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.POST(options.BaseURL+"/content/template", wrapper.EnrichTemplate)
 	router.POST(options.BaseURL+"/content/translate", wrapper.TranslateContent)
 	router.GET(options.BaseURL+"/healthz", wrapper.GetHealth)
-	router.GET(options.BaseURL+"/hello", wrapper.GetHello)
 	router.GET(options.BaseURL+"/stats", wrapper.GetStats)
 	router.POST(options.BaseURL+"/track", wrapper.TrackPageview)
 	router.GET(options.BaseURL+"/users", wrapper.ListUsers)
@@ -802,8 +782,6 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 type BadRequestJSONResponse Error
 
 type ForbiddenJSONResponse Error
-
-type InternalJSONResponse Error
 
 type NotConfiguredJSONResponse Error
 
@@ -2065,44 +2043,6 @@ func (response GetHealth200JSONResponse) VisitGetHealthResponse(w http.ResponseW
 	return err
 }
 
-type GetHelloRequestObject struct {
-}
-
-type GetHelloResponseObject interface {
-	VisitGetHelloResponse(w http.ResponseWriter) error
-}
-
-type GetHello200JSONResponse struct {
-	Hits    int    `json:"hits"`
-	Message string `json:"message"`
-}
-
-func (response GetHello200JSONResponse) VisitGetHelloResponse(w http.ResponseWriter) error {
-
-	var buf bytes.Buffer
-	if err := json.NewEncoder(&buf).Encode(response); err != nil {
-		return err
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(200)
-	_, err := buf.WriteTo(w)
-	return err
-}
-
-type GetHello500JSONResponse struct{ InternalJSONResponse }
-
-func (response GetHello500JSONResponse) VisitGetHelloResponse(w http.ResponseWriter) error {
-
-	var buf bytes.Buffer
-	if err := json.NewEncoder(&buf).Encode(response); err != nil {
-		return err
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(500)
-	_, err := buf.WriteTo(w)
-	return err
-}
-
 type GetStatsRequestObject struct {
 	Params GetStatsParams
 }
@@ -2450,9 +2390,6 @@ type StrictServerInterface interface {
 	// Liveness probe
 	// (GET /healthz)
 	GetHealth(ctx context.Context, request GetHealthRequestObject) (GetHealthResponseObject, error)
-	// Scaffold endpoint proving a DB round-trip (feeds BackendBadge)
-	// (GET /hello)
-	GetHello(ctx context.Context, request GetHelloRequestObject) (GetHelloResponseObject, error)
 	// Admin — page + API hit totals for a window (the campfire statistics view)
 	// (GET /stats)
 	GetStats(ctx context.Context, request GetStatsRequestObject) (GetStatsResponseObject, error)
@@ -2990,30 +2927,6 @@ func (sh *strictHandler) GetHealth(ctx *gin.Context) {
 		sh.options.HandlerErrorFunc(ctx, err)
 	} else if validResponse, ok := response.(GetHealthResponseObject); ok {
 		if err := validResponse.VisitGetHealthResponse(ctx.Writer); err != nil {
-			sh.options.ResponseErrorHandlerFunc(ctx, err)
-		}
-	} else if response != nil {
-		sh.options.ResponseErrorHandlerFunc(ctx, fmt.Errorf("unexpected response type: %T", response))
-	}
-}
-
-// GetHello operation middleware
-func (sh *strictHandler) GetHello(ctx *gin.Context) {
-	var request GetHelloRequestObject
-
-	handler := func(ctx *gin.Context, request interface{}) (interface{}, error) {
-		return sh.ssi.GetHello(ctx, request.(GetHelloRequestObject))
-	}
-	for _, middleware := range sh.middlewares {
-		handler = middleware(handler, "GetHello")
-	}
-
-	response, err := handler(ctx, request)
-
-	if err != nil {
-		sh.options.HandlerErrorFunc(ctx, err)
-	} else if validResponse, ok := response.(GetHelloResponseObject); ok {
-		if err := validResponse.VisitGetHelloResponse(ctx.Writer); err != nil {
 			sh.options.ResponseErrorHandlerFunc(ctx, err)
 		}
 	} else if response != nil {

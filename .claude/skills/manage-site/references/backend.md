@@ -46,9 +46,7 @@ static-site build work.
   `internal/httpapi` (gin router, hand-written CORS
   allowlist, middleware, handlers). Endpoints: `/api/healthz` (readiness probe
   — DB `Ping`, 200 only when the DB round-trips, else 500; drives both the FE
-  `backendUp` gate and the container healthcheck), `/api/hello`
-  (hits counter proving a DB round-trip — the mutating one, feeds BackendBadge),
-  `/api/auth/telegram` +
+  `backendUp` gate and the container healthcheck), `/api/auth/telegram` +
   `/api/auth/telegram/poll` (the primary Telegram login), `/api/auth/magic` +
   `/api/auth/magic/verify` (the passwordless email login),
   `/api/auth/{login,register,logout,me}`,
@@ -387,7 +385,7 @@ off by default). On ⇒ gin runs in debug mode AND the request logger echoes,
 per request, the OpenAPI response description for the status it returned
 (`↳ Service is up.`) plus the JSON body; off ⇒ just the one access line, no
 body. `RESPONSE_LOG_LINES` (default 3) caps the echoed body. `LOG_EXCLUDE`
-(CSV of full paths, default healthz/hello/auth-me/telegram-poll) drops noisy
+(CSV of full paths, default healthz/auth-me/telegram-poll) drops noisy
 endpoints from the log entirely, DEBUG or not. Separate from the FE
 `VITE_DEBUG` gate (different process, different gate).
 

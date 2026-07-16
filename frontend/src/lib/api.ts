@@ -3,7 +3,7 @@
 // The backend is *progressive enhancement*: it is down most of the time (a
 // laptop behind ngrok), and the live Pages site ships without a stable API
 // URL. So every helper here fails quietly — callers render nothing on error,
-// never an error page. See `useApi` and the SPA-fallback guard below.
+// never an error page. See the SPA-fallback guard below.
 import { useEffect, useState } from 'react'
 import { watchDeploy } from './deployWatch'
 
@@ -124,11 +124,6 @@ export function apiDelete<T>(path: string, body?: unknown, opts?: { token?: stri
 // Request/response types live here until there are enough to split out.
 // They mirror backend/openapi.yaml — the endpoint contract's single source
 // of truth.
-export interface HelloResponse {
-  message: string
-  hits: number
-}
-
 export type Role = 'admin' | 'editor' | 'viewer'
 
 /** POST /api/auth/magic/verify and /api/auth/login answer with this grant. */
@@ -330,37 +325,3 @@ export function trackPageview(path: string): Promise<void> {
   return apiPost<void>('/track', { path })
 }
 
-interface ApiState<T> {
-  data: T | null
-  error: ApiError | Error | null
-  loading: boolean
-}
-
-/**
- * Fetch `path` once on mount. Failures are swallowed into `error` (never
- * thrown), so a consumer can simply render null unless `data` is set — the
- * degradation rule that keeps the static site identical when the BE is absent.
- */
-export function useApi<T>(path: string): ApiState<T> {
-  const [state, setState] = useState<ApiState<T>>({
-    data: null,
-    error: null,
-    loading: true,
-  })
-
-  useEffect(() => {
-    let alive = true
-    apiGet<T>(path)
-      .then((data) => {
-        if (alive) setState({ data, error: null, loading: false })
-      })
-      .catch((error: Error) => {
-        if (alive) setState({ data: null, error, loading: false })
-      })
-    return () => {
-      alive = false
-    }
-  }, [path])
-
-  return state
-}
