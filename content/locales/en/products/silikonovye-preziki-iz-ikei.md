@@ -14,40 +14,32 @@ tags: [ikea, silicone, kitchen, zero-waste]
 
 <!--
   Written by hand, from real use — no invented durations or results, and earn
-  every Gaia Score number in the body. Keep all five sections, fill them
-  honestly, retitle each heading in this review's own words (the defaults name
-  the section's job, not its wording), and delete the prompts before you ship.
+  every Gaia Score number in the body. Answer the questions below in your own
+  words, in any order — dictating is fine. Every published review keeps the
+  same six sections: each question's bold label becomes its `##` heading (the
+  verdict stays a bold **Verdict:** lead line, no heading), the answers land
+  under them in this order, and the questions themselves get deleted.
 -->
 
-**Verdict:** the answer in one or two sentences, for the reader who leaves after
-ten seconds. Would you buy the IKEA silicone lids again — knowing what you know now?
-
-## Why IKEA silicone lids went into the kitchen kit
-
-Nobody wakes up wanting a product review — they wake up with a problem at
-3 a.m. Name the real one this thing had to solve in our actual day on the road:
-what were we afraid would go wrong, and what were we choosing between?
-
-## How the lids held up wash after wash
-
-How long, in what conditions — the camper, the road, the baby — and whether it
-was bought or gifted (gifted must be disclosed here). What broke, what we
-repaired, what we'd genuinely miss if it vanished tomorrow.
-
-## Where the silicone lids earned their place
-
-Concrete beats adjectives: counted washes, measured grams, real prices — not
-"very durable". Give us the one specific moment it earned its place.
-
-## What we'd change about them
-
-Every review names a flaw — if nothing else, the flaw is the price, or who it's
-*not* for. Then the honest one a paid reviewer never writes: **what would make
-us take this recommendation back?** Name the thing that would change our mind.
-
-## Who the IKEA silicone lids are for
-
-And who should skip it — one honest line each. Then the reverse question worth
-asking of anything you carry: **how long could you happily do without it?** If
-it's not for you, we'd rather you keep your money — that's the whole point of
-this site.
+1. **Verdict** — one or two sentences for the reader who leaves after ten
+   seconds: would we buy the IKEA silicone lids again, knowing what we know
+   now?
+2. **Why we bought it** — nobody wakes up wanting a review; they wake up with
+   a problem. What were they replacing — cling film, foil, mismatched plastic
+   lids, food going off in a small fridge? What were we afraid of, and what
+   were we choosing between: beeswax wraps, jars with lids, plates on top of
+   bowls?
+3. **How it lived with us** — how long, and on what: bowls, cut vegetables,
+   pans, jars? Bought or gifted (gifted must be said out loud)? Do they still
+   seal after however many washes, do they hold on a bumpy road, has silicone
+   picked up smells or stains, what would we genuinely miss if they vanished
+   tomorrow?
+4. **What's genuinely good** — concrete beats adjectives: how many, what they
+   cost, how many rolls of cling film they have replaced, how they wash with
+   limited water. What's the one specific moment they earned their place?
+5. **What we'd change** — every review names a flaw; if nothing else, the flaw
+   is the price, or who it's *not* for. Which bowl shapes they won't seal,
+   smell retention, silicone as a material — and the question a paid reviewer
+   never answers: what would make us take this recommendation back?
+6. **Who it's for** — and who should skip it, one honest line each. How long
+   could we happily do without them — is a plate on a bowl good enough?

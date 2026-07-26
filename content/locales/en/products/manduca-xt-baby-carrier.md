@@ -14,40 +14,33 @@ tags: [baby carrier, babywearing, travel]
 
 <!--
   Written by hand, from real use — no invented durations or results, and earn
-  every Gaia Score number in the body. Keep all five sections, fill them
-  honestly, retitle each heading in this review's own words (the defaults name
-  the section's job, not its wording), and delete the prompts before you ship.
+  every Gaia Score number in the body. Answer the questions below in your own
+  words, in any order — dictating is fine. Every published review keeps the
+  same six sections: each question's bold label becomes its `##` heading (the
+  verdict stays a bold **Verdict:** lead line, no heading), the answers land
+  under them in this order, and the questions themselves get deleted.
 -->
 
-**Verdict:** the answer in one or two sentences, for the reader who leaves after
-ten seconds. Would you buy the Manduca XT again — knowing what you know now?
-
-## The carrying problem the Manduca XT had to solve
-
-Nobody wakes up wanting a product review — they wake up with a problem at
-3 a.m. Name the real one this thing had to solve in our actual day on the road:
-what were we afraid would go wrong, and what were we choosing between?
-
-## How the Manduca XT wore in over the miles
-
-How long, in what conditions — the camper, the road, the baby — and whether it
-was bought or gifted (gifted must be disclosed here). What broke, what we
-repaired, what we'd genuinely miss if it vanished tomorrow.
-
-## Where the carrier earned its keep
-
-Concrete beats adjectives: counted washes, measured grams, real prices — not
-"very durable". Give us the one specific moment it earned its place.
-
-## What we'd change about the Manduca XT
-
-Every review names a flaw — if nothing else, the flaw is the price, or who it's
-*not* for. Then the honest one a paid reviewer never writes: **what would make
-us take this recommendation back?** Name the thing that would change our mind.
-
-## The parent and baby the Manduca XT fits
-
-And who should skip it — one honest line each. Then the reverse question worth
-asking of anything you carry: **how long could you happily do without it?** If
-it's not for you, we'd rather you keep your money — that's the whole point of
-this site.
+1. **Verdict** — one or two sentences for the reader who leaves after ten
+   seconds: would we buy the Manduca XT again, knowing what we know now?
+2. **Why we bought it** — nobody wakes up wanting a review; they wake up with
+   a problem. Where can't a pushchair go that we needed to go anyway — trails,
+   towns, ferries, stairs? What were we afraid of (backs, hips, an unhappy
+   baby), and what were we choosing between: a wrap, a ring sling, another
+   structured carrier?
+3. **How it lived with us** — how long, worn by whom, and in what conditions:
+   heat, rain, long walks, quick errands? Bought or gifted (gifted must be
+   said out loud)? What has worn — buckles, straps, padding — what did we
+   repair, how does it wash, and what would we genuinely miss if it vanished
+   tomorrow?
+4. **What's genuinely good** — concrete beats adjectives: how long we can
+   actually carry before something hurts, how fast it goes on alone, how it
+   adjusts between two adults of different sizes, what it cost. What's the one
+   specific walk where it earned its place?
+5. **What we'd change** — every review names a flaw; if nothing else, the flaw
+   is the price, or who it's *not* for. Heat, bulk when packed, the learning
+   curve, the fit range — and the question a paid reviewer never answers: what
+   would make us take this recommendation back?
+6. **Who it's for** — and who should skip it, one honest line each. How long
+   could we happily do without it, and from what age to what weight does it
+   really work?

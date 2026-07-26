@@ -14,40 +14,35 @@ tags: [lifestraw, water filter, gravity filter]
 
 <!--
   Written by hand, from real use — no invented durations or results, and earn
-  every Gaia Score number in the body. Keep all five sections, fill them
-  honestly, retitle each heading in this review's own words (the defaults name
-  the section's job, not its wording), and delete the prompts before you ship.
+  every Gaia Score number in the body. Answer the questions below in your own
+  words, in any order — dictating is fine. Every published review keeps the
+  same six sections: each question's bold label becomes its `##` heading (the
+  verdict stays a bold **Verdict:** lead line, no heading), the answers land
+  under them in this order, and the questions themselves get deleted.
 -->
 
-**Verdict:** the answer in one or two sentences, for the reader who leaves after
-ten seconds. Would you buy the LifeStraw gravity setup again — knowing what you know now?
-
-## The clean-water problem the gravity filter had to solve
-
-Nobody wakes up wanting a product review — they wake up with a problem at
-3 a.m. Name the real one this thing had to solve in our actual day on the road:
-what were we afraid would go wrong, and what were we choosing between?
-
-## How the LifeStraw setup performed off-grid
-
-How long, in what conditions — the camper, the road, the baby — and whether it
-was bought or gifted (gifted must be disclosed here). What broke, what we
-repaired, what we'd genuinely miss if it vanished tomorrow.
-
-## Where the gravity filter earned its keep
-
-Concrete beats adjectives: counted washes, measured grams, real prices — not
-"very durable". Give us the one specific moment it earned its place.
-
-## What we'd change about the setup
-
-Every review names a flaw — if nothing else, the flaw is the price, or who it's
-*not* for. Then the honest one a paid reviewer never writes: **what would make
-us take this recommendation back?** Name the thing that would change our mind.
-
-## Who the LifeStraw gravity filter is for
-
-And who should skip it — one honest line each. Then the reverse question worth
-asking of anything you carry: **how long could you happily do without it?** If
-it's not for you, we'd rather you keep your money — that's the whole point of
-this site.
+1. **Verdict** — one or two sentences for the reader who leaves after ten
+   seconds: would we buy the LifeStraw gravity filter and water storage again,
+   knowing what we know now?
+2. **Why we bought it** — nobody wakes up wanting a review; they wake up with
+   a problem. What does a family need clean water for beyond drinking —
+   cooking, washing a baby, washing up — and where were we getting it before?
+   What were we afraid of off-grid, and what were we choosing between: a
+   pump, a bottle filter, canisters of bought water?
+3. **How it lived with us** — how long, and where did we hang it and fill it:
+   taps, springs, streams? Bought or gifted (gifted must be said out loud)?
+   How is the filter holding up, does the bag leak or grow anything, where
+   does it live while driving, and what would we genuinely miss if it vanished
+   tomorrow?
+4. **What's genuinely good** — concrete beats adjectives: how many litres, how
+   long a full bag takes to run through, how much water a day it covers for
+   the three of us, what it cost. What's the one specific stop where it earned
+   its place?
+5. **What we'd change** — every review names a flaw; if nothing else, the flaw
+   is the price, or who it's *not* for. Flow slowing down, hanging it with
+   nothing to hang it from, drying the bag, what it does *not* filter — and
+   the question a paid reviewer never answers: what would make us take this
+   recommendation back?
+6. **Who it's for** — and who should skip it, one honest line each. How long
+   could we happily do without it — is it worth the space if you mostly stay
+   on serviced sites?

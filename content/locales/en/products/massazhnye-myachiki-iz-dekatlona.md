@@ -14,40 +14,32 @@ tags: [decathlon, massage, recovery]
 
 <!--
   Written by hand, from real use — no invented durations or results, and earn
-  every Gaia Score number in the body. Keep all five sections, fill them
-  honestly, retitle each heading in this review's own words (the defaults name
-  the section's job, not its wording), and delete the prompts before you ship.
+  every Gaia Score number in the body. Answer the questions below in your own
+  words, in any order — dictating is fine. Every published review keeps the
+  same six sections: each question's bold label becomes its `##` heading (the
+  verdict stays a bold **Verdict:** lead line, no heading), the answers land
+  under them in this order, and the questions themselves get deleted.
 -->
 
-**Verdict:** the answer in one or two sentences, for the reader who leaves after
-ten seconds. Would you buy the massage balls again — knowing what you know now?
-
-## Why massage balls ride along with us
-
-Nobody wakes up wanting a product review — they wake up with a problem at
-3 a.m. Name the real one this thing had to solve in our actual day on the road:
-what were we afraid would go wrong, and what were we choosing between?
-
-## How the balls held up to daily use
-
-How long, in what conditions — the camper, the road, the baby — and whether it
-was bought or gifted (gifted must be disclosed here). What broke, what we
-repaired, what we'd genuinely miss if it vanished tomorrow.
-
-## Where the massage balls earned their place
-
-Concrete beats adjectives: counted washes, measured grams, real prices — not
-"very durable". Give us the one specific moment it earned its place.
-
-## What we'd change about them
-
-Every review names a flaw — if nothing else, the flaw is the price, or who it's
-*not* for. Then the honest one a paid reviewer never writes: **what would make
-us take this recommendation back?** Name the thing that would change our mind.
-
-## Who the massage balls are for
-
-And who should skip it — one honest line each. Then the reverse question worth
-asking of anything you carry: **how long could you happily do without it?** If
-it's not for you, we'd rather you keep your money — that's the whole point of
-this site.
+1. **Verdict** — one or two sentences for the reader who leaves after ten
+   seconds: would we buy the Decathlon massage balls again, knowing what we
+   know now?
+2. **Why we bought it** — nobody wakes up wanting a review; they wake up with
+   a problem — in this case a body. What hurts after a day of driving and
+   carrying a baby, and what were we doing about it before? What were we
+   choosing between: a roller, hands, stretching, nothing?
+3. **How it lived with us** — how long, how often, and where do they get used:
+   on the camper floor, against a wall, on the ground outside? Bought or
+   gifted (gifted must be said out loud)? Have they gone soft, split, or gone
+   missing under a seat, and what would we genuinely miss if they vanished
+   tomorrow?
+4. **What's genuinely good** — concrete beats adjectives: what they weigh, how
+   little space they take, what they cost, how often we actually reach for
+   them in a week. What's the one specific ache they fixed?
+5. **What we'd change** — every review names a flaw; if nothing else, the flaw
+   is the price, or who it's *not* for. Hardness, size, smell out of the
+   packet — and the question a paid reviewer never answers: what would make us
+   take this recommendation back?
+6. **Who it's for** — and who should skip it, one honest line each. How long
+   could we happily do without them — do hands and a doorframe do the same
+   job?

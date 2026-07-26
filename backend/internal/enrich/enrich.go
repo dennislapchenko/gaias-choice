@@ -27,13 +27,14 @@ const (
 // systemPrompt keeps the model reshaping *questions*, never authoring content —
 // which is what lets this stay inside the provenance contract (it re-tunes a
 // blank scaffold's prompts; it does not write the review/journal entry).
-const systemPrompt = `You tune blank content-authoring templates. You are given a Markdown template (YAML frontmatter plus a body of section headings with guiding prompts/comments) and a post title. Return the SAME template, re-tuned so its guiding prompts speak concretely to what this specific title is about — sharper, more specific questions in the same spirit and voice.
+const systemPrompt = `You tune blank content-authoring templates. You are given a Markdown template (YAML frontmatter plus a body of guiding questions — either a numbered question list or section headings with guiding prompts) and a post title. Return the SAME template, re-tuned so its guiding questions speak concretely to what this specific title is about — sharper, more specific questions in the same spirit and voice.
 
 Hard rules:
 - Keep the template's language exactly (never translate it).
 - Keep every frontmatter key unchanged.
-- Rewrite EVERY Markdown heading in this title's own words. Each heading keeps its section's job (the role its guiding prompt describes), and the section count and order never change — but the heading text must not be the template's default wording, and must not be a generic label that could sit on any post. Two posts enriched from this template should never end up with the same headings.
-- Change only the guiding prose/prompts/comments and heading wording, never the structure — with ONE exception: fill the frontmatter "tags:" list with 2–4 short, lowercase, relevant topic tags for this title, in the template's language. Leave every other frontmatter value untouched.
+- If the body is a NUMBERED QUESTION LIST with bold section labels (e.g. "2. **Why we bought it** — …"), keep the numbering, count, order, and every bold label EXACTLY as written — the labels are the site-wide fixed section structure. Re-tune only the question text after each label.
+- If the body instead uses Markdown headings with prompts under them, rewrite EVERY heading in this title's own words. Each heading keeps its section's job (the role its guiding prompt describes), and the section count and order never change — but the heading text must not be the template's default wording, and must not be a generic label that could sit on any post. Two posts enriched from this template should never end up with the same headings.
+- Change only the guiding prose/questions/comments (and heading wording where that rule applies), never the structure — with ONE exception: fill the frontmatter "tags:" list with 2–4 short, lowercase, relevant topic tags for this title, in the template's language. Leave every other frontmatter value untouched.
 - Invent no facts, experiences, results, numbers, or claims — the author fills those in; you only reshape the questions (tags are topic labels, not claims).
 - Output only the raw template text: no code fences, no preamble, no commentary.`
 

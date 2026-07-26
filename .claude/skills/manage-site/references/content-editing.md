@@ -49,24 +49,33 @@ criteria themselves are one shared list in `site.yaml` (localized; names
 currently provisional) — renaming there relabels every review; see CLAUDE.md
 "Gaia Score".
 
-The six body sections are **the universal structure of every review** — keep
-them all, in this order. The template headings name each section's **job**,
-not its final wording: every review retitles them in its own words (the
-enrich endpoint does this for drafted stubs), so no two reviews share
-headings — only roles:
+The six body sections are **the universal structure of every review**, and
+their headings are **fixed — identical across all reviews** (a returning
+reader always meets the same shape; per-post heading rewording is a Journal
+thing, not a review thing). The published body is a bold `**Verdict:**` lead
+line (no heading) followed by five `##` sections, in this order — en / ru:
 
-1. `**Verdict:** …` — the answer first
-2. why we bought it — the real problem it had to solve in the family's
-   day (emotional problem first — nobody wakes up wanting a review)
-3. how it lived with us — duration, conditions, bought vs gifted (gifted
-   must be disclosed here)
-4. what's genuinely good
-5. what we'd change — every review names a flaw
-6. who it's for — and who should skip it
+1. `**Verdict:** …` — the answer first / `**Вердикт:** …`
+2. `## Why we bought it` / `## Зачем мы это купили` — the real problem it had
+   to solve in the family's day (emotional problem first)
+3. `## How it lived with us` / `## Как эта вещь жила с нами` — duration,
+   conditions, bought vs gifted (gifted must be disclosed here)
+4. `## What's genuinely good` / `## Что действительно хорошо`
+5. `## What we'd change` / `## Что бы мы изменили` — every review names a flaw
+6. `## Who it's for` / `## Кому это подойдёт` — and who should skip it
 
-To change the structure, edit the template files themselves (keep en + ru in
-lockstep) — don't improvise per review. Ask for real testing notes if the
-user didn't provide them.
+**A draft is a numbered question list, not a section skeleton**: six
+questions at the top of the body, each opening with its section's bold label
+(`2. **Why we bought it** — …`) — dictation-friendly, no headings to distract
+the author, answered in any order. The enrich endpoint re-tunes only the
+question text after each label; the labels never change. Publishing = sort
+the answers under the fixed `##` headings above (verdict stays the bold lead
+line) and delete the questions.
+
+To change the structure or the fixed headings, edit the template files
+themselves (keep en + ru in lockstep, and this list with them) — don't
+improvise per review. Ask for real testing notes if the user didn't provide
+them.
 
 ## Add a Compass chapter → `content/locales/en/compass/<epic-tag>/<NN-slug>.md`
 

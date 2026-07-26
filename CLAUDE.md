@@ -150,8 +150,10 @@ authoring: `content-editing.md`).
 (filter chip), `scores` (the **Gaia Score**), optional `price`/`boughtAt`
 (where we got it — free text)/`affiliateUrl` (rendered
 `rel=sponsored`)/`image`/`tags`/`state`, `excerpt`, `date`. Every review
-follows the universal six-section body structure whose canonical source is
-`content/shared/review-template.<locale>.md`. Detail layout (header, reading
+follows the universal six-section body structure with **fixed headings shared
+by all reviews**; drafts seed from `content/shared/review-template.<locale>.md`
+as a numbered question list (canonical headings + draft format:
+content-editing.md "Add a product review"). Detail layout (header, reading
 column, sticky facts rail of panel cards, buy CTA): development.md "Cards" row.
 
 **Gaia Score (review rating).** Not a single star: `site.yaml`
