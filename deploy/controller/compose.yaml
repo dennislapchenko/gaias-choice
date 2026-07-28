@@ -28,10 +28,13 @@ services:
       # — earlier the body was a fixed 4-line job_id/repository/revision/stack
       # block with no knob). Go text/template, validated at startup; the title
       # stays daemon-native ("✅ Deployment completed"), not templatable.
+      # Repo prefix is the literal short name (this daemon polls only
+      # dennislapchenko/gaias-choice) — doco-cd registers no template funcs, so
+      # splitting .Repository on "/" in-template isn't possible.
       # Full write-up: the doco-cd skill "Notifications (Apprise)".
       APPRISE_API_URL: http://apprise:8000/notify
       APPRISE_NOTIFY_LEVEL: success
-      APPRISE_NOTIFY_BODY_TEMPLATE: "{{.Stack}} @ {{.Revision}}{{if .IsReconciliation}} · {{.ReconciliationEvent}}{{end}}"
+      APPRISE_NOTIFY_BODY_TEMPLATE: "gaias-choice -> {{.Stack}} @ {{.Revision}}{{if .IsReconciliation}} · {{.ReconciliationEvent}}{{end}}"
     depends_on:
       - apprise
     volumes:
