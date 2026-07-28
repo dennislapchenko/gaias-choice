@@ -5,7 +5,7 @@
 # to digests (immutable); bump tag+digest together to upgrade.
 services:
   doco-cd:
-    image: ghcr.io/kimdre/doco-cd:v0.94.0@sha256:378fd7d5fcbd9b038640dd14af7ded1686ab26b464bbbe7df880cc0563161e38
+    image: ghcr.io/kimdre/doco-cd:0.103.0@sha256:90b56eafce7791142a91bdeadf71a2cb0c0d554ef70c4e47ac43bbd7554afbf6
     restart: unless-stopped
     # secrets.env holds the live stack's env (the former deploy.env). PASS_ENV
     # forwards these into every deployment's compose interpolation, so
@@ -24,15 +24,14 @@ services:
       # per-poll. APPRISE_NOTIFY_URLS carries the bot token, so it lives in
       # secrets.env (not here): tgram://<TELEGRAM_BOT_TOKEN>/<chat_id>/
       #
-      # The message body is doco-cd-native and NOT customizable: it hard-codes
-      # `<emoji> <title>` + alphabetically-sorted `job_id`/`repository`/`revision`/
-      # `stack` lines (verified in its notification.go — no template knob). It
-      # reads a bit verbose (job_id etc.); reshaping it means replacing Apprise
-      # with our own forwarder endpoint, judged not worth an extra sidecar for a
-      # single stack. Revisit only if several hosts/stacks ever share one channel.
+      # Body collapsed to a one-liner via APPRISE_NOTIFY_BODY_TEMPLATE (0.103.0+
+      # — earlier the body was a fixed 4-line job_id/repository/revision/stack
+      # block with no knob). Go text/template, validated at startup; the title
+      # stays daemon-native ("✅ Deployment completed"), not templatable.
       # Full write-up: the doco-cd skill "Notifications (Apprise)".
       APPRISE_API_URL: http://apprise:8000/notify
       APPRISE_NOTIFY_LEVEL: success
+      APPRISE_NOTIFY_BODY_TEMPLATE: "{{.Stack}} @ {{.Revision}}{{if .IsReconciliation}} · {{.ReconciliationEvent}}{{end}}"
     depends_on:
       - apprise
     volumes:
