@@ -185,9 +185,17 @@
   `compose.yaml`/`Caddyfile`/`deploy.env`) was `rm -rf`'d — it was inert but a
   footgun (a `docker compose up` there would fight doco-cd's caddy for 80/443).
   `/opt/gaias-choice/` is gone; persistent data still lives in `/srv/gaias-choice`.
-- **doco-cd image pinned** to `v0.94.0@sha256:378fd7d5…` in
-  `/opt/doco-cd/compose.yaml` (was `:latest`). Bump the tag+digest together to
-  upgrade the daemon.
+- **doco-cd image pinned** to `0.103.0@sha256:90b56eaf…` in
+  `/opt/doco-cd/compose.yaml` (history: `:latest` → `0.94.0` → `0.102.0`). Bump
+  the tag+digest together to upgrade the daemon (via `task doco:sync`). Note the
+  ghcr tags have **no `v` prefix** (`:0.103.0`, not `:v0.94.0` — the earlier `v`
+  tag was cosmetic and only resolved because the `@sha256` digest is
+  authoritative).
+- **Deploy pings collapsed to a one-liner** (0.103.0's
+  `APPRISE_NOTIFY_BODY_TEMPLATE`): body = `{{.Stack}} @ {{.Revision}}` instead of
+  the 4-line job_id/repository/revision/stack block; title stays daemon-native.
+  Public repo ⇒ no `GIT_ACCESS_TOKEN_USER` needed (that 0.103.0 knob is for
+  private GitLab deploy tokens).
 
 #### doco-cd server config (`/opt/doco-cd/`)
 
@@ -202,7 +210,7 @@ polling, `PASS_ENV`, pinned images):
 ```yaml
 services:
   doco-cd:
-    image: ghcr.io/kimdre/doco-cd:v0.94.0@sha256:378fd7d5fcbd9b038640dd14af7ded1686ab26b464bbbe7df880cc0563161e38
+    image: ghcr.io/kimdre/doco-cd:0.103.0@sha256:90b56eafce7791142a91bdeadf71a2cb0c0d554ef70c4e47ac43bbd7554afbf6
     restart: unless-stopped
     env_file: [secrets.env]          # forwarded into deploys via PASS_ENV
     environment:
@@ -219,6 +227,7 @@ services:
       APPRISE_NOTIFY_LEVEL: success                # min level; no-op polls
                                                    # aren't deploys, so this is
                                                    # ✅/❌ deploys only, no spam
+      APPRISE_NOTIFY_BODY_TEMPLATE: "{{.Stack}} @ {{.Revision}}{{if .IsReconciliation}} · {{.ReconciliationEvent}}{{end}}"  # one-line body (0.103.0+)
     depends_on: [apprise]            # service_started (not _healthy): a broken
                                      # apprise must never block polling
     volumes:
