@@ -36,10 +36,16 @@ services:
       # Full write-up: the doco-cd skill "Notifications (Apprise)".
       APPRISE_API_URL: http://apprise:8000/notify
       APPRISE_NOTIFY_LEVEL: success
+      # Backticks render as code because the tgram URL carries ?format=markdown
+      # (push-secrets.sh). Commit lines are FULLY backtick-wrapped: inside a code
+      # span stray _/* are inert; the one remaining killer is a backtick in a
+      # commit subject — unbalanced backticks make Telegram reject the WHOLE
+      # message (tested: 424, ping lost). House rule: no backticks in commit
+      # subjects.
       APPRISE_NOTIFY_BODY_TEMPLATE: |-
-        gaias-choice -> {{.Stack}} @ {{.Revision}}{{if .IsReconciliation}} · {{.ReconciliationEvent}}{{end}}
+        gaias-choice -> `{{.Stack}}` @ `{{.Revision}}`{{if .IsReconciliation}} · {{.ReconciliationEvent}}{{end}}
         {{- range .Commits }}
-        - {{ . }}
+        - `{{ . }}`
         {{- end }}
     depends_on:
       - apprise

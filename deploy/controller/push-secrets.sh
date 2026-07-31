@@ -41,7 +41,7 @@ echo "→ streaming secrets.env (.env + derived APPRISE_NOTIFY_URLS) to $VM_HOST
   # .env verbatim, minus the notify-only knob and any hand-set APPRISE line
   # (we derive it), plus the composed target.
   grep -vE '^(TELEGRAM_CHAT_ID|APPRISE_NOTIFY_URLS)=' "$ENV_FILE"
-  echo "APPRISE_NOTIFY_URLS=tgram://${tok}/${chat}/"
+  echo "APPRISE_NOTIFY_URLS=tgram://${tok}/${chat}/?format=markdown"
 } | ssh -p "$VM_PORT" -i "$VM_KEY" "$VM_HOST" \
   'umask 077 && cat > /opt/doco-cd/secrets.env && cd /opt/doco-cd && docker compose up -d'
 
