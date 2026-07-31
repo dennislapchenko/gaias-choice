@@ -5,7 +5,7 @@
 # to digests (immutable); bump tag+digest together to upgrade.
 services:
   doco-cd:
-    image: ghcr.io/kimdre/doco-cd:0.103.0@sha256:90b56eafce7791142a91bdeadf71a2cb0c0d554ef70c4e47ac43bbd7554afbf6
+    image: ghcr.io/kimdre/doco-cd:0.104.0@sha256:a1ff99adaccd8eb29e218d79b30051cec0b4aa1e2451643d0082d04e4b5c4653
     restart: unless-stopped
     # secrets.env holds the live stack's env (the former deploy.env). PASS_ENV
     # forwards these into every deployment's compose interpolation, so
@@ -24,17 +24,23 @@ services:
       # per-poll. APPRISE_NOTIFY_URLS carries the bot token, so it lives in
       # secrets.env (not here): tgram://<TELEGRAM_BOT_TOKEN>/<chat_id>/
       #
-      # Body collapsed to a one-liner via APPRISE_NOTIFY_BODY_TEMPLATE (0.103.0+
-      # — earlier the body was a fixed 4-line job_id/repository/revision/stack
-      # block with no knob). Go text/template, validated at startup; the title
-      # stays daemon-native ("✅ Deployment completed"), not templatable.
+      # Body via APPRISE_NOTIFY_BODY_TEMPLATE (0.103.0+ knob): identity
+      # one-liner, then one line per deployed commit — `.Commits` is 0.104.0+;
+      # `{{ . }}` inside the range renders "shortHash subject". Empty on first
+      # deploy / failed deploys / reconcile events, so it degrades back to the
+      # one-liner. Go text/template, validated at startup; the title stays
+      # daemon-native ("✅ Deployment completed"), not templatable.
       # Repo prefix is the literal short name (this daemon polls only
       # dennislapchenko/gaias-choice) — doco-cd registers no template funcs, so
       # splitting .Repository on "/" in-template isn't possible.
       # Full write-up: the doco-cd skill "Notifications (Apprise)".
       APPRISE_API_URL: http://apprise:8000/notify
       APPRISE_NOTIFY_LEVEL: success
-      APPRISE_NOTIFY_BODY_TEMPLATE: "gaias-choice -> {{.Stack}} @ {{.Revision}}{{if .IsReconciliation}} · {{.ReconciliationEvent}}{{end}}"
+      APPRISE_NOTIFY_BODY_TEMPLATE: |-
+        gaias-choice -> {{.Stack}} @ {{.Revision}}{{if .IsReconciliation}} · {{.ReconciliationEvent}}{{end}}
+        {{- range .Commits }}
+        - {{ . }}
+        {{- end }}
     depends_on:
       - apprise
     volumes:
