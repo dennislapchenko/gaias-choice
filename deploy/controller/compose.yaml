@@ -42,8 +42,11 @@ services:
       # commit subject — unbalanced backticks make Telegram reject the WHOLE
       # message (tested: 424, ping lost). House rule: no backticks in commit
       # subjects.
+      # Non-success levels append `.Message` — that's where the failure reason
+      # lives; without it a failed deploy pings with no error at all (upstream
+      # chose to document this rather than auto-append, doco-cd PR #1591).
       APPRISE_NOTIFY_BODY_TEMPLATE: |-
-        gaias-choice -> `{{.Stack}}` @ `{{.Revision}}`{{if .IsReconciliation}} · {{.ReconciliationEvent}}{{end}}
+        gaias-choice -> `{{.Stack}}` @ `{{.Revision}}`{{if .IsReconciliation}} · {{.ReconciliationEvent}}{{end}}{{if ne .Level "success"}} — `{{.Message}}`{{end}}
         {{- range .Commits }}
         - `{{ . }}`
         {{- end }}
