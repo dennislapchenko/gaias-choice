@@ -5,7 +5,7 @@
 # to digests (immutable); bump tag+digest together to upgrade.
 services:
   doco-cd:
-    image: ghcr.io/kimdre/doco-cd:0.104.0@sha256:a1ff99adaccd8eb29e218d79b30051cec0b4aa1e2451643d0082d04e4b5c4653
+    image: ghcr.io/kimdre/doco-cd:0.105.2@sha256:b3dbc27d6cce437ad5acc34f326121623b5a3b2b45b85baf3029001e0f9fa764
     restart: unless-stopped
     # secrets.env holds the live stack's env (the former deploy.env). PASS_ENV
     # forwards these into every deployment's compose interpolation, so
@@ -45,8 +45,12 @@ services:
       # Non-success levels append `.Message` — that's where the failure reason
       # lives; without it a failed deploy pings with no error at all (upstream
       # chose to document this rather than auto-append, doco-cd PR #1591).
+      # `.Duration` (PR #1591, live in 0.105.0) = job start → notification. It's
+      # zero (renders `0s`, not empty) when no deployment ran, so it hangs off
+      # the ELSE of the reconcile branch, never its own `{{if}}` — a reconcile
+      # gets ` · <event>`, a real deploy gets ` in <duration>`.
       APPRISE_NOTIFY_BODY_TEMPLATE: |-
-        gaias-choice -> `{{.Stack}}` @ `{{.Revision}}`{{if .IsReconciliation}} · {{.ReconciliationEvent}}{{end}}{{if ne .Level "success"}} — `{{.Message}}`{{end}}
+        gaias-choice -> `{{.Stack}}` @ `{{.Revision}}`{{if .IsReconciliation}} · {{.ReconciliationEvent}}{{else}} in {{.Duration}}{{end}}{{if ne .Level "success"}} — `{{.Message}}`{{end}}
         {{- range .Commits }}
         - `{{ . }}`
         {{- end }}
