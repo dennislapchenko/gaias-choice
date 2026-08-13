@@ -5,7 +5,7 @@
 # to digests (immutable); bump tag+digest together to upgrade.
 services:
   doco-cd:
-    image: ghcr.io/kimdre/doco-cd:0.105.2@sha256:b3dbc27d6cce437ad5acc34f326121623b5a3b2b45b85baf3029001e0f9fa764
+    image: ghcr.io/kimdre/doco-cd:0.108.0@sha256:7b444cbd9b350e0d65a93942cfa025ae62fe52d5f00b7b791d93630ef6909cef
     restart: unless-stopped
     # secrets.env holds the live stack's env (the former deploy.env). PASS_ENV
     # forwards these into every deployment's compose interpolation, so
@@ -41,7 +41,8 @@ services:
       # span stray _/* are inert; the one remaining killer is a backtick in a
       # commit subject — unbalanced backticks make Telegram reject the WHOLE
       # message (tested: 424, ping lost). House rule: no backticks in commit
-      # subjects.
+      # subjects. Since 0.107.0 such a rejection is at least visible: the
+      # Apprise response body is logged, so `docker logs doco-cd` names it.
       # Non-success levels append `.Message` — that's where the failure reason
       # lives; without it a failed deploy pings with no error at all (upstream
       # chose to document this rather than auto-append, doco-cd PR #1591).
