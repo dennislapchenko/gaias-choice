@@ -39,9 +39,11 @@ short titles verbatim; frontmatter titles may add colon-subtitles.]
 [Last chapter: back-link only; its Next section closes the course — no
 invented forward link.]
 
-## Heading skeleton (fixed — feeds the TOC; do not rename)
+## Heading skeleton (feeds the TOC — exactly 8 `## ` headings per chapter)
 
-[EN + RU skeletons from the course plan.]
+[EN + RU skeletons from the course plan. v1 courses: all 8 titles fixed.
+v2 courses: headings 2–8 fixed; heading 1's title is chapter-specific per
+the plan's hook column — restate each chapter's hook type + role here.]
 
 ## Non-negotiables
 
@@ -50,6 +52,10 @@ invented forward link.]
   EXACTLY one seed; answer incoming seeds explicitly (lists below).
 - Practice: away from screen, 20–60 min, checklist form, visible artifact
   piece, ends with the observable success criterion.
+- (v2) Hook type + role per the table; Path Bridge opens now-you-can with the
+  pocket rule VERBATIM from this brief; every self-check question ends with
+  an answer pointer; practice includes the "Short on time:" minimum; the
+  checkpoint/return, slow arcs, and crib land exactly where assigned.
 - EN and RU same substance, each written as itself — RU in her voice, EN
   plain house voice. No calque either direction.
 - No medical claims. No invented biography; hypotheticals as «представьте».

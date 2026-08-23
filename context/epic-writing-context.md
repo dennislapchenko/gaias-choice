@@ -14,6 +14,16 @@ This file is the *structure and method*; read it together with:
 - `.claude/skills/manage-site/references/content-editing.md` — house voice
   rules (truth-first, verdict-first, no hype) remain senior to everything here.
 
+**Pattern version: this blueprint is course pattern v2.** The six courses
+shipped before it (`founder-guide`, `herbalism`, `homeopathy`, `aromatherapy`,
+`trophology`, `inside-websites`) were built to **v1** and stay v1 — no
+retrofit; v1's record and the assessment that produced v2 live in
+[course-pattern-v1.md](course-pattern-v1.md). Every course plan states its
+pattern version in its header. v2 = v1 plus: the hook palette and chapter
+roles (§4), the checkpoint chapter + the return (§3e), slow arcs (§3f),
+pocket rules, answer pointers, the minimum honest version, and the crib
+(§3d, §4).
+
 ---
 
 ## 1. What an epic course is (the content model)
@@ -125,31 +135,111 @@ tells them where they are; the artifact makes them want the next chapter.
 Fixed order at the end of each chapter:
 
 1. **«Теперь вы умеете»** — 3–5 bullets, all verbs, restating the chapter's
-   capabilities (this is the recap *and* the self-efficacy beat).
+   capabilities (this is the recap *and* the self-efficacy beat). **Path
+   chapters open this section with the pocket rule** — one bolded,
+   blockquoted sentence: the chapter's whole capability compressed into a
+   decision instrument the reader can quote from memory a year later («Если
+   плавает — жди и встряхивай», "the label IS the safety system"). One per
+   Path chapter, frozen in the course plan, restated verbatim in the crib
+   (§4.8). A pocket rule is a *rule*, not a slogan — it must decide something.
 2. **«Практика»** — the task (see §4.6).
 3. **«Проверьте себя»** — 3–5 questions answerable from memory, no answers
-   printed (retrieval, not review).
+   printed (retrieval, not review). **Every question ends with an answer
+   pointer** — the address, never the answer: *(гл. 3 → «Минеральный
+   ключ»)*. A reader who blanks gets a place to go instead of a dead end;
+   a reader who recalls never needs it.
 4. **The hook** — one sentence naming the question the next chapter answers, +
-   the link. The next chapter's Trail block then picks the reader up.
+   the link. **Tie it to the artifact whenever possible**: name the visible
+   gap the reader's own artifact now has («на полке есть банки — но какие из
+   них можно доверить детской коже?») rather than abstract curiosity. The
+   next chapter's Trail block then picks the reader up.
+
+### 3e. The checkpoint chapter + the return
+
+v1's continuity looked mostly backward (callbacks) and its artifact only ever
+grew — early pieces fossilized at early-chapter skill. v2 adds one
+consolidation point per course:
+
+- **11-chapter courses:** the plan designates ONE mid-Path chapter (ch. 5–7)
+  as the **checkpoint**. It opens, right after the Trail block, with the
+  **gate quiz** — 5 retrieval questions spanning *all* previous chapters
+  (not just the last one), each with an answer pointer (§3d.3). Its practice
+  performs **the return**: instead of adding a new artifact piece, the reader
+  takes one *named early piece* back to the bench and upgrades it with
+  everything learned since — re-encoding, transfer, and the honest lesson
+  that revision is half of craft. The chapter still teaches (role `concept`
+  or `protocol` inside), but its practice budget belongs to the return.
+- **5-chapter courses:** a lighter beat, not a whole chapter — chapter 3 or 4
+  opens with a 3-question gate quiz and its practice includes one return
+  element alongside its new piece.
+
+The plan freezes which chapter is the checkpoint and which early piece the
+return revisits. A course may add further returns where the domain invites
+them; the checkpoint's is mandatory.
+
+### 3f. Slow arcs
+
+Where the domain has processes that take real calendar time — a tincture
+maturing, timber drying, a seed stratifying, a moisture reading repeated
+across weeks — the plan schedules them deliberately: **set in chapter N,
+check or harvest in chapter M**. A slow arc is the strongest continuity
+device a course can own: the reader's kitchen/workshop physically contains
+a thing addressed to a future chapter. At least one slow arc per course
+*where the domain allows it* (screen-bound or purely conceptual topics are
+exempt — never fake one). The arc's set-point and harvest-point are frozen
+in the plan; the harvesting chapter must actually harvest (a set-and-forgotten
+jar is worse than none).
 
 ## 4. Chapter anatomy (the fixed skeleton)
 
-Use these as `##` headings in this order — consistent headings across all
-chapters make the left TOC sidebar a genuine "resume where I stopped" tool
-(landed 2026-07-05: sticky scrollspy TOC on desktop, collapsible above the
-article on mobile, shown once a page has 3+ headings; RU headings get
-transliterated anchor ids automatically).
-Concepts inside the Core section get `###` subheadings.
+**Eight `##` headings per chapter, always.** Headings 2–8 keep the same
+titles across the whole course — consistent headings make the left TOC
+sidebar a genuine "resume where I stopped" tool (sticky scrollspy TOC on
+desktop, collapsible above the article on mobile, shown once a page has 3+
+headings; RU headings get transliterated anchor ids automatically). **The
+first heading is the one v2 frees:** its title is chapter-specific, set by
+the chapter's hook (below). The count stays exactly 8 — that's what the
+verification greps check. Concepts inside the Core section get `###`
+subheadings.
 
-1. **Trail block** (§3a — not a heading, just the opening lines).
-2. **The hook** — a real, concrete scene or problem the reader recognizes.
-   Truth-first: a real situation of the owners' or an honestly hypothetical
-   one («представьте…») — never invented experience dressed as biography.
+1. **Trail block** (§3a — not a heading, just the opening lines). The
+   checkpoint chapter's gate quiz (§3e) follows immediately after it.
+2. **The hook** — first `##` heading, title chapter-specific. v1 opened every
+   chapter with the same beat; v2 assigns each chapter one hook type from a
+   closed palette of four, frozen in the plan, **never the same type in two
+   adjacent chapters**:
+   - **Scene** — a real, concrete situation the reader recognizes (the v1
+     default, still the workhorse).
+   - **Misconception autopsy** — open with the wrong belief most readers
+     carry, stated fairly, then take it apart («считается, что сруб гниёт —
+     считается неверно, и вот где ошибка прячется»).
+   - **Artifact in trouble** — start from the reader's own artifact: the
+     piece they built is now insufficient, ambiguous, or failing, and this
+     chapter is what fixes it.
+   - **Open question** — a question the reader *should* be able to answer by
+     now and provably can't; the gap is the hook. (Natural fit for the
+     checkpoint chapter.)
+   Truth-first applies to all four: a real situation of the owners' or an
+   honestly hypothetical one («представьте…») — never invented experience
+   dressed as biography.
 3. **The promise** — what the reader will be able to *do* after this chapter.
    Verbs, not themes.
-4. **The core** — 3–5 concepts, each in the same micro-pattern: *idea → why it
-   matters → concrete example → how to actually do it*. Concrete before
-   abstract, always.
+4. **The core** — shaped by the chapter's **role**, assigned in the plan:
+   - **`concept`** (the default) — 3–5 concepts, each in the same
+     micro-pattern: *idea → why it matters → concrete example → how to
+     actually do it*. Concrete before abstract, always.
+   - **`gallery`** — the catalog chapter (ten herbs, eight wood species): the
+     core is a run of short portraits in ONE fixed per-item format defined in
+     the plan (v1 forced these through the concepts mold; the kitchen-ten
+     visibly strained). Still ≤5 *new concepts* — the portrait format itself
+     is usually one of them; the items are instances, not concepts.
+   - **`protocol`** — the decision chapter (matching X to the situation):
+     the core builds one decision instrument — a tree, a table, a go/no-go
+     sequence — and walks it through contrasting cases.
+   Roles reshape the *inside* of the core and practice only; the 8-heading
+   skeleton never changes. A course is mostly `concept` chapters — use the
+   other roles where the material genuinely has that shape, not for variety's
+   own sake.
 5. **Worked example** — apply this chapter's concepts to the spine artifact,
    start to finish, showing the messy middle (her difficulty-first honesty:
    name what's hard before showing it done).
@@ -158,7 +248,19 @@ Concepts inside the Core section get `###` subheadings.
    20–60 minutes; produces a **visible piece of the artifact**; written as
    numbered steps or a GFM checklist so it cannot be skim-read as prose; ends
    with «как понять, что получилось» — one observable success criterion.
+   **Plus the minimum honest version:** one marked line — «Если сегодня нет
+   сил:» / "Short on time:" — naming a 10–15-minute cut that still moves the
+   artifact visibly. Not homework-lite: the honest minimum. A stalled
+   artifact turns the course's pull into guilt; the minimum keeps the chain
+   unbroken.
 7. **Self-check + Bridge** (§3d).
+8. **The crib** (final chapter only, inside its worked-example or core
+   section): the whole course on one page — every named concept with a
+   one-line reminder, every pocket rule verbatim, and the course-map diagram
+   re-embedded in past tense. The reader is told to copy or print it and
+   keep it *with the artifact* — the named-concept vocabulary the course
+   built finally becomes a physical reference the reader owns, instead of
+   evaporating at the last Bridge.
 
 **Visuals (mandatory since 2026-07-05):** every chapter carries **1–3
 visuals** that cement its core concepts — GFM tables for comparisons/reference
@@ -189,6 +291,13 @@ never repeat the adjacent sentence.
   outlining, not after.
 - **One artifact, interleaved skills** — every chapter's practice hits the same
   project from a new angle; that's interleaving with a purpose.
+- **Consolidation beats accumulation** — the checkpoint's gate quiz and the
+  return (§3e) force the reader to hold the whole earlier course together
+  once, mid-way, when it's cheap to repair a gap — not discover it in the
+  Summit. Revising an early artifact piece re-encodes it at current skill.
+- **A prediction across time is the deepest retrieval** — slow arcs (§3f)
+  make the reader write down an expectation and meet it chapters later;
+  being wrong on paper teaches more than being told.
 - **Concrete → abstract**, example → principle, never the reverse order.
 - **Desirable difficulty lives in 10–11** — the Summit chapters *should* make
   the reader work; say so there, in her voice (she names fear and overrules
@@ -236,16 +345,28 @@ Before saving ideology integrated upon course plan - ask the owner for feedback.
       Include the seed list **both ways**: by origin (which chapter plants
       what) *and* as an incoming index (which seeds each chapter must answer) —
       a writer picking up chapter N needs its debts listed, not derivable.
+      **v2 plans also freeze:** pattern version in the header, per-chapter
+      **role** and **hook type** columns (no hook type twice in a row), the
+      **checkpoint chapter + which early piece its return revisits**, the
+      **slow arcs** (set-chapter → harvest-chapter, or the explicit "domain
+      has none"), and every Path chapter's **pocket rule** verbatim.
       Store it as `context/course-plan-<course-slug>.md` (existing examples:
       `course-plan-homeopathy.md`, `course-plan-herbalism.md`) and keep its
       "Status" line current as chapters ship.
 - [ ] 22 files: 11 chapters × {en, ru}, same slugs, `chapter:` 1–11, epic tag
       first in `tags`.
 - [ ] `site.yaml` `epics:` entry in both locales; epic image via `task images`.
-- [ ] Every chapter passes: Trail block ✓, ≤5 new concepts ✓, artifact piece ✓,
-      ≥2 callbacks ✓ (ch. 2+), exactly 1 seed ✓ (Path), Bridge ✓, RU passes the
-      persona 5-question test ✓.
-- [ ] Seeds audit: every planted seed is actually answered in its named chapter.
+- [ ] Every chapter passes: Trail block ✓, exactly 8 `##` headings (heading 1
+      free-titled per its hook, 2–8 fixed) ✓, hook type + role per the plan ✓,
+      ≤5 new concepts ✓, artifact piece ✓, minimum honest version in the
+      practice ✓, ≥2 callbacks ✓ (ch. 2+), exactly 1 seed ✓ (Path), Bridge
+      with pocket rule (Path) + answer pointers ✓, RU passes the persona
+      5-question test ✓.
+- [ ] Checkpoint chapter: gate quiz spans all prior chapters ✓; the return
+      revisits the piece the plan names ✓. Final chapter carries the crib ✓.
+- [ ] Seeds audit: every planted seed is actually answered in its named
+      chapter. Slow-arc audit: every set jar/board/bed is harvested in its
+      named chapter.
 - [ ] `task typecheck && task build`; spot-check the epic tab, chapter order
       1→11, prev/next links, and the TOC sidebar in a served `dist/`.
 - [ ] Docs updated; **ask the owner before committing**.

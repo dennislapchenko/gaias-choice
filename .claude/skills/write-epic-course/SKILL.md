@@ -46,6 +46,10 @@ document every agent works from. Template with the non-obvious parts marked:
 - the full chapter table: slug, **short title** (used in Trail links) and full
   colon-subtitle freedom, stage, both locales;
 - the seed graph **both directions** — planted by / must be answered in;
+- **(v2 courses)** per-chapter **role** and **hook type**, the checkpoint
+  chapter + which early artifact piece its return revisits, the slow arcs
+  (set → harvest), and every Path chapter's **pocket rule verbatim** — all
+  copied from the plan, never left to a writer;
 - per-chapter visual assignments (which diagram, which GFM table);
 - domain non-negotiables (safety lines etc.) *with placement* — "state X in
   ch. N's portrait and recall it in ch. M" beats "mention X somewhere";
