@@ -390,7 +390,11 @@ The owners are first-time site builders learning the affiliate-content
 business in public. Keep this section current *and short* — the phase, not
 the history:
 
-- **Compass:** all six courses complete. The founder guides are internal
+- **Compass:** all six courses complete (built to course pattern v1 — see
+  `context/course-pattern-v1.md`; the live blueprint is pattern v2). Two new
+  EN-only courses are planned to v2 — `wooden-house` (11 ch) and `plant-id`
+  (5 ch), plans in `context/course-plan-*.md`, awaiting owner review; no
+  chapters written. The founder guides are internal
   playbooks deliberately published as a course — don't "fix" them into
   consumer content; retelling them from lived experience is a roadmap
   milestone. Open launch-checklist item: label each reader course's
