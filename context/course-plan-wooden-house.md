@@ -239,6 +239,18 @@ New templates in `content/shared/diagrams/`:
 | `hat-and-boots` — whole-house silhouette: plinth/capillary break/drainage slots below, roof slots above | 4 (boots filled, hat slots greyed "ch. 8") | 8 (completed), 10 |
 | `wall-section` — layered vapor-open wall cut: structure / insulation / plasters / air films, arrows for wind, vapor, rain | 6 | 7 (moisture-plan version: air-path arrows), 10 (the chosen wall) |
 | `top-down-burn` — the подовая печь cut: hearth floor, top-down flame, gas path through the mass, sealed air intake, flue | 9 | — |
+| `mold-triangle` — moisture / warmth / food, with moisture marked as the only controllable corner | 1 | — |
+| `wall-srub`, `wall-timber-frame`, `wall-stud-frame`, `wall-cordwood`, `wall-roundwood` — one construction drawing per wall portrait | 3 (one each) | — |
+| `srub-anatomy` — венец, паз (with packing, in cutaway) and чашка labeled on one corner | 5 | — |
+| `settling-years` — the same wall as built vs two years on: the drop, the settling gap over an opening, the jacked interior post | 5 | — |
+| `frame-joint` — post/beam/brace closing a triangle, plus a pegged mortise-and-tenon detail | 5 | — |
+
+**The per-portrait rule (learned from reader feedback):** chapter 3 shipped
+without drawings and its first reader had to search the web to picture each
+wall. Gallery chapters give **every portrait its own visual** — the blueprint
+§4 `gallery` role now states this, and it overrides the 1–3 visuals guideline.
+Chapter 5 is the same lesson in a `concept` chapter: named physical geometry
+(a joint, a foreign term of art) always owes the reader a drawing.
 
 GFM tables (authored inline): the five-approaches comparison (ch. 3 — the
 shortlist instrument), foundation options for wet clay (ch. 4), the joinery

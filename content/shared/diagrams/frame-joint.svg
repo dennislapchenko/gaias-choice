@@ -1,0 +1,31 @@
+<svg viewBox="0 0 640 392" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<!-- LEFT: the frame's three words -->
+<line x1="44" y1="302" x2="298" y2="302" stroke="var(--line)" stroke-width="2"/>
+<polygon points="88,120 166,120 88,244" fill="var(--sage)" opacity="0.16"/>
+<rect x="70" y="118" width="16" height="184" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<rect x="240" y="118" width="16" height="184" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<rect x="56" y="100" width="214" height="18" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<g transform="translate(86,250) rotate(-57.5)">
+<rect x="-4" y="-9" width="162" height="18" rx="4" fill="var(--sage)"/>
+<text x="77" y="4" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--on-accent)">{{brace}}</text>
+</g>
+<text x="163" y="113" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink)">{{beam}}</text>
+<text transform="translate(78,210) rotate(-90)" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink)">{{post}}</text>
+<!-- RIGHT: the pegged mortise-and-tenon, read from outside -->
+<line x1="340" y1="320" x2="610" y2="320" stroke="var(--line)" stroke-width="2"/>
+<rect x="360" y="80" width="44" height="240" fill="var(--sand-2)" stroke="var(--line)" stroke-width="2"/>
+<rect x="404" y="168" width="176" height="44" fill="var(--sand-2)" stroke="var(--line)" stroke-width="2"/>
+<!-- hidden tenon inside the mortise -->
+<rect x="366" y="180" width="38" height="20" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="5 4"/>
+<!-- shoulder seated tight against the post -->
+<line x1="405" y1="167" x2="405" y2="213" stroke="var(--sage)" stroke-width="3.5"/>
+<!-- pegs through post and tenon -->
+<circle cx="382" cy="185" r="4.5" fill="var(--clay)"/>
+<circle cx="382" cy="199" r="4.5" fill="var(--clay)"/>
+<line x1="486" y1="64" x2="414" y2="160" stroke="var(--line)" stroke-width="1.5"/>
+<text x="490" y="56" text-anchor="middle" font-size="12" fill="var(--ink)">{{joint}}</text>
+<line x1="440" y1="340" x2="388" y2="206" stroke="var(--line)" stroke-width="1.5"/>
+<text x="470" y="354" text-anchor="middle" font-size="11.5" fill="var(--ink)">{{d1}}</text>
+<!-- takeaway -->
+<text x="320" y="384" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{note}}</text>
+</svg>

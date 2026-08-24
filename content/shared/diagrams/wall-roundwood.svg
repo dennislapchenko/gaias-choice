@@ -1,0 +1,25 @@
+<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<text x="320" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{t1}}</text>
+<!-- ground -->
+<line x1="210" y1="214" x2="450" y2="214" stroke="var(--line)" stroke-width="2"/>
+<!-- two poles, tapering, no two alike -->
+<path d="M252,212 C249,164 254,118 258,62 L274,62 C278,118 276,164 284,212 Z" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="2"/>
+<path d="M380,212 C375,160 384,112 386,56 L404,56 C406,112 401,160 410,212 Z" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="2"/>
+<!-- the round beam they carry, tapered too -->
+<path d="M202,48 C290,44 380,42 448,44 L448,70 C380,72 290,70 202,66 Z" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="2"/>
+<!-- its end grain: the round section, fibers uncut -->
+<circle cx="206" cy="57" r="10" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="2"/>
+<circle cx="206" cy="57" r="4" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+<!-- scribed joints where beam saddles each pole -->
+<path d="M252,70 Q266,59 282,70" fill="none" stroke="var(--clay)" stroke-width="2.5"/>
+<path d="M378,72 Q394,61 412,72" fill="none" stroke="var(--clay)" stroke-width="2.5"/>
+<!-- callouts -->
+<line x1="180" y1="50" x2="194" y2="54" stroke="var(--line)" stroke-width="1.5"/>
+<text x="176" y="54" text-anchor="end" font-size="11.5" fill="var(--ink)">{{p1}}</text>
+<line x1="464" y1="100" x2="408" y2="74" stroke="var(--line)" stroke-width="1.5"/>
+<text x="468" y="104" text-anchor="start" font-size="11.5" fill="var(--ink)">{{p2}}</text>
+<line x1="180" y1="146" x2="248" y2="148" stroke="var(--line)" stroke-width="1.5"/>
+<text x="176" y="150" text-anchor="end" font-size="11.5" fill="var(--ink)">{{p3}}</text>
+<!-- takeaway -->
+<text x="320" y="248" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{note}}</text>
+</svg>

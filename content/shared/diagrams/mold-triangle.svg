@@ -1,0 +1,27 @@
+<svg viewBox="0 0 640 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<!-- the triangle -->
+<line x1="320" y1="80" x2="180" y2="300" stroke="var(--line)" stroke-width="3"/>
+<line x1="320" y1="80" x2="460" y2="300" stroke="var(--line)" stroke-width="3"/>
+<line x1="180" y1="300" x2="460" y2="300" stroke="var(--line)" stroke-width="3"/>
+<!-- moisture: the one corner in the builder's hands -->
+<circle cx="320" cy="80" r="28" fill="var(--sage)"/>
+<path d="M320 64 C327 76 331 84 331 89 A11 11 0 1 1 309 89 C309 84 313 76 320 64 Z" fill="var(--on-accent)"/>
+<!-- warmth: given, not removable -->
+<circle cx="180" cy="300" r="28" fill="var(--sand-2)" stroke="var(--line)" stroke-width="2" stroke-dasharray="6 4"/>
+<path d="M172 310 Q176 305 172 300 Q168 295 172 290" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"/>
+<path d="M180 310 Q184 305 180 300 Q176 295 180 290" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"/>
+<path d="M188 310 Q192 305 188 300 Q184 295 188 290" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"/>
+<!-- food: the wood itself, always on the table -->
+<circle cx="460" cy="300" r="28" fill="var(--sand-2)" stroke="var(--line)" stroke-width="2" stroke-dasharray="6 4"/>
+<circle cx="460" cy="300" r="14" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+<circle cx="460" cy="300" r="7" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+<!-- corner labels -->
+<text x="320" y="34" text-anchor="middle" font-size="13" font-weight="600" fill="var(--ink)">{{s1}}</text>
+<text x="180" y="352" text-anchor="middle" font-size="12" fill="var(--ink)">{{s2}}</text>
+<text x="460" y="352" text-anchor="middle" font-size="12" fill="var(--ink)">{{s3}}</text>
+<!-- the control callout -->
+<line x1="350" y1="70" x2="448" y2="62" stroke="var(--line)" stroke-width="1.5"/>
+<text x="454" y="66" text-anchor="start" font-size="12" fill="var(--ink)">{{control}}</text>
+<!-- takeaway -->
+<text x="320" y="374" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{note}}</text>
+</svg>

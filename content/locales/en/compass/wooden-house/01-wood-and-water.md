@@ -100,6 +100,16 @@ this course compressed into one sentence: every wall, foundation, roof, and
 stove decision ahead is a move in moisture management, whatever else it
 also is.
 
+```diagram mold-triangle
+aria: "The mold triangle: three corners — moisture, warmth, food. The moisture corner is solid and accented as the one under the builder's control; warmth and food are drawn dashed, as givens."
+s1: "moisture"
+s2: "warmth — the point of a house"
+s3: "food — the wood itself"
+control: "the one corner you control"
+note: "Break any corner and mold stops. Only one corner will let you."
+caption: "Keep this shape in reach — chapters 2, 4, 6 and 7 will each hand you back its moisture corner."
+```
+
 Now rerun the black corners from the street. Warm room air carries water
 vapor. The corner behind the wardrobe is the wall's coldest spot, with no
 air moving across it. Vapor condenses on cold surfaces. Paper-faced board is

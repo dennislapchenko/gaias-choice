@@ -1,0 +1,33 @@
+<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<text x="320" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{t1}}</text>
+<!-- plates -->
+<rect x="192" y="54" width="260" height="10" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<rect x="192" y="194" width="260" height="10" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<!-- many thin studs at close spacing -->
+<rect x="192" y="64" width="7" height="130" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="1"/>
+<rect x="220" y="64" width="7" height="130" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="1"/>
+<rect x="248" y="64" width="7" height="130" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="1"/>
+<rect x="276" y="64" width="7" height="130" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="1"/>
+<rect x="304" y="64" width="7" height="130" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="1"/>
+<rect x="332" y="64" width="7" height="130" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="1"/>
+<rect x="360" y="64" width="7" height="130" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="1"/>
+<rect x="388" y="64" width="7" height="130" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="1"/>
+<rect x="416" y="64" width="7" height="130" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="1"/>
+<rect x="445" y="64" width="7" height="130" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="1"/>
+<!-- insulation batts in the open bays -->
+<path d="M210,72 q7,11 0,22 q-7,11 0,22 q7,11 0,22 q-7,11 0,22 q7,11 0,22" fill="none" stroke="var(--mint)" stroke-width="9" stroke-linecap="round"/>
+<path d="M238,72 q-7,11 0,22 q7,11 0,22 q-7,11 0,22 q7,11 0,22 q-7,11 0,22" fill="none" stroke="var(--mint)" stroke-width="9" stroke-linecap="round"/>
+<path d="M266,72 q7,11 0,22 q-7,11 0,22 q7,11 0,22 q-7,11 0,22 q7,11 0,22" fill="none" stroke="var(--mint)" stroke-width="9" stroke-linecap="round"/>
+<path d="M294,72 q-7,11 0,22 q7,11 0,22 q-7,11 0,22 q7,11 0,22 q-7,11 0,22" fill="none" stroke="var(--mint)" stroke-width="9" stroke-linecap="round"/>
+<!-- sheathing skin bracing one face -->
+<rect x="340" y="48" width="112" height="162" rx="2" fill="var(--sage)"/>
+<!-- callouts -->
+<line x1="182" y1="96" x2="190" y2="98" stroke="var(--line)" stroke-width="1.5"/>
+<text x="178" y="100" text-anchor="end" font-size="11.5" fill="var(--ink)">{{p1}}</text>
+<line x1="460" y1="106" x2="454" y2="108" stroke="var(--line)" stroke-width="1.5"/>
+<text x="464" y="110" text-anchor="start" font-size="11.5" fill="var(--ink)">{{p2}}</text>
+<line x1="182" y1="156" x2="206" y2="152" stroke="var(--line)" stroke-width="1.5"/>
+<text x="178" y="160" text-anchor="end" font-size="11.5" fill="var(--ink)">{{p3}}</text>
+<!-- takeaway -->
+<text x="320" y="248" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{note}}</text>
+</svg>

@@ -47,6 +47,16 @@ A сруб is not "a pile of logs" — it is a precise, ancient system, and thre
 
 **Чашка** — the cup carved where logs cross at a corner, the joint that both carries the wall's weight and seals its coldest point. Corners are where log craft is most visible and where it fails first. What it tells you: look at the corners before anything else. Tight cups with no daylight, log ends proud past the crossing (they protect the joint), no checking split running into the cup — that is a corner to trust. Daylight in a corner is a verdict, and it is final.
 
+```diagram srub-anatomy
+aria: "A log-wall corner: stacked courses with one венец highlighted, proud log ends seated in чашка cups, and a magnified cutaway of the паз groove with its packing."
+venec: "венец — one full ring of logs"
+chashka: "чашка — the cup where logs cross"
+paz: "паз — the groove underneath"
+d1: "moss or wool packing in the паз"
+note: "One corner shows all three words at once — and shows how well they were cut."
+caption: "Every noun in the quote that opened this chapter points at a spot on this corner."
+```
+
 ### The settling years
 
 Now the word that shapes the whole calendar of a log build. Recall **wood follows water** from chapter 1 — before reading on, answer from memory: in which direction does your billet move most, along the grain or across it?
@@ -54,6 +64,17 @@ Now the word that shapes the whole calendar of a log build. Recall **wood follow
 Across. And now look at what a сруб *is*: twenty-odd logs stacked horizontally, which means twenty-odd *across-the-grain* dimensions piled one on another. As the logs dry in the wall — and they keep drying for years — every one of them shrinks in exactly the direction that is the wall's height. The wall sinks. Add the packing compressing in every паз and the cups seating deeper, and a full-height wall comes down by roughly a hand's width over about two years. This is усадка, and it is not a defect — it is the material keeping its oldest promise, at architectural scale.
 
 **The settling years** is this chapter's named concept, and its practical law: **a сруб is finished twice.** Built once — walls up, roof on. Finished the second time — windows and doors fitted, rigid finishes applied, the chimney's collar closed — only after the settling has largely happened. What the settling years forbid meanwhile: anything rigid fixed across multiple венцы, tight-fitted frames in openings (they get sliding surrounds with a settling gap above, a piece of standard log-craft the joinery card will help you ask about), plaster too early, and any vertical post inside the building that is not fitted with an adjustable jack to be let down as the wall comes down. A carpenter who does not volunteer this list is the wrong carpenter.
+
+```diagram settling-years
+aria: "The same log wall as built and two years later: the wall has sunk below its original height, the settling gap above the window has nearly closed, and an interior post rides an adjustable jack."
+t1: "as built"
+t2: "two years later"
+gap: "settling gap, sliding surround"
+jack: "every interior post gets a jack"
+drop: "roughly a hand's width"
+note: "The wall does the moving; the gap and the jack absorb it."
+caption: "Both allowances are built in on day one, sized for movement that has not happened yet."
+```
 
 And here the chapter's forward question plants itself, because you have already seen the collision coming: the walls will sink a hand's width over two years — what happens to a roof built on walls that move? Chapter 8 answers.
 
@@ -64,6 +85,17 @@ The frame's vocabulary is shorter and the physics is barer. **Post** — vertica
 Notice what a frame does *not* do: settle. Its posts stand along the grain, and wood barely moves in that direction — the same anisotropy that sinks a сруб leaves a frame's height almost untouched. That single fact is now a real row on your shortlist: a frame can take its windows, doors and finishes immediately; a сруб waits out its settling years. Neither is the winner — it is a schedule and a temperament, and chapter 10 will make the worked terrain choose in the open.
 
 **The joint is the frame's whole honesty.** In traditional work, post meets beam in a mortise-and-tenon — a tongue in a socket — locked with wooden pegs, and everything about it is *readable*: you can see the shoulder seated tight against the post, see the pegs, see whether they were offset to draw the joint closed. Modern metal plates and screws are legitimate engineering and pass codes all day — but they hide their work inside the wood, and their honesty is on the certificate, not in front of your eye. This course's preference for the visible joint is exactly that: a preference for work you can personally verify, stated as such.
+
+```diagram frame-joint
+aria: "Left: a frame bent of two posts, a beam and a diagonal brace closing a triangle. Right: a pegged mortise-and-tenon in detail — hidden tenon dashed, two pegs, the shoulder seated against the post."
+post: "post — carries load down"
+beam: "beam — carries load across"
+brace: "brace — the triangle"
+joint: "the pegged mortise-and-tenon"
+d1: "pegs and shoulder, in plain sight"
+note: "The dashes are the only hidden part — everything else is yours to inspect."
+caption: "The left half is why a frame stands; the right half is how you judge who built it."
+```
 
 ### Drying, and what your billet has been quietly proving
 

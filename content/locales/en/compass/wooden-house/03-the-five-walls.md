@@ -76,6 +76,16 @@ notches, each log grooved along its underside to sit tight on the one
 below. The oldest wooden wall of the northern forest belt — the 150-year
 house from chapter 1 is one.
 
+```diagram wall-srub
+aria: "Elevation of a stacked-log wall corner: six log courses, the cross-wall log ends showing as ringed circles at the interlocked corner, log ends standing proud past the crossing, a grooved joint line under every course"
+t1: "Сруб — every log is structure"
+p1: "Corner cup; ends stand proud"
+p2: "Groove (паз) under each log"
+p3: "Each course carries all above"
+note: "Openings interrupt the structure — old срубs keep windows few and small"
+caption: "The circles at the corner are the exposed end grain the water line names — this wall's weak point stands at its showiest joint."
+```
+
 **How it carries load.** The wall *is* the structure: every log is a beam,
 every course carries everything above it. Openings are interruptions the
 wall must be persuaded to accept, which is why old срубs have few and small
@@ -111,6 +121,16 @@ carpentry. The wall between the posts is not structure — it is filling and
 wrapping, chosen separately, which makes this the one approach that splits
 "holds the roof up" from "keeps the weather out" into two independent jobs.
 
+```diagram wall-timber-frame
+aria: "A timber frame in elevation: two heavy posts under a beam on a sill, corner braces, and a light dashed infill panel between the posts that carries no load"
+t1: "Timber frame — skeleton apart from skin"
+p1: "Posts carry all the load"
+p2: "Beam, joined by carpentry"
+p3: "Brace; infill holds nothing"
+note: "The dashed wall is chosen separately — as thick and vapor-open as needed"
+caption: "Two independent jobs in one picture: the heavy members hold the roof up, and everything dashed only keeps the weather out."
+```
+
 **How it carries load.** Concentrated: loads run down the posts to a
 handful of points. Openings are nearly free — the wall between posts holds
 nothing — and the roof can stand before any wall exists, a real gift in a
@@ -138,6 +158,16 @@ the wall for years before the smell reports it.
 
 **What it is.** Many small studs at close spacing, sheathed into a rigid
 skin — the default wall of the modern world, from suburbs to site sheds.
+
+```diagram wall-stud-frame
+aria: "A light stud-frame wall in elevation: many thin studs at close spacing between top and bottom plates, insulation batts filling the open bays, and a sheathing panel bracing one face"
+t1: "Light stud frame — many small members"
+p1: "Studs: no single one matters"
+p2: "Sheathing braces the whole"
+p3: "Insulation between the studs"
+note: "Redundancy is real — a weak stud has neighbors"
+caption: "Thin sections everywhere the eye lands: nothing here has mass to buffer a leak, so every layer trusts the detailing."
+```
 
 **How it carries load.** Distributed: no single member matters much, the
 sheathing braces the whole, and the redundancy is genuine — a weak stud has
@@ -167,6 +197,16 @@ piece by piece.
 **What it is.** Short logs laid across the wall like stacked firewood,
 bedded in lime or clay mortar, end grain showing on both faces.
 
+```diagram wall-cordwood
+aria: "A cordwood wall face-on: short log ends showing as ringed circles packed into a mortar matrix, framed by posts and beams that carry the loads"
+t1: "Cordwood — firewood laid into mortar"
+p1: "End grain faces the weather"
+p2: "Lime or clay mortar bed"
+p3: "Frame carries the real loads"
+note: "Wood and mortar move to different rules — joints open as moisture swings"
+caption: "What the drawing makes plain: nearly the whole face is circles — this wall greets the rain almost entirely with end grain."
+```
+
 **How it carries load.** The mortar matrix and log ends together — and
 modestly. Best practice puts cordwood as infill inside a frame that carries
 the real loads, and this course agrees with best practice.
@@ -195,6 +235,16 @@ crown.
 
 **What it is.** Timber framing with unmilled poles: the tree's round
 section used whole, fibers uncut, bark off.
+
+```diagram wall-roundwood
+aria: "A roundwood frame: two unmilled tapering poles carrying a round beam, the beam's end grain visible as a ringed circle, scribed joints marked where beam saddles each pole"
+t1: "Roundwood framing — the tree used whole"
+p1: "Round section, fibers uncut"
+p2: "Scribed to its exact partner"
+p3: "Taper — no two poles alike"
+note: "Thinnings and coppice — wood a sawmill rejects — can hold up a roof"
+caption: "No two members in this drawing share a dimension — which is exactly what a span table cannot describe."
+```
 
 **How it carries load.** Like a timber frame — a skeleton. A round pole is
 stronger for its diameter than the beam milled out of it, because milling

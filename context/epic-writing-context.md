@@ -233,6 +233,13 @@ subheadings.
      the plan (v1 forced these through the concepts mold; the kitchen-ten
      visibly strained). Still ≤5 *new concepts* — the portrait format itself
      is usually one of them; the items are instances, not concepts.
+     **Whenever the items have a physical form the reader may never have
+     seen, the portrait format includes a per-item visual** — a small drawing
+     inside every portrait, not one shared diagram at the top. This overrides
+     the 1–3 visuals rule below (five portraits = five drawings, and they
+     count as one visual system). The test: if a reader would open a search
+     tab to picture the item, the portrait owes them the picture. A shipped
+     gallery chapter that skipped this sent its first reader googling.
    - **`protocol`** — the decision chapter (matching X to the situation):
      the core builds one decision instrument — a tree, a table, a go/no-go
      sequence — and walks it through contrasting cases.
@@ -263,9 +270,14 @@ subheadings.
    evaporating at the last Bridge.
 
 **Visuals (mandatory since 2026-07-05):** every chapter carries **1–3
-visuals** that cement its core concepts — GFM tables for comparisons/reference
+visuals** (gallery chapters excepted — see the role above) that cement its
+core concepts — GFM tables for comparisons/reference
 grids (authored inline per locale), and SVG diagrams for flows, maps, scales,
-compasses, charts. Diagram **geometry is authored once as a shared template**
+compasses, charts. **Physical form counts as a concept:** whenever a chapter
+names a shape, a joint, an assembly, or a term of art in another language, it
+owes the reader a drawing of the thing itself — prose describing geometry
+sends readers to a search engine, and a reader who leaves to search may not
+come back. Diagram **geometry is authored once as a shared template**
 (`content/shared/diagrams/<name>.svg`, with `{{slot}}` tokens) and embedded in
 each locale's markdown via a `` ```diagram <name> `` fenced block whose YAML
 supplies the per-locale text — so geometry is never mirrored by hand. The Gate

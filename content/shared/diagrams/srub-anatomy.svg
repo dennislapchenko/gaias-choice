@@ -1,0 +1,40 @@
+<svg viewBox="0 0 640 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<!-- log wall corner, side view: five courses, top course highlighted as one венец -->
+<rect x="108" y="70" width="242" height="40" rx="18" fill="var(--mint)" stroke="var(--line)" stroke-width="1.5"/>
+<rect x="108" y="112" width="242" height="40" rx="18" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<rect x="108" y="154" width="242" height="40" rx="18" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<rect x="108" y="196" width="242" height="40" rx="18" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<rect x="108" y="238" width="242" height="40" rx="18" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<!-- perpendicular wall's log ends: proud past the crossing, seated in the cups -->
+<circle cx="94" cy="111" r="20" fill="var(--mint)" stroke="var(--line)" stroke-width="1.5"/>
+<circle cx="94" cy="153" r="20" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<circle cx="94" cy="195" r="20" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<circle cx="94" cy="237" r="20" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<circle cx="94" cy="111" r="8" fill="none" stroke="var(--line)" stroke-width="1" opacity="0.7"/>
+<circle cx="94" cy="153" r="8" fill="none" stroke="var(--line)" stroke-width="1" opacity="0.7"/>
+<circle cx="94" cy="195" r="8" fill="none" stroke="var(--line)" stroke-width="1" opacity="0.7"/>
+<circle cx="94" cy="237" r="8" fill="none" stroke="var(--line)" stroke-width="1" opacity="0.7"/>
+<!-- венец callout: the highlighted ring -->
+<line x1="352" y1="90" x2="396" y2="90" stroke="var(--line)" stroke-width="1.5"/>
+<text x="402" y="94" text-anchor="start" font-size="12" fill="var(--ink)">{{venec}}</text>
+<!-- чашка callout: the crossing -->
+<line x1="86" y1="338" x2="100" y2="262" stroke="var(--line)" stroke-width="1.5"/>
+<text x="60" y="350" text-anchor="start" font-size="12" fill="var(--ink)">{{chashka}}</text>
+<!-- zoom mark: one seam, magnified in the cutaway -->
+<ellipse cx="240" cy="153" rx="26" ry="11" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4"/>
+<line x1="266" y1="158" x2="474" y2="252" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 4"/>
+<!-- cutaway: two logs in section, groove on the upper log's underside, packing between -->
+<circle cx="520" cy="362" r="38" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<circle cx="520" cy="362" r="14" fill="none" stroke="var(--line)" stroke-width="1" opacity="0.6"/>
+<path d="M494.8 298.4 A38 38 0 1 1 545.2 298.4 A42 42 0 0 0 494.8 298.4 Z" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<circle cx="520" cy="266" r="14" fill="none" stroke="var(--line)" stroke-width="1" opacity="0.6"/>
+<path d="M496 312 Q506 304 516 312 T536 312 T546 312" fill="none" stroke="var(--clay)" stroke-width="5" stroke-linecap="round"/>
+<!-- паз callout: the groove -->
+<line x1="462" y1="316" x2="498" y2="302" stroke="var(--line)" stroke-width="1.5"/>
+<text x="458" y="320" text-anchor="end" font-size="12" fill="var(--ink)">{{paz}}</text>
+<!-- packing callout -->
+<line x1="600" y1="432" x2="552" y2="318" stroke="var(--line)" stroke-width="1.5"/>
+<text x="630" y="446" text-anchor="end" font-size="11.5" fill="var(--ink)">{{d1}}</text>
+<!-- takeaway -->
+<text x="320" y="464" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{note}}</text>
+</svg>
