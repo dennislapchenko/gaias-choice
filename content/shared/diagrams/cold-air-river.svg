@@ -1,0 +1,38 @@
+<svg viewBox="0 0 640 345" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs>
+<marker id="arr-car" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker>
+<marker id="arr-car-sun" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--clay)"/></marker>
+</defs>
+<!-- terrain -->
+<path d="M20,95 C100,112 180,150 235,185 C250,194 258,199 272,201 L318,206 C368,216 402,258 448,276 C480,288 540,290 620,288 L620,316 L20,316 Z" fill="var(--sand-2)"/>
+<path d="M20,95 C100,112 180,150 235,185 C250,194 258,199 272,201 L318,206 C368,216 402,258 448,276 C480,288 540,290 620,288" fill="none" stroke="var(--line)" stroke-width="2"/>
+<!-- forest on the hilltop -->
+<polygon points="40,98 52,62 64,98" fill="var(--sage)" opacity="0.85"/><line x1="52" y1="98" x2="52" y2="106" stroke="var(--muted)" stroke-width="3"/>
+<polygon points="76,106 88,72 100,106" fill="var(--sage)" opacity="0.85"/><line x1="88" y1="106" x2="88" y2="113" stroke="var(--muted)" stroke-width="3"/>
+<polygon points="112,120 124,88 136,120" fill="var(--sage)" opacity="0.85"/><line x1="124" y1="120" x2="124" y2="127" stroke="var(--muted)" stroke-width="3"/>
+<!-- house on the shoulder bench -->
+<rect x="282" y="182" width="26" height="19" fill="var(--sage)"/>
+<polygon points="278,182 295,167 312,182" fill="var(--sage)"/>
+<!-- cold-air pool in the hollow -->
+<path d="M390,240 L620,240 L620,288 C540,290 480,288 448,276 C425,266 405,254 390,240 Z" fill="var(--mint)" fill-opacity="0.6"/>
+<line x1="390" y1="240" x2="620" y2="240" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="5 4"/>
+<!-- cold air flowing downslope like water -->
+<path d="M180,152 C210,168 228,180 246,190" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-car)"/>
+<path d="M320,212 C350,220 372,238 392,252" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-car)"/>
+<path d="M400,250 C420,262 440,270 462,276" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-car)"/>
+<path d="M470,254 C495,257 515,258 535,258" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-car)"/>
+<!-- sun on the south side -->
+<circle cx="556" cy="42" r="15" fill="none" stroke="var(--clay)" stroke-width="3"/>
+<line x1="556" y1="22" x2="556" y2="10" stroke="var(--clay)" stroke-width="2.5"/>
+<line x1="536" y1="42" x2="524" y2="42" stroke="var(--clay)" stroke-width="2.5"/>
+<line x1="541" y1="27" x2="532" y2="18" stroke="var(--clay)" stroke-width="2.5"/>
+<line x1="571" y1="27" x2="580" y2="18" stroke="var(--clay)" stroke-width="2.5"/>
+<path d="M540,66 C480,100 400,150 352,180" fill="none" stroke="var(--clay)" stroke-width="2" marker-end="url(#arr-car-sun)"/>
+<!-- labels -->
+<text x="28" y="40" text-anchor="start" font-size="12.5" font-weight="700" fill="var(--ink)">{{top}}</text>
+<text x="295" y="150" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{shoulder}}</text>
+<text x="515" y="306" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{hollow}}</text>
+<text x="520" y="270" text-anchor="middle" font-size="11.5" fill="var(--ink)">{{pool}}</text>
+<text x="616" y="88" text-anchor="end" font-size="11.5" fill="var(--muted)">{{sun}}</text>
+<text x="320" y="336" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{note}}</text>
+</svg>

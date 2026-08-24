@@ -589,6 +589,165 @@ const SETS = {
 <path d="M-70,78 C-20,66 40,58 70,42 C30,44 -10,48 -34,40 C6,34 44,24 60,10 C28,14 -4,18 -22,10 C6,2 28,-8 36,-22" fill="none" stroke="#f7d0e4" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
 <path d="M36,-30 C44,-16 50,-8 50,0 A14,14 0 1 1 22,0 C22,-8 28,-16 36,-30 Z" fill="#f4aacf" opacity="0.95"/>`,
       },
+
+      // «The wooden house» (wooden-house, EN-only) — building a wooden house
+      // on a cold, wet site. Warm timber/forest family: dark bark-olive
+      // backgrounds with khaki/bronze strokes (hue ~45, desaturated — distinct
+      // from trophology's saturated orange-amber, founder's gold, herbalism's
+      // green); one hue/lightness step per chapter, icon per concept.
+      {
+        // ch. 1 — wood and water: a log's end grain beside a water drop.
+        slug: 'wooden-house-01-wood-and-water',
+        petalCount: 12,
+        bg: ['#33290f', '#6b5a1e', '#120e04'],
+        stroke: '#e3d08a',
+        centerIcon: `
+<circle cx="-18" cy="-6" r="58" fill="#f0e4bc" opacity="0.92"/>
+<circle cx="-18" cy="-6" r="40" fill="none" stroke="#6b5a1e" stroke-width="3" opacity="0.7"/>
+<circle cx="-18" cy="-6" r="24" fill="none" stroke="#6b5a1e" stroke-width="3" opacity="0.7"/>
+<circle cx="-18" cy="-6" r="9" fill="#6b5a1e" opacity="0.8"/>
+<path d="M46,-8 C58,10 66,20 66,32 A20,20 0 1 1 26,32 C26,20 34,10 46,-8 Z" fill="#8fc9c0" opacity="0.95"/>`,
+      },
+      {
+        // ch. 2 — reading the land: a slope profile with contours and a
+        // house mark on the shoulder.
+        slug: 'wooden-house-02-reading-the-land',
+        petalCount: 10,
+        bg: ['#2f2c10', '#5f5c20', '#100f04'],
+        stroke: '#d8d88a',
+        centerIcon: `
+<path d="M-84,-40 C-40,-20 -10,6 20,28 C48,46 68,56 84,60" fill="none" stroke="#f0e4bc" stroke-width="6" stroke-linecap="round" opacity="0.92"/>
+<path d="M-84,-12 C-48,4 -18,22 8,40" fill="none" stroke="#c9a55a" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+<path d="M-84,16 C-52,28 -28,42 -8,54" fill="none" stroke="#c9a55a" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
+<rect x="-6" y="8" width="22" height="16" fill="#96b45e"/>
+<path d="M-10,8 L5,-6 L20,8 Z" fill="#96b45e"/>`,
+      },
+      {
+        // ch. 3 — the five walls: five upright planks, grain lines inside.
+        slug: 'wooden-house-03-the-five-walls',
+        petalCount: 14,
+        bg: ['#362a12', '#705a24', '#130e05'],
+        stroke: '#e8cf8f',
+        centerIcon: `
+<g fill="#f0e4bc" opacity="0.92">
+  <rect x="-85" y="-55" width="24" height="110" rx="6"/><rect x="-51" y="-62" width="24" height="117" rx="6"/>
+  <rect x="-17" y="-68" width="24" height="123" rx="6"/><rect x="17" y="-62" width="24" height="117" rx="6"/>
+  <rect x="51" y="-55" width="24" height="110" rx="6"/>
+</g>
+<g stroke="#705a24" stroke-width="3" opacity="0.6">
+  <line x1="-73" y1="-40" x2="-73" y2="40"/><line x1="-39" y1="-46" x2="-39" y2="44"/>
+  <line x1="-5" y1="-52" x2="-5" y2="48"/><line x1="29" y1="-46" x2="29" y2="44"/>
+  <line x1="63" y1="-40" x2="63" y2="40"/>
+</g>`,
+      },
+      {
+        // ch. 4 — the ground beneath: a sill beam on stone plinths, ground
+        // line through them, drainage dashes below.
+        slug: 'wooden-house-04-the-ground-beneath',
+        petalCount: 8,
+        bg: ['#332715', '#68512a', '#120d06'],
+        stroke: '#dfc394',
+        centerIcon: `
+<rect x="-46" y="-38" width="92" height="20" rx="6" fill="#b08048" opacity="0.95"/>
+<rect x="-38" y="-14" width="34" height="22" rx="8" fill="#f0e4bc" opacity="0.92"/>
+<rect x="4" y="-14" width="34" height="22" rx="8" fill="#f0e4bc" opacity="0.92"/>
+<line x1="-84" y1="10" x2="84" y2="10" stroke="#c9a55a" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+<rect x="-22" y="14" width="44" height="22" rx="8" fill="#f0e4bc" opacity="0.7"/>
+<path d="M-60,48 L-40,48 M20,52 L44,52 M-10,62 L14,62" stroke="#c9a55a" stroke-width="3" stroke-linecap="round" opacity="0.5"/>`,
+      },
+      {
+        // ch. 5 — the carpenter's grammar: two logs crossing in a corner
+        // notch, a peg at the joint.
+        slug: 'wooden-house-05-the-carpenters-grammar',
+        petalCount: 16,
+        bg: ['#38290e', '#74561c', '#140d04'],
+        stroke: '#ecd084',
+        centerIcon: `
+<rect x="-84" y="-16" width="168" height="32" rx="14" fill="#f0e4bc" opacity="0.9"/>
+<rect x="-16" y="-84" width="32" height="168" rx="14" fill="#c9a55a" opacity="0.9"/>
+<path d="M-84,0 L-30,0 M30,0 L84,0" stroke="#74561c" stroke-width="3" opacity="0.5"/>
+<circle cx="0" cy="0" r="10" fill="#74561c" opacity="0.75"/>`,
+      },
+      {
+        // ch. 6 — the wool coat: layered arcs wrapping a wall block, a wavy
+        // wool strand above.
+        slug: 'wooden-house-06-the-wool-coat',
+        petalCount: 12,
+        bg: ['#332b14', '#665a2a', '#110f06'],
+        stroke: '#ded898',
+        centerIcon: `
+<rect x="-24" y="-20" width="48" height="64" rx="8" fill="#f0e4bc" opacity="0.92"/>
+<path d="M-70,44 A70,70 0 0 1 70,44" fill="none" stroke="#96b45e" stroke-width="9" stroke-linecap="round" opacity="0.85"/>
+<path d="M-48,44 A48,48 0 0 1 48,44" fill="none" stroke="#c9a55a" stroke-width="9" stroke-linecap="round" opacity="0.85"/>
+<path d="M-58,-60 Q-46,-70 -34,-60 T-10,-60 T14,-60 T38,-60 T62,-60" fill="none" stroke="#ded898" stroke-width="4" stroke-linecap="round" opacity="0.7"/>`,
+      },
+      {
+        // ch. 7 — the breathing house: a house outline with air waves
+        // passing through it.
+        slug: 'wooden-house-07-the-breathing-house',
+        petalCount: 10,
+        bg: ['#2e2d12', '#5a6024', '#0f1005'],
+        stroke: '#cfe08f',
+        centerIcon: `
+<path d="M-56,-6 L0,-54 L56,-6 L56,52 L-56,52 Z" fill="none" stroke="#f0e4bc" stroke-width="5" stroke-linejoin="round" opacity="0.92"/>
+<path d="M-84,16 C-68,8 -56,24 -40,16 C-28,10 -20,18 -12,16" fill="none" stroke="#96b45e" stroke-width="5" stroke-linecap="round"/>
+<path d="M12,24 C28,16 40,32 56,24 C68,18 76,26 86,24" fill="none" stroke="#96b45e" stroke-width="5" stroke-linecap="round"/>`,
+      },
+      {
+        // ch. 8 — a roof for the snow: a steep roof with overhangs, a
+        // snowflake above the ridge.
+        slug: 'wooden-house-08-a-roof-for-the-snow',
+        petalCount: 14,
+        bg: ['#2c2a16', '#565830', '#0e0f07'],
+        stroke: '#d8dcb0',
+        centerIcon: `
+<path d="M-64,58 L0,-30 L64,58 Z" fill="none" stroke="#f0e4bc" stroke-width="6" stroke-linejoin="round" opacity="0.92"/>
+<path d="M-64,58 L-78,72 M64,58 L78,72" stroke="#f0e4bc" stroke-width="6" stroke-linecap="round" opacity="0.92"/>
+<g transform="translate(0,-68)" stroke="#d8dcb0" stroke-width="4" stroke-linecap="round">
+  <path d="M0,-16 L0,16 M-14,-8 L14,8 M14,-8 L-14,8"/>
+</g>`,
+      },
+      {
+        // ch. 9 — the hearth: a flame on a hearth line under a masonry arch.
+        slug: 'wooden-house-09-the-hearth',
+        petalCount: 8,
+        bg: ['#3a2810', '#7a5218', '#150d04'],
+        stroke: '#f0c878',
+        centerIcon: `
+<path d="M-52,54 L-52,-6 A52,52 0 0 1 52,-6 L52,54" fill="none" stroke="#f0e4bc" stroke-width="6" stroke-linecap="round" opacity="0.92"/>
+<line x1="-64" y1="58" x2="64" y2="58" stroke="#c9a55a" stroke-width="7" stroke-linecap="round"/>
+<g transform="translate(0,36)">
+  <path d="M0,-34 C10,-20 20,-10 20,2 A20,20 0 1 1 -20,2 C-20,-10 -10,-20 0,-34 Z" fill="#f0c878" opacity="0.95"/>
+</g>`,
+      },
+      {
+        // ch. 10 — the karst house: the slope with the pooled hollow, the
+        // house committed on the shoulder.
+        slug: 'wooden-house-10-the-karst-house',
+        petalCount: 16,
+        bg: ['#302a12', '#605626', '#100e05'],
+        stroke: '#d8cf90',
+        centerIcon: `
+<path d="M-84,-44 C-44,-28 -12,-4 12,16 C36,34 60,44 84,46" fill="none" stroke="#f0e4bc" stroke-width="6" stroke-linecap="round" opacity="0.92"/>
+<path d="M28,46 L84,46 L84,66 C64,68 44,62 28,46 Z" fill="#8fc9c0" opacity="0.55"/>
+<rect x="-14" y="-4" width="24" height="18" fill="#96b45e"/>
+<path d="M-18,-4 L-2,-18 L14,-4 Z" fill="#96b45e"/>`,
+      },
+      {
+        // ch. 11 — from paper to timber: the dossier sheet, an arrow rising
+        // from it to a log's end grain.
+        slug: 'wooden-house-11-from-paper-to-timber',
+        petalCount: 12,
+        bg: ['#362c10', '#6e5a20', '#130f04'],
+        stroke: '#e6d68f',
+        centerIcon: `
+<path d="M-72,-58 L8,-58 L28,-38 L28,58 L-72,58 Z" fill="#f0e4bc" opacity="0.92"/>
+<path d="M8,-58 L8,-38 L28,-38" fill="none" stroke="#6e5a20" stroke-width="3"/>
+<path d="M-56,-30 L4,-30 M-56,-8 L12,-8 M-56,14 L0,14 M-56,36 L8,36" stroke="#c9a55a" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+<path d="M40,40 C56,20 60,0 58,-24 M58,-24 L48,-20 M58,-24 L64,-14" fill="none" stroke="#96b45e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="62" cy="-48" r="18" fill="#c9a55a" opacity="0.95"/>
+<circle cx="62" cy="-48" r="9" fill="none" stroke="#6e5a20" stroke-width="3" opacity="0.7"/>`,
+      },
     ],
   },
 
@@ -679,6 +838,27 @@ const SETS = {
 <circle cx="0" cy="6" r="78" fill="none" stroke="#f7d0e4" stroke-width="3" opacity="0.2"/>
 <path d="M0,-58 C22,-20 38,2 38,24 A38,38 0 1 1 -38,24 C-38,2 -22,-20 0,-58 Z" fill="#f7d0e4" opacity="0.95"/>
 <path d="M-12,16 A18,18 0 0 0 6,34" fill="none" stroke="#e089b0" stroke-width="4" stroke-linecap="round" opacity="0.8"/>`,
+      },
+      {
+        // «The wooden house» — a log-cabin front: stacked log courses with
+        // round log ends under a roof outline, distinct from the course's own
+        // ring/slope/plank chapter icons.
+        slug: 'wooden-house',
+        petalCount: 12,
+        bg: ['#31290f', '#655424', '#110e04'],
+        stroke: '#e0d08c',
+        centerIcon: `
+<g fill="#f0e4bc" opacity="0.92">
+  <rect x="-62" y="-6" width="124" height="20" rx="10"/>
+  <rect x="-62" y="18" width="124" height="20" rx="10"/>
+  <rect x="-62" y="42" width="124" height="20" rx="10"/>
+</g>
+<g fill="#c9a55a">
+  <circle cx="-62" cy="4" r="10"/><circle cx="62" cy="4" r="10"/>
+  <circle cx="-62" cy="28" r="10"/><circle cx="62" cy="28" r="10"/>
+  <circle cx="-62" cy="52" r="10"/><circle cx="62" cy="52" r="10"/>
+</g>
+<path d="M-76,-8 L0,-72 L76,-8 Z" fill="none" stroke="#e0d08c" stroke-width="6" stroke-linejoin="round"/>`,
       },
     ],
   },

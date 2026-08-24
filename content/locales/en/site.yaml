@@ -152,6 +152,12 @@ epics:
     title: Inside Frontend Code Of This Site
     image: /images/epic-inside-websites.svg
     blurb: A 5-chapter guide for developers, designers and ops people — how a modern frontend site works under the hood, taught on this site's own code, from the URL bar down to the lockfile.
+  # English-only course (owner decision 2026-08-23) — deliberately absent from
+  # ru/site.yaml, so the RU locale never shows this tab.
+  - tag: wooden-house
+    title: The Wooden House
+    image: /images/epic-wooden-house.svg
+    blurb: An 11-chapter guide — design a wooden house that stays warm, dry and mold-free on a cold, wet, snowy site, from reading the land to the masonry stove at its heart, natural materials wherever they honestly work. Drawn on paper before the first log is cut.
 
 # The "in the works" rails on /reviews and /journal are NOT configured here:
 # an unfinished post is a real content file (products/ or journal/) with

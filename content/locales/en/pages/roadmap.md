@@ -75,6 +75,10 @@ belonging is harder to copy than content.
 - [x] "Aromatherapy: Living Scent" Compass course finished (all 11 chapters,
       both languages) — ten essential oils learned by nose and dose, graded on a
       trust ladder, with the fragrance-free bright line held and no medical claims
+- [x] "The Wooden House" Compass course finished (all 11 chapters,
+      English-only) — designing a wooden house on paper for a cold, wet, snowy
+      site: natural materials wherever they honestly work, mold and stale air
+      never accepted, a masonry stove at the heart
 - [ ] Pick one recurring ritual and hold it — a monthly almanac letter, a
       season-opening Journal note — something readers learn to expect. Trust
       comes from consistency, not expertise alone
@@ -189,5 +193,5 @@ we're looking for right now is the first line of this phase, not a someday.
 
 ---
 
-*Last updated: July 2026. If this page hasn't been updated in three months,
+*Last updated: August 2026. If this page hasn't been updated in three months,
 ask us why.*

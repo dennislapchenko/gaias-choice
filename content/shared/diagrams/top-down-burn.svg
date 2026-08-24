@@ -1,0 +1,43 @@
+<svg viewBox="0 0 640 416" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs>
+<marker id="arr-tdb-c" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--clay)"/></marker>
+<marker id="arr-tdb-m" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker>
+</defs>
+<!-- floor -->
+<line x1="40" y1="370" x2="600" y2="370" stroke="var(--line)" stroke-width="2"/>
+<!-- masonry body + flue stub -->
+<rect x="180" y="40" width="280" height="330" rx="8" fill="var(--sand-2)" stroke="var(--line)" stroke-width="2"/>
+<rect x="400" y="6" width="30" height="38" fill="var(--sand-2)" stroke="var(--line)" stroke-width="2"/>
+<line x1="415" y1="36" x2="415" y2="14" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-tdb-m)"/>
+<!-- internal channel walls (the serpentine's masonry) -->
+<line x1="357" y1="110" x2="357" y2="344" stroke="var(--line)" stroke-width="2"/>
+<line x1="400" y1="86" x2="400" y2="300" stroke="var(--line)" stroke-width="2"/>
+<!-- firebox: hearth floor, no grate -->
+<rect x="204" y="238" width="112" height="110" rx="4" fill="var(--mint)" stroke="var(--line)" stroke-width="1.5"/>
+<line x1="206" y1="346" x2="314" y2="346" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/>
+<!-- log stack, end grain -->
+<circle cx="238" cy="330" r="11" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="2"/>
+<circle cx="262" cy="330" r="11" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="2"/>
+<circle cx="286" cy="330" r="11" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="2"/>
+<circle cx="250" cy="312" r="11" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="2"/>
+<circle cx="274" cy="312" r="11" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="2"/>
+<!-- the flame, tip pointing DOWN onto the stack -->
+<path d="M262,306 C250,294 248,282 262,276 C276,282 274,294 262,306 Z" fill="var(--clay)"/>
+<!-- gas path: firebox up and through the serpentine to the flue -->
+<path d="M298,246 C322,236 332,214 333,180 C334,140 334,100 366,92 C392,98 381,150 380,200 C380,250 376,296 392,318 C412,332 423,296 424,248 C424,190 420,110 417,46" fill="none" stroke="var(--clay)" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#arr-tdb-c)"/>
+<!-- sealed outside-air intake from below -->
+<rect x="60" y="380" width="180" height="13" fill="var(--mint)" stroke="var(--line)" stroke-width="1.5"/>
+<rect x="228" y="348" width="13" height="45" fill="var(--mint)" stroke="var(--line)" stroke-width="1.5"/>
+<path d="M72,386 L234,386 L234,356" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#arr-tdb-m)"/>
+<!-- labels -->
+<text x="260" y="258" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--ink)">{{fire}}</text>
+<line x1="172" y1="286" x2="244" y2="288" stroke="var(--line)" stroke-width="1.5"/>
+<text x="166" y="290" text-anchor="end" font-size="11.5" fill="var(--ink)">{{burn}}</text>
+<line x1="476" y1="136" x2="464" y2="136" stroke="var(--line)" stroke-width="1.5"/>
+<text x="480" y="140" text-anchor="start" font-size="11.5" fill="var(--ink)">{{mass}}</text>
+<line x1="476" y1="236" x2="428" y2="236" stroke="var(--line)" stroke-width="1.5"/>
+<text x="480" y="240" text-anchor="start" font-size="11.5" fill="var(--ink)">{{path}}</text>
+<text x="40" y="410" text-anchor="start" font-size="11.5" fill="var(--ink)">{{air}}</text>
+<text x="442" y="24" text-anchor="start" font-size="11.5" fill="var(--ink)">{{flue}}</text>
+<text x="290" y="410" text-anchor="start" font-size="12" font-style="italic" fill="var(--muted)">{{note}}</text>
+</svg>

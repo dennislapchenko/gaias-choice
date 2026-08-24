@@ -123,9 +123,10 @@ lives in `context/epic-writing-context.md`. **Read it before writing or
 editing any course chapter**; its skeleton headings feed the chapter TOC
 sidebar, so don't rename them casually. Courses that exist: the founder
 course and `inside-websites` (both 5 chapters, complete), `trophology` (5
-chapters, complete, en+ru — `context/course-plan-trophology.md`), and three
+chapters, complete, en+ru — `context/course-plan-trophology.md`), three
 reader-facing 11-chapter courses: `herbalism`, `homeopathy` and `aromatherapy`
-(all complete, en+ru). Every course has an outline — chapter
+(all complete, en+ru) — and `wooden-house` (11 chapters, complete,
+**English-only**, the first course built to pattern v2). Every course has an outline — chapter
 one-liners, named concepts, seeds, reuse maps — in
 `context/course-plan-<slug>.md`; follow the plan when writing the next
 chapter. Writing chapters in batch (finishing a course, starting a new one):

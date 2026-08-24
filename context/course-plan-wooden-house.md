@@ -4,7 +4,8 @@ Authoring plan per [epic-writing-context.md](epic-writing-context.md) §7.
 **Pattern version: v2** (the first course planned to v2 — hook palette, roles,
 checkpoint + return, slow arcs, pocket rules, answer pointers, minimum honest
 version, crib all frozen here).
-**Status: plan drafted — awaiting owner review; no chapters written.**
+**Status: complete — all 11 chapters shipped (EN-only), the first course built
+to pattern v2.**
 **English only by owner decision (2026-08-23)** — same sanctioned deviation as
 `inside-websites`: no RU files planned, the epic stays absent from
 `ru/site.yaml` `epics:`, so the RU locale never shows the tab. The course's

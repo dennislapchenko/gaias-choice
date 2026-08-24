@@ -1,0 +1,33 @@
+<svg viewBox="0 0 640 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs>
+<marker id="arr-ws" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker>
+</defs>
+<!-- weather cue: rain slants outside (left) -->
+<line x1="48" y1="42" x2="42" y2="56" stroke="var(--muted)" stroke-width="2"/>
+<line x1="70" y1="38" x2="64" y2="52" stroke="var(--muted)" stroke-width="2"/>
+<line x1="92" y1="42" x2="86" y2="56" stroke="var(--muted)" stroke-width="2"/>
+<!-- layers, outside (left) to inside (right) -->
+<rect x="150" y="58" width="66" height="184" rx="6" fill="var(--sage)"/>
+<rect x="222" y="58" width="66" height="184" rx="6" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1"/>
+<rect x="294" y="58" width="66" height="184" rx="6" fill="var(--mint)"/>
+<rect x="366" y="58" width="66" height="184" rx="6" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1"/>
+<rect x="438" y="58" width="66" height="184" rx="6" fill="var(--mint)"/>
+<text transform="translate(187,150) rotate(-90)" text-anchor="middle" font-size="12" font-weight="600" fill="var(--on-accent)">{{l1}}</text>
+<text transform="translate(259,150) rotate(-90)" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink)">{{l2}}</text>
+<text transform="translate(331,150) rotate(-90)" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink)">{{l3}}</text>
+<text transform="translate(403,150) rotate(-90)" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink)">{{l4}}</text>
+<text transform="translate(475,150) rotate(-90)" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink)">{{l5}}</text>
+<!-- wind: stopped at the outer layer -->
+<line x1="36" y1="100" x2="140" y2="100" stroke="var(--muted)" stroke-width="2.5" marker-end="url(#arr-ws)"/>
+<line x1="146" y1="86" x2="146" y2="114" stroke="var(--clay)" stroke-width="4" stroke-linecap="round"/>
+<text x="36" y="86" text-anchor="start" font-size="11.5" fill="var(--ink)">{{a1}}</text>
+<!-- rain: shed down the outer face -->
+<line x1="36" y1="160" x2="134" y2="160" stroke="var(--muted)" stroke-width="2.5" marker-end="url(#arr-ws)"/>
+<path d="M148,166 C154,184 150,202 138,216" fill="none" stroke="var(--muted)" stroke-width="2.5" marker-end="url(#arr-ws)"/>
+<text x="36" y="146" text-anchor="start" font-size="11.5" fill="var(--ink)">{{a2}}</text>
+<!-- vapor: passes through, inside to out -->
+<line x1="544" y1="214" x2="112" y2="214" stroke="var(--muted)" stroke-width="2.5" stroke-dasharray="6 5" marker-end="url(#arr-ws)"/>
+<text x="616" y="202" text-anchor="end" font-size="11.5" fill="var(--ink)">{{a3}}</text>
+<!-- takeaway -->
+<text x="320" y="290" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{note}}</text>
+</svg>
