@@ -170,6 +170,12 @@ cross-section in one sheet), `id-verdict-flow` (ch. 3, the workflow),
 `herbarium-sheet` (ch. 4, sheet anatomy: specimen + label fields),
 `season-wheel` (ch. 5, one plant across the year).
 
+Per-portrait drawings (ch. 2's gallery — every portrait gets its own visual,
+per the v2 gallery rule): `family-mints`, `family-umbels` (carries the
+deadly-twins warning callout in `--clay`), `family-composites`,
+`family-roses`, `family-mustards`, `family-peas` — six drawings, one visual
+system, uniform 6-slot shape mirroring the wooden-house `wall-*` series.
+
 Re-embeds (preferred over near-duplicates, per v2): `certainty-ladder`
 re-embedded in ch. 3 with workflow-stage slot text; `plant-id-course-map`
 re-embedded in ch. 5 in past tense (inside the crib).
