@@ -1,0 +1,38 @@
+<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<text x="320" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{t1}}</text>
+<!-- four petals in a cross, face on -->
+<g fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5">
+<ellipse cx="230" cy="88" rx="12" ry="22"/>
+<ellipse cx="230" cy="152" rx="12" ry="22"/>
+<ellipse cx="198" cy="120" rx="22" ry="12"/>
+<ellipse cx="262" cy="120" rx="22" ry="12"/>
+</g>
+<!-- six stamens: four long on the diagonals, two short on the sides -->
+<g stroke="var(--clay)" stroke-width="2">
+<line x1="233" y1="117" x2="245" y2="105"/><line x1="227" y1="117" x2="215" y2="105"/>
+<line x1="233" y1="123" x2="245" y2="135"/><line x1="227" y1="123" x2="215" y2="135"/>
+<line x1="226" y1="120" x2="218" y2="120"/><line x1="234" y1="120" x2="242" y2="120"/>
+</g>
+<g fill="var(--clay)">
+<circle cx="247" cy="103" r="2.5"/><circle cx="213" cy="103" r="2.5"/>
+<circle cx="247" cy="137" r="2.5"/><circle cx="213" cy="137" r="2.5"/>
+<circle cx="216" cy="120" r="2.5"/><circle cx="244" cy="120" r="2.5"/>
+</g>
+<circle cx="230" cy="120" r="4" fill="var(--mint)" stroke="var(--line)" stroke-width="1"/>
+<!-- the seed pod: a long silique -->
+<path d="M450,220 C447,164 452,112 462,66 L468,68 C460,114 458,166 458,220 Z" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/>
+<line x1="465" y1="64" x2="468" y2="52" stroke="var(--sage)" stroke-width="1.5"/>
+<g fill="var(--ink)" opacity="0.5">
+<circle cx="455" cy="200" r="1.8"/><circle cx="454" cy="172" r="1.8"/><circle cx="455" cy="144" r="1.8"/>
+<circle cx="458" cy="116" r="1.8"/><circle cx="461" cy="90" r="1.8"/>
+</g>
+<!-- callouts -->
+<text x="196" y="54" text-anchor="middle" font-size="11.5" fill="var(--ink)">{{p1}}</text>
+<line x1="200" y1="58" x2="222" y2="70" stroke="var(--line)" stroke-width="1.5"/>
+<line x1="230" y1="178" x2="230" y2="190" stroke="var(--line)" stroke-width="1.5"/>
+<text x="230" y="204" text-anchor="middle" font-size="11.5" fill="var(--ink)">{{p2}}</text>
+<line x1="484" y1="146" x2="466" y2="140" stroke="var(--line)" stroke-width="1.5"/>
+<text x="488" y="150" text-anchor="start" font-size="11.5" fill="var(--ink)">{{p3}}</text>
+<!-- takeaway -->
+<text x="320" y="248" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{note}}</text>
+</svg>

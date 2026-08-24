@@ -748,6 +748,82 @@ const SETS = {
 <circle cx="62" cy="-48" r="18" fill="#c9a55a" opacity="0.95"/>
 <circle cx="62" cy="-48" r="9" fill="none" stroke="#6e5a20" stroke-width="3" opacity="0.7"/>`,
       },
+
+      // «The named world» (plant-id, EN-only) — plant identification on home
+      // ground. Fresh leaf-green/lime family (hue ~75–85 — distinct from
+      // herbalism's deep emerald, wooden-house's khaki-bark, founder's gold);
+      // one hue/lightness step per chapter, icon per concept.
+      {
+        // ch. 1 — the named world: a leaf with a name tag tied to it.
+        slug: 'plant-id-01-the-named-world',
+        petalCount: 12,
+        bg: ['#26380e', '#4f731c', '#0c1204'],
+        stroke: '#cfe98a',
+        centerIcon: `
+<path d="M-16,68 C-72,42 -80,-32 -30,-68 C8,-32 12,32 -16,68 Z" fill="#a8d968" opacity="0.92"/>
+<path d="M-22,58 C-34,20 -34,-24 -28,-56" fill="none" stroke="#4f731c" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+<path d="M-4,-2 Q20,4 30,14" fill="none" stroke="#cfe98a" stroke-width="3" stroke-linecap="round"/>
+<rect x="26" y="10" width="56" height="34" rx="7" fill="#f0f7d8" opacity="0.94"/>
+<circle cx="36" cy="27" r="3.5" fill="#4f731c"/>
+<path d="M46,21 L72,21 M46,33 L64,33" stroke="#4f731c" stroke-width="4" stroke-linecap="round"/>`,
+      },
+      {
+        // ch. 2 — reading a plant: a leaf with callout ticks off its edge.
+        slug: 'plant-id-02-reading-a-plant',
+        petalCount: 10,
+        bg: ['#2a3a0c', '#587a18', '#0d1204'],
+        stroke: '#d6ed8e',
+        centerIcon: `
+<path d="M0,70 C-48,42 -54,-30 0,-70 C54,-30 48,42 0,70 Z" fill="#eef7d0" opacity="0.92"/>
+<path d="M0,-62 L0,62" stroke="#587a18" stroke-width="4" stroke-linecap="round"/>
+<path d="M0,-30 C-14,-24 -26,-14 -32,-4 M0,0 C14,6 26,16 32,26 M0,-30 C14,-24 26,-14 32,-4 M0,0 C-14,6 -26,16 -32,26" fill="none" stroke="#587a18" stroke-width="3" opacity="0.7"/>
+<path d="M-38,-30 L-72,-46 M40,-14 L74,-28 M-34,38 L-66,56" stroke="#d6ed8e" stroke-width="3.5" stroke-linecap="round"/>
+<circle cx="-76" cy="-48" r="5" fill="#d6ed8e"/>
+<circle cx="78" cy="-30" r="5" fill="#d6ed8e"/>
+<circle cx="-70" cy="58" r="5" fill="#d6ed8e"/>`,
+      },
+      {
+        // ch. 3 — the verdict: two look-alike leaves, a check under the
+        // one that earned it.
+        slug: 'plant-id-03-the-verdict',
+        petalCount: 14,
+        bg: ['#233a12', '#4a7a26', '#0b1206'],
+        stroke: '#c2ee9a',
+        centerIcon: `
+<path d="M-40,36 C-72,18 -76,-32 -40,-58 C-10,-32 -10,14 -40,36 Z" fill="#9fd56a" opacity="0.92"/>
+<path d="M-40,-50 L-40,28" stroke="#234a10" stroke-width="3.5" stroke-linecap="round" opacity="0.7"/>
+<path d="M40,36 C8,18 4,-32 40,-58 C70,-32 70,14 40,36 Z" fill="none" stroke="#c2ee9a" stroke-width="4"/>
+<path d="M40,-50 L40,28" stroke="#c2ee9a" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+<path d="M-58,62 L-44,76 L-16,48" fill="none" stroke="#eef7d0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>`,
+      },
+      {
+        // ch. 4 — the record: a field card with ruled lines and a small
+        // pressed leaf in its corner.
+        slug: 'plant-id-04-the-record',
+        petalCount: 8,
+        bg: ['#2e3a10', '#617a20', '#0e1205'],
+        stroke: '#dcee96',
+        centerIcon: `
+<rect x="-66" y="-56" width="132" height="112" rx="10" fill="#f0f7d8" opacity="0.94"/>
+<path d="M-50,-32 L34,-32 M-50,-10 L50,-10 M-50,12 L42,12 M-50,34 L20,34" stroke="#617a20" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+<path d="M50,26 C34,36 32,54 44,60 C56,54 58,38 50,26 Z" fill="#9fd56a" opacity="0.95"/>
+<path d="M46,-44 L62,-44" stroke="#a4c060" stroke-width="6" stroke-linecap="round"/>`,
+      },
+      {
+        // ch. 5 — your personal flora: the bound flora, a leaf emblem on
+        // its cover.
+        slug: 'plant-id-05-your-personal-flora',
+        petalCount: 16,
+        bg: ['#1f3a16', '#3f7a2e', '#0a1207'],
+        stroke: '#b4eea0',
+        centerIcon: `
+<rect x="-58" y="-70" width="116" height="140" rx="10" fill="#eef7dc" opacity="0.94"/>
+<rect x="-58" y="-70" width="20" height="140" rx="10" fill="#7ab250" opacity="0.95"/>
+<path d="M14,26 L14,-14" stroke="#3f7a2e" stroke-width="4" stroke-linecap="round"/>
+<path d="M14,-14 C-6,-18 -13,-38 -1,-50 C11,-38 15,-26 14,-14 Z" fill="#7ab250" opacity="0.95"/>
+<path d="M14,-4 C34,-8 41,-26 29,-38 C17,-26 15,-16 14,-4 Z" fill="#a8d968" opacity="0.95"/>
+<path d="M-16,48 L44,48" stroke="#3f7a2e" stroke-width="4" stroke-linecap="round" opacity="0.7"/>`,
+      },
     ],
   },
 
@@ -859,6 +935,23 @@ const SETS = {
   <circle cx="-62" cy="52" r="10"/><circle cx="62" cy="52" r="10"/>
 </g>
 <path d="M-76,-8 L0,-72 L76,-8 Z" fill="none" stroke="#e0d08c" stroke-width="6" stroke-linejoin="round"/>`,
+      },
+      {
+        // «The named world» — a hand lens over a three-leaflet sprig: the
+        // botanist's tool, distinct from the course's own leaf/tag/card
+        // chapter icons.
+        slug: 'plant-id',
+        petalCount: 12,
+        bg: ['#26380e', '#4f731c', '#0c1204'],
+        stroke: '#cfe98a',
+        centerIcon: `
+<circle cx="-10" cy="-12" r="52" fill="#26380e" opacity="0.6"/>
+<path d="M-10,26 L-10,-8" stroke="#a8d968" stroke-width="4" stroke-linecap="round"/>
+<path d="M-10,-8 C-30,-12 -37,-32 -25,-44 C-13,-32 -9,-20 -10,-8 Z" fill="#a8d968" opacity="0.95"/>
+<path d="M-10,-8 C10,-12 17,-32 5,-44 C-7,-32 -11,-20 -10,-8 Z" fill="#7ab250" opacity="0.95"/>
+<path d="M-10,4 C-26,2 -34,-8 -28,-20 C-18,-14 -12,-4 -10,4 Z" fill="#cfe98a" opacity="0.9"/>
+<circle cx="-10" cy="-12" r="52" fill="none" stroke="#f0f7d8" stroke-width="8" opacity="0.94"/>
+<line x1="28" y1="24" x2="66" y2="62" stroke="#f0f7d8" stroke-width="11" stroke-linecap="round" opacity="0.94"/>`,
       },
     ],
   },

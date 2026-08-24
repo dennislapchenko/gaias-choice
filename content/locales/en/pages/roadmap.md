@@ -79,6 +79,10 @@ belonging is harder to copy than content.
       English-only) — designing a wooden house on paper for a cold, wet, snowy
       site: natural materials wherever they honestly work, mold and stale air
       never accepted, a masonry stove at the heart
+- [x] "The named world" Compass course finished (all 5 chapters,
+      English-only) — plant identification with honest certainty: reading
+      characters and family faces, a verdict workflow with the look-alike
+      check, a naturalist's notebook and a personal flora of home ground
 - [ ] Pick one recurring ritual and hold it — a monthly almanac letter, a
       season-opening Journal note — something readers learn to expect. Trust
       comes from consistency, not expertise alone

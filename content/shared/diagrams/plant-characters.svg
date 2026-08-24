@@ -1,0 +1,52 @@
+<svg viewBox="0 0 640 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<text x="320" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{t1}}</text>
+<!-- ground + habitat tufts -->
+<line x1="210" y1="320" x2="430" y2="320" stroke="var(--line)" stroke-width="2"/>
+<path d="M248,320 L244,308 M252,320 L252,306 M256,320 L260,309" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M388,320 L384,308 M392,320 L392,306 M396,320 L400,309" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round"/>
+<!-- basal rosette -->
+<ellipse cx="292" cy="312" rx="26" ry="8" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5" transform="rotate(-14 292 312)"/>
+<ellipse cx="348" cy="312" rx="26" ry="8" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5" transform="rotate(14 348 312)"/>
+<ellipse cx="302" cy="306" rx="22" ry="7" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5" transform="rotate(-34 302 306)"/>
+<ellipse cx="338" cy="306" rx="22" ry="7" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5" transform="rotate(34 338 306)"/>
+<!-- stem -->
+<line x1="320" y1="316" x2="320" y2="96" stroke="var(--sage)" stroke-width="4"/>
+<!-- opposite leaf pairs (arrangement) -->
+<path d="M320,240 C300,232 282,234 272,244 C282,254 302,250 320,240 Z" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/>
+<path d="M320,240 C340,232 358,234 368,244 C358,254 338,250 320,240 Z" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/>
+<path d="M320,172 C303,164 288,166 279,175 C288,184 304,181 320,172 Z" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/>
+<path d="M320,172 C337,164 352,166 361,175 C352,184 336,181 320,172 Z" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/>
+<!-- toothed margin on the lower-left leaf -->
+<path d="M275,246 L280,242 L284,247 L289,243 L293,248 L298,244" fill="none" stroke="var(--ink)" stroke-width="1.2"/>
+<!-- smell: crushed-leaf wisps at the upper-left leaf -->
+<path d="M276,164 Q270,152 276,142" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"/>
+<path d="M288,160 Q283,150 288,141" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"/>
+<!-- flower: five petals, counted parts -->
+<ellipse cx="320" cy="60" rx="9" ry="17" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<ellipse cx="320" cy="60" rx="9" ry="17" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5" transform="rotate(72 320 80)"/>
+<ellipse cx="320" cy="60" rx="9" ry="17" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5" transform="rotate(144 320 80)"/>
+<ellipse cx="320" cy="60" rx="9" ry="17" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5" transform="rotate(216 320 80)"/>
+<ellipse cx="320" cy="60" rx="9" ry="17" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5" transform="rotate(288 320 80)"/>
+<circle cx="320" cy="80" r="7" fill="var(--clay)"/>
+<!-- stem cross-section inset: round vs square -->
+<circle cx="80" cy="300" r="15" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="2"/>
+<circle cx="80" cy="300" r="3" fill="var(--muted)"/>
+<rect x="111" y="285" width="30" height="30" rx="4" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="2"/>
+<circle cx="126" cy="300" r="3" fill="var(--muted)"/>
+<!-- callouts -->
+<line x1="352" y1="72" x2="396" y2="64" stroke="var(--line)" stroke-width="1.5"/>
+<text x="400" y="68" text-anchor="start" font-size="11.5" fill="var(--ink)">{{p1}}</text>
+<line x1="366" y1="172" x2="400" y2="176" stroke="var(--line)" stroke-width="1.5"/>
+<text x="404" y="180" text-anchor="start" font-size="11.5" fill="var(--ink)">{{p2}}</text>
+<line x1="200" y1="240" x2="268" y2="246" stroke="var(--line)" stroke-width="1.5"/>
+<text x="196" y="244" text-anchor="end" font-size="11.5" fill="var(--ink)">{{p3}}</text>
+<text x="106" y="338" text-anchor="middle" font-size="11.5" fill="var(--ink)">{{p4}}</text>
+<line x1="200" y1="150" x2="272" y2="152" stroke="var(--line)" stroke-width="1.5"/>
+<text x="196" y="154" text-anchor="end" font-size="11.5" fill="var(--ink)">{{p5}}</text>
+<line x1="436" y1="316" x2="404" y2="314" stroke="var(--line)" stroke-width="1.5"/>
+<text x="440" y="320" text-anchor="start" font-size="11.5" fill="var(--ink)">{{p6}}</text>
+<line x1="200" y1="296" x2="272" y2="306" stroke="var(--line)" stroke-width="1.5"/>
+<text x="196" y="300" text-anchor="end" font-size="11.5" fill="var(--ink)">{{p7}}</text>
+<!-- takeaway -->
+<text x="320" y="370" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{note}}</text>
+</svg>

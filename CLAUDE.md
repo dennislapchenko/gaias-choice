@@ -187,10 +187,10 @@ provenance contract is SKILL.md non-negotiable #6).
 - Courses are **5 or 11 chapters** (owner rule); optional `chapter: N`
   frontmatter orders them. Existing epics, all complete: `founder-guide` (5),
   `herbalism` (11), `homeopathy` (11), `aromatherapy` (11), `trophology` (5) —
-  en+ru — and two **English-only by owner decision** (absent from
+  en+ru — and three **English-only by owner decision** (absent from
   `ru/site.yaml`; their EN-only diagrams are expected parity-check
-  asymmetries): `inside-websites` (5) and `wooden-house` (11, the first
-  course built to pattern v2).
+  asymmetries): `inside-websites` (5), `wooden-house` (11, the first
+  course built to pattern v2) and `plant-id` (5, pattern v2).
   Outlines: `context/course-plan-*.md`; blueprint:
   `context/epic-writing-context.md`.
 - **EntryDetail** is the shared detail page for Compass chapters *and* Journal
@@ -391,12 +391,10 @@ The owners are first-time site builders learning the affiliate-content
 business in public. Keep this section current *and short* — the phase, not
 the history:
 
-- **Compass:** seven courses complete — six built to course pattern v1 (see
-  `context/course-pattern-v1.md`) and `wooden-house` (11 ch, EN-only), the
-  first built to pattern v2 (the live blueprint). One more v2 course is
-  planned: `plant-id` (5 ch, EN-only), plan in
-  `context/course-plan-plant-id.md`, awaiting owner review; no
-  chapters written. The founder guides are internal
+- **Compass:** eight courses complete — six built to course pattern v1 (see
+  `context/course-pattern-v1.md`) and two to pattern v2 (the live
+  blueprint): `wooden-house` (11 ch) and `plant-id` (5 ch), both EN-only.
+  The founder guides are internal
   playbooks deliberately published as a course — don't "fix" them into
   consumer content; retelling them from lived experience is a roadmap
   milestone. Open launch-checklist item: label each reader course's

@@ -1,0 +1,35 @@
+<svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<text x="320" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{t1}}</text>
+<!-- the mounted sheet -->
+<rect x="240" y="40" width="200" height="290" rx="6" fill="var(--sand-2)" stroke="var(--line)" stroke-width="2"/>
+<!-- the pressed specimen -->
+<path d="M310,300 C322,240 330,180 345,95" fill="none" stroke="var(--sage)" stroke-width="3.5"/>
+<path d="M322,250 C304,242 288,244 279,253 C289,262 306,259 322,250 Z" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/>
+<path d="M334,190 C352,182 368,184 377,193 C367,202 350,199 334,190 Z" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/>
+<path d="M332,140 C315,132 300,134 291,143 C301,152 317,149 332,140 Z" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/>
+<ellipse cx="347" cy="82" rx="6" ry="11" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.2"/>
+<ellipse cx="347" cy="82" rx="6" ry="11" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.2" transform="rotate(72 347 90)"/>
+<ellipse cx="347" cy="82" rx="6" ry="11" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.2" transform="rotate(144 347 90)"/>
+<ellipse cx="347" cy="82" rx="6" ry="11" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.2" transform="rotate(216 347 90)"/>
+<ellipse cx="347" cy="82" rx="6" ry="11" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.2" transform="rotate(288 347 90)"/>
+<circle cx="347" cy="90" r="4.5" fill="var(--clay)"/>
+<!-- mounting strips across the stem -->
+<rect x="301" y="267" width="34" height="10" rx="2" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="1.5" transform="rotate(20 318 272)"/>
+<rect x="325" y="170" width="34" height="10" rx="2" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="1.5" transform="rotate(-15 342 175)"/>
+<rect x="329" y="110" width="34" height="10" rx="2" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="1.5" transform="rotate(12 346 115)"/>
+<!-- the label block, bottom-right: the record's twin -->
+<rect x="352" y="262" width="80" height="56" rx="4" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+<line x1="358" y1="274" x2="424" y2="274" stroke="var(--muted)" stroke-width="1.5"/>
+<line x1="358" y1="286" x2="416" y2="286" stroke="var(--muted)" stroke-width="1.5"/>
+<line x1="358" y1="298" x2="424" y2="298" stroke="var(--muted)" stroke-width="1.5"/>
+<line x1="358" y1="310" x2="404" y2="310" stroke="var(--muted)" stroke-width="1.5"/>
+<!-- callouts -->
+<line x1="204" y1="146" x2="322" y2="168" stroke="var(--line)" stroke-width="1.5"/>
+<text x="200" y="144" text-anchor="end" font-size="11.5" fill="var(--ink)">{{c1}}</text>
+<line x1="204" y1="262" x2="312" y2="272" stroke="var(--line)" stroke-width="1.5"/>
+<text x="200" y="260" text-anchor="end" font-size="11.5" fill="var(--ink)">{{c2}}</text>
+<line x1="476" y1="288" x2="436" y2="290" stroke="var(--line)" stroke-width="1.5"/>
+<text x="480" y="292" text-anchor="start" font-size="11.5" fill="var(--ink)">{{c3}}</text>
+<!-- takeaway -->
+<text x="320" y="352" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{note}}</text>
+</svg>

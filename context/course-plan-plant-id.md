@@ -2,7 +2,7 @@
 
 Authoring plan per [epic-writing-context.md](epic-writing-context.md) §7.
 **Pattern version: v2.**
-**Status: plan drafted — awaiting owner review; no chapters written.**
+**Status: complete — all 5 chapters shipped (EN-only), pattern v2.**
 **English only by owner decision (2026-08-23)** — no RU files planned; the
 epic is deliberately absent from `ru/site.yaml` `epics:`, so the RU locale
 never shows the tab. Same sanctioned deviation as `inside-websites`

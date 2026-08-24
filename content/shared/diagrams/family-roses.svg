@@ -1,0 +1,45 @@
+<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<text x="320" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{t1}}</text>
+<!-- the open five-petal flower, face on -->
+<g fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5">
+<ellipse cx="200" cy="95" rx="16" ry="24"/>
+<ellipse cx="200" cy="95" rx="16" ry="24" transform="rotate(72 200 125)"/>
+<ellipse cx="200" cy="95" rx="16" ry="24" transform="rotate(144 200 125)"/>
+<ellipse cx="200" cy="95" rx="16" ry="24" transform="rotate(216 200 125)"/>
+<ellipse cx="200" cy="95" rx="16" ry="24" transform="rotate(288 200 125)"/>
+</g>
+<!-- the crowd of stamens -->
+<g stroke="var(--clay)" stroke-width="1.5">
+<line x1="200" y1="121" x2="200" y2="109"/><line x1="204" y1="122" x2="209" y2="111"/><line x1="207" y1="124" x2="216" y2="116"/>
+<line x1="208" y1="127" x2="219" y2="125"/><line x1="207" y1="130" x2="217" y2="134"/><line x1="204" y1="132" x2="211" y2="141"/>
+<line x1="200" y1="133" x2="200" y2="143"/><line x1="196" y1="132" x2="189" y2="141"/><line x1="193" y1="130" x2="183" y2="134"/>
+<line x1="192" y1="127" x2="181" y2="125"/><line x1="193" y1="124" x2="184" y2="116"/><line x1="196" y1="122" x2="191" y2="111"/>
+</g>
+<g fill="var(--clay)">
+<circle cx="200" cy="107" r="2"/><circle cx="210" cy="109" r="2"/><circle cx="218" cy="115" r="2"/><circle cx="221" cy="125" r="2"/>
+<circle cx="219" cy="135" r="2"/><circle cx="212" cy="143" r="2"/><circle cx="200" cy="145" r="2"/><circle cx="188" cy="143" r="2"/>
+<circle cx="181" cy="135" r="2"/><circle cx="179" cy="125" r="2"/><circle cx="182" cy="115" r="2"/><circle cx="190" cy="109" r="2"/>
+</g>
+<circle cx="200" cy="127" r="5" fill="var(--mint)" stroke="var(--line)" stroke-width="1"/>
+<!-- the thorned stem -->
+<path d="M470,235 C500,180 505,130 480,75" fill="none" stroke="var(--sage)" stroke-width="4"/>
+<path d="M491,196 L481,192 L488,186 Z" fill="var(--sage)"/>
+<path d="M499,155 L489,151 L496,145 Z" fill="var(--sage)"/>
+<path d="M492,100 L482,98 L488,91 Z" fill="var(--sage)"/>
+<!-- a leaf on the stem, stipules at its base -->
+<line x1="498" y1="140" x2="556" y2="120" stroke="var(--sage)" stroke-width="2"/>
+<ellipse cx="522" cy="126" rx="12" ry="6" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.2" transform="rotate(-18 522 126)"/>
+<ellipse cx="540" cy="132" rx="12" ry="6" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.2" transform="rotate(24 540 132)"/>
+<ellipse cx="558" cy="116" rx="12" ry="6" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.2" transform="rotate(-20 558 116)"/>
+<path d="M498,140 C490,144 488,152 494,156 C498,150 499,144 498,140 Z" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.2"/>
+<path d="M498,140 C506,146 508,154 502,158 C498,152 497,145 498,140 Z" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.2"/>
+<!-- callouts -->
+<text x="188" y="56" text-anchor="middle" font-size="11.5" fill="var(--ink)">{{p1}}</text>
+<line x1="190" y1="60" x2="197" y2="88" stroke="var(--line)" stroke-width="1.5"/>
+<line x1="134" y1="176" x2="186" y2="140" stroke="var(--line)" stroke-width="1.5"/>
+<text x="130" y="180" text-anchor="end" font-size="11.5" fill="var(--ink)">{{p2}}</text>
+<line x1="452" y1="192" x2="494" y2="152" stroke="var(--line)" stroke-width="1.5"/>
+<text x="448" y="196" text-anchor="end" font-size="11.5" fill="var(--ink)">{{p3}}</text>
+<!-- takeaway -->
+<text x="320" y="248" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{note}}</text>
+</svg>

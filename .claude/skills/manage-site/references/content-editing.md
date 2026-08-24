@@ -125,8 +125,8 @@ sidebar, so don't rename them casually. Courses that exist: the founder
 course and `inside-websites` (both 5 chapters, complete), `trophology` (5
 chapters, complete, en+ru — `context/course-plan-trophology.md`), three
 reader-facing 11-chapter courses: `herbalism`, `homeopathy` and `aromatherapy`
-(all complete, en+ru) — and `wooden-house` (11 chapters, complete,
-**English-only**, the first course built to pattern v2). Every course has an outline — chapter
+(all complete, en+ru) — and two **English-only** pattern-v2 courses:
+`wooden-house` (11 chapters, complete) and `plant-id` (5 chapters, complete). Every course has an outline — chapter
 one-liners, named concepts, seeds, reuse maps — in
 `context/course-plan-<slug>.md`; follow the plan when writing the next
 chapter. Writing chapters in batch (finishing a course, starting a new one):

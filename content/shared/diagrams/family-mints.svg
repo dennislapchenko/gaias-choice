@@ -1,0 +1,32 @@
+<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<text x="320" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="var(--ink)">{{t1}}</text>
+<!-- ground -->
+<line x1="240" y1="230" x2="420" y2="230" stroke="var(--line)" stroke-width="2"/>
+<!-- the square stem -->
+<rect x="316" y="60" width="8" height="170" rx="2" fill="var(--sage)"/>
+<!-- opposite leaf pairs -->
+<path d="M316,190 C296,180 278,182 268,192 C280,202 300,198 316,190 Z" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/>
+<path d="M324,190 C344,180 362,182 372,192 C360,202 340,198 324,190 Z" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/>
+<path d="M316,135 C300,126 284,128 276,137 C286,146 302,143 316,135 Z" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/>
+<path d="M324,135 C340,126 356,128 364,137 C354,146 338,143 324,135 Z" fill="var(--mint)" stroke="var(--sage)" stroke-width="1.5"/>
+<!-- flower whorls at the leaf nodes -->
+<circle cx="306" cy="180" r="4" fill="var(--clay)" opacity="0.85"/>
+<circle cx="334" cy="180" r="4" fill="var(--clay)" opacity="0.85"/>
+<circle cx="308" cy="126" r="4" fill="var(--clay)" opacity="0.85"/>
+<circle cx="332" cy="126" r="4" fill="var(--clay)" opacity="0.85"/>
+<!-- the two-lipped flower at the top -->
+<path d="M306,56 Q320,34 334,56 Z" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="1.5"/>
+<path d="M310,58 C308,74 332,74 330,58 Z" fill="var(--mint)" stroke="var(--ink)" stroke-width="1.5"/>
+<!-- inset: the square stem cross-section -->
+<rect x="88" y="70" width="44" height="44" rx="6" fill="var(--sand-2)" stroke="var(--ink)" stroke-width="2"/>
+<rect x="96" y="78" width="28" height="28" rx="4" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+<circle cx="110" cy="92" r="3" fill="var(--muted)"/>
+<!-- callouts -->
+<text x="110" y="134" text-anchor="middle" font-size="11.5" fill="var(--ink)">{{p1}}</text>
+<line x1="436" y1="136" x2="378" y2="137" stroke="var(--line)" stroke-width="1.5"/>
+<text x="440" y="140" text-anchor="start" font-size="11.5" fill="var(--ink)">{{p2}}</text>
+<line x1="436" y1="54" x2="340" y2="52" stroke="var(--line)" stroke-width="1.5"/>
+<text x="440" y="58" text-anchor="start" font-size="11.5" fill="var(--ink)">{{p3}}</text>
+<!-- takeaway -->
+<text x="320" y="248" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{note}}</text>
+</svg>

@@ -1,0 +1,33 @@
+<svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="46%" r="72%">
+      <stop offset="0%" stop-color="#26380e"/>
+      <stop offset="55%" stop-color="#4f731c"/>
+      <stop offset="100%" stop-color="#0c1204"/>
+    </radialGradient>
+    <path id="petal" d="M400,220 Q448,145.0 400,70 Q352,145.0 400,220 Z" fill="none" stroke="#cfe98a" stroke-width="1.6" opacity="0.4"/>
+  </defs>
+  <rect width="800" height="800" fill="url(#bg)"/>
+  <circle cx="400" cy="400" r="350" fill="none" stroke="#cfe98a" stroke-width="1" opacity="0.28"/>
+  <circle cx="400" cy="400" r="270" fill="none" stroke="#cfe98a" stroke-width="1" opacity="0.28"/>
+  <use href="#petal" transform="rotate(0 400 400)"/>
+  <use href="#petal" transform="rotate(30 400 400)"/>
+  <use href="#petal" transform="rotate(60 400 400)"/>
+  <use href="#petal" transform="rotate(90 400 400)"/>
+  <use href="#petal" transform="rotate(120 400 400)"/>
+  <use href="#petal" transform="rotate(150 400 400)"/>
+  <use href="#petal" transform="rotate(180 400 400)"/>
+  <use href="#petal" transform="rotate(210 400 400)"/>
+  <use href="#petal" transform="rotate(240 400 400)"/>
+  <use href="#petal" transform="rotate(270 400 400)"/>
+  <use href="#petal" transform="rotate(300 400 400)"/>
+  <use href="#petal" transform="rotate(330 400 400)"/>
+  <g transform="translate(400,400)">
+<path d="M-16,68 C-72,42 -80,-32 -30,-68 C8,-32 12,32 -16,68 Z" fill="#a8d968" opacity="0.92"/>
+<path d="M-22,58 C-34,20 -34,-24 -28,-56" fill="none" stroke="#4f731c" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+<path d="M-4,-2 Q20,4 30,14" fill="none" stroke="#cfe98a" stroke-width="3" stroke-linecap="round"/>
+<rect x="26" y="10" width="56" height="34" rx="7" fill="#f0f7d8" opacity="0.94"/>
+<circle cx="36" cy="27" r="3.5" fill="#4f731c"/>
+<path d="M46,21 L72,21 M46,33 L64,33" stroke="#4f731c" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>

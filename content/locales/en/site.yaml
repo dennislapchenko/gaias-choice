@@ -158,6 +158,12 @@ epics:
     title: The Wooden House
     image: /images/epic-wooden-house.svg
     blurb: An 11-chapter guide — design a wooden house that stays warm, dry and mold-free on a cold, wet, snowy site, from reading the land to the masonry stove at its heart, natural materials wherever they honestly work. Drawn on paper before the first log is cut.
+  # English-only course (owner decision 2026-08-23) — deliberately absent from
+  # ru/site.yaml, so the RU locale never shows this tab.
+  - tag: plant-id
+    title: The named world
+    image: /images/epic-plant-id.svg
+    blurb: Learn to truly know the plants around you — identify with real certainty, keep a naturalist's notebook, and build a personal flora of your home ground. Five chapters, one notebook, and the street outside your door.
 
 # The "in the works" rails on /reviews and /journal are NOT configured here:
 # an unfinished post is a real content file (products/ or journal/) with

@@ -1,0 +1,31 @@
+<svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{aria}}">
+<defs><marker id="arr-clad" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+<!-- five rungs, bottom (r1) to top (r5); top rung is the accent -->
+<rect x="40" y="282" width="270" height="44" rx="10" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<rect x="40" y="216" width="270" height="44" rx="10" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<rect x="40" y="150" width="270" height="44" rx="10" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<rect x="40" y="84" width="270" height="44" rx="10" fill="var(--sand-2)" stroke="var(--line)" stroke-width="1.5"/>
+<rect x="40" y="18" width="270" height="44" rx="10" fill="var(--sage)"/>
+<!-- rung names + one-line meanings -->
+<text x="175" y="300" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{r1}}</text>
+<text x="175" y="316" text-anchor="middle" font-size="11" fill="var(--muted)">{{m1}}</text>
+<text x="175" y="234" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{r2}}</text>
+<text x="175" y="250" text-anchor="middle" font-size="11" fill="var(--muted)">{{m2}}</text>
+<text x="175" y="168" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{r3}}</text>
+<text x="175" y="184" text-anchor="middle" font-size="11" fill="var(--muted)">{{m3}}</text>
+<text x="175" y="102" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">{{r4}}</text>
+<text x="175" y="118" text-anchor="middle" font-size="11" fill="var(--muted)">{{m4}}</text>
+<text x="175" y="36" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--on-accent)">{{r5}}</text>
+<text x="175" y="52" text-anchor="middle" font-size="11" fill="var(--on-accent)">{{m5}}</text>
+<!-- the climb: one arrow per gap, what promotes a plant upward -->
+<line x1="332" y1="296" x2="332" y2="246" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-clad)"/>
+<line x1="332" y1="230" x2="332" y2="180" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-clad)"/>
+<line x1="332" y1="164" x2="332" y2="114" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-clad)"/>
+<line x1="332" y1="98" x2="332" y2="48" stroke="var(--muted)" stroke-width="2" marker-end="url(#arr-clad)"/>
+<text x="348" y="274" text-anchor="start" font-size="11.5" fill="var(--ink)">{{g1}}</text>
+<text x="348" y="208" text-anchor="start" font-size="11.5" fill="var(--ink)">{{g2}}</text>
+<text x="348" y="142" text-anchor="start" font-size="11.5" fill="var(--ink)">{{g3}}</text>
+<text x="348" y="76" text-anchor="start" font-size="11.5" fill="var(--ink)">{{g4}}</text>
+<!-- takeaway -->
+<text x="320" y="350" text-anchor="middle" font-size="12" font-style="italic" fill="var(--muted)">{{note}}</text>
+</svg>
