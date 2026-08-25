@@ -78,3 +78,27 @@ existing course against its own rules, or when weighing a v3.
 v2 (the current blueprint) addresses 1 via the hook palette + chapter roles,
 2–3 via the checkpoint chapter + the return, 4 via answer pointers, 5 via the
 minimum honest version, 6 via pocket rules + the crib, 7 via slow arcs.
+
+## Conversion ledger (one home for "which course is on which pattern")
+
+Courses convert v1 → v2 gradually, one locale at a time when the owner says
+so; single-locale courses get translated when the owner says so. This table
+is the canonical record — update it whenever a course's pattern or locale
+coverage changes.
+
+| Course | EN | RU | Next step (owner-gated) |
+|---|---|---|---|
+| `founder-guide` (5) | v1 | v1 | convert to v2 |
+| `herbalism` (11) | v1 | v1 | convert to v2 |
+| `homeopathy` (11) | v1 | v1 | convert to v2 |
+| `aromatherapy` (11) | v1 | **v2** | translate the v2 upgrade to EN |
+| `trophology` (5) | v1 | v1 | convert to v2 |
+| `inside-websites` (5) | v1 | — | convert to v2; RU optional (EN-only by decision) |
+| `wooden-house` (11) | v2 (born) | — | RU translation optional (EN-only by decision) |
+| `plant-id` (5) | v2 (born) | — | RU translation optional (EN-only by decision) |
+
+A split-pattern course (like aromatherapy) is a sanctioned, temporary
+asymmetry: the RU chapters carry v2 devices (free-titled hook heading, gate
+quiz, pocket rules, answer pointers, minimums, crib) that their EN siblings
+lack until translated. The upgrade design for each converted course lives in
+its own `course-plan-*.md` ("Pattern v2 upgrade" section).

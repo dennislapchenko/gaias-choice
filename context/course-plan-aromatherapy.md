@@ -1,7 +1,7 @@
 # Course plan — «Ароматерапия: Живой аромат» / "Aromatherapy: Living Scent"
 
 Authoring plan per [epic-writing-context.md](epic-writing-context.md) §7.
-**Status: complete — all 11 chapters written, en+ru, verified (11/11).**
+**Status: complete — all 11 chapters, en+ru. RU upgraded to pattern v2 (see "Pattern v2 upgrade" below); EN still v1, translation pass pending owner call.**
 
 ## Course meta
 
@@ -226,3 +226,82 @@ Full portraits in ch. 5; each reappears in later chapters per the concept map.
   via smell + skin at trace doses; herbalism = ingest the whole plant. Managed
   by explicit framing + *earned* cross-links (now standing practice across
   Compass courses — link only where it deepens understanding), never repetition.
+
+## Pattern v2 upgrade (RU only — owner decision 2026-08-25)
+
+The RU chapters are upgraded to course pattern v2; the EN siblings stay v1
+until the owner asks for the translation pass (ledger:
+[course-pattern-v1.md](course-pattern-v1.md) "Conversion ledger"). The
+upgrade edits structure and adds v2 devices — it does NOT rewrite substance,
+voice, or the existing diagrams (no template changes; the crib is a GFM
+table; ch. 11 already re-embeds the course map in past tense).
+
+### Hooks and roles (frozen; heading 1 retitled per hook, «Знакомая картина» retired in RU)
+
+| # | Hook type | Heading 1 (RU, frozen) | Role |
+|---|-----------|------------------------|------|
+| 1 | scene | «Лаванда, которой не было» | concept |
+| 2 | open question | «Чувство приходит первым — почему?» | concept |
+| 3 | misconception | «Натуральное — значит безопасное?» | concept |
+| 4 | scene | «Два флакона без этикеток» | concept |
+| 5 | misconception | «Корзина из двадцати флаконов» | gallery |
+| 6 | artifact-in-trouble | «Флакон есть — доказательства нет» | concept + **checkpoint** |
+| 7 | open question | «Тот же флакон, обратный результат» | concept |
+| 8 | scene | «Обычная неделя» | protocol |
+| 9 | misconception | «Две проповеди об одном флаконе» | concept |
+| 10 | artifact-in-trouble | «Флакончик, который кричит» | concept (Summit) |
+| 11 | scene | «Полка, журнал и обещание» | concept (Summit, crib) |
+
+No hook type repeats adjacently. Existing v1 openings already carry most of
+these beats — the upgrade formalizes and retitles rather than rewrites.
+Gallery note (ch. 5): the ten oils' physical form is a scent, not a shape —
+no per-portrait drawings owed (the search-tab test fails: nobody googles
+what an orange looks like). The portrait grid stays as is.
+
+### Checkpoint (ch. 6) + the return
+
+- **Gate quiz** (5 questions, ch. 1–5, right after the Trail block): the
+  ladder's four rungs and why none is a trump *(гл. 1)*; the nose route's
+  five stops and why feeling precedes thought *(гл. 2)*; drops for 2% in
+  10 ml and why neat is the red line *(гл. 3)*; which molecule family
+  predicts calm and which predicts lift *(гл. 4)*; the portrait's six fields
+  and what an empty «почувствовал сам» rung means *(гл. 5)*.
+- **The return:** ch. 6's lavender self-trial week is framed explicitly as
+  upgrading the course's FIRST artifact piece — the ch.-1 lavender journal
+  line — from "one smell, one evening" to an earned ✓/○/— verdict; the
+  practice sends the reader back to the journal's first page.
+
+### Slow arcs (frozen)
+
+- **Arc A — citrus against the calendar:** set in ch. 5 (bottles labeled
+  with opening dates, "особенно цитрус" — explicitly addressed to ch. 11),
+  harvested in ch. 11 (the inspection smells the dated citrus against its
+  date — a prediction met months later).
+- **Arc B — the journal as data:** set in ch. 1 (the journal opens,
+  addressed to ch. 11's ревизия), reinforced in ch. 6 (the week of dated
+  evening entries + пустая ночь), harvested in ch. 11 (два месяца записей
+  становятся данными).
+
+### Pocket rules (Path chapters, verbatim — restated in the ch. 11 crib)
+
+- ch. 2: **«Сначала — что почувствовали, потом — как называется.»**
+- ch. 3: **«Не бывает безопасных масел — бывают безопасные проценты.»**
+- ch. 4: **«Сначала семья, потом имя, потом проверка носом.»**
+- ch. 5: **«Рунг „почувствовал сам" не дописывают — его зарабатывают.»**
+- ch. 6: **«Одна хорошая ночь — не доказательство; доказательство — неделя с пустой ночью внутри.»**
+- ch. 7: **«Запах — толчок поверх сна, еды и движения, а не вместо них.»**
+- ch. 8: **«Чем меньше тело — тем ниже процент; для самых маленьких — ноль и педиатр.»**
+- ch. 9: **«Прежде чем поверить — спроси, кому выгодно; прежде чем купить — прочти латынь.»**
+
+### The remaining v2 devices
+
+- **Answer pointers** on every self-check question: *(гл. N → «понятие»)*;
+  cross-chapter pointers where the concept's home is another chapter.
+- **Minimum honest version** in every practice: one marked line «Если
+  сегодня нет сил:» — a 10–15-minute cut that still moves the shelf/journal.
+- **The crib** (ch. 11, in Разбор beside the existing past-tense course-map
+  re-embed): a GFM table — all 13 named concepts one-lined + the 8 pocket
+  rules verbatim — with the instruction to copy it by hand onto a card that
+  lives on the shelf next to the red-lines card.
+- Frontmatter (dates, titles, excerpts, images) unchanged; heading count
+  stays exactly 8; headings 2–8 unchanged.

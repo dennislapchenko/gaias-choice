@@ -192,7 +192,10 @@ provenance contract is SKILL.md non-negotiable #6).
   asymmetries): `inside-websites` (5), `wooden-house` (11, the first
   course built to pattern v2) and `plant-id` (5, pattern v2).
   Outlines: `context/course-plan-*.md`; blueprint:
-  `context/epic-writing-context.md`.
+  `context/epic-writing-context.md`. Which course is on which pattern (and
+  the v1→v2 conversion state per locale, incl. sanctioned split-pattern
+  asymmetries like aromatherapy's RU-v2/EN-v1): the conversion ledger in
+  `context/course-pattern-v1.md`.
 - **EntryDetail** is the shared detail page for Compass chapters *and* Journal
   entries, with a page-local TOC from `h2`/`h3` headings (3+ required) —
   development.md "Entry detail TOC" row.
@@ -391,9 +394,11 @@ The owners are first-time site builders learning the affiliate-content
 business in public. Keep this section current *and short* — the phase, not
 the history:
 
-- **Compass:** eight courses complete — six built to course pattern v1 (see
-  `context/course-pattern-v1.md`) and two to pattern v2 (the live
-  blueprint): `wooden-house` (11 ch) and `plant-id` (5 ch), both EN-only.
+- **Compass:** eight courses complete. Patterns are mid-migration — v1
+  courses convert to v2 (the live blueprint) one locale at a time as the
+  owner calls them; `aromatherapy` is the first (RU on v2, EN still v1).
+  The canonical per-course/per-locale record is the conversion ledger in
+  `context/course-pattern-v1.md`.
   The founder guides are internal
   playbooks deliberately published as a course — don't "fix" them into
   consumer content; retelling them from lived experience is a roadmap

@@ -83,6 +83,10 @@ belonging is harder to copy than content.
       English-only) — plant identification with honest certainty: reading
       characters and family faces, a verdict workflow with the look-alike
       check, a naturalist's notebook and a personal flora of home ground
+- [x] "Aromatherapy" upgraded to course pattern v2 (Russian version) — a
+      mid-course checkpoint quiz, quotable pocket rules, honest 10-minute
+      practice minimums, and a one-page course crib; older courses will
+      convert gradually, English translations to follow
 - [ ] Pick one recurring ritual and hold it — a monthly almanac letter, a
       season-opening Journal note — something readers learn to expect. Trust
       comes from consistency, not expertise alone
