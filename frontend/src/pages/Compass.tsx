@@ -54,8 +54,14 @@ export default function Compass() {
 
       <div className="reviews-layout">
         <div className="reviews-main">
-          {activeEpic && <h2 className="epic-title">{activeEpic.title}</h2>}
-          {activeEpic?.blurb && <p className="epic-blurb">{activeEpic.blurb}</p>}
+          {/* Title + blurb are ONE block so the sage rule groups them and marks
+              them as the selected course, not more page-header prose. */}
+          {activeEpic && (
+            <header className="epic-head">
+              <h2 className="epic-title">{activeEpic.title}</h2>
+              {activeEpic.blurb && <p className="epic-blurb">{activeEpic.blurb}</p>}
+            </header>
+          )}
 
           <div className="guide-row-list">
             {visible.map((g) => (

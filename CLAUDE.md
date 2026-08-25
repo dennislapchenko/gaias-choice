@@ -177,7 +177,9 @@ development.md "Upcoming" + "Live-edit" rows.
 **Compass** (`/compass`, `compass/<epic>/*.md`) — the site's **courses**
 section (user-facing "Compass" / «Путь») and the one **openly
 computer-assisted** section, disclosed by the `compass.provenance` banner (the
-provenance contract is SKILL.md non-negotiable #6).
+provenance contract is SKILL.md non-negotiable #6) plus its one-line sibling
+`compass.provenanceLabel` on every chapter page — both UI strings in
+`src/locales/*.ts`, mechanics in development.md.
 
 - **A chapter's FIRST tag is its epic** (course, used to group the landing
   page); the epic subfolder is also part of the slug/URL —
@@ -402,8 +404,7 @@ the history:
   The founder guides are internal
   playbooks deliberately published as a course — don't "fix" them into
   consumer content; retelling them from lived experience is a roadmap
-  milestone. Open launch-checklist item: label each reader course's
-  provenance at its top.
+  milestone.
 - **Journal:** one seed entry (an explicit fill-in template) + a couple of
   `state: upcoming` stubs queued.
 - **Reviews:** the *active* `products/*` with fake affiliate URLs

@@ -45,6 +45,12 @@ export default function EntryDetail({ kind }: { kind: 'compass' | 'journal' }) {
   const backLabel = kind === 'compass' ? t('compassDetail.backLink') : t('journalDetail.backLink')
   const tagLabel = kind === 'compass' ? t('compass.tag') : t('journal.tag')
   const chapter = kind === 'compass' ? entry.chapter : undefined
+  // Compass-only provenance footnote (SKILL.md non-negotiable #6): the /compass
+  // banner never reaches a reader who lands on a chapter straight from search.
+  // `translate()` returns the key itself when a dictionary lacks it, so an
+  // absent string renders nothing instead of leaking "compass.provenanceLabel".
+  const provenance = t('compass.provenanceLabel')
+  const showProvenance = kind === 'compass' && provenance !== 'compass.provenanceLabel'
 
   return (
     <div className="detail-layout">
@@ -87,6 +93,7 @@ export default function EntryDetail({ kind }: { kind: 'compass' | 'journal' }) {
             </span>
           )}
         </div>
+        {showProvenance && <p className="chapter-provenance">{provenance}</p>}
         {entry.image && (
           <img className="detail-image" src={withBase(entry.image)} alt={entry.title} />
         )}

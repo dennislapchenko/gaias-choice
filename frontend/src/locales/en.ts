@@ -35,6 +35,10 @@ const en = {
   "compass.lead": "Free, structured mini-courses — no fluff, no upsell. Each one takes you end to end, in order.",
   "compass.provenance":
     "Openly computer-assisted. The Compass courses are drafted with an AI from our own context, influences and voice, then edited — because clear, patient teaching is the one thing we think a machine genuinely helps with. It’s the only part of the site made this way: the Journal and every review are written by hand.",
+  // The same disclosure as compass.provenance, shrunk to one line for the top
+  // of every chapter page — readers arriving from search never see the banner.
+  "compass.provenanceLabel":
+    "Drafted with an AI from our own outlines and worldview, then reviewed by us — the one section of this site written this way.",
   "compass.tag": "Guide",
   "compass.epicsAriaLabel": "Courses",
   "compass.chapter": "Chapter {{n}}",

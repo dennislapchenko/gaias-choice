@@ -1895,10 +1895,16 @@ a.respected-card:hover {
     background: var(--surface-muted-strong);
     border-color: var(--sage);
 }
+/* The active tab and the .epic-head rule below are the SAME sage cue at both
+   ends of the page — "this tab" and "this course header" read as one pair. */
 .epic-row.is-active {
     background: var(--sage);
     border-color: var(--sage);
     color: var(--on-accent);
+    font-weight: 700;
+    /* Halo, not a layout box — box-shadow costs no width, so the rail keeps
+       its column and nothing clips (.epic-rail-list has no overflow). */
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--sage) 25%, transparent);
 }
 /* The mandala art is a full radial design (rings + petals) with a small
    center icon, so the whole image is mostly background at thumbnail size —
@@ -1924,18 +1930,35 @@ a.respected-card:hover {
     font-size: 1.3rem;
     transform: none;
 }
+/* Selected-course header. It used to be a bare h2 + paragraph directly under
+   the page's own h1 + .lead, so the two headers read as one run of prose and
+   the reader couldn't tell WHICH course was open. The sage left rule binds
+   title and blurb into one block and colour-matches .epic-row.is-active. */
+.epic-head {
+    border-left: 4px solid var(--sage);
+    padding-left: 18px;
+    margin: 0 0 22px;
+}
 .epic-title {
-    margin: 0 0 10px;
-    font-size: 1.5rem;
+    margin: 0 0 8px;
+    /* Grows with the viewport but always trails h1's clamp(1.9rem, 4vw, 2.8rem),
+       incl. at 480px where h1 sits at its 1.9rem floor and this at 1.5rem. */
+    font-size: clamp(1.5rem, 3vw, 1.95rem);
     line-height: 1.2;
 }
 
 .epic-blurb {
-    margin: 0 0 20px;
+    /* .epic-head owns the gap to the row list now. */
+    margin: 0;
     max-width: 60ch;
     color: var(--muted);
     font-size: 1.02rem;
     line-height: 1.55;
+}
+@media (max-width: 640px) {
+    .epic-head {
+        padding-left: 14px;
+    }
 }
 
 /* ---------- Page-head row + mobile rail toggle (Account, Reviews, Journal) ---------- */
@@ -4015,6 +4038,23 @@ a.respected-card:hover {
     color: var(--ink);
     font-size: 0.92rem;
     line-height: 1.6;
+}
+
+/* The same disclosure on a single Compass CHAPTER page (EntryDetail, compass
+   kind only — never Journal). Quieter than the landing banner on purpose: an
+   honest footnote under the title, not a second warning. Muted "greyed" card
+   surface like .upcoming-link / .epic-row, round per --radius-sm. */
+.chapter-provenance {
+    display: inline-block;
+    max-width: 60ch;
+    margin: 0 0 20px;
+    padding: 8px 14px;
+    background: var(--surface-muted);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    font-size: 0.82rem;
+    line-height: 1.5;
 }
 
 /* ---------- Journal (human-written, date-ordered blog on /journal) ---------- */
