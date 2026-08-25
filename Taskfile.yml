@@ -208,6 +208,23 @@ tasks:
     cmds:
       - '{{.NODE_RUN}} node scripts/generate-mandala.mjs {{.SET}} {{if .ONLY}}--only={{.ONLY}}{{end}}'
 
+  og-cards:
+    desc: 'Generate the Compass course social-preview cards (1200x630 JPG, optional ONLY=tag1,tag2)'
+    deps: [deps]
+    vars:
+      MAGICK: dpokidov/imagemagick:latest
+      QUALITY: '86'
+    cmds:
+      # 1) SVG from content (site.yaml epics + themes.yaml palette).
+      - '{{.NODE_RUN}} node scripts/generate-og-cards.mjs {{if .ONLY}}--only={{.ONLY}}{{end}}'
+      # 2) Rasterize to JPG (scrapers want a raster) and drop the SVGs — the JPGs
+      #    are the committed artifact, referenced by entry-server.tsx as og:image.
+      #    The SVG delegate in this image is rsvg-convert.
+      - >-
+        docker run --rm --entrypoint sh -v {{.ROOT_DIR}}/frontend/public/og:/og -w /og {{.MAGICK}}
+        -c 'for f in *.svg; do [ -e "$f" ] || continue;
+        magick "$f" -quality {{.QUALITY}} "${f%.svg}.jpg" && rm "$f"; done'
+
   image:
     desc: Build the production Docker image (nginx)
     cmds:

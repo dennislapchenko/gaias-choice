@@ -44,6 +44,11 @@ export interface PageDef {
   lastmod?: string
   /** Utility route whose content is session-driven: emit the empty app shell. */
   shell?: boolean
+  /** Per-page og:image, root-relative and WITHOUT the Vite base
+   *  ('/og/course-herbalism-ru.jpg'); prerender prefixes the origin. Absent ⇒
+   *  the site-wide og-default.jpg. The file must exist in dist/ — prerender
+   *  self-checks it, since a missing card ships a broken link preview. */
+  image?: string
 }
 
 /** Every prerenderable page of one locale's URL tree. */
@@ -55,6 +60,7 @@ export function pages(locale: Locale): PageDef[] {
   const fullTitle = (title?: string) =>
     title ? `${title} — ${site.name}` : `${site.name} — ${site.tagline}`
 
+  const compass = getCompass(locale)
   const defs: PageDef[] = []
   const add = (
     key: string,
@@ -71,6 +77,7 @@ export function pages(locale: Locale): PageDef[] {
       sitemap: meta.sitemap ?? false,
       lastmod: meta.lastmod,
       shell: meta.shell,
+      image: meta.image,
     })
 
   // Home + listings.
@@ -78,6 +85,20 @@ export function pages(locale: Locale): PageDef[] {
   add('/reviews', { title: t('reviews.title'), description: t('reviews.lead'), sitemap: true })
   add('/journal', { title: t('journal.title'), description: t('journal.lead'), sitemap: true })
   add('/compass', { title: t('compass.title'), description: t('compass.lead'), sitemap: true })
+
+  // One page per course (`/compass/<tag>` — Compass.tsx selects from the path),
+  // so a shared course link previews as that course instead of the generic
+  // section. Same filter the page uses: an epic with no chapters gets no page.
+  // Card art comes from `task og-cards` (scripts/generate-og-cards.mjs).
+  for (const epic of site.epics ?? []) {
+    if (!compass.some((c) => c.tags?.[0] === epic.tag)) continue
+    add(`/compass/${epic.tag}`, {
+      title: epic.title,
+      description: epic.blurb,
+      sitemap: true,
+      image: `/og/course-${epic.tag}-${locale}.jpg`,
+    })
+  }
 
   // Standalone pages wired as routes in App.tsx.
   for (const slug of ['about', 'contact', 'roadmap', 'disclosure', 'privacy', 'support']) {
@@ -99,7 +120,7 @@ export function pages(locale: Locale): PageDef[] {
     add(`/journal/${e.slug}`, { title: e.title, description: e.excerpt, ogType: 'article', sitemap: true, lastmod: e.date })
   for (const e of getUpcomingJournal(locale))
     add(`/journal/${e.slug}`, { title: e.title, description: e.excerpt, ogType: 'article', noindex: true })
-  for (const c of getCompass(locale))
+  for (const c of compass)
     add(`/compass/${c.slug}`, { title: c.title, description: c.excerpt, ogType: 'article', sitemap: true, lastmod: c.date })
 
   return defs

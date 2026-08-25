@@ -79,7 +79,7 @@ function headFor(def, siblings) {
   lines.push(`<meta property="og:title" content="${esc(def.title)}" />`)
   lines.push(`<meta property="og:description" content="${esc(def.description)}" />`)
   lines.push(`<meta property="og:url" content="${canonical}" />`)
-  lines.push(`<meta property="og:image" content="${ORIGIN}/og-default.jpg" />`)
+  lines.push(`<meta property="og:image" content="${ORIGIN}${def.image ?? '/og-default.jpg'}" />`)
   lines.push(`<meta property="og:locale" content="${OG_LOCALE[def.locale]}" />`)
   lines.push('<meta name="twitter:card" content="summary_large_image" />')
   return lines.join('\n')
@@ -152,6 +152,13 @@ writeFileSync(join(dist, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${O
 for (const d of listed) {
   if (!existsSync(join(dist, fileFor(d.path)))) {
     throw new Error(`prerender: sitemap lists ${d.path} but ${fileFor(d.path)} was not written`)
+  }
+}
+// Self-check: every declared og:image must exist. A missing card is invisible
+// here but ships a broken link preview everywhere the page is shared.
+for (const d of defs) {
+  if (d.image && !existsSync(join(dist, d.image.slice(1)))) {
+    throw new Error(`prerender: ${d.path} declares og:image ${d.image} but dist${d.image} is missing — run \`task og-cards\``)
   }
 }
 console.log(`prerender: ${defs.length + 1} pages written, ${listed.length} in sitemap`)

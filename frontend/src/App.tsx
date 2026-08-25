@@ -39,6 +39,12 @@ export default function App() {
                 <Route path="/journal" element={<Journal />} />
                 <Route path="/journal/:slug" element={<EntryDetail kind="journal" />} />
                 <Route path="/compass" element={<Compass />} />
+                {/* One segment = a course: `/compass/aromatherapy` is the
+                    Compass landing with that course selected (a real path, so
+                    its social preview can be prerendered per course). Router
+                    ranking puts this ahead of the splat below regardless of
+                    order — a single dynamic segment outranks a splat. */}
+                <Route path="/compass/:course" element={<Compass />} />
                 {/* Splat, not :slug — a Compass slug carries its epic folder
                     (`/compass/herbalism/02-…`), so it spans a path separator. */}
                 <Route path="/compass/*" element={<EntryDetail kind="compass" />} />

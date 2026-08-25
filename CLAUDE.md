@@ -186,6 +186,10 @@ provenance contract is SKILL.md non-negotiable #6) plus its one-line sibling
   `compass/<epic>/<file>.md` → `/compass/<epic>/<file>`. Epic display metadata
   lives in `site.yaml`
   `epics:`; the first entry is the default tab.
+- **A course is a real path** — `/compass/<tag>` selects it (`?course=<tag>`
+  still works for already-shared links), so each course prerenders its own
+  head and social-preview card; mechanics in development.md "Compass section /
+  epics" + "OG cards".
 - Courses are **5 or 11 chapters** (owner rule); optional `chapter: N`
   frontmatter orders them. Existing epics, all complete: `founder-guide` (5),
   `herbalism` (11), `homeopathy` (11), `aromatherapy` (11), `trophology` (5) —
@@ -229,7 +233,10 @@ drop into `public/images/` and get optimized to WebP by `task images`
 content references); **mandala SVG art** — the generated radial-symmetry
 images guide chapters and reviews use instead of stock photos — comes from
 `scripts/generate-mandala.mjs` via `task mandalas SET=<name>` (development.md
-"Mandala SVG art" row). Content references images by absolute path
+"Mandala SVG art" row). A third, non-content path: the **Compass course OG
+cards** in `public/og/` (`task og-cards`), generated from `site.yaml` epics and
+consumed only by the prerendered `og:image` — development.md "OG cards".
+Content references images by absolute path
 (`/images/x.webp`). Real product photos replace review mandalas when real
 reviews ship.
 

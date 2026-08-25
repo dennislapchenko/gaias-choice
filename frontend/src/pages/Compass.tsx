@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { getCompass, getSite } from '../lib/content'
 import { usePageHead } from '../lib/head'
 import { useI18n } from '../lib/i18n'
@@ -8,7 +8,6 @@ import CompassRow from '../components/CompassRow'
 
 export default function Compass() {
   const { locale, t } = useI18n()
-  usePageHead(t('compass.title'), t('compass.lead'))
   const entries = getCompass(locale)
   const site = getSite(locale)
 
@@ -17,20 +16,30 @@ export default function Compass() {
   // Only show epics that actually have chapters. The first one is the default.
   const epics = (site.epics ?? []).filter((e) => entries.some((g) => g.tags?.[0] === e.tag))
 
-  // Selected course persists in the URL (?course=<tag>), mirroring the Reviews/
-  // Journal filter idiom. Prerendered HTML is the default (first) tab, so the
-  // param applies only after mount — a direct ?course= link hydrates cleanly.
-  const [params, setParams] = useSearchParams()
+  // The selected course lives in the PATH (`/compass/<tag>`), so the prerender
+  // can bake a per-course head + OG card into each course's static HTML — a
+  // query param can't be prerendered and scrapers don't run JS. Resolution
+  // order: path param → legacy `?course=` (back-compat for links already
+  // shared) → first epic. The path param is read on the server too — only the
+  // query fallback stays behind the mount gate, since it can't be prerendered.
+  const { course } = useParams()
+  const [params] = useSearchParams()
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
-  const requested = mounted ? params.get('course') : null
+  const requested = course ?? (mounted ? params.get('course') : null)
   const activeTag = epics.some((e) => e.tag === requested) ? requested! : epics[0]?.tag
-  const setActiveTag = (tag: string) =>
-    setParams(tag === epics[0]?.tag ? {} : { course: tag }, { replace: true })
+  const navigate = useNavigate()
+  const setActiveTag = (tag: string) => navigate(`/compass/${tag}`, { replace: true })
 
   // With epics configured, the window shows the active epic's chapters; without
   // any (older config), it falls back to showing every chapter.
   const activeEpic = epics.find((e) => e.tag === activeTag)
+  // Mirrors the head the prerender bakes into /compass/<tag>.html, so a
+  // client-side tab switch keeps title/description in step with the URL.
+  usePageHead(
+    activeEpic && course ? activeEpic.title : t('compass.title'),
+    activeEpic && course ? (activeEpic.blurb ?? t('compass.lead')) : t('compass.lead'),
+  )
   const filtered = activeTag ? entries.filter((g) => g.tags?.[0] === activeTag) : entries
   // Chaptered entries (course order) sort ascending and come first; entries
   // without a chapter keep the existing date-descending order (e.g. the
