@@ -5,6 +5,7 @@ image: /images/guide-aromatherapy-04-molecule-families.svg
 date: 2026-07-12
 chapter: 4
 tags: [aromatherapy]
+superseded: true
 ---
 
 > **Глава 4 из 11 · Путь** — [← Глава 3: Кожа и доза](/compass/aromatherapy/03-skin-and-dose) · [Глава 5: Стартовый набор →](/compass/aromatherapy/05-the-starter-set)

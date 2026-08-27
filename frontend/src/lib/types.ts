@@ -136,6 +136,10 @@ export interface JournalEntry extends Entry {
 /** A Compass course chapter — a Journal-shaped article plus optional course order. */
 export interface CompassEntry extends JournalEntry {
   chapter?: number // optional course order within an epic; ascending, takes precedence over date
+  // Old-version chapter kept readable while the course is rewritten: the row
+  // is dimmed + tagged on /compass and the page carries a notice. Compass-only
+  // (reviews/journal use `state` instead) — see development.md.
+  superseded?: boolean
 }
 
 export interface Page extends Entry {

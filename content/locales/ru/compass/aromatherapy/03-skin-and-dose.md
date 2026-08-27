@@ -5,6 +5,7 @@ image: /images/guide-aromatherapy-03-skin-and-dose.svg
 date: 2026-07-12
 chapter: 3
 tags: [aromatherapy]
+superseded: true
 ---
 
 > **Глава 3 из 11 · Путь** — [← Глава 2: Как работает запах](/compass/aromatherapy/02-how-smell-works) · [Глава 4: Семьи молекул →](/compass/aromatherapy/04-molecule-families)

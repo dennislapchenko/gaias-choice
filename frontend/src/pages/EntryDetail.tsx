@@ -93,6 +93,9 @@ export default function EntryDetail({ kind }: { kind: 'compass' | 'journal' }) {
             </span>
           )}
         </div>
+        {kind === 'compass' && (entry as { superseded?: boolean }).superseded && (
+          <p className="chapter-superseded">{t('compass.supersededNote')}</p>
+        )}
         {showProvenance && <p className="chapter-provenance">{provenance}</p>}
         {entry.image && (
           <img className="detail-image" src={withBase(entry.image)} alt={entry.title} />

@@ -5,6 +5,7 @@ image: /images/guide-aromatherapy-10-blending.svg
 date: 2026-07-12
 chapter: 10
 tags: [aromatherapy]
+superseded: true
 ---
 
 > **Глава 10 из 11 · Вершина** — [← Глава 9: Честность флакона](/compass/aromatherapy/09-honesty-of-the-bottle) · [Глава 11: Свой нос — ваш арбитр →](/compass/aromatherapy/11-your-nose-your-arbiter)

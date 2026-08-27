@@ -5,6 +5,7 @@ image: /images/guide-aromatherapy-06-calm-and-sleep.svg
 date: 2026-07-12
 chapter: 6
 tags: [aromatherapy]
+superseded: true
 ---
 
 > **Глава 6 из 11 · Путь** — [← Глава 5: Стартовый набор](/compass/aromatherapy/05-the-starter-set) · [Глава 7: Ясность, энергия, настроение →](/compass/aromatherapy/07-focus-energy-mood)

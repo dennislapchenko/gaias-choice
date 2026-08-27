@@ -5,6 +5,7 @@ image: /images/guide-aromatherapy-09-honesty-of-the-bottle.svg
 date: 2026-07-12
 chapter: 9
 tags: [aromatherapy]
+superseded: true
 ---
 
 > **Глава 9 из 11 · Путь** — [← Глава 8: Забота и границы](/compass/aromatherapy/08-care-and-boundaries) · [Глава 10: Составление смесей →](/compass/aromatherapy/10-blending)

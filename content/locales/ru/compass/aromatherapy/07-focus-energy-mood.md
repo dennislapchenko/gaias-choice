@@ -5,6 +5,7 @@ image: /images/guide-aromatherapy-07-focus-energy-mood.svg
 date: 2026-07-12
 chapter: 7
 tags: [aromatherapy]
+superseded: true
 ---
 
 > **Глава 7 из 11 · Путь** — [← Глава 6: Покой и сон](/compass/aromatherapy/06-calm-and-sleep) · [Глава 8: Забота и границы →](/compass/aromatherapy/08-care-and-boundaries)

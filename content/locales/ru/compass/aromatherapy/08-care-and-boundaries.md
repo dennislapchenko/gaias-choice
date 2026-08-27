@@ -5,6 +5,7 @@ image: /images/guide-aromatherapy-08-care-and-boundaries.svg
 date: 2026-07-12
 chapter: 8
 tags: [aromatherapy]
+superseded: true
 ---
 
 > **Глава 8 из 11 · Путь** — [← Глава 7: Ясность, энергия, настроение](/compass/aromatherapy/07-focus-energy-mood) · [Глава 9: Честность флакона →](/compass/aromatherapy/09-honesty-of-the-bottle)

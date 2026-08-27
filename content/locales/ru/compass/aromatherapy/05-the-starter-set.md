@@ -5,6 +5,7 @@ image: /images/guide-aromatherapy-05-the-starter-set.svg
 date: 2026-07-12
 chapter: 5
 tags: [aromatherapy]
+superseded: true
 ---
 
 > **Глава 5 из 11 · Путь** — [← Глава 4: Семьи молекул](/compass/aromatherapy/04-molecule-families) · [Глава 6: Покой и сон →](/compass/aromatherapy/06-calm-and-sleep)

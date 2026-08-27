@@ -14,7 +14,10 @@ import { useI18n } from '../lib/i18n'
 export default function CompassRow({ entry }: { entry: CompassEntry }) {
   const { t } = useI18n()
   return (
-    <Link to={`/compass/${entry.slug}`} className="guide-row">
+    <Link
+      to={`/compass/${entry.slug}`}
+      className={`guide-row${entry.superseded ? ' is-superseded' : ''}`}
+    >
       {entry.image ? (
         <img className="guide-row-img" src={withBase(entry.image)} alt="" loading="lazy" />
       ) : (
@@ -22,7 +25,9 @@ export default function CompassRow({ entry }: { entry: CompassEntry }) {
           📋
         </div>
       )}
-      <span className="tag guide-row-tag">{t('compass.tag')}</span>
+      <span className="tag guide-row-tag">
+        {entry.superseded ? t('compass.superseded') : t('compass.tag')}
+      </span>
       {entry.chapter != null && (
         <span className="tag guide-row-chapter">{t('compass.chapter', { n: entry.chapter })}</span>
       )}

@@ -5,6 +5,7 @@ image: /images/guide-aromatherapy-02-how-smell-works.svg
 date: 2026-07-12
 chapter: 2
 tags: [aromatherapy]
+superseded: true
 ---
 
 > **Глава 2 из 11 · Путь** — [← Глава 1: Что такое живой аромат](/compass/aromatherapy/01-what-living-scent-is) · [Глава 3: Кожа и доза →](/compass/aromatherapy/03-skin-and-dose)

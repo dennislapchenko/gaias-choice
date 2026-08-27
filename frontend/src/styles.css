@@ -1961,6 +1961,43 @@ a.respected-card:hover {
     }
 }
 
+/* An old-version chapter kept readable while the course is rewritten
+   (`superseded: true` in frontmatter). Dimmed and desaturated so the current
+   chapter is unmistakable, but still fully clickable — the reader can compare.
+   Hover lifts it back to full strength so it never reads as disabled. */
+/* Same notice on the old chapter's own page — clay-tinted, unlike the neutral
+   provenance footnote beside it, because this one is a warning, not context. */
+.chapter-superseded {
+    display: inline-block;
+    max-width: 60ch;
+    margin: 0 0 12px;
+    padding: 8px 14px;
+    background: var(--surface-muted);
+    border: 1px solid var(--clay);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    font-size: 0.84rem;
+    line-height: 1.5;
+}
+
+.guide-row.is-superseded {
+    filter: grayscale(0.75);
+    opacity: 0.55;
+    transition: opacity 0.18s ease, filter 0.18s ease;
+}
+.guide-row.is-superseded:hover,
+.guide-row.is-superseded:focus-visible {
+    filter: grayscale(0);
+    opacity: 1;
+}
+.guide-row.is-superseded .guide-row-tag {
+    background: var(--surface-muted-strong);
+    color: var(--ink);
+}
+@media (prefers-reduced-motion: reduce) {
+    .guide-row.is-superseded { transition: none; }
+}
+
 /* ---------- Page-head row + mobile rail toggle (Account, Reviews, Journal) ---------- */
 /* The page title sits in a flex row so a toggle button has a home next to it;
    the button itself (`.rail-toggle`) is the same pill-shaped `.user-toggle`

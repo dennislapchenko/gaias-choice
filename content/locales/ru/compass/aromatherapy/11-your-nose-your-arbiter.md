@@ -5,6 +5,7 @@ image: /images/guide-aromatherapy-11-your-nose-your-arbiter.svg
 date: 2026-07-12
 chapter: 11
 tags: [aromatherapy]
+superseded: true
 ---
 
 > **Глава 11 из 11 · Вершина** — [← Глава 10: Составление смесей](/compass/aromatherapy/10-blending)

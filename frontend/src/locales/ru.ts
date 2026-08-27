@@ -40,6 +40,8 @@ const ru: Record<keyof typeof en, string> = {
   // наверху каждой главы.
   "compass.provenanceLabel":
     "Набросано с ИИ из наших планов и взглядов, потом вычитано нами вручную — так сделан только этот раздел сайта.",
+  "compass.supersededNote": "Старая версия — эта глава переписывается. Новый курс начинается с главы 1.",
+  "compass.superseded": "Старая версия",
   "compass.tag": "Гайд",
   "compass.epicsAriaLabel": "Курсы",
   "compass.chapter": "Глава {{n}}",

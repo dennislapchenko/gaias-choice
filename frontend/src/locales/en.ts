@@ -39,6 +39,8 @@ const en = {
   // of every chapter page — readers arriving from search never see the banner.
   "compass.provenanceLabel":
     "Drafted with an AI from our own outlines and worldview, then reviewed by us — the one section of this site written this way.",
+  "compass.supersededNote": "Old version — this chapter is being rewritten. The new course starts at chapter 1.",
+  "compass.superseded": "Old version",
   "compass.tag": "Guide",
   "compass.epicsAriaLabel": "Courses",
   "compass.chapter": "Chapter {{n}}",
