@@ -1,192 +1,193 @@
-# Course plan — «Ароматерапия» (RU), succinct rebuild
+# Course plan — «Ароматерапия» (RU), rebuild
 
-**Pattern version: v3.** **Status: pilot — chapter 1 drafted for owner review;
-the live 11-chapter course is untouched.** RU only for now; EN stays on the
-live v1 course until this shape is approved.
+**Pattern version: v3.** **Status: ch. 1 published live at the existing slug
+(rebuild in progress); chapters 2–5 not written. Old chapters 2–11 marked
+`superseded: true` — greyed in the listing, notice on the page.** RU only; EN
+stays on the live v1 course until this shape is settled.
 
-## Why this rebuild exists
+## What the reader is here for (the north star — owner, verbatim)
 
-A native reader skimmed RU chapters 1–3 of the live course and reported "90%
-water, no substance, gained nothing". Measured, the complaint is exact:
+> "The main gain from the course should be understanding **how to use this or
+> that oil for this or that purpose**. A deep dive, a real holistic approach.
+> How to also be armed with the **principles of how oils work** and be able to
+> understand by own feeling/thinking how to **find novel uses**. And as a
+> side-effect generally understanding better what essential oils (and
+> **absolutes**) are and how to **connect** with them."
 
-| Live chapter | Core words | Facts / 1,000 core words | Epistemology mentions |
-|---|---|---|---|
-| 1 «Что такое живой аромат» | 1,362 | **1.5** | **22** |
-| 2 «Как работает запах» | 990 | **0.0** | 7 |
-| 3 «Кожа и доза» | 1,092 | 23.8 | 2 |
+Three obligations, in priority order:
 
-(Measured with `task density`; floor is 12. Chapter 5 scores 1.5 with **42**
-epistemology mentions — the worst in the course.) Chapter 3, the one chapter
-that teaches dilution, is the only one of the three that measures as teaching
-at all. The cause is not the v2 upgrade (it changed
-~10 lines per chapter) and not the translation. The cause is that **the course
-taught its epistemology instead of its subject**, and an 11-chapter budget
-forced padding onto a domain with ~5 chapters of real content.
+1. **Purpose → oil.** The reader can meet a real situation and choose.
+2. **Principles that generate answers.** Not a lookup table — an engine, so
+   they can serve a purpose nobody wrote a recipe for.
+3. **What these substances are, and how to meet one.** Earned along the way,
+   never a lecture that precedes the useful part.
 
-Full diagnosis and the general rules that came out of it:
-[epic-writing-context.md](../epic-writing-context.md) §0 (pattern v3).
+## Two failed openings, and why (keep this — it is the design constraint)
 
-## The new shape — 5 chapters, two stages
+| Opening | Why it failed |
+|---|---|
+| v1/v2 «Что такое живой аромат» | Water — 1.5 facts/1,000 core words, 22 epistemology mentions. Taught the course's own trust framework instead of its subject. |
+| v3 draft «Флакон и доза» | Dense (37.5 facts/1k) but **the wrong subject**: buying and dilution arithmetic. Logistics, not use. The owner read it and still found the beginning useless. |
 
-Stages are **Основа** (chapters 1–4, the vital 20%) and **Вершина** (chapter 5).
-There is no separate framing "Gate": chapter 1 is a working chapter that hands
-over a usable instrument before it explains anything about itself.
+**The lesson both share: chapter 1 must deliver the course's actual promise on
+its first pages.** For this course that means the reader makes a real
+purpose→oil match, with a reason they can articulate, before chapter 1 ends.
+Dose is a *constraint on the answer*, taught where it binds — never the topic.
 
-| # | Slug | Title | Stage | Role | The instrument it hands over |
-|---|------|-------|-------|------|------------------------------|
-| 1 | `01-flakon-i-doza` | «Флакон и доза» | Основа | protocol | The dilution rule + how to read a label. After chapter 1 the reader can buy correctly and mix safely — the whole 80/20 in one chapter. |
-| 2 | `02-desyat-masel` | «Десять масел» | Основа | gallery | Ten portraits: Latin name, marker molecule, what it does, dose, safety flag, shelf life. |
-| 3 | `03-kak-primenyat` | «Как применять» | Основа | protocol | Methods with real numbers: diffuser, inhaler, steam, roller, bath, compress — drops, minutes, frequency. |
-| 4 | `04-komu-nelzya` | «Кому нельзя» | Основа | protocol | The red lines with ages, percentages and mechanisms — children, pregnancy, cats, dogs, phototoxicity, sensitisation. |
-| 5 | `05-smesi-i-chestnyy-flakon` | «Смеси и честный флакон» | Вершина | concept | Blending architecture + judging a supplier + where real depth lives. |
+## The engine — «цепочка подбора» (the matching chain)
 
-Safety is not deferred: the dose instrument is chapter 1, the population limits
-are chapter 4, and chapter 1 carries an explicit "children, pregnancy, animals →
-chapter 4, and until you have read it, don't" line.
+The one instrument the whole course exists to install. Chapter 1 teaches it
+whole and small; chapters 2–4 deepen one link each; chapter 5 uses it to reach
+answers that aren't in any book.
+
+1. **Состояние** — name it precisely. Not «стресс» but «не могу выключить
+   голову в 23:00». A vague state cannot be matched; a precise one nearly
+   matches itself.
+2. **Маршрут** — nose (seconds; mood, alertness, breath), skin (slower, local
+   and lasting), air (background, a room and a rhythm). The route is chosen by
+   *what kind* of effect is wanted, before any bottle is picked.
+3. **Семья молекул** — the predicted action: esters calm, oxides open
+   breathing, citrus monoterpenes lift, alcohols balance and clean.
+4. **Масло** — a member of that family, with its caution.
+5. **Доза и время** — the number that makes it safe, and how long to give it.
+6. **Чтение** — what actually changed in the body, noticed before it is named,
+   written down once. This is both the feedback loop and the connection: an
+   oil becomes known the way a person does, by repeated honest meeting.
+
+Steps 1–5 are how you *choose*. Step 6 is how you *learn*, and it is what
+turns the chain from a recipe into a practice.
+
+## The 5 chapters
+
+Stages: **Основа** (1–4) and **Вершина** (5). No framing gate.
+
+| # | Slug | Title | Deepens | What the reader can do after it |
+|---|------|-------|---------|--------------------------------|
+| 1 | `01-...` (keeps live slug) | «От состояния к флакону» | the whole chain, small | Take tonight's real state and choose an oil, route and dose for it — and say why. Has met one oil properly. |
+| 2 | `02-semi-molekul` | «Семьи молекул» | link 3 — the prediction engine | Smell an unknown bottle, place it in a family, and predict what it will do and whom it must avoid. |
+| 3 | `03-marshruty` | «Маршруты» | link 2 + 5 — route and dose | Pick nose / skin / air for a given purpose and execute it with real numbers; knows dose–response is not linear. |
+| 4 | `04-desyat-masel-i-granitsy` | «Десять масел и границы» | link 4 — the cast, and who must not | Run the chain over ten oils organised by what they are FOR; knows the red lines cold. |
+| 5 | `05-svoyo-primenenie` | «Своё применение» | the whole chain, generative | Blend, and reason to a use nobody wrote down — then test and judge it honestly. |
+
+**Absolutes** get their honest place in ch. 1 (what they are and why they
+exist — solvent extraction for flowers steam would destroy) and return in
+ch. 5 (heavier, tenacious, the base of a blend).
 
 ## Spine artifact — the working shelf
 
-Physical, countable: **ten labelled bottles + one correctly diluted roller +
-the red-lines card + one blend of your own.** The smell journal survives as a
-*tool* mentioned in one short paragraph — never again as a curriculum item with
-its own taught columns.
+Ten labelled bottles + one correctly dosed preparation per route (roller,
+inhaler, diffuser rhythm) + the red-lines card + one blend of the reader's own
+design, made for a purpose they chose.
 
 ## Named concepts (five, hard cap)
 
-| Concept | Born in | Why it earns a name |
-|---|---|---|
-| доза решает | 1 | The one rule that prevents most harm |
-| семья молекул | 2 | Lets a nose predict an unknown oil |
-| окисление | 1 (named), 4 (consequences) | Explains shelf life AND why old oil is more dangerous, not just weaker |
-| красные линии | 4 | The non-negotiable population limits |
-| верх · сердце · база | 5 | The blending architecture |
+| Concept | Born in |
+|---|---|
+| цепочка подбора | 1 |
+| семья молекул | 2 |
+| маршрут решает вид эффекта | 3 |
+| доза решает | 1 (as a constraint), formalised in 3 |
+| красные линии | 4 |
 
-Everything else is a fact, a procedure or a portrait — not a named concept.
+## Pocket rules (verbatim)
 
-## Pocket rules (one per Основа chapter, verbatim)
-
-- ch. 1: **«Не бывает безопасных масел — бывают безопасные проценты.»**
-- ch. 2: **«Сначала семья, потом имя, потом проверка носом.»**
-- ch. 3: **«Вдыхают чаще, чем мажут; мажут — только в основе.»**
+- ch. 1: **«Сначала назови состояние — потом бери флакон.»**
+- ch. 2: **«Нос читает семью раньше, чем этикетка называет имя.»**
+- ch. 3: **«Маршрут решает, каким будет эффект; доза — будет ли он безопасным.»**
 - ch. 4: **«Чем меньше тело — тем ниже процент; для самых маленьких — ноль и врач.»**
-
-## What was cut, and why (the refactor record)
-
-| Cut | Was | Why |
-|---|---|---|
-| **лестница доверия** as taught content | Its own core section in ch. 1, re-taught in every chapter (22 mentions in ch. 1, 42 in ch. 5) | Epistemology is a **stance**, not curriculum. Stated once in two sentences, then applied silently. |
-| «где наука кончается» section | ~400 words of ch. 2 | Same reason. One honest sentence where a claim is genuinely thin. |
-| «помощь и усиление» | A named concept + a core section | Vocabulary with no payload — renaming "calming" and "energising" taught nothing. |
-| «путь через нос» as a chapter | All of ch. 2 (~1,750 words) for one anatomical fact | Compressed to one paragraph in ch. 3 where it explains why inhalation is the main route. |
-| Journal's three taught columns | Core sections across chapters | Kept as a tool in one paragraph. |
-| Chapters 6–11's separate "directions" | Calm/sleep, focus/energy, care | Folded into the ten portraits (ch. 2) and the methods table (ch. 3) — that is where a reader actually looks them up. |
-
-**Net:** ~22,000 words → ~9,000, with more teachable content, not less.
 
 ## Fact bank — chapter 1 (use these; invent no numbers)
 
-Everything below is standard, published aromatherapy-safety material,
-consistent with the live course. **Safety-critical values are marked 🔒 — never
-alter, round or "improve" them.** If a number is not here and not already in
-the live course, do not state it.
+Safety-critical values marked 🔒 — never alter or round.
 
-**What is in the bottle**
-- Эфирное масло = летучая фракция растения: от нескольких десятков до
-  нескольких сотен соединений в одном флаконе.
-- Способы извлечения: паровая дистилляция (большинство), холодный отжим
-  (цитрусовая кожура), CO₂-экстракция, абсолю (растворитель — жасмин, роза).
-- Выход и цена: лаванда — ~100–150 кг сырья на 1 кг масла; роза — ~3 000–5 000 кг
-  лепестков на 1 кг масла; апельсиновая кожура — высокий выход, поэтому дёшево.
-  **Цена честного флакона идёт за выходом, а не за брендом.**
+**What these substances are (brief, because it explains why they act)**
+- Эфирное масло — летучая фракция растения: от нескольких десятков до
+  нескольких сотен молекул. Летучесть — обязательное условие: то, что не
+  испаряется, до носа не доходит.
+- Способы: паровая дистилляция (большинство), холодный отжим (цитрусовая
+  кожура), CO₂-экстракция.
+- **Абсолю** — для цветов, которые пар разрушает (жасмин, роза, тубероза):
+  сырьё экстрагируют растворителем, затем спиртом. Молекулы тяжелее и менее
+  летучи — пахнет ближе к живому цветку и держится дольше; в смеси работает
+  как база (глава 5).
+- Выход и цена: лаванда ~100–150 кг сырья на 1 кг масла; роза ~3 000–5 000 кг
+  лепестков на 1 кг. Цена идёт за выходом, а не за брендом.
 
-**Чтение этикетки**
-- Что обязано быть: латинское имя (*Lavandula angustifolia*), часть растения,
-  страна, способ извлечения, номер партии, тёмное стекло.
-- 🔒 «Отдушка», «parfum», «fragrance oil», «ароматическое масло» = синтетика.
-  Это не сорт похуже, это другой продукт.
+**Маршруты (link 2 — introduced here, deepened in ch. 3)**
+- Нос: молекула → обонятельный эпителий → луковица → лимбическая система
+  (эмоция и память) — **раньше** мыслящей коры. Поэтому эффект приходит
+  секундами и ощущается как настроение, а не как решение.
+- Кожа: медленнее, дольше, работает и местно; всегда в основе.
+- Воздух: фон комнаты — не точечный эффект, а ритм.
 
-**Доза — инструмент главы**
-- 🔒 1 мл ≈ 20 капель.
-- 🔒 1% = 1 капля на 5 мл основы.
-- 🔒 Роллер 10 мл: 1% = 2 капли, 2% = 4 капли, 3% = 6 капель.
-- 🔒 Взрослый, тело, короткий курс: 2–3%.
-- 🔒 Лицо, чувствительная кожа, ежедневное применение, пожилые: 0,5–1%.
-- 🔒 Дети от 2 лет: 0,5–1%. До 2 лет — только со специалистом.
-- 🔒 Неразведённое на кожу — нет. Не «крепче», а другая категория риска.
+**Семьи (link 3 — named here, taught in ch. 2)**
+- Эфиры (линалилацетат) — успокаивают, мягкие к коже.
+- Оксиды (1,8-цинеол) — открывают дыхание, бодрят. 🔒 Не к лицу ребёнка до 6.
+- Цитрусовые монотерпены (лимонен) — лёгкий подъём, быстро приходят и уходят.
+- Спирты (линалоол, терпинен-4-ол, гераниол) — противомикробные, хорошо
+  переносятся.
 
-**Три вещи, которые может сделать неразведённое масло**
-- 🔒 Раздражение — сразу, как ожог.
-- 🔒 Сенсибилизация — иммунная реакция, может остаться навсегда; одна
-  неосторожная неделя стоит масла на всю жизнь.
-- 🔒 Фототоксичность — отжатые цитрусы на коже + ультрафиолет (подробности и
-  проценты — глава 4).
+**Доза (link 5 — the constraint, stated once, formalised in ch. 3)**
+- 🔒 1 мл ≈ 20 капель. 🔒 1% = 1 капля на 5 мл основы.
+- 🔒 Роллер 10 мл: 2% = 4 капли.
+- 🔒 Взрослый, тело, короткий курс 2–3%; лицо, чувствительная кожа, пожилые
+  0,5–1%; дети от 2 лет 0,5–1%; до 2 лет — только со специалистом.
+- 🔒 Неразведённое на кожу — нет: раздражение, сенсибилизация (может остаться
+  навсегда), фототоксичность у отжатых цитрусов.
+- Диффузор: 3–5 капель на 100 мл воды, 30–60 минут с перерывами.
+- Салфетка / личный ингалятор: 1–2 капли — самый быстрый способ проверить
+  маршрут через нос.
+- 🔒 Дети, беременность, животные — глава 4; до неё рабочий ответ «не надо».
 
-**Основы (масла-носители)**
-- Жожоба — жидкий воск, очень стабилен, ~5 лет.
-- Фракционированный кокос — очень стабилен, без запаха.
-- Сладкий миндаль — ~1 год.
-- Абрикосовая косточка — ~1 год.
+**Чтение (link 6 — the encounter)**
+- Нюхать в три захода: из флакона на ладонь ниже носа; со стрипа через минуту
+  (живое масло *меняется* — отдушка стоит на месте); с закрытыми глазами,
+  молча тридцать секунд.
+- Сначала телесный ответ, потом название. Плечи, дыхание, желание двигаться —
+  или ничего. «Ничего» — это результат, а не провал.
 
-**Хранение и срок годности**
-- Тёмное стекло, прохлада, плотно закрытая крышка. Не в ванной (тепло + пар).
-- Цитрусовые и хвойные (богаты монотерпенами): 1–2 года.
-- Лаванда, ромашка, герань, розмарин: 2–3 года.
-- Мята: ~3 года (ментол стабилен).
-- Сандал, пачули, ветивер: с возрастом становятся лучше.
-- 🔒 **Окисление:** монотерпены на воздухе окисляются, и продукты окисления —
-  сенсибилизаторы. Старое цитрусовое масло не «слабее» — оно **опаснее**
-  свежего. Это главная причина, по которой флакон закрывают и датируют.
+**Worked match for ch. 1 (the whole chain, once):** состояние «голова не
+выключается в 23:00» → маршрут нос (нужен быстрый сдвиг настроения, не местное
+действие) → семья эфиры (успокаивают) → лаванда → 1–2 капли на салфетку у
+подушки (не на кожу — маршрут выбран через нос) → прочитать: что изменилось за
+десять минут, записать одной строкой.
 
-**Практика (chapter 1's own):** смешать роллер 10 мл, 2% = 4 капли лаванды в
-жожоба; подписать: масло, процент, основа, дата открытия флакона.
+## Chapter 1 structure notes
 
-## Fact banks — chapters 2–5 (outline level, for when they are written)
+- Opens on a **real state**, not on a shop shelf and not on a philosophy.
+- The chain is the core; each link gets a short `###` and names the chapter
+  that deepens it — so the reader sees the course's shape without a course map.
+- Ends with the reader having made **one match tonight** and read the result.
+- Length 1,200–1,800 words; ≥20 quantified facts / 1,000 core words
+  (`task density`); epistemology budget two sentences, once.
 
-- **Ch. 2, the ten:** лаванда *Lavandula angustifolia* (линалоол, линалилацетат);
-  апельсин сладкий *Citrus sinensis* (лимонен ~95%, **не** фототоксичен);
-  мята *Mentha × piperita* (ментол); чайное дерево *Melaleuca alternifolia*
-  (терпинен-4-ол — ISO 4730 требует ≥30%, 1,8-цинеол ≤15%); эвкалипт
-  *Eucalyptus globulus* (1,8-цинеол ~70–85%); ромашка римская *Chamaemelum
-  nobile* (эфиры); лимон *Citrus limon*, отжим (лимонен, фототоксичен); ладан
-  *Boswellia carterii* (α-пинен); розмарин *Rosmarinus officinalis*
-  (1,8-цинеол / камфора, хемотипы); герань *Pelargonium graveolens*
-  (цитронеллол, гераниол — сенсибилизатор).
-- **Ch. 3, methods:** ультразвуковой диффузор 3–5 капель на 100 мл воды,
-  30–60 мин с перерывами, проветривать; персональный ингалятор 5–15 капель на
-  фитиль; паровая ингаляция 1–2 капли, глаза закрыты, 5–10 мин (не детям);
-  роллер 10 мл 2% = 4 капли; 🔒 ванна — масла не растворяются в воде: 4–6 капель
-  развести в 1 ст. л. основы, молока или солюбилизатора; компресс 3–5 капель на
-  миску с дисперсантом; массаж 1–2% на большую площадь.
-- **Ch. 4, red lines:** 🔒 до 2 лет — только специалист; 2–6 лет 0,5%; мята и
-  эвкалипт не к лицу ребёнка до 6 (ментол, 1,8-цинеол); беременность — избегать
-  розмарин и сильные масла, вдыхание в низкой дозе, консультация до кожи; кошки
-  — дефицит глюкуронирования (UGT1A6), чайное дерево токсично, диффузор только
-  там, откуда кошка может уйти; собаки — разводить сильнее, дать уйти;
-  фототоксичность IFRA leave-on: лимон отжим 2%, бергамот 0,4%, лайм отжим 0,7%,
-  грейпфрут 4%, без УФ 12–18 часов; патч-тест 24 часа; «поддержка, не лечение».
-- **Ch. 5, pinnacle:** скорость испарения → верх/сердце/база; стартовое
-  соотношение и ведущее масло; синергия; GC/MS и номер партии; адюльтерация
-  (разбавление носителем, синтетический линалоол); Tisserand & Young «Essential
-  Oil Safety» как справочник, ISO-стандарты, чтение GC/MS.
+## Fact banks — chapters 2–5 (outline level)
 
-## Voice and structure rules for this rebuild
+- **Ch. 2:** six families with marker molecule, signature smell, predicted
+  action, caution, shelf life — эфиры, спирты, монотерпены, оксиды, альдегиды
+  (цитраль — сенсибилизаторы), фенолы (тимол, карвакрол, эвгенол — самые
+  «горячие»); окисление монотерпенов делает старое масло опаснее, не слабее;
+  хемотипы (розмарин цинеольный / камфорный).
+- **Ch. 3:** диффузор 3–5 капель / 100 мл, 30–60 мин с перерывами; ингалятор
+  5–15 капель на фитиль; паровая ингаляция 1–2 капли, 5–10 мин, глаза закрыты
+  (не детям); роллер 10 мл 2% = 4 капли; 🔒 ванна — масла не растворяются в
+  воде: 4–6 капель в 1 ст. л. основы/молока/солюбилизатора; компресс 3–5
+  капель; массаж 1–2%. Доза–ответ не линейна: низкая может успокаивать там,
+  где высокая возбуждает. Правило почвы: запах — надстройка над сном, едой и
+  движением.
+- **Ch. 4:** ten oils grouped by purpose with Latin names and markers; 🔒 red
+  lines — до 2 лет только специалист, 2–6 лет 0,5%, мята и эвкалипт не к лицу
+  до 6; беременность — без розмарина и сильных масел; кошки — дефицит
+  глюкуронирования (UGT1A6), чайное дерево токсично; собаки — сильнее
+  разводить, дать уйти; фототоксичность IFRA leave-on: лимон отжим 2%,
+  бергамот 0,4%, лайм отжим 0,7%, грейпфрут 4%, без УФ 12–18 часов.
+- **Ch. 5:** верх/сердце/база и скорость испарения; абсолю как база; синергия;
+  вывод нового применения из принципов + честная проверка; покупка (GC/MS,
+  партия, латынь, цена по ботанике); Tisserand & Young как справочник.
 
-- Chapter length **1,200–1,800 words** — shorter than v1/v2 on purpose.
-- **≥20 quantified facts per 1,000 core words** (`task density`; the general
-  floor is 12, but a dosing course carries numbers and should clear 20 — the
-  drafted chapter 1 reaches 37.5).
-- Scaffolding ≤20% of the chapter (v1/v2 ran 27–33%).
-- Heading skeleton stays 8 `##` so the TOC and the checks keep working.
-- Author's voice per `persona-context.md` — warm, direct, difficulty-first.
-  Density is the fix, **not** coldness: facts arrive inside real sentences and
-  real situations, never as a bare datasheet.
-- No medical claims. Support, never treatment.
-- Epistemology: **two sentences, once, in chapter 1.** Then never again as a
-  topic — only as the reason a claim is stated carefully.
+## Migration
 
-## Migration (when approved)
-
-The live RU course is 11 chapters at existing URLs. Replacing it with 5 means
-6 URLs stop existing — decide then whether to redirect, keep them as an
-archive, or accept the 404s. Nothing is deleted until the owner approves the
-shape. EN follows only after RU is settled.
+Live RU ch. 1 currently holds the «Флакон и доза» rebuild — it is replaced by
+«От состояния к флакону» at the same slug. Its dose material is not lost: it
+becomes the constraint inside link 5 here and the formal treatment in ch. 3.
+Chapters 2–11 stay `superseded` until the new 2–5 exist.
