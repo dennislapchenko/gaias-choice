@@ -1,9 +1,12 @@
-# Epic course writing context — how to author an 11-chapter Learn course
+# Epic course writing context — how to author a Compass course
 
-**Purpose.** The complete blueprint for writing a Gaia's Choice **epic course**:
-a free, 11-chapter e-course living in the Learn section, built to be the
-highest-quality, most thought-out and intuitive online course in its niche.
-This file is the *structure and method*; read it together with:
+**Purpose.** The complete blueprint for writing a Gaia's Choice **Compass
+course**: a free, multi-chapter e-course, built to be the highest-quality,
+most thought-out and intuitive online course in its niche — which means, before
+anything structural, that **every chapter must actually teach something the
+reader can use** (§0). Chapter count follows the material (§0c); 5 and 11 are
+the house defaults. This file is the *structure and method*; read it together
+with:
 
 - [persona-context.md](persona-context.md) — *how it sounds* (RU speaks in the
   author's voice; guides sit at **medium-high register** per the calibration
@@ -14,15 +17,100 @@ This file is the *structure and method*; read it together with:
 - `.claude/skills/manage-site/references/content-editing.md` — house voice
   rules (truth-first, verdict-first, no hype) remain senior to everything here.
 
-**Pattern version: this blueprint is course pattern v2.** The six courses
-shipped before it (`founder-guide`, `herbalism`, `homeopathy`, `aromatherapy`,
-`trophology`, `inside-websites`) were built to **v1** and stay v1 — no
-retrofit; v1's record and the assessment that produced v2 live in
-[course-pattern-v1.md](course-pattern-v1.md). Every course plan states its
-pattern version in its header. v2 = v1 plus: the hook palette and chapter
-roles (§4), the checkpoint chapter + the return (§3e), slow arcs (§3f),
-pocket rules, answer pointers, the minimum honest version, and the crib
-(§3d, §4).
+**Pattern version: this blueprint is course pattern v3.** Every course plan
+states its pattern version in its header; which shipped course sits on which
+pattern is the conversion ledger in
+[course-pattern-v1.md](course-pattern-v1.md).
+
+- **v1** — the original eight-heading spine: Trail, growing artifact,
+  callbacks and seeds, Bridge. Its record and weaknesses: `course-pattern-v1.md`.
+- **v2** = v1 + the hook palette and chapter roles (§4), the checkpoint
+  chapter + the return (§3e), slow arcs (§3f), pocket rules, answer pointers,
+  the minimum honest version, and the crib (§3d, §4).
+- **v3** = v2 + §0 below. v3 exists because v1 and v2 both optimised
+  *structure* and neither asked whether a chapter carried enough to teach.
+
+---
+
+## 0. The density rules (v3) — read before anything else
+
+A native reader skimmed three shipped chapters and said: *"90% water, no
+substance, I gained nothing."* `task density` agreed. Those chapters measure
+**1.5 and 0.0 quantified facts per 1,000 core words** — while chapter 3, the
+one that actually teaches dilution, measures **23.8**. The epistemology device
+is what fills the gap: **22 mentions in chapter 1, 42 in chapter 5.**
+Scaffolding sits near 30% across every course including healthy ones, so
+scaffolding was never the problem: **the empty chapters were empty on the
+inside.** The rebuilt chapter 1, same language and same checker, measures
+**37.5** — a 25× swing with fewer words.
+
+The four rules that follow are v3, and they outrank every structural device in
+this file. A chapter that satisfies §3 and §4 perfectly but fails these is a
+bad chapter.
+
+### 0a. The fact floor
+
+Every chapter's core carries things a reader can write down and use: a number
+with a unit or a percent, a ratio, a threshold, a dose, a duration, a shelf
+life, a species name, a named molecule, a named procedure step. Run
+`task density` (see development.md); the floor it flags below is **12 per
+1,000 core words**.
+
+The count is a **proxy, not a grade**, and it has a specific blind spot: it
+counts *quantified* facts, so a chapter rich in qualitative craft knowledge
+("square stem, opposite leaves", a joint that must not trap water) can score
+low and still teach plenty. Two rules follow. **Never treat a passing score as
+proof a chapter teaches** — the real gate is the reading question: *what could
+a reader write down from this page?* And **never dismiss a flag without
+reading the chapter** — a near-zero score in a domain that has numbers, like
+dosing, is exactly the failure this exists to catch.
+
+Courses that carry real numbers should aim well above the floor — the rebuilt
+aromatherapy chapter sets its own bar at 20+ and reaches 37.5. Set that target
+per course in its plan, not globally.
+
+### 0b. Epistemology is a stance, not curriculum
+
+This is the specific failure that produced the water. The site's
+"verify it yourself" epistemology (Ralston, symmetric skepticism) is **how
+claims get framed** — it is not subject matter. Teach the stance **once, in
+two sentences**, then apply it silently by stating claims carefully.
+
+The moment a course re-teaches its own trust framework chapter after chapter,
+every candidate fact is converted into a hypothesis for the reader to settle
+later, and the course becomes **structurally unable to assert anything
+useful**. The reader wanted "2% maximum on skin, never neat, here is why";
+they received a framework for evaluating claims about lavender.
+
+Symmetric skepticism still stands. It shows up as *precision* — naming who
+funded a thin study, in one clause — never as a recurring section.
+
+### 0c. Chapter count follows the material
+
+**Count the honest content first, then choose the number of chapters.** 5 and
+11 remain the house defaults, but if the material genuinely runs to 6, ship 6
+and say so in the plan. A chapter budget larger than the subject is a padding
+machine: it does not produce more teaching, it produces framing, restatement
+and motivational prose to fill the gap.
+
+If a topic honestly fits in fewer chapters than you hoped, that is information
+about the topic, not a problem to write around.
+
+### 0d. The base is the 20%, the pinnacle is last
+
+v1/v2 spent chapter 1 on framing — the promise, the map, the mental model —
+and let real content start around chapter 3. v3 drops the separate framing
+Gate. Two stages:
+
+| Stage | Chapters | What they do |
+| --- | --- | --- |
+| **Основа / The base** | 1 … n−1 | The vital 20% that produces 80% of results, **starting in chapter 1**. Chapter 1 is a working chapter: it hands over a usable instrument before it explains anything about itself. |
+| **Вершина / The pinnacle** | the last one or two | Expert synthesis and where real depth lives — no new fundamentals. |
+
+A reader who stops after the base owns a complete, working practice; say so
+plainly at the end of the base. The course map, the artifact and the promise
+still exist — they ride *inside* chapter 1's working content, in a few lines,
+not as its subject.
 
 ---
 
@@ -52,7 +140,15 @@ pocket rules, answer pointers, the minimum honest version, and the crib
   voice, EN in plain house voice. Glossary terms stay English per
   `content/locales/README.md`.
 
-## 2. The 11-chapter architecture (the 20/80 spine)
+## 2. The architecture (the 20/80 spine)
+
+> **v3 supersedes this section's stage mapping** — see §0d. The Gate/Path/
+> Summit table below is how v1 and v2 courses are built and stays here because
+> the shipped courses follow it. New courses use the two-stage base/pinnacle
+> model, choose their chapter count from the material (§0c), and start
+> delivering the 20% in chapter 1. Everything else in this section — the 20/80
+> selection logic, the "used by two later chapters" test, the you-can-stop-here
+> line — carries over unchanged.
 
 The course teaches the **vital 20% of the field that produces 80% of the
 results** in chapters 1–9, then uses chapters 10–11 to make the remaining 80%
@@ -64,12 +160,20 @@ results** in chapters 1–9, then uses chapters 10–11 to make the remaining 80
 | **2–9** | **The Path** | Eight chapters, each = **one load-bearing capability**. Selection test for what earns a chapter: *is this concept used again by at least two later chapters?* If not, it's not in the vital 20% — cut it or demote it to a side note. |
 | **10–11** | **The Summit** | Advanced. **No new fundamentals** — only synthesis: harder, real-world-messy applications that force every Path concept to work together. Written so an apt student finishes able to teach *themselves* the remaining 80%: where the depth lives, which sources are worth it, and how to test claims against their own experience (Ralston's epistemology, made practical). A struggling student can stop after ch. 9 with a complete, working foundation — say so explicitly at the end of ch. 9. |
 
-**Sizing:** each chapter = 1–2 hours of engaged time (reading + doing),
-roughly **1,800–3,500 words per locale** plus the practice task (shipped
-chapters run ~1,700–3,300; RU lands ~10–15% more compact than EN at identical
-substance). Never pad toward a floor — especially closing chapters, where
-padding reads as hype. **3–5 new concepts per
-chapter, never more** (cognitive load is the budget; depth over coverage).
+**Sizing:** roughly **1,800–3,500 words per locale** plus the practice task
+(v1/v2 chapters run ~1,700–3,300; RU lands ~10–15% more compact than EN at
+identical substance). **3–5 new concepts per chapter, never more** (cognitive
+load is the budget; depth over coverage).
+
+**v3 sizing is different, and deliberately smaller.** The word range above is
+a *consequence*, never a target: write what the material holds at the fact
+floor (§0a) and stop. A dense v3 chapter lands nearer **1,200–1,800 words**,
+and that is a better chapter, not a thinner one. The failure mode the range
+caused is real — a chapter budget met with framing instead of teaching. Two
+hard limits: **never pad toward a floor**, and **scaffolding ≤20% of the
+chapter** (the promise, recap, self-check and next-hook machinery restates
+each capability four to five times by design; v1/v2 chapters ran 27–33% and
+skim-read as noise).
 
 ## 3. The roadmap weave — «Нить» (the Thread)
 
@@ -362,9 +466,18 @@ Before saving ideology integrated upon course plan - ask the owner for feedback.
       **checkpoint chapter + which early piece its return revisits**, the
       **slow arcs** (set-chapter → harvest-chapter, or the explicit "domain
       has none"), and every Path chapter's **pocket rule** verbatim.
+      **v3 plans additionally freeze:** the **chapter count with its
+      justification** (§0c — count the material first), the **fact bank per
+      chapter** (the actual numbers, doses, species and thresholds the writer
+      may use, with safety-critical values marked "never alter" so no writer
+      invents or rounds one), and a **"what was cut, and why" table** — the
+      record that makes a later refactor of another course possible.
       Store it as `context/course-plan-<course-slug>.md` (existing examples:
       `course-plan-homeopathy.md`, `course-plan-herbalism.md`) and keep its
       "Status" line current as chapters ship.
+- [ ] **v3: `task density` on every new chapter before it ships** — at or above
+      the fact floor (§0a), scaffolding ≤20%, epistemology mentions in low
+      single digits across the whole course.
 - [ ] 22 files: 11 chapters × {en, ru}, same slugs, `chapter:` 1–11, epic tag
       first in `tags`.
 - [ ] `site.yaml` `epics:` entry in both locales; epic image via `task images`.
@@ -389,10 +502,14 @@ Before saving ideology integrated upon course plan - ask the owner for feedback.
   topic selection, not format change — pick territories genuinely big enough
   for 11 chapters; if an outline honestly runs short, the topic is too narrow
   for an epic (make it a standalone guide instead) rather than the chapters
-  too thin. **Owner rule (2026-07-05): every course is either 5 or 11
-  chapters** — a 5-chapter course maps Gate = 1 / Path = 2–4 (or 2–N−1) /
-  Summit = 5; everything else (Trail, seeds, callbacks, Bridge, artifact)
-  follows this blueprint unchanged. Existing 5-chapter courses: «Честный сайт
+  too thin. **Owner rule: 5 and 11 are the defaults, not a law** — count the
+  honest material first and ship the number it supports (§0c); state the count
+  and its justification in the plan. The concern above turned out to be
+  correct and expensive: an 11-chapter budget on a 5-chapter subject is what
+  produced the padding that made a reader quit. A 5-chapter v1/v2 course maps
+  Gate = 1 / Path = 2–4 (or 2–N−1) / Summit = 5; v3 courses use base/pinnacle
+  (§0d). Everything else (Trail, seeds, callbacks, Bridge, artifact) follows
+  this blueprint unchanged. Existing 5-chapter courses: «Честный сайт
   с нуля» (`founder-guide`, `context/course-plan-building-in-public.md`),
   «Трофология» (`trophology`, `context/course-plan-trophology.md` — a
   reader-facing food-combining course after Daniel Reid, en+ru, complete

@@ -81,21 +81,42 @@ minimum honest version, 6 via pocket rules + the crib, 7 via slow arcs.
 
 ## Conversion ledger (one home for "which course is on which pattern")
 
-Courses convert v1 → v2 gradually, one locale at a time when the owner says
-so; single-locale courses get translated when the owner says so. This table
-is the canonical record — update it whenever a course's pattern or locale
-coverage changes.
+Courses convert gradually, one locale at a time when the owner says so;
+single-locale courses get translated when the owner says so. This table is the
+canonical record — update it whenever a course's pattern or locale coverage
+changes.
+
+**v3 is now the live pattern** (density rules — `epic-writing-context.md` §0).
+It came from a reader quitting the aromatherapy course as "90% water": v1 and
+v2 both tuned structure, and neither asked whether a chapter carried enough to
+teach. v3 adds the fact floor, epistemology-as-stance, chapter-count-follows-
+material, and the base/pinnacle stage model. **Converting a course to v3 is a
+rewrite, not an edit** — unlike the v1→v2 upgrade, which was ~10 lines per
+chapter. Expect to cut roughly half the words and end with more teaching; the
+per-course "what was cut, and why" table is the record that makes the next
+conversion cheaper.
 
 | Course | EN | RU | Next step (owner-gated) |
 |---|---|---|---|
 | `founder-guide` (5) | v1 | v1 | convert to v2 |
 | `herbalism` (11) | v1 | v1 | convert to v2 |
 | `homeopathy` (11) | v1 | v1 | convert to v2 |
-| `aromatherapy` (11) | v1 | **v2** | translate the v2 upgrade to EN |
+| `aromatherapy` (11) | v1 | **v2** | **v3 rebuild piloted** — 5-chapter plan + ch. 1 draft in `context/aromatherapy-v3/`, awaiting owner verdict; live course untouched |
 | `trophology` (5) | v1 | v1 | convert to v2 |
 | `inside-websites` (5) | v1 | — | convert to v2; RU optional (EN-only by decision) |
 | `wooden-house` (11) | v2 (born) | — | RU translation optional (EN-only by decision) |
 | `plant-id` (5) | v2 (born) | — | RU translation optional (EN-only by decision) |
+
+Density is measurable: `task density` reports quantified facts per 1,000 core
+words, scaffolding share and epistemology mentions per chapter. Measured
+baselines (floor 12): RU `aromatherapy` ch. 1 **1.5** and ch. 2 **0.0** — the
+failure — against its own ch. 3 at **23.8**; the v3 rebuild of ch. 1 at
+**37.5**; `wooden-house` 2.7–14.3; `herbalism` 2.1; `homeopathy` 0.8;
+`trophology` 2.3. Read the caveat in the blueprint before drawing conclusions
+from a low score: the metric counts *quantified* facts only, so qualitative
+craft chapters score low legitimately. `founder-guide` and `inside-websites`
+report "no core found" — they are playbooks that never used the 8-heading
+skeleton, so the tool cannot measure them at all.
 
 A split-pattern course (like aromatherapy) is a sanctioned, temporary
 asymmetry: the RU chapters carry v2 devices (free-titled hook heading, gate

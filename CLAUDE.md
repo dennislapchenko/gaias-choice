@@ -190,7 +190,10 @@ provenance contract is SKILL.md non-negotiable #6) plus its one-line sibling
   still works for already-shared links), so each course prerenders its own
   head and social-preview card; mechanics in development.md "Compass section /
   epics" + "OG cards".
-- Courses are **5 or 11 chapters** (owner rule); optional `chapter: N`
+- Courses run **5 or 11 chapters by default, but the count follows the
+  material** — and every chapter owes the reader facts they can use, measured
+  by `task density` (pattern v3 rules: `context/epic-writing-context.md` §0);
+  optional `chapter: N`
   frontmatter orders them. Existing epics, all complete: `founder-guide` (5),
   `herbalism` (11), `homeopathy` (11), `aromatherapy` (11), `trophology` (5) —
   en+ru — and three **English-only by owner decision** (absent from

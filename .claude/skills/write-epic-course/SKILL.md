@@ -50,6 +50,15 @@ document every agent works from. Template with the non-obvious parts marked:
   chapter + which early artifact piece its return revisits, the slow arcs
   (set → harvest), and every Path chapter's **pocket rule verbatim** — all
   copied from the plan, never left to a writer;
+- **(v3 courses) the per-chapter FACT BANK** — the actual numbers, doses,
+  species, thresholds and named procedures each chapter may use, with
+  safety-critical values marked "never alter, never round". This is the
+  highest-value item in a v3 brief: it is what makes a chapter dense instead
+  of atmospheric, and the only real defence against a writer inventing a
+  safety number to fill a paragraph. Writers use the bank plus what the
+  existing course already states — nothing else. Freeze alongside it the
+  **chapter count with its justification** and the **epistemology budget**
+  (blueprint §0b: two sentences, once, for the whole course);
 - per-chapter visual assignments (which diagram, which GFM table);
 - domain non-negotiables (safety lines etc.) *with placement* — "state X in
   ch. N's portrait and recall it in ch. M" beats "mention X somewhere";
@@ -118,12 +127,20 @@ failure class:
    ("we spent", "months on the road", «мы провели»…) and medical-claim verbs
    (cure/heal/лечит/вылечи) — expect only benign hits, read each.
 5. `task typecheck && task build`.
-6. **In-browser audit** on served `dist/` — per new page × per locale: no
+6. **`task density`** (v3) — hard facts per 1,000 core words at or above the
+   floor, scaffolding ≤20%, epistemology mentions in low single digits across
+   the course. This is the check that catches "reads fine, teaches nothing" —
+   the only one a fluent, on-voice, structurally perfect chapter can still
+   fail. A near-zero score means rewrite, not polish.
+7. **In-browser audit** on served `dist/` — per new page × per locale: no
    `⚠` figcaptions, no SVG text overflow, TOC renders, epic tab lists 1→N.
    (A plain static server has no SPA fallback; the client-side navigation
    recipe is in verification.md §6.)
-7. **Spot-read** at least one full RU chapter (pick the most sensitive one)
-   against the persona 5-question test — greps can't judge voice.
+8. **Spot-read** at least one full RU chapter (pick the most sensitive one)
+   against the persona 5-question test — greps can't judge voice. Ask the
+   density question by hand too: *what could a reader write down from this
+   page?* If the honest answer is "nothing", no structural check will catch
+   it and the chapter is not shippable.
 
 ## Phase 4 — docs, then the owner
 
@@ -137,7 +154,15 @@ the background-agent procedure in manage-site SKILL.md.
 
 - **Padding toward a word floor.** The blueprint's range is a range; closing
   chapters especially run short on purpose. Thin content stretched to a
-  number reads as exactly that.
+  number reads as exactly that. **This trap has already cost a reader:** a
+  course was built to 11 chapters on a 5-chapter subject, the gap filled with
+  framing, restatement and the course's own epistemology, and a native reader
+  quit three chapters in calling it "90% water". Count the material first
+  (blueprint §0c).
+- **Teaching the epistemology instead of the subject.** If a course
+  re-explains its own trust framework every chapter, every fact becomes a
+  hypothesis for the reader to settle later and the course asserts nothing
+  usable. State the stance once, then be precise instead (blueprint §0b).
 - **Calquing between locales.** RU is written in the author's voice
   (persona test), EN in plain house voice — same substance, neither is a
   translation of the other. If an RU sentence only makes sense after

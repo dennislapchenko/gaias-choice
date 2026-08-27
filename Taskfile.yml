@@ -225,6 +225,19 @@ tasks:
         -c 'for f in *.svg; do [ -e "$f" ] || continue;
         magick "$f" -quality {{.QUALITY}} "${f%.svg}.jpg" && rm "$f"; done'
 
+  density:
+    desc: >-
+      Measure Compass chapter content-density (scaffold % + hard facts per
+      1,000 core words — a proxy, not a grade). No args scans every course in
+      both locales; DIR=<course-tag> or FILE=<path> scans a subset; FLOOR=<n>
+      overrides the default 12-facts-per-1k floor; STRICT=1 exits non-zero
+      when anything is under the floor.
+    cmds:
+      - >-
+        {{.NODE_RUN}} sh -c
+        'DIR={{.DIR}} FILE={{.FILE}} FLOOR={{.FLOOR}} STRICT={{.STRICT}}
+        node scripts/check-density.mjs'
+
   image:
     desc: Build the production Docker image (nginx)
     cmds:
