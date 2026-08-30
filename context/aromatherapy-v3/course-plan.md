@@ -22,6 +22,35 @@ Three obligations, in priority order:
 3. **What these substances are, and how to meet one.** Earned along the way,
    never a lecture that precedes the useful part.
 
+**And the reader herself, asked directly (Lida, verbatim — recorded in
+`persona-context.md` Appendix B, #LIDA 2026-08-30):**
+
+> «Точное понимание что и в каком количестве мне сейчас поможет справиться с
+> той или иной задачей: насморк у малыша или я ногу подвернула, или просто
+> хочется создать расслабленную атмосферу дома вечером.»
+>
+> «Четкие инструкции и правила применения, понимание суперсилы базовых масел»
+>
+> «Познакомиться с душой и предназначением и историей масел»
+
+What this changes, concretely:
+
+- **Her three states are the course's recurring cases** — вечерняя атмосфера
+  (air route), подвёрнутая нога (skin route, support-not-treatment),
+  насморк у малыша (lands on the red lines — answered honestly and fully in
+  ch. 4; named in ch. 1 as the question the smallest bodies make strict).
+- **«Суперсила» is the portrait's lead field** — every staple oil opens with
+  the one thing it does best, in one line. (Her «базовых масел» may also mean
+  carriers — cover both: the staples' superpowers AND why the carrier is half
+  the preparation.)
+- **«Душа и история» is a required portrait field** — the oil's story told as
+  dense, real facts (etymology, who used it and for what across centuries,
+  what the plant is doing with these molecules), never mysticism-as-filler.
+  This is the connection layer the density purge over-cut; A3 restores it.
+- She already uses oils by others' advice (real episode: four oils in coconut
+  carrier for a sore throat). The course's job is exactly the gap between
+  *following* and *owning* — the chain answers her «почему именно эти».
+
 ## Two failed openings, and why (keep this — it is the design constraint)
 
 | Opening | Why it failed |
@@ -63,11 +92,11 @@ Stages: **Основа** (1–4) and **Вершина** (5). No framing gate.
 
 | # | Slug | Title | Deepens | What the reader can do after it |
 |---|------|-------|---------|--------------------------------|
-| 1 | `01-...` (keeps live slug) | «От состояния к флакону» | the whole chain, small | Take tonight's real state and choose an oil, route and dose for it — and say why. Has met one oil properly. |
-| 2 | `02-semi-molekul` | «Семьи молекул» | link 3 — the prediction engine | Smell an unknown bottle, place it in a family, and predict what it will do and whom it must avoid. |
-| 3 | `03-marshruty` | «Маршруты» | link 2 + 5 — route and dose | Pick nose / skin / air for a given purpose and execute it with real numbers; knows dose–response is not linear. |
-| 4 | `04-desyat-masel-i-granitsy` | «Десять масел и границы» | link 4 — the cast, and who must not | Run the chain over ten oils organised by what they are FOR; knows the red lines cold. |
-| 5 | `05-svoyo-primenenie` | «Своё применение» | the whole chain, generative | Blend, and reason to a use nobody wrote down — then test and judge it honestly. |
+| 1 | `01-...` (keeps live slug) | «От состояния к флакону» | the whole chain, small | Take tonight's real state and choose an oil, route and dose for it — and say why. Has met one oil properly, story included. |
+| 2 | `02-desyat-masel` | «Десять масел: суперсила, семья, душа» | link 3 + 4 — the cast AND the prediction engine | Knows each staple's superpower, family and story; can smell an unknown bottle and place it in a family. Families are taught THROUGH the portraits (one intro section, then the gallery), not before them. |
+| 3 | `03-marshruty-i-instruktsii` | «Маршруты и инструкции» | link 2 + 5 — route, method, dose | Execute any route with real numbers — diffuser, inhaler, steam, roller, bath, compress, massage; knows dose–response is not linear and why the carrier is half the preparation. |
+| 4 | `04-krasnye-linii-i-domashnie-sluchai` | «Красные линии и домашние случаи» | link 4's hard edge + the chain applied | Knows the red lines cold — and gets her three cases answered in full, насморк у малыша first: what is allowed near the smallest bodies, what is not, and what "support, never treatment" means in practice. |
+| 5 | `05-svoyo-primenenie` | «Своё применение» | the whole chain, generative | Blend (absolutes as base), reason to a use nobody wrote down, buy honestly — then test and judge it. |
 
 **Absolutes** get their honest place in ch. 1 (what they are and why they
 exist — solvent extraction for flowers steam would destroy) and return in
@@ -139,6 +168,15 @@ Safety-critical values marked 🔒 — never alter or round.
   маршрут через нос.
 - 🔒 Дети, беременность, животные — глава 4; до неё рабочий ответ «не надо».
 
+**Душа и история — лаванда (ch. 1's one acquaintance; ch. 2 does the rest)**
+- Имя — от латинского *lavare*, «мыть»: римляне душили лавандой бани и бельё.
+- Столетия в монастырских и аптекарских садах Европы; веками — травяные
+  подушки и бельевые мешочки для сна.
+- Растение делает эти молекулы не для нас: летучая химия — его язык для
+  опылителей и защита от вредителей; во флаконе — слово растения, не парфюм.
+- **Суперсила лаванды:** самый мягкий и универсальный якорь покоя набора —
+  масло, с которого начинают, потому что оно прощает новичка.
+
 **Чтение (link 6 — the encounter)**
 - Нюхать в три захода: из флакона на ладонь ниже носа; со стрипа через минуту
   (живое масло *меняется* — отдушка стоит на месте); с закрытыми глазами,
@@ -154,6 +192,23 @@ Safety-critical values marked 🔒 — never alter or round.
 
 ## Chapter 1 structure notes
 
+- **The hook is her three states**, as generic situations: вечером хочется
+  мягкой атмосферы · нога подвёрнута · у малыша насморк. Three different
+  answers from one chain — and «масла от насморка» in a search box can answer
+  none of them precisely.
+- **Worked example main case: вечерняя атмосфера** (air route — diffuser
+  3–5 капель / 100 мл, 30–60 мин с перерывами; rejections shown: nose is a
+  point answer not a background, skin is local). **Second, short: подвёрнутая
+  нога** — skin route, 2–3% adult roller/massage *around* comfort, with the
+  mandatory line: поддержка, не лечение — сильная боль или отёк → врач.
+- **The baby case is named and honestly deferred**: для самых маленьких
+  правила отдельные и строгие — глава 4 отвечает полно; до неё рабочий ответ
+  «не надо». Her #1 want becomes the course's forward pull.
+- **Link 6 gains the acquaintance layer**: meeting lavender includes two
+  dense lines of its story (from *lavare* — Romans scented baths and laundry;
+  centuries in monastery gardens; the safest, most forgiving staple) and its
+  **суперсила** named in one line. Announce that every oil in ch. 2 comes with
+  суперсила + душа и история.
 - Opens on a **real state**, not on a shop shelf and not on a philosophy.
 - The chain is the core; each link gets a short `###` and names the chapter
   that deepens it — so the reader sees the course's shape without a course map.
@@ -163,11 +218,19 @@ Safety-critical values marked 🔒 — never alter or round.
 
 ## Fact banks — chapters 2–5 (outline level)
 
-- **Ch. 2:** six families with marker molecule, signature smell, predicted
-  action, caution, shelf life — эфиры, спирты, монотерпены, оксиды, альдегиды
-  (цитраль — сенсибилизаторы), фенолы (тимол, карвакрол, эвгенол — самые
-  «горячие»); окисление монотерпенов делает старое масло опаснее, не слабее;
-  хемотипы (розмарин цинеольный / камфорный).
+- **Ch. 2 (the gallery):** portrait format, fixed: **суперсила** (one line,
+  leads) · family + marker molecule · nose · **душа и история** (2–3 dense
+  lines: etymology, who used it across centuries and for what, what the plant
+  makes the molecules for) · dose flag · shelf life. The ten staples with
+  Latin names as in the old ch. 5 table. Families taught in one intro section
+  + through the portraits: эфиры, спирты, монотерпены, оксиды + named-only
+  альдегиды (цитраль — сенсибилизаторы) and фенолы (тимол, карвакрол — самые
+  «горячие», deliberately absent from the set); окисление монотерпенов makes
+  old oil more dangerous, not weaker; хемотипы (розмарин цинеольный /
+  камфорный). History facts must be real and checkable-grade (lavare/Roman
+  baths; frankincense as temple incense traded along dedicated routes;
+  peppermint as an ancient hybrid, etc.) — no invented rituals, no mysticism
+  dressed as history.
 - **Ch. 3:** диффузор 3–5 капель / 100 мл, 30–60 мин с перерывами; ингалятор
   5–15 капель на фитиль; паровая ингаляция 1–2 капли, 5–10 мин, глаза закрыты
   (не детям); роллер 10 мл 2% = 4 капли; 🔒 ванна — масла не растворяются в
@@ -175,12 +238,16 @@ Safety-critical values marked 🔒 — never alter or round.
   капель; массаж 1–2%. Доза–ответ не линейна: низкая может успокаивать там,
   где высокая возбуждает. Правило почвы: запах — надстройка над сном, едой и
   движением.
-- **Ch. 4:** ten oils grouped by purpose with Latin names and markers; 🔒 red
-  lines — до 2 лет только специалист, 2–6 лет 0,5%, мята и эвкалипт не к лицу
-  до 6; беременность — без розмарина и сильных масел; кошки — дефицит
-  глюкуронирования (UGT1A6), чайное дерево токсично; собаки — сильнее
-  разводить, дать уйти; фототоксичность IFRA leave-on: лимон отжим 2%,
-  бергамот 0,4%, лайм отжим 0,7%, грейпфрут 4%, без УФ 12–18 часов.
+- **Ch. 4 (red lines + household cases):** 🔒 red lines — до 2 лет только
+  специалист, 2–6 лет 0,5%, мята и эвкалипт не к лицу до 6; беременность —
+  без розмарина и сильных масел; кошки — дефицит глюкуронирования (UGT1A6),
+  чайное дерево токсично; собаки — сильнее разводить, дать уйти;
+  фототоксичность IFRA leave-on: лимон отжим 2%, бергамот 0,4%, лайм отжим
+  0,7%, грейпфрут 4%, без УФ 12–18 часов. Then **her cases run through the
+  chain in full**: насморк у малыша (the honest answer, age-by-age),
+  подвёрнутая нога, вечерняя атмосфера, plus sleep and a scraped knee —
+  each as состояние → маршрут → семья → масло → доза → чтение, поддержка не
+  лечение throughout.
 - **Ch. 5:** верх/сердце/база и скорость испарения; абсолю как база; синергия;
   вывод нового применения из принципов + честная проверка; покупка (GC/MS,
   партия, латынь, цена по ботанике); Tisserand & Young как справочник.

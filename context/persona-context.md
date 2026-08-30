@@ -458,7 +458,25 @@ untouched source. **Denis's answers below; Lida's under the `#LIDA` marker.**
 > Intelligence). I even have these 2 words tattooes on my clavicles. the only
 > words I have tattoed.
 
-### #LIDA — (awaiting answers)
+### #LIDA — 2026-08-30 · Best-case value from the aromatherapy course
 
-*No deep-questions session logged for Lida yet. When she answers, record her
-words verbatim here under a dated heading, same format.*
+*Context: three questions after she rejected the course's first version as
+«90% воды». Q1 — the scene a month after the ideal course; Q2 — the moment
+knowledge truly "lands"; Q3 — what she'd need to answer the "why" herself and
+assemble her own quality set (she already uses oils by others' advice — e.g.
+four oils in coconut carrier rubbed on her back for a sore throat, Denis's
+verified account).*
+
+**A1:**
+
+> Точное понимание что и в каком количестве мне сейчас поможет справиться с
+> той или иной задачей: насморк у малыша или я ногу подвернула, или просто
+> хочется создать расслабленную атмосферу дома вечером.
+
+**A2:**
+
+> Четкие инструкции и правила применения, понимание суперсилы базовых масел
+
+**A3:**
+
+> Познакомиться с душой и предназначением и историей масел
