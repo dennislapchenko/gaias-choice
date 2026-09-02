@@ -201,8 +201,9 @@
 
 Three files under `/opt/doco-cd/`. Two are **mirrored in the repo**
 (`deploy/controller/`) and pushed with `task doco:sync` (step 10); `secrets.env`
-is VM-only. The verbatim copies below are kept for the record — the repo files
-are the source of truth.
+is VM-only. The verbatim copies below are a **snapshot of step 9** kept for the
+record and deliberately not refreshed on later bumps — `deploy/controller/` is
+the source of truth for what runs now (image pin included).
 
 `compose.yaml` — the daemon + the Apprise notification sidecar (docker-socket,
 polling, `PASS_ENV`, pinned images):
@@ -358,6 +359,55 @@ deploy.
   push (CI builds the new image + auto-bumps `BE_TAG`); phase 2 = the compose
   healthcheck + reconciliation, applied against the now-current image.
 
+### 12. doco-cd 0.114.0; deploy pings name the services a deploy moved
+
+- **Daemon bumped `0.110.1` → `0.114.0`** (tag + digest together) in
+  `deploy/controller/compose.yaml`, applied with `task doco:sync`. The daemon
+  confirms itself: `starting application version=v0.114.0`.
+- **`APPRISE_NOTIFY_BODY_TEMPLATE` gained a second range, over
+  `.ChangedServices`** — one `` `recreated: <service>` `` line per service the
+  deploy actually moved, under the commit lines and fully backtick-wrapped for
+  the same `?format=markdown` reason. It only earns its place now: the field
+  used to stay empty on a plain image-tag bump, which is exactly how this stack
+  ships the backend (`release.sh` moves `BE_TAG`). 0.112.0 added a local
+  configured-vs-deployed image-reference comparison, so a `BE_TAG` bump finally
+  names `api`. Field semantics live in the compose file's comment; the template
+  was executed against all five notification shapes (single service, multi
+  service, no changed services, failure, reconcile) before syncing, since a bad
+  field reference fails the daemon at startup.
+- **The three 0.113.0 removals and the 0.111.0 parser swap do not touch this
+  estate.** Checked before syncing:
+  - `one_shot` job-execution-mode alias gone (`one_off` only) — this estate
+    schedules no jobs; zero matches in the repo.
+  - legacy auto-discovery labels retired (`…auto_discover`,
+    `…auto_discover.delete`, `…auto_discovery.delete`) — zero matches, and
+    `auto_discovery` is not enabled in `.doco-cd.yml`.
+  - PKCS#1 `ENCRYPTED PRIVATE KEY` SSH keys unsupported — `poll.yaml` polls a
+    **public** `https://` repo with no git credentials. No SSH key exists
+    anywhere in the deploy path.
+  - 0.111.0 replaced the `env_files` dotenv parser with compose-go's, so
+    `${lowercase}` / `${MixedCase}` inside such a file now interpolate (empty
+    string when unset) instead of staying literal, and bare keys inherit from
+    the environment. Two independent reasons this cannot bite: the deploy
+    config uses no `env_files` key at all, and `/opt/doco-cd/secrets.env` —
+    which compose's own `env_file:` reads, not doco-cd's parser — holds **zero
+    lines containing `$`** across its 14 variables.
+- **`reconciliation: events: [unhealthy, die]` behaves as before.** The wiki's
+  Reconciliation Settings section is byte-identical between the upstream
+  `v0.110.1` and `v0.114.0` tags: same events, same restart-vs-redeploy
+  actions, same `restart_limit`/`restart_window` defaults.
+- **Measured: the managed stack was NOT force-recreated.** `gaias-choice-api-1`
+  and `gaias-choice-caddy-1` report `StartedAt` `2026-08-13T19:18:58.444324990Z`
+  and `…446554071Z` — identical to the nanosecond before the sync, after it, and
+  after two further daemon recreates. Same container ids (`295fce3ddca2`,
+  `1e97c88c0d11`), `RestartCount=0`, api still `healthy`, 19d18h continuous
+  uptime. `doco-cd-apprise-1` untouched too. Only `doco-cd-doco-cd-1` was
+  replaced. Four consecutive polls logged `job completed successfully`
+  (1.57s / 761ms / 1.911s / 840ms) with zero deployments and zero warnings.
+- **A controller restart pings ❌ once or twice** (`context canceled` — the
+  in-flight poll dies with the container). Expected, not a fault; the next poll
+  is clean.
+
 ## Redeploy / operate (quick reference)
 
 - **New backend image (fully automatic):** push to `main` touching `backend/**`
@@ -385,7 +435,14 @@ deploy.
   Secrets live in `/opt/doco-cd/secrets.env` (`chmod 600`, never committed); the
   non-secrets (`API_DOMAIN`/`CORS_ORIGINS`/`BE_TAG`) live in `.doco-cd.yml`.
 - **Logs:** `task be:logs` (app api; `SVC=caddy` for the edge) or
-  `docker logs -f doco-cd-doco-cd-1` (the daemon).
+  `docker logs -f doco-cd-doco-cd-1` (the daemon). The daemon logs **nothing**
+  at the committed `LOG_LEVEL=warn` — that is the point of `warn`, but it also
+  means "did it poll?" is unanswerable from logs. Raise it for one capture
+  without editing the repo file or leaving drift: write a
+  `services: {doco-cd: {environment: {LOG_LEVEL: info}}}` override to
+  `/tmp/ll.yaml`, `docker compose -f compose.yaml -f /tmp/ll.yaml up -d`, read
+  the version + `job completed successfully` lines, then plain
+  `docker compose up -d` to land back on the repo file.
 - **DB backup (host cron, never `cp` a live WAL db):** the db is a host file:
   `sqlite3 /srv/gaias-choice/data/gaia.db ".backup '/srv/gaias-choice/backups/gaia-$(date +%F).db'"`.
 

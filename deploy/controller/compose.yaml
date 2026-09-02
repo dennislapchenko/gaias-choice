@@ -5,7 +5,7 @@
 # to digests (immutable); bump tag+digest together to upgrade.
 services:
   doco-cd:
-    image: ghcr.io/kimdre/doco-cd:0.110.1@sha256:cd491cf9ec09e39f0e690a418e8a5e2c5d631544d6af8f879f4de8978b847af1
+    image: ghcr.io/kimdre/doco-cd:0.114.0@sha256:73b60295d651745b1701003e19ce1d5114ebfeb3446dbc4e3aeb17882e1a3568
     restart: unless-stopped
     # secrets.env holds the live stack's env (the former deploy.env). PASS_ENV
     # forwards these into every deployment's compose interpolation, so
@@ -25,11 +25,12 @@ services:
       # secrets.env (not here): tgram://<TELEGRAM_BOT_TOKEN>/<chat_id>/
       #
       # Body via APPRISE_NOTIFY_BODY_TEMPLATE (0.103.0+ knob): identity
-      # one-liner, then one line per deployed commit — `.Commits` is 0.104.0+;
-      # `{{ . }}` inside the range renders "shortHash subject". Empty on first
-      # deploy / failed deploys / reconcile events, so it degrades back to the
-      # one-liner. Go text/template, validated at startup; the title stays
-      # daemon-native ("✅ Deployment completed"), not templatable.
+      # one-liner, then one line per deployed commit, then one per service the
+      # deploy actually moved — `.Commits` is 0.104.0+; `{{ . }}` inside the
+      # range renders "shortHash subject". Empty on first deploy / failed
+      # deploys / reconcile events, so it degrades back to the one-liner. Go
+      # text/template, validated at startup; the title stays daemon-native
+      # ("✅ Deployment completed"), not templatable.
       # Repo prefix is the literal short name (this daemon polls only
       # dennislapchenko/gaias-choice) — doco-cd registers no template funcs, so
       # splitting .Repository on "/" in-template isn't possible.
@@ -50,10 +51,25 @@ services:
       # zero (renders `0s`, not empty) when no deployment ran, so it hangs off
       # the ELSE of the reconcile branch, never its own `{{if}}` — a reconcile
       # gets ` · <event>`, a real deploy gets ` in <duration>`.
+      # `.ChangedServices` holds what the deploy actually moved, from three
+      # sources: services force-recreated because a bind-mounted / referenced
+      # file changed (ours is the Caddyfile — infra-log "Reconcile triggers"),
+      # services whose image digest drifted behind `force_image_pull`, and —
+      # since 0.112.0 — services whose image REFERENCE changed, compared
+      # configured-vs-deployed locally with no registry call. That third source
+      # is the one this stack needed: a `BE_TAG` bump in .doco-cd.yml is how
+      # the backend ships, and before 0.112.0 the field stayed empty for
+      # exactly that. Still empty when the whole stack is redeployed for
+      # another reason (compose config change, drift, `force_recreate`) and on
+      # a first deploy, so the range is conditional and simply adds no lines —
+      # same degradation as `.Commits`.
       APPRISE_NOTIFY_BODY_TEMPLATE: |-
         gaias-choice -> `{{.Stack}}` @ `{{.Revision}}`{{if .IsReconciliation}} · {{.ReconciliationEvent}}{{else}} in {{.Duration}}{{end}}{{if ne .Level "success"}} — `{{.Message}}`{{end}}
         {{- range .Commits }}
         - `{{ . }}`
+        {{- end }}
+        {{- range .ChangedServices }}
+        - `recreated: {{ . }}`
         {{- end }}
     depends_on:
       - apprise
