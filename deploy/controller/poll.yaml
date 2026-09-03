@@ -4,3 +4,9 @@
 - url: https://github.com/dennislapchenko/gaias-choice.git
   reference: refs/heads/main
   interval: 30s
+# Second stack on the same VM: the mokri-potok village portal backend. Public
+# repo, no token. Its .doco-cd.yml deploys one service (potok-api) that joins
+# the gaias-choice network; app/Caddyfile proxies /potok/* to it.
+- url: https://github.com/dennislapchenko/mokri-potok-portal.git
+  reference: refs/heads/main
+  interval: 60s
