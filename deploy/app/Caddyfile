@@ -35,6 +35,11 @@
 		abort
 	}
 
+	handle /potok/* {
+    	uri strip_prefix /potok
+    	reverse_proxy potok-api:8788
+    }
+
 	handle {
 		reverse_proxy api:8787
 	}
