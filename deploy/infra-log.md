@@ -520,6 +520,22 @@ take **`VM_PORT` (default 13337)**, wiring `ssh -p` / `scp -P`.
 already the only working path; makes it explicit). Not done — touches live
 sshd auth; apply with console access as the lockout fallback.
 
+## Second stack on the VM — mokri-potok portal backend
+
+The VM also hosts the backend of `github.com/dennislapchenko/mokri-potok-portal`.
+Wiring, all in git: `controller/poll.yaml` has a second poll entry for that
+repo (`main`, 60s); its own `.doco-cd.yml` deploys compose project
+`mokri-potok`, one service `potok-api` (GHCR image, SQLite bind-mounted at
+`/srv/mokri-potok/data`, owned by uid 65532, no secrets). `app/Caddyfile`
+`handle /potok/*` strips the prefix and proxies to `potok-api:8788`; the portal
+compose joins `gaias-choice_default` as an external network so the name
+resolves. No new hostname, DNS or edge port. Controller and Caddy stay this
+repo's — a portal change needing a route or poll entry is a change here. Note:
+`task doco:sync` does not reload a changed `poll.yaml` (the daemon reads it at
+start); a `docker compose restart doco-cd` in `/opt/doco-cd` is needed.
+`PASS_ENV=true` forwards this VM's `secrets.env` into the portal stack's
+interpolation scope too; the portal compose references none of those vars.
+
 ## Deferred (not done yet, by design)
 - **Terraform the edge firewall** — `gaias-choice-edge` is live but was created
   imperatively via `hcloud`; codify it later as `hcloud_firewall` + attachment.
