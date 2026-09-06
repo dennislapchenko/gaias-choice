@@ -65,6 +65,11 @@ services:
       - "443:443"
     environment:
       API_DOMAIN: ${API_DOMAIN} # api.<owner's owned domain>
+      # Second site: the village portal's own hostname. The whole host proxies to
+      # potok-api:8788 (that container serves its own frontend now). No `:-`
+      # default on purpose — an empty value leaves an unnamed Caddy site block
+      # and breaks the parse, so a missing var must fail loudly, not silently.
+      POTOK_DOMAIN: ${POTOK_DOMAIN}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - /srv/gaias-choice/caddy:/data # cert storage survives redeploys

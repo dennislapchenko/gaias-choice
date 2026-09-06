@@ -14,6 +14,11 @@ name: gaias-choice
 working_dir: deploy/app
 environment:
   API_DOMAIN: gaias-choice.gardenofatlantis.com
+  # Second Caddy site: the village portal's own hostname (A record → this VM,
+  # created by the village). A public DNS name, so it belongs here, not in
+  # secrets.env. Caddy REQUIRES a value — an empty one leaves an unnamed site
+  # block, the Caddyfile fails to parse, and the api site goes down with it.
+  POTOK_DOMAIN: vas.mokri-potok.si
   CORS_ORIGINS: https://dennislapchenko.github.io
   BE_TAG: sha-f40ba2b34a9fd744399685353b43a9339abae907
 # Runtime self-healing (doco-cd watches Docker events on this stack's containers):

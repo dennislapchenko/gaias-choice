@@ -35,12 +35,58 @@
 		abort
 	}
 
+	# TRANSITIONAL — the village portal's old route on the api host. The portal
+	# frontend on GitHub Pages still calls `https://{$API_DOMAIN}/potok/...`, so
+	# this stays until that frontend is retired in favour of the portal serving
+	# itself from `{$POTOK_DOMAIN}` (site block below). Delete this block, not the
+	# one below, when the Pages copy goes away.
 	handle /potok/* {
-    	uri strip_prefix /potok
-    	reverse_proxy potok-api:8788
-    }
+		uri strip_prefix /potok
+		reverse_proxy potok-api:8788
+	}
 
 	handle {
 		reverse_proxy api:8787
 	}
+}
+
+# The village portal, on its own hostname. The A record `{$POTOK_DOMAIN}` → this
+# VM was created by the village (2026-09-06). Automatic Let's Encrypt TLS, same
+# as the site above; the cert lands in the same `/srv/gaias-choice/caddy` volume.
+#
+# The `potok-api` container now serves BOTH the JSON api and the portal's own
+# frontend (static files embedded in the Go binary), so this host proxies
+# EVERYTHING to it — no prefix strip, no `handle` split, no static root here.
+{$POTOK_DOMAIN} {
+	# Same edge hardening as the api site, same reasoning (see its comments):
+	# HSTS with no preload/includeSubDomains, no MIME sniffing, no Server banner.
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		-Server
+	}
+
+	# Same 10MB cap, same reason — stop a giant POST before the Go handler reads it.
+	request_body {
+		max_size 10MB
+	}
+
+	# Same bot-scan drop list as the api site MINUS `/config*` and `/vendor/*`:
+	# this host serves an SPA, and both of those are plausible real paths on a
+	# static frontend (a bundler's vendor chunk dir, a runtime config.json, a
+	# `/config` route). The remaining patterns can never be legitimate here.
+	# `abort` closes the connection with no response. Add patterns as new scans
+	# show up in the logs. (Path matching is case-insensitive.)
+	@scanners path /.env* /.git* /wp-* /wordpress* /.aws/* /.ssh/* /phpinfo* *.php *.asp *.aspx
+	handle @scanners {
+		abort
+	}
+
+	# Deliberately NO Content-Security-Policy here. The portal page embeds the
+	# Slovenian weather agency's widget in an iframe from
+	# `https://vreme.arso.gov.si`, and any `default-src`-style CSP would block it.
+	# If a CSP is ever added it MUST carry `frame-src https://vreme.arso.gov.si`.
+	# (The api site above skips CSP for a different reason: it serves JSON, never
+	# framed HTML.)
+	reverse_proxy potok-api:8788
 }

@@ -31,11 +31,14 @@ The static site stays on GitHub Pages and never depends on this stack.
 - `app/compose.yaml` — the `api` service (backend image, host bind mount for
   SQLite per D9) behind a `caddy` service that terminates TLS. Only Caddy
   publishes ports (80/443); `api` stays internal to the compose network.
-- `app/Caddyfile` — reverse-proxies `{$API_DOMAIN}` to `api:8787` with automatic
-  Let's Encrypt TLS, edge-drops bot-scan paths, and sets transport hardening
-  (HSTS, body cap) — see its comments.
+- `app/Caddyfile` — two sites, both with automatic Let's Encrypt TLS, bot-scan
+  paths edge-dropped and the same transport hardening (HSTS, body cap):
+  `{$API_DOMAIN}` → `api:8787`, and `{$POTOK_DOMAIN}` → `potok-api:8788` (the
+  village portal, whole host — that container serves its own frontend). See its
+  comments, and `infra-log.md` for the portal wiring.
 - `.doco-cd.yml` (repo root) — `name`, `working_dir: deploy/app`, and the
-  **non-secret** `environment:` (`API_DOMAIN`, `CORS_ORIGINS`, `BE_TAG`).
+  **non-secret** `environment:` (`API_DOMAIN`, `POTOK_DOMAIN`, `CORS_ORIGINS`,
+  `BE_TAG`).
 
 **`controller/` (Layer 0 — the doco-cd daemon, synced with `task doco:sync`):**
 
@@ -106,11 +109,13 @@ or wire it as OpenTofu userdata):
 
 ```sh
 # app compose renders with dummy env
-API_DOMAIN=api.example.com CORS_ORIGINS=https://dennislapchenko.github.io BE_TAG=latest \
+API_DOMAIN=api.example.com POTOK_DOMAIN=portal.example.com \
+  CORS_ORIGINS=https://dennislapchenko.github.io BE_TAG=latest \
   docker compose -f deploy/app/compose.yaml config
 
-# Caddyfile parses
-docker run --rm -e API_DOMAIN=api.example.com \
+# Caddyfile parses. Both domain vars are required — an empty one leaves an
+# unnamed site block and the parse fails.
+docker run --rm -e API_DOMAIN=api.example.com -e POTOK_DOMAIN=portal.example.com \
   -v "$PWD/deploy/app/Caddyfile:/etc/caddy/Caddyfile" \
   caddy:2-alpine caddy validate --config /etc/caddy/Caddyfile
 

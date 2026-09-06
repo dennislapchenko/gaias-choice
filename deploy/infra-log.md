@@ -450,11 +450,13 @@ deploy.
 
 **Current inbound surface (what's actually reachable):**
 - **13337/tcp** — SSH, key-based, root login (moved off 22, see below).
-- **80/443/tcp** — Caddy only. Caddy serves a single site (`{$API_DOMAIN}`)
-  and reverse-proxies it to `api:8787`; requests to the raw IP or any other
-  `Host` get no matching site (and no cert on 443), so they don't proxy
-  through. `api:8787` is **not** host-published — it lives only on the compose
-  network. So the effective surface is 22 + 80/443, nothing else.
+- **80/443/tcp** — Caddy only. Caddy serves **two named sites**:
+  `{$API_DOMAIN}` → `api:8787` (plus the transitional `/potok/*` route), and
+  `{$POTOK_DOMAIN}` → `potok-api:8788` for the whole host (added 2026-09-06,
+  see the portal section below). Requests to the raw IP or any other `Host`
+  still match no site (and get no cert on 443), so they don't proxy through.
+  Neither `api:8787` nor `potok-api:8788` is host-published — both live only on
+  the compose network. So the effective surface is 13337 + 80/443, nothing else.
 - **Scanner paths edge-dropped:** the `Caddyfile` matches the usual bot-scan
   paths (`/.env*`, `/.git*`, `/wp-*`, `*.php`, …) with an `@scanners` matcher
   and `abort`s the connection — they never reach the api, so its logs stay
@@ -535,6 +537,37 @@ repo's — a portal change needing a route or poll entry is a change here. Note:
 start); a `docker compose restart doco-cd` in `/opt/doco-cd` is needed.
 `PASS_ENV=true` forwards this VM's `secrets.env` into the portal stack's
 interpolation scope too; the portal compose references none of those vars.
+
+### 2026-09-06 — the portal gets its own hostname (`vas.mokri-potok.si`)
+
+- **DNS:** the village created an A record `vas.mokri-potok.si` → this VM's IP.
+  (Their action, on their own domain; this repo does not manage that zone.)
+- **Why:** `potok-api` now serves its **own frontend** as well as the JSON api —
+  the static files are embedded in the Go binary. So the new host must proxy
+  **everything** to `potok-api:8788`, not just an api prefix.
+- **Caddy:** `app/Caddyfile` gained a **second site block** keyed on
+  `{$POTOK_DOMAIN}`, with automatic Let's Encrypt TLS, the same hardening as the
+  api site (HSTS `max-age=31536000`, `nosniff`, `-Server`, 10MB
+  `request_body max_size`, `@scanners` → `abort`) and a bare
+  `reverse_proxy potok-api:8788` — no `uri strip_prefix`.
+  - The scan list drops `/config*` and `/vendor/*` versus the api site: this host
+    serves an SPA and both are plausible real asset paths there.
+  - **No Content-Security-Policy, deliberately.** The portal page embeds the
+    Slovenian weather agency's widget in an iframe from
+    `https://vreme.arso.gov.si`; a `default-src` CSP would blank it. Any future
+    CSP must carry `frame-src https://vreme.arso.gov.si`.
+- **`POTOK_DOMAIN`** is wired exactly like `API_DOMAIN`: a non-secret value in
+  `.doco-cd.yml`'s `environment:` (in git), passed into the caddy service in
+  `app/compose.yaml`. **No `:-` default** — an empty value leaves an unnamed site
+  block, the Caddyfile fails to parse, and Caddy takes the api site down with it.
+- **The old `/potok/*` block on `{$API_DOMAIN}` stays**, marked transitional in
+  the Caddyfile. The portal's GitHub Pages frontend still calls it. Delete it
+  once that Pages copy is retired.
+- **No other change needed:** ports 80/443 are already open on the
+  `gaias-choice-edge` Hetzner firewall and already bound by this Caddy;
+  `potok-api` stays unpublished on the compose network; the new cert lands in the
+  existing `/srv/gaias-choice/caddy` bind mount. A push to `main` is the deploy —
+  the Caddyfile change force-recreates the caddy service alone.
 
 ## Deferred (not done yet, by design)
 - **Terraform the edge firewall** — `gaias-choice-edge` is live but was created
