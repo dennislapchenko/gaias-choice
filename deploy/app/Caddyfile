@@ -82,11 +82,10 @@
 		abort
 	}
 
-	# Deliberately NO Content-Security-Policy here. The portal page embeds the
-	# Slovenian weather agency's widget in an iframe from
-	# `https://vreme.arso.gov.si`, and any `default-src`-style CSP would block it.
-	# If a CSP is ever added it MUST carry `frame-src https://vreme.arso.gov.si`.
-	# (The api site above skips CSP for a different reason: it serves JSON, never
-	# framed HTML.)
+	# No Content-Security-Policy here on purpose: the portal sets its own on
+	# index.html (mokri-potok-portal, backend/internal/httpapi/static.go), so
+	# the policy ships and is tested with the frontend it describes. Setting a
+	# second one here would only intersect with it. (The api site above skips
+	# CSP for a different reason: it serves JSON, never framed HTML.)
 	reverse_proxy potok-api:8788
 }
