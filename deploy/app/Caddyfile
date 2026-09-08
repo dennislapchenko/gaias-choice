@@ -35,16 +35,6 @@
 		abort
 	}
 
-	# TRANSITIONAL — the village portal's old route on the api host. The portal
-	# frontend on GitHub Pages still calls `https://{$API_DOMAIN}/potok/...`, so
-	# this stays until that frontend is retired in favour of the portal serving
-	# itself from `{$POTOK_DOMAIN}` (site block below). Delete this block, not the
-	# one below, when the Pages copy goes away.
-	handle /potok/* {
-		uri strip_prefix /potok
-		reverse_proxy potok-api:8788
-	}
-
 	handle {
 		reverse_proxy api:8787
 	}

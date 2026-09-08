@@ -451,7 +451,7 @@ deploy.
 **Current inbound surface (what's actually reachable):**
 - **13337/tcp** — SSH, key-based, root login (moved off 22, see below).
 - **80/443/tcp** — Caddy only. Caddy serves **two named sites**:
-  `{$API_DOMAIN}` → `api:8787` (plus the transitional `/potok/*` route), and
+  `{$API_DOMAIN}` → `api:8787`, and
   `{$POTOK_DOMAIN}` → `potok-api:8788` for the whole host (added 2026-09-06,
   see the portal section below). Requests to the raw IP or any other `Host`
   still match no site (and get no cert on 443), so they don't proxy through.
@@ -568,6 +568,14 @@ interpolation scope too; the portal compose references none of those vars.
   `potok-api` stays unpublished on the compose network; the new cert lands in the
   existing `/srv/gaias-choice/caddy` bind mount. A push to `main` is the deploy —
   the Caddyfile change force-recreates the caddy service alone.
+
+### 2026-09-08 — the transitional `/potok/*` route goes
+- The portal's GitHub Pages frontend is gone (everyone moved to
+  `vas.mokri-potok.si`; the Pages site was disabled in that repo), so the
+  `handle /potok/*` block on `{$API_DOMAIN}` was deleted. Anything still calling
+  `/potok/api/...` now falls through to `api:8787` and 404s. `poll.yaml`'s
+  comment updated to match. Caddyfile comment about "no CSP" rewritten the day
+  before: the portal sets its own CSP in its Go server.
 
 ## Deferred (not done yet, by design)
 - **Terraform the edge firewall** — `gaias-choice-edge` is live but was created
