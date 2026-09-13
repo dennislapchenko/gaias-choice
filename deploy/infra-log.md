@@ -408,6 +408,87 @@ deploy.
   in-flight poll dies with the container). Expected, not a fault; the next poll
   is clean.
 
+### 13. doco-cd 0.117.1; the metrics endpoint answers "which version, did it poll"
+
+- **Daemon bumped `0.114.0` → `0.117.1`** (tag + digest together) in
+  `deploy/controller/compose.yaml`, applied with `task doco:sync`. The pin is
+  the **index** digest, not a per-arch one: `ghcr.io` returns
+  `sha256:9db114c9…` for the tag with an
+  `application/vnd.oci.image.index.v1+json` content type, and the amd64 child
+  inside it is what this VM runs.
+- **Image pre-pulled before the sync, and that is now the house rule.**
+  `sync.sh` scps `compose.yaml` and only THEN runs `up -d`, so a failed pull
+  leaves `/opt/doco-cd/compose.yaml` naming an image the box is not running —
+  no outage, no error, and the divergence surfaces on the next reboot. ghcr.io
+  is flaky from these Hetzner boxes (truetothebook needed 4 attempts on one
+  VM last round). This time **one attempt** was enough here.
+- **Nothing in 0.115.0 → 0.117.1 touches this estate.** Checked before syncing:
+  - **No removals, no renames.** `internal/config/app` and
+    `internal/config/deploy` only gained keys (`SSH_KNOWN_HOSTS_FILE`,
+    `OPENAPI_ENABLED`, `PPROF_ENABLED`/`PPROF_PORT`), all defaulting off. The
+    `cd.doco.*` label set only gained four scheduler bookkeeping labels
+    (`job.run_id`, `job.scheduled_at`, `job.started_at`,
+    `job.source_service_id`) — nothing this estate writes, and it schedules no
+    jobs anyway.
+  - **`env_files` parsing and the notification template are byte-identical.**
+    `internal/config/deploy/dotenv.go` and `reconciliation.go` do not change
+    across the range, and `Metadata` + `TemplateData` — the structs behind
+    `{{.Commits}}`, `{{.ChangedServices}}`, `{{.Duration}}` — diff to nothing.
+    The template in `compose.yaml` needed no edit.
+  - **Auto-discovery changed but is not enabled here** (`.doco-cd.yml` has no
+    `auto_discovery`). 0.116.0 made the config comparison semantic rather than
+    textual.
+  - **SSH host-key handling went fail-closed** and 0.116.0 added
+    `SSH_KNOWN_HOSTS_FILE`. Irrelevant: `poll.yaml` polls two **public
+    https** repos with no git credentials.
+  - **SOPS decryption fix in 0.117.1** (files from every bind-mounted
+    directory were being dropped) — this estate runs no encryption; secrets
+    come from `/opt/doco-cd/secrets.env` via `PASS_ENV`.
+- **The one thing worth proving, and the reason to read the compose libs.**
+  A deploy is skipped when the recorded `cd.doco.deployment.compose.sha`
+  still matches, and that hash is `json.Marshal` of the loaded compose-go
+  project — so a compose-go bump that adds a serialized field silently
+  redeploys every stack on the first poll. compose-go went `2.14.0` →
+  `2.15.0` here; its `types/` diff is one `GetPullPolicy` fix and one new
+  `Project` method, **zero struct fields**, and the loader diff is a mutex
+  plus include dedup. Config-hash side is safe by inspection too:
+  `deploy.Config` and its `Hash()` are unchanged. Measured after the sync,
+  and it held.
+- **Measured: nothing but the daemon moved.** `gaias-choice-api-1`
+  (`295fce3ddca2`) and `gaias-choice-caddy-1` (`79cfde4fa867`) kept their
+  container ids and their `StartedAt` to the nanosecond —
+  `2026-08-13T19:18:58.444324990Z` for api, 31 days continuous. The second
+  stack, `mokri-potok-potok-api-1` (`3687b2a8eea0`), and `doco-cd-apprise-1`
+  (`87262c930175`) are untouched as well. Only `doco-cd-doco-cd-1` was
+  replaced, `f86d16ac688a` → `d6f7293690b6`. `/api/healthz` 200 throughout.
+- **`doco_cd_info` answers the version question without raising `LOG_LEVEL`.**
+  This box logs nothing at `warn`, so the old recipe (write `/tmp/ll.yaml`,
+  recreate the daemon with `LOG_LEVEL=info`, read, recreate again) cost two
+  extra container recreates just to confirm a version. The Prometheus endpoint
+  on 9120 carries it instead, and 9120 is not published — reach it from the
+  sidecar on the compose network:
+
+  ```sh
+  docker exec doco-cd-apprise-1 curl -s http://doco-cd:9120/metrics
+  ```
+
+  `doco_cd_info{log_level="warn",start_time="…",version="v0.117.1"} 1` is the
+  version. `doco_cd_polls_total` per repository is the poll proof
+  (13 for `gaias-choice`, 7 for `mokri-potok-portal` in the first minutes).
+  And `doco_cd_deployment_stage_duration_seconds_count{stage="pre-deploy",
+  outcome="skipped"}` is the *no-redeploy* proof, per stack, as a number —
+  every poll skipped, no stage past `init` ran. That last metric is **new in
+  0.116.0**; `doco_cd_info` and `doco_cd_polls_total` were always there, we
+  just never used them. The `/tmp/ll.yaml` trick below is still the way to read
+  actual log lines; it is no longer needed for these three questions.
+  ⚠ **It also went unexercised this round** — the metrics answered everything,
+  so nobody wrote `/tmp/ll.yaml` on this box since the 0.114.0 bump. Treat the
+  recipe as last-verified 2026-09-02, not 2026-09-13, and expect to debug it
+  rather than trust it the next time a log line is genuinely needed.
+- `/v1/health` is reachable the same way (`curl -s http://doco-cd/v1/health` →
+  `{"content":"healthy",…}`), which is the same answer the container
+  healthcheck gives.
+
 ## Redeploy / operate (quick reference)
 
 - **New backend image (fully automatic):** push to `main` touching `backend/**`
@@ -421,6 +502,11 @@ deploy.
 - **Controller (Layer 0) change:** edit `deploy/controller/{compose,poll}.yaml`
   in the repo, then `task doco:sync` (scp non-secret files → `/opt/doco-cd/` +
   `docker compose up -d`). doco-cd does NOT self-deploy its own config.
+  **On a version bump, `docker pull` the new pin on the VM first** — `sync.sh`
+  scps before it `up -d`s, so a failed pull strands the file (step 13). Verify
+  after: `doco_cd_info` for the version, `doco_cd_polls_total` for the polls,
+  `deployment_stage_duration_seconds{stage="pre-deploy",outcome="skipped"}` for
+  "no stack was redeployed" — all from the metrics endpoint, no `LOG_LEVEL` edit.
 - **Secret rotation / notify-target change:** edit the repo-root `.env`
   (gitignored source of truth) — e.g. `TELEGRAM_CHAT_ID` to move the deploy-ping
   target — then `task doco:secrets` (→ `push-secrets.sh`): streams `.env` + a
