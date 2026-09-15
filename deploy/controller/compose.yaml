@@ -5,7 +5,7 @@
 # to digests (immutable); bump tag+digest together to upgrade.
 services:
   doco-cd:
-    image: ghcr.io/kimdre/doco-cd:0.117.1@sha256:9db114c98e4fffa2f88a5ded0d4f71356334310057398f31105cabb004077e28
+    image: ghcr.io/kimdre/doco-cd:0.118.1@sha256:674c38e4988af5cf9028a002c3045d2c0aa7d15e3babc823b02e5e56e31685dc
     restart: unless-stopped
     # secrets.env holds the live stack's env (the former deploy.env). PASS_ENV
     # forwards these into every deployment's compose interpolation, so
