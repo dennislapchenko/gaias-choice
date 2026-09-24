@@ -692,6 +692,12 @@ in `.doco-cd.yml` — nothing hand-run on the box:
   token flow (`ghcr.io/token?scope=repository:<pkg>:pull`, then the
   manifest — 200 public, 403 private), not with a bare manifest GET, which
   is 401 for public and private alike.
+- Pushed 2026-09-24 (`58ed96f`) once both packages were public and both
+  records resolved to this VM. Both hosts answered 200 within 40 s of the
+  push, with their Let's Encrypt certs; `caddy` was recreated for the new
+  Caddyfile, `api` and `potok-api` were not touched. Verified on the box:
+  `pagi-demo` logged "demo village seeded on boot", its healthcheck passes,
+  `docker inspect` shows the memory, CPU and pid caps and the 256 MB tmpfs.
 
 ## Deferred (not done yet, by design)
 - **Terraform the edge firewall** — `gaias-choice-edge` is live but was created
