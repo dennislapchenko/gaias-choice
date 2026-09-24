@@ -96,7 +96,11 @@ services:
   pagi-demo:
     image: ghcr.io/dennislapchenko/porta-pagi-demo:${PAGI_DEMO_TAG:-latest}
     restart: unless-stopped
+    # Caps, because it shares this box with a village: memory, half a core,
+    # and a process count a fork loop cannot pass.
     mem_limit: 384m
+    cpus: "0.5"
+    pids_limit: 128
     environment:
       DATA_DIR: /data
       PORT: "8788"

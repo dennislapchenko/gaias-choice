@@ -679,10 +679,11 @@ in `.doco-cd.yml` — nothing hand-run on the box:
   build: a door with no code, an hourly wipe-and-reseed), rolled by
   `PAGI_DEMO_TAG`. **No bind mount:** `/data` is a 256 MB tmpfs, mode 1777
   so the image's nonroot user can write, and the container seeds itself on
-  an empty ground. `mem_limit: 384m`. A visitor holds a steward's powers for
-  an hour, and the product's own docs say a demo never runs beside a village;
-  this box hosts one. The tmpfs and the memory cap are what bound the blast:
-  a visitor can kill the demo, not fill the disk the village's SQLite is on.
+  an empty ground. `mem_limit: 384m`, `cpus: "0.5"`, `pids_limit: 128`. A visitor holds a
+  steward's powers for an hour, and the product's own docs say a demo never
+  runs beside a village; this box hosts one. The tmpfs and the three caps
+  are what bound the blast: a visitor can kill the demo and take half a core
+  with it, not fill the disk the village's SQLite is on or starve its CPU.
 - Both A records → this VM, created by the owner. Both GHCR packages start
   **private** (a package inherits its repo's visibility on first push):
   **flip both to public before pushing this** — `docker compose up` fails
