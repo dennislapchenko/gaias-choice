@@ -31,11 +31,13 @@ The static site stays on GitHub Pages and never depends on this stack.
 - `app/compose.yaml` — the `api` service (backend image, host bind mount for
   SQLite per D9) behind a `caddy` service that terminates TLS. Only Caddy
   publishes ports (80/443); `api` stays internal to the compose network.
-- `app/Caddyfile` — two sites, both with automatic Let's Encrypt TLS, bot-scan
+- `app/Caddyfile` — four sites, all with automatic Let's Encrypt TLS, bot-scan
   paths edge-dropped and the same transport hardening (HSTS, body cap):
-  `{$API_DOMAIN}` → `api:8787`, and `{$POTOK_DOMAIN}` → `potok-api:8788` (the
-  village portal, whole host — that container serves its own frontend). See its
-  comments, and `infra-log.md` for the portal wiring.
+  `{$API_DOMAIN}` → `api:8787`, `{$POTOK_DOMAIN}` → `potok-api:8788` (the
+  village portal, whole host — that container serves its own frontend),
+  `{$PAGI_DOMAIN}` → `pagi-site:8080` (the Porta Pagi landing page) and
+  `{$PAGI_DEMO_DOMAIN}` → `pagi-demo:8788` (its demo village, the product's
+  demo image on a tmpfs). See its comments, and `infra-log.md` for the wiring.
 - `.doco-cd.yml` (repo root) — `name`, `working_dir: deploy/app`, and the
   **non-secret** `environment:` (`API_DOMAIN`, `POTOK_DOMAIN`, `CORS_ORIGINS`,
   `BE_TAG`).

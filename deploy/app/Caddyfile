@@ -79,3 +79,38 @@
 	# CSP for a different reason: it serves JSON, never framed HTML.)
 	reverse_proxy potok-api:8788
 }
+
+# The Porta Pagi landing page, on its own hostname (A record → this VM,
+# owner, 2026-09-24). A static site served by its own container; that
+# container sets the page's CSP, this block only the edge headers.
+{$PAGI_DOMAIN} {
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		-Server
+	}
+	@scanners path /.env* /.git* /wp-* /wordpress* /.aws/* /.ssh/* /phpinfo* *.php *.asp *.aspx
+	handle @scanners {
+		abort
+	}
+	reverse_proxy pagi-site:8080
+}
+
+# The Porta Pagi demo village: the same shape as the village portal above
+# (the same binary, the demo build), so the same edge rules — and the same
+# 10MB body cap, which matters more here because anyone may upload.
+{$PAGI_DEMO_DOMAIN} {
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		-Server
+	}
+	request_body {
+		max_size 10MB
+	}
+	@scanners path /.env* /.git* /wp-* /wordpress* /.aws/* /.ssh/* /phpinfo* *.php *.asp *.aspx
+	handle @scanners {
+		abort
+	}
+	reverse_proxy pagi-demo:8788
+}

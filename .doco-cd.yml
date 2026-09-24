@@ -19,6 +19,15 @@ environment:
   # secrets.env. Caddy REQUIRES a value — an empty one leaves an unnamed site
   # block, the Caddyfile fails to parse, and the api site goes down with it.
   POTOK_DOMAIN: vas.mokri-potok.si
+  # Third and fourth Caddy sites (owner, 2026-09-24): the Porta Pagi landing
+  # page and its demo village, both A records → this VM. Public names, so
+  # here. The two tags are the images the box runs; both packages must be
+  # public on GHCR or compose up fails to pull and the whole stack's
+  # reconcile stops — flip them before the first push that names them.
+  PAGI_DOMAIN: porta-pagi.gardenofatlantis.com
+  PAGI_DEMO_DOMAIN: pp-demo.gardenofatlantis.com
+  PAGI_SITE_TAG: sha-98127b5dbab50f8205979b69e6e3a0ed66c351b6
+  PAGI_DEMO_TAG: sha-91363184745d073cb973955ec923229c03e00c69
   CORS_ORIGINS: https://dennislapchenko.github.io
   BE_TAG: sha-f40ba2b34a9fd744399685353b43a9339abae907
 # Runtime self-healing (doco-cd watches Docker events on this stack's containers):

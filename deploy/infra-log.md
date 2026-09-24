@@ -663,6 +663,35 @@ interpolation scope too; the portal compose references none of those vars.
   comment updated to match. Caddyfile comment about "no CSP" rewritten the day
   before: the portal sets its own CSP in its Go server.
 
+## Third and fourth sites — the Porta Pagi landing page and demo
+
+### 2026-09-24 — `porta-pagi.gardenofatlantis.com` and `pp-demo.gardenofatlantis.com`
+
+The village portal became a product, Porta Pagi (`dennislapchenko/porta-pagi`;
+the landing page is in `dennislapchenko/porta-pagi-cloud`, private). The
+owner bundles its landing page and demo village on this VM for now. Two
+services in `app/compose.yaml`, two Caddy sites, four non-secret variables
+in `.doco-cd.yml` — nothing hand-run on the box:
+
+- `pagi-site`: `ghcr.io/dennislapchenko/porta-pagi-site` (caddy:2-alpine
+  serving the static page on :8080), rolled by `PAGI_SITE_TAG`.
+- `pagi-demo`: `ghcr.io/dennislapchenko/porta-pagi-demo` (the product's demo
+  build: a door with no code, an hourly wipe-and-reseed), rolled by
+  `PAGI_DEMO_TAG`. **No bind mount:** `/data` is a 256 MB tmpfs, mode 1777
+  so the image's nonroot user can write, and the container seeds itself on
+  an empty ground. `mem_limit: 384m`. A visitor holds a steward's powers for
+  an hour, and the product's own docs say a demo never runs beside a village;
+  this box hosts one. The tmpfs and the memory cap are what bound the blast:
+  a visitor can kill the demo, not fill the disk the village's SQLite is on.
+- Both A records → this VM, created by the owner. Both GHCR packages start
+  **private** (a package inherits its repo's visibility on first push):
+  **flip both to public before pushing this** — `docker compose up` fails
+  on the first unpullable image and the whole stack's reconcile stops with
+  it, api and village included. Checked with the registry's anonymous
+  token flow (`ghcr.io/token?scope=repository:<pkg>:pull`, then the
+  manifest — 200 public, 403 private), not with a bare manifest GET, which
+  is 401 for public and private alike.
+
 ## Deferred (not done yet, by design)
 - **Terraform the edge firewall** — `gaias-choice-edge` is live but was created
   imperatively via `hcloud`; codify it later as `hcloud_firewall` + attachment.
