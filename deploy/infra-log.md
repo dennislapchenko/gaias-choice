@@ -698,6 +698,18 @@ in `.doco-cd.yml` — nothing hand-run on the box:
   Caddyfile, `api` and `potok-api` were not touched. Verified on the box:
   `pagi-demo` logged "demo village seeded on boot", its healthcheck passes,
   `docker inspect` shows the memory, CPU and pid caps and the 256 MB tmpfs.
+- Same day, on review: **the two Porta Pagi services moved to their own
+  compose network, `pagi`, with Caddy on both.** On the stack's default
+  network the demo container could have named `potok-api:8788` and
+  `api:8787`; a demo visitor holds a house's login for an hour, so it gets
+  Caddy as its only neighbour. Verified after the roll: `docker inspect`
+  shows `pagi-demo` on `gaias-choice_pagi` alone, `caddy` on both.
+- **Expected noise:** `reconciliation: events: [unhealthy, die]` is per
+  stack, not per service. A visitor who pushes the demo past its memory
+  cap kills it, which is a `die`, which is a stack-wide `compose up` and an
+  [R] Telegram ping — and can recur each hour. That ping is the demo, not
+  the village or the api. Dropping `die` for cause is backlog item 8 of the
+  doco-cd notes, unchanged by this.
 
 ## Deferred (not done yet, by design)
 - **Terraform the edge firewall** — `gaias-choice-edge` is live but was created

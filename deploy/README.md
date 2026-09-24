@@ -39,7 +39,7 @@ The static site stays on GitHub Pages and never depends on this stack.
   `{$PAGI_DEMO_DOMAIN}` → `pagi-demo:8788` (its demo village, the product's
   demo image on a tmpfs). See its comments, and `infra-log.md` for the wiring.
 - `.doco-cd.yml` (repo root) — `name`, `working_dir: deploy/app`, and the
-  **non-secret** `environment:` (`API_DOMAIN`, `POTOK_DOMAIN`, `CORS_ORIGINS`,
+  **non-secret** `environment:` (`API_DOMAIN`, `POTOK_DOMAIN`, `PAGI_DOMAIN`, `PAGI_DEMO_DOMAIN`, `PAGI_SITE_TAG`, `PAGI_DEMO_TAG`, `CORS_ORIGINS`,
   `BE_TAG`).
 
 **`controller/` (Layer 0 — the doco-cd daemon, synced with `task doco:sync`):**
